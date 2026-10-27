@@ -1,0 +1,345 @@
+[
+  {
+    "name": "local_snapshot",
+    "schema": "InternalRpcRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getSnapshot",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "forged_local_source",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getSnapshot",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null,
+      "source": "LOCAL_UI"
+    }
+  },
+  {
+    "name": "ws_not_rpc",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "subscribeChanges",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "missing_path_id",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getOperation",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "local_progress",
+    "schema": "InternalRpcRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "progress.report",
+      "session_token": null,
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": {
+        "target": "UI",
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5",
+        "observed_age_ms": 20,
+        "sampled_mono_ms": "980"
+      }
+    }
+  },
+  {
+    "name": "supervisor_rejects_session",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "progress.report",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": {
+        "target": "UI",
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5",
+        "observed_age_ms": 20,
+        "sampled_mono_ms": "980"
+      }
+    }
+  },
+  {
+    "name": "token_is_not_an_object",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getSnapshot",
+      "session_token": {},
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "version_bool_is_not_number",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": true,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getSnapshot",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "logout_null_body",
+    "schema": "InternalRpcResponse",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "status": 204,
+      "body": null
+    }
+  },
+  {
+    "name": "progress_ack",
+    "schema": "InternalRpcResponse",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "status": 200,
+      "body": {
+        "kind": "PROGRESS_RECORDED",
+        "target": "UI",
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5"
+      }
+    }
+  },
+  {
+    "name": "supervisor_health_query",
+    "schema": "InternalRpcRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "health.get",
+      "session_token": null,
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "health_query_no_session",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "health.get",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "health_response",
+    "schema": "SupervisorHealthResponse",
+    "valid": true,
+    "value": {
+      "supervisor_instance_id": "00000000-0000-4000-8000-000000000015",
+      "sampled_mono_ms": "1000",
+      "service": null,
+      "ui": {
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5",
+        "observed_age_ms": 20,
+        "sampled_mono_ms": "980"
+      },
+      "state": "RUNNING",
+      "restart_count": 0,
+      "window_attempts": 0,
+      "cooldown_remaining_ms": 0,
+      "budget_ready": true
+    }
+  },
+  {
+    "name": "health_unknown",
+    "schema": "SupervisorHealthResponse",
+    "valid": true,
+    "value": {
+      "supervisor_instance_id": "00000000-0000-4000-8000-000000000015",
+      "sampled_mono_ms": "1000",
+      "service": null,
+      "ui": null,
+      "state": "UNKNOWN",
+      "restart_count": null,
+      "window_attempts": 0,
+      "cooldown_remaining_ms": 0,
+      "budget_ready": false
+    }
+  },
+  {
+    "name": "health_invalid_restart_count",
+    "schema": "SupervisorHealthResponse",
+    "valid": false,
+    "value": {
+      "supervisor_instance_id": "00000000-0000-4000-8000-000000000015",
+      "sampled_mono_ms": "1000",
+      "service": null,
+      "ui": {
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5",
+        "observed_age_ms": 20,
+        "sampled_mono_ms": "980"
+      },
+      "state": "RUNNING",
+      "restart_count": -1,
+      "window_attempts": 0,
+      "cooldown_remaining_ms": 0,
+      "budget_ready": true
+    }
+  },
+  {
+    "name": "health_ack_envelope",
+    "schema": "InternalRpcResponse",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "status": 200,
+      "body": {
+        "supervisor_instance_id": "00000000-0000-4000-8000-000000000015",
+        "sampled_mono_ms": "1000",
+        "service": null,
+        "ui": {
+          "instance_id": "00000000-0000-4000-8000-00000000000b",
+          "progress": "5",
+          "observed_age_ms": 20,
+          "sampled_mono_ms": "980"
+        },
+        "state": "RUNNING",
+        "restart_count": 0,
+        "window_attempts": 0,
+        "cooldown_remaining_ms": 0,
+        "budget_ready": true
+      }
+    }
+  },
+  {
+    "name": "progress_missing_source_sample",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "progress.report",
+      "session_token": null,
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": {
+        "target": "UI",
+        "instance_id": "00000000-0000-4000-8000-00000000000b",
+        "progress": "5",
+        "observed_age_ms": 20
+      }
+    }
+  },
+  {
+    "name": "vision_status_read",
+    "schema": "InternalRpcRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getVisionStatus",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "vision_evidence_read",
+    "schema": "InternalRpcRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getOperationVisionEvidence",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {
+        "operation_id": "00000000-0000-4000-8000-000000000003"
+      },
+      "query": {
+        "limit": 20
+      },
+      "idempotency_key": null,
+      "params": null
+    }
+  },
+  {
+    "name": "vision_read_requires_operation",
+    "schema": "InternalRpcRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "request_id": "00000000-0000-4000-8000-000000000014",
+      "method": "getOperationVisionEvidence",
+      "session_token": "sample-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "path_ids": {},
+      "query": {},
+      "idempotency_key": null,
+      "params": null
+    }
+  }
+]

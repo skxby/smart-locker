@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "contract_version": "0.2.0",
+  "public_routes": 24,
+  "internal_ports": 80,
+  "private_rpc_methods": 28,
+  "resolved_schema_refs": 453,
+  "resolved_internal_refs": 332,
+  "api_examples": 8,
+  "internal_examples": 5,
+  "local_rpc_examples": 20,
+  "uart_vectors": 4,
+  "uart_requests": 11,
+  "max_wire_payload": 469,
+  "c_declaration_syntax": "PASS (parse only, not compile/link)",
+  "hardware_profile": "UNVERIFIED",
+  "hardware_profile_cases": 3,
+  "nominal_bom_cny": "197.94",
+  "prices_settled": false,
+  "business_or_hardware_tested": false
+}

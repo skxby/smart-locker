@@ -1,0 +1,8 @@
+# per-test binaries, each run directly (own exit code is the verdict)
+# date: 2026-10-23T22:02:02+08:00
+PER_TEST test_bounded_queue EXIT=0 :: PASS common.bounded_queue (97 checks)
+PER_TEST test_build_info EXIT=0 :: PASS common.build_info (5 checks)
+PER_TEST test_clock EXIT=0 :: PASS common.clock (53 checks)
+PER_TEST test_log EXIT=0 :: PASS common.log (164 checks)
+PER_TEST test_numeric EXIT=0 :: PASS common.numeric (133 checks)
+PER_TEST test_uuid EXIT=0 :: PASS common.uuid (53 checks)

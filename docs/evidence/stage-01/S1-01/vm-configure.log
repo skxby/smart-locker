@@ -1,0 +1,24 @@
+# S1-01 clean-Linux configure log (VMware guest)
+# date: 2026-10-23T20:19:51+08:00
+# host: Linux 7.3.0-rc5 x86_64
+# distro: Ubuntu 26.04.1 LTS
+# cmake: cmake version 4.2.3
+# gcc: gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+# make: GNU Make 4.4.1
+# ctest: ctest version 4.2.3
+# files in tree: 45
+# command: rm -rf build/host && cmake -S . -B build/host -DLOCKER_BUILD_HOST=ON -DLOCKER_BUILD_TESTS=ON -DLOCKER_WARNINGS_AS_ERRORS=ON
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/%USER%/s1_01_verify/build/host
+CONFIGURE_EXIT=0

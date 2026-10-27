@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "files": {
+    "CMakeLists.txt": true,
+    "host/common/src/uuid.c": true,
+    "host/common/src/numeric.c": true,
+    "host/common/src/log.c": true,
+    "host/common/src/bounded_queue.c": true,
+    "host/common/src/build_info.c": true,
+    "host/common/src/clock.c": true,
+    "host/common/include/locker/common/log.h": true,
+    "host/common/include/locker/common/bounded_queue.h": true,
+    "host/common/include/locker/common/numeric.h": true,
+    "host/common/include/locker/common/uuid.h": true,
+    "host/common/include/locker/common/build_info.h": true,
+    "host/common/include/locker/common/clock.h": true,
+    "tests/unit/common/test_numeric.c": true,
+    "tests/unit/common/test_clock.c": true,
+    "tests/unit/common/test_uuid.c": true,
+    "tests/unit/common/test_build_info.c": true,
+    "tests/unit/common/test_bounded_queue.c": true,
+    "tests/unit/common/test_log.c": true
+  }
+}

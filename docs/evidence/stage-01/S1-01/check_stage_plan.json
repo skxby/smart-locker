@@ -1,0 +1,7 @@
+{
+  "command": "python -B scripts/check_stage_plan.py",
+  "exit_code": 0,
+  "stdout": "{\"status\": \"PASS\", \"contract_version\": \"0.2.1\", \"stages\": 5, \"task_cards\": 45, \"public_routes_mapped\": 24, \"internal_ports_mapped\": 82, \"uart_requests_mapped\": 11, \"private_rpc_mapped\": 28, \"vision_worker_messages_mapped\": 3, \"active_task\": null, \"implementation_cards_done\": 1, \"runtime_or_hardware_tested\": false}\n",
+  "stderr": "",
+  "captured_at": "2026-10-23T23:10:12+08:00"
+}

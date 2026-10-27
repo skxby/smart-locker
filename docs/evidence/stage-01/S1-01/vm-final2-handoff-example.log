@@ -1,0 +1,4 @@
+# handoff.md fake clock example: compile + run (round 2)
+# date: 2026-10-23T22:02:34+08:00
+HANDOFF_COMPILE_EXIT=0
+HANDOFF_RUN_EXIT=0

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>ADuM芯片方向与模块追线</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">13  ADuM芯片方向与模块追线</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">芯片顶视图：文字朝自己、缺口在上；左侧1→4，右侧8→5。此图不规定商品模块排针顺序。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">13 / 14</text>
+<rect x="590" y="190" width="420" height="490" rx="5" fill="#e6edf3" stroke="#e6edf3"/>
+<circle cx="620" cy="220" r="10" fill="#536477"/>
+<text x="685" y="250" font-family="Microsoft YaHei,sans-serif" font-size="30" fill="#172d46">ADuM1201</text>
+<text x="710" y="296" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">顶视图</text>
+<polyline points="315,340 590,340" fill="none" stroke="#c34b35" stroke-width="4"/>
+<polyline points="1010,340 1285,340" fill="none" stroke="#c34b35" stroke-width="4"/>
+<rect x="560" y="325" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<rect x="1010" y="325" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<text x="610" y="344" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">1 VDD1</text>
+<text x="830" y="344" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">8 VDD2</text>
+<text x="70" y="342" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#c34b35">MCU 3V3</text>
+<text x="1295" y="339" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#c34b35">RK匹配3.3V电源</text>
+<polyline points="315,425 590,425" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="1010,425 1285,425" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="560" y="410" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<rect x="1010" y="410" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<text x="610" y="429" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">2 VOA</text>
+<text x="830" y="429" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">7 VIA</text>
+<text x="70" y="427" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#176da6">P2-28 / PD6 RX</text>
+<text x="1295" y="424" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">RK UART_TX</text>
+<text x="780" y="433" font-family="Microsoft YaHei,sans-serif" font-size="28" fill="#176da6">←</text>
+<polyline points="315,510 590,510" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="1010,510 1285,510" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="560" y="495" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<rect x="1010" y="495" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<text x="610" y="514" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">3 VIB</text>
+<text x="830" y="514" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">6 VOB</text>
+<text x="70" y="512" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#176da6">P2-29 / PD5 TX</text>
+<text x="1295" y="509" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">RK UART_RX</text>
+<text x="780" y="518" font-family="Microsoft YaHei,sans-serif" font-size="28" fill="#176da6">→</text>
+<polyline points="315,595 590,595" fill="none" stroke="#536477" stroke-width="4"/>
+<polyline points="1010,595 1285,595" fill="none" stroke="#536477" stroke-width="4"/>
+<rect x="560" y="580" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<rect x="1010" y="580" width="30" height="30" rx="5" fill="#536477" stroke="#536477"/>
+<text x="610" y="599" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">4 GND1</text>
+<text x="830" y="599" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">5 GND2</text>
+<text x="70" y="597" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#536477">MCU GND</text>
+<text x="1295" y="594" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">RK GND</text>
+<rect x="65" y="735" width="710" height="280" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="735" width="5" height="280" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="772" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">断电追线后，给模块排针贴标签</text>
+<text x="85" y="811" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先断开模块两侧全部电源和连接线。</text>
+<text x="85" y="839" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">黑笔接某个模块排针，红笔接对应芯片焊盘。</text>
+<text x="85" y="867" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">通断核实后标：VDD1 / VOA / VIB / GND1。</text>
+<text x="85" y="895" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">细脚不好接触时量模块焊盘，不硬戳相邻脚。</text>
+<text x="85" y="923" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">芯片侧电容100nF：1与4之间，8与5之间。</text>
+<text x="85" y="951" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">去耦电容只接本侧；GND1和GND2不得并。</text>
+<rect x="815" y="735" width="720" height="280" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="735" width="5" height="280" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="835" y="772" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">测电压与未确认项</text>
+<text x="835" y="811" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">万用表DC V：黑4红1，量MCU侧供电。</text>
+<text x="835" y="839" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">换到RK侧：黑5红8，量RK侧供电。</text>
+<text x="835" y="867" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">两侧分开测，不用黑4红8判断供电。</text>
+<text x="835" y="895" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK板型/针号/IO域不明时，右侧暂不接。</text>
+<text x="835" y="923" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">1.8V不能直接使用本ADuM模块方案。</text>
+<text x="835" y="951" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">单侧掉电时检查反灌和接收端电压，留证据。</text></svg>

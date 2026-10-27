@@ -1,0 +1,23 @@
+# S1-01 VM final re-verification ROUND 2 - environment (audit B1-R/B3 remediation)
+date=2026-10-23T22:01:57+08:00
+workspace=/home/%USER%/locker-workspace/S1-01
+workspace_filesystem=ext4 /dev/sda2
+src=/home/%USER%/locker-workspace/S1-01/src (source only, no build state)
+build=/home/%USER%/locker-workspace/S1-01/build (out-of-source)
+snapshot_sha256=8f6525c9cbf9b1919ce32e7ad01b48ce8c6afd26a2a1b2a1a4254371e18c36cf
+snapshot_bytes=10758257
+snapshot_manifest_sha256=6727b61c04bfbad59453b220a59aae5a9507fe2226752478f9a6e3623d5fe873
+source_files=549
+source_bytes=26717272
+log_c_sha256=1418a51fc49d28c69a022fa5ac985eff183f72a13e790d5db137fab25217a8ba
+log_c_bytes=20965
+test_log_c_sha256=7e8cf73515becf2c17aef356c2d3ab1f3878bf12a731c18f02f6365f9be10f5f
+uname=Linux 7.3.0-rc5 x86_64
+os_release=PRETTY_NAME="Ubuntu 26.04.1 LTS" VERSION_ID="26.04" 
+arch=x86_64
+cmake=cmake version 4.2.3
+gcc=gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+make=GNU Make 4.4.1
+ctest=ctest version 4.2.3
+python3=Python 3.14.4
+nproc=2

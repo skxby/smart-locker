@@ -1,0 +1,272 @@
+{
+  "updated": "2026-10-22",
+  "note": "手机选购用：kw 为淘宝搜索词，must 为硬条件，group 决定排序。价格是参考价，不是结算价。",
+  "groups": [
+    {
+      "id": "missing",
+      "title": "① 还缺 SKU（先搜这两个）"
+    },
+    {
+      "id": "verify",
+      "title": "② 参数要确认（SKU 有了）"
+    },
+    {
+      "id": "jd",
+      "title": "③ 京东已定，去淘宝比价"
+    },
+    {
+      "id": "checked",
+      "title": "④ 已核过，备查"
+    }
+  ],
+  "items": [
+    {
+      "id": "B17a",
+      "name": "Type-C 数据线 1m",
+      "group": "missing",
+      "kw": "Type-C 数据线 1米 数据 3A 编织",
+      "must": "1m、能传数据（不是纯充电线）",
+      "price": "1.27",
+      "candidate": {
+        "label": "京东候选 ¥12.29（超预算 11.02）",
+        "url": "https://item.jd.com/10227900700449.html"
+      }
+    },
+    {
+      "id": "B14a",
+      "name": "3M9448A 双面胶",
+      "group": "missing",
+      "kw": "3M9448A 双面胶 10mm 3米 单卷",
+      "must": "单卷、宽 10mm 左右",
+      "price": "2.17",
+      "candidate": {
+        "label": "京东候选 ¥6.80（超预算 4.63）",
+        "url": "https://item.jd.com/10107946423067.html"
+      }
+    },
+    {
+      "id": "B01",
+      "name": "RC522 套件",
+      "group": "verify",
+      "kw": "RC522 射频模块 套件 含卡 排针已焊",
+      "must": "含白卡+钥匙扣卡；排针已焊（未焊要自己焊 8 针）",
+      "price": "8.50"
+    },
+    {
+      "id": "B02",
+      "name": "DC12V 电控锁",
+      "group": "verify",
+      "kw": "LY03 12V 电控锁 通电解锁 带尾杆",
+      "must": "通电解锁/断电锁闭/带尾杆；确认“不含锁扣”影响安装吗",
+      "price": "21.90"
+    },
+    {
+      "id": "B03",
+      "name": "MOS 驱动模块",
+      "group": "verify",
+      "kw": "MOS管 驱动模块 光耦隔离 3.3V PWM 低电平触发",
+      "must": "模块（不是裸管）、光耦隔离、3.3V 可触发、支持 PWM",
+      "price": "8.00"
+    },
+    {
+      "id": "B08",
+      "name": "金属膜电阻包",
+      "group": "verify",
+      "kw": "1/4W 金属膜电阻包 1% 30种 各10只",
+      "must": "±1%，含 10k / 22k / 100k",
+      "price": "3.80"
+    },
+    {
+      "id": "B13",
+      "name": "M3 尼龙螺丝套装",
+      "group": "verify",
+      "kw": "M3 尼龙螺丝套装 180PCS 螺母 隔离柱",
+      "must": "180PCS，含螺母+隔离柱",
+      "price": "10.00"
+    },
+    {
+      "id": "B21",
+      "name": "CH340 USB-TTL",
+      "group": "verify",
+      "kw": "CH340 USB转TTL 3.3V 5V 电平可选",
+      "must": "3.3V/5V 可选，不是只有 5V",
+      "price": "8.40"
+    },
+    {
+      "id": "P01",
+      "name": "12V/2A 电源适配器",
+      "group": "jd",
+      "kw": "12V 2A 电源适配器 DC5.5*2.1",
+      "must": "12V/2A，插头 5.5×2.1（不是 2.5）",
+      "price": "17.46",
+      "ref_price": "11.80",
+      "prefer_taobao": true
+    },
+    {
+      "id": "B05",
+      "name": "微动开关",
+      "group": "jd",
+      "kw": "KW11 微动开关 常开 2线 20cm",
+      "must": "常开 2 线、线长 20cm（已选定，¥2.6）",
+      "price": "2.60"
+    },
+    {
+      "id": "B09b",
+      "name": "5×20 保险丝座",
+      "group": "jd",
+      "kw": "5x20 保险丝座 带线 全铜 粗线",
+      "must": "带线、全铜、线径够（0.75平方以上）",
+      "price": "3.04",
+      "ref_price": "1.18",
+      "prefer_taobao": true
+    },
+    {
+      "id": "B10",
+      "name": "杜邦线 40P",
+      "group": "jd",
+      "kw": "杜邦线 40P 母对母 20cm 一排",
+      "must": "40P 一排、母对母、20cm",
+      "price": "2.26",
+      "ref_price": "1.40",
+      "prefer_taobao": true
+    },
+    {
+      "id": "B12",
+      "name": "万用板 3×7cm",
+      "group": "jd",
+      "kw": "3x7cm 双面 万用板 洞洞板 2片",
+      "must": "3×7cm、双面、2 片",
+      "price": "2.50"
+    },
+    {
+      "id": "B16",
+      "name": "EVA 泡棉",
+      "group": "jd",
+      "kw": "EVA 泡棉 1mm厚 自粘 10mm宽",
+      "must": "1mm 厚、自粘、宽 10mm",
+      "price": "1.80"
+    },
+    {
+      "id": "B17b",
+      "name": "网线 1m",
+      "group": "jd",
+      "kw": "超五类 网线 1米 成品 跳线",
+      "must": "Cat5e 成品跳线、1 米",
+      "price": "3.90",
+      "ref_price": "1.17",
+      "prefer_taobao": true
+    },
+    {
+      "id": "C01",
+      "name": "相机 HBVCAM-F2170HD",
+      "group": "checked",
+      "kw": "HBVCAM-F2170HD USB摄像头模组 UVC 75度 手动调焦",
+      "must": "75°手动调焦 SKU（不要自动对焦/带光敏）",
+      "price": "33.76"
+    },
+    {
+      "id": "C02",
+      "name": "补光灯 白光3W",
+      "group": "checked",
+      "kw": "USB 铝合金 圆形 灯板 白光 3W 开关线",
+      "must": "白光、固定亮度、开关线 1 米",
+      "price": "9.80"
+    },
+    {
+      "id": "B04",
+      "name": "MC-38 门磁",
+      "group": "checked",
+      "kw": "MC-38 门磁 常闭 一套",
+      "must": "常闭（断线读开门）",
+      "price": "2.34"
+    },
+    {
+      "id": "B07",
+      "name": "ADUM1201 隔离模块",
+      "group": "checked",
+      "kw": "ADUM1201 隔离模块 双通道",
+      "must": "双通道、两侧 3.3–5V",
+      "price": "4.15"
+    },
+    {
+      "id": "B09a",
+      "name": "1N4007 二极管",
+      "group": "checked",
+      "kw": "1N4007 DO-41 20只",
+      "must": "DO-41 直插、1A/1000V",
+      "price": "1.20"
+    },
+    {
+      "id": "B09c",
+      "name": "电解+瓷片电容",
+      "group": "checked",
+      "kw": "470uF 25V 直插 电解电容 10只",
+      "must": "另搜：瓷片 104 100nF 100只",
+      "price": "2.73"
+    },
+    {
+      "id": "B09d",
+      "name": "玻璃保险管 3A",
+      "group": "checked",
+      "kw": "5x20 玻璃保险管 3A 10只",
+      "must": "额定值等锁实测电流后定",
+      "price": "2.60"
+    },
+    {
+      "id": "B11",
+      "name": "DC 母头 5.5×2.1",
+      "group": "checked",
+      "kw": "DC-022B 5.5*2.1 母头 带线 20cm",
+      "must": "5.5×2.1、带线",
+      "price": "2.90"
+    },
+    {
+      "id": "B11a",
+      "name": "22AWG 红黑线",
+      "group": "checked",
+      "kw": "22AWG 红黑并线 1米 镀锡铜",
+      "must": "22AWG、镀锡铜、1 米",
+      "price": "1.50"
+    },
+    {
+      "id": "B12a",
+      "name": "KF301 端子",
+      "group": "checked",
+      "kw": "KF301-5.0-2P 接线端子 直插",
+      "must": "5.0mm 间距、2P 直插",
+      "price": "3.00"
+    },
+    {
+      "id": "B13a",
+      "name": "不锈钢角码",
+      "group": "checked",
+      "kw": "不锈钢 角码 L型 20x20 10个",
+      "must": "L 型、10 个",
+      "price": "2.95"
+    },
+    {
+      "id": "B14",
+      "name": "热缩管套装",
+      "group": "checked",
+      "kw": "热缩管 套装 127个 多规格",
+      "must": "多规格混装",
+      "price": "3.00"
+    },
+    {
+      "id": "B19",
+      "name": "ST-LINK V2",
+      "group": "checked",
+      "kw": "ST-LINK V2 下载器 无外壳",
+      "must": "软件可升级版",
+      "price": "5.90"
+    },
+    {
+      "id": "B20",
+      "name": "有源蜂鸣器模块",
+      "group": "checked",
+      "kw": "有源蜂鸣器模块 3.3V 高电平触发",
+      "must": "高电平触发（低电平款需换）",
+      "price": "3.32"
+    }
+  ]
+}

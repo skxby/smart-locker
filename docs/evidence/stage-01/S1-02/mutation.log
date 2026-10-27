@@ -1,0 +1,693 @@
+# S1-02 mutation evidence (round-8 remediation snapshot, batch completed 2026-10-24T21:20+08:00)
+#
+# This file is generated from the two raw runs that are kept as evidence next to it:
+#   mutation-batch.py   / mutation-batch.log   42 points (34 named + 8 joint), full output
+#   mutation-joint-m26c.py / mutation-joint-m26c.log  three-point joint m26+m28+m33
+# The raw logs are the primary record; this file only normalises them into one section per
+# point with an explicit denominator and an explicit attribution.
+#
+# METHOD
+#   1. copy CMakeLists.txt + contracts + host + tests into a scratch tree per point,
+#   2. apply exactly one textual edit (count(old) must be 1, otherwise PATCH_PATTERN_COUNT),
+#   3. configure + build into a separate build directory, run
+#      `ctest --output-on-failure` and read the FAIL lines out of THAT SAME ctest stdout
+#      (there is no second direct execution of the mutated binary; round-8 N-1 (4)),
+#   4. record ctest exit code, FAIL lines and the '(N of M checks failed)' denominator.
+#
+# TWO CHANNELS, both recorded per point:
+#   ctest=N               8 = at least one test failed, 0 = the whole suite stayed green
+#   assertion_failures=K  K counts every line starting with 'FAIL ', which includes the
+#                         trailing suite summary line 'FAIL storage.<suite> (N of M checks
+#                         failed)'. The real assertion count is therefore K-1, and the
+#                         per-point counts below are already the K-1 values.
+#
+# SOURCE_FINGERPRINT (sha256 first 12 hex chars, byte size) of the tree the batch ran on:
+#   SOURCE_FINGERPRINT f9e1964ee544 CMakeLists.txt 3943 B
+#   SOURCE_FINGERPRINT b9ab2abaa41e host/storage/src/repository.c 95832 B
+#   SOURCE_FINGERPRINT 19bd5b4f9e24 host/storage/src/schema.c 26069 B
+#   SOURCE_FINGERPRINT 875036a0abbf host/storage/src/u64.c 2180 B
+#   SOURCE_FINGERPRINT 2229c561f455 host/storage/src/event_key.c 7165 B
+#   SOURCE_FINGERPRINT b01a90e58f18 host/storage/src/regex.c 25127 B
+#   SOURCE_FINGERPRINT f1cc609cf4cf tests/unit/storage/test_repository.c 138538 B
+#   SOURCE_FINGERPRINT 4952adc2876f tests/unit/storage/test_schema.c 31269 B
+#   SOURCE_FINGERPRINT 6919ee375023 tests/unit/storage/test_u64.c 6040 B
+#   SOURCE_FINGERPRINT 159254c9091d tests/unit/storage/test_event_key.c 7913 B
+#   SOURCE_FINGERPRINT 8bb903aa8b76 tests/unit/storage/test_regex.c 5128 B
+#
+# DENOMINATORS: storage.repository 865, storage.regex 46, storage.u64 90, storage.schema 131.
+# m9b_doc_bytes reports 850 instead of 865 because its first failing assertion makes the
+# page root NULL, so the assertions that need the root are skipped and never counted.
+# Line numbers refer to tests/unit/storage/test_*.c unless stated otherwise.
+#
+# SCOPE: 42 runs = 34 named points + 8 '<name>_plus_ddl_off' joint points. m23/m24 were
+# removed earlier as duplicate points (same anchor and same FAIL lines as m17/m18),
+# m15_object_type was removed in round 3, and m29b_xinfo_to_info_only was removed in
+# round 7 because its edit is byte-identical to m29_table_info: it was a duplicate run,
+# not a second defect. None of those are counted here.
+#
+# NOT CAUGHT, recorded honestly, no assertion invented:
+#   m6_sync          PRAGMA synchronous=FULL -> OFF (repository.c:2366). The pragma is
+#                    connection-local; no second connection can observe it, so no
+#                    assertion is possible from the test process. Code inspection only.
+#   m9_page_budget   reserved continuation-key space 192*6+8 = 1160 B -> 8 B
+#                    (repository.c:975). The reservation is a conservative margin; the
+#                    pagination fixtures never come close enough to the 65535 B page
+#                    limit for the smaller reservation to change any result.
+#   m17/m18/m20b/m21b/m22/m26/m29/m30  single-point variants masked by the round-7
+#                    verify_official_ddl byte-exact CREATE TABLE comparison
+#                    (repository.c:2244, called at :2077). That guard runs AFTER the
+#                    column, key-index and object-list checks and rejects any database
+#                    whose stored CREATE TABLE text is not byte-identical to the single
+#                    schema-v1.sql, so disabling one earlier check alone still leaves the
+#                    fixture rejected and the suite green. The real order is:
+#                    verify_table_columns (:2061) -> verify_key_index (:2065) ->
+#                    verify_official_objects (:2071) -> verify_official_ddl (:2077).
+#                    The object-list guard is therefore NOT 'before the index check'; it
+#                    runs after it and re-rejects the same fixtures. Each masked point has
+#                    a joint run below, and the single run is not counted as coverage.
+#                    A joint run only shows the behaviour of that branch once the fallback
+#                    is disabled; it does not by itself prove the branch is indispensable
+#                    while every guard is enabled (round-8 N-1 (3)).
+#
+# ATTRIBUTION OF THE JOINT RUNS (round-8 audit section 4.3, recomputed from this log).
+#   Every joint run also applies m33, so each of them reports the 6 real assertions of the
+#   CHECK / FOREIGN KEY / same-length DDL fixtures (:2542 :2543 :2554 :2555 :2567 :2568)
+#   and one ':2250 repo == NULL' per rejected fixture. Full decomposition (real
+#   assertions = helper :2250 + m33 DDL lines + target-fixture lines):
+#     m17+ddl_off  32 = 16 + 6 + 10
+#     m18+ddl_off  24 = 12 + 6 +  6
+#     m20b+ddl_off 16 =  8 + 6 +  2
+#     m21b+ddl_off 16 =  8 + 6 +  2
+#     m22+ddl_off  16 =  8 + 6 +  2
+#     m26+ddl_off  12 =  6 + 6 +  0
+#     m29+ddl_off  16 =  8 + 6 +  2
+#     m30+ddl_off  16 =  8 + 6 +  2
+#   Equivalently, real minus the 12 lines that m33 itself contributes gives the numbers
+#   quoted by the round-8 audit (20/12/4/4/4/0/4/4), which still contain the ':2250'
+#   helper line of each target fixture.
+#   m26+ddl_off has zero target lines: disabling the partial-UNIQUE check alone still
+#   leaves struct_partial.db rejected by the object-list guard, so its 12 lines must NOT
+#   be read as partial-UNIQUE coverage.
+#   m26b_partial_plus_objects (m26+m28) reports 4 real failures: test_repository.c:2250 x2
+#   plus :2475/:2476. Those are the (11) trigger fixture, not struct_partial.db
+#   (:2460/:2461), so m26b is NOT evidence for the partial-UNIQUE branch either
+#   (round-8 N-1 (1)). The only run that makes the partial branch observable is the
+#   three-point joint m26+m28+m33 (kept in mutation-joint-m26c.log): 20 real failures =
+#   4 partial (:2250 + :2460/:2461), 4 trigger (:2475/:2476) and 12 from m33.
+#
+# KNOWN ATTRIBUTION LIMITS (recorded, not hidden):
+#   - m17/m18/m20b/m21b/m22/m28/m29/m30/m26b and all 8 joint runs share the fixture
+#     open helper at test_repository.c:2250, so each reports 'repo == NULL' once per
+#     rejected fixture in addition to the per-fixture status assertion. The counts are
+#     the raw per-assertion record, not a de-duplicated behaviour count.
+#   - m10/m11 produce chained failures inside one test function; per-case NUL
+#     independence is guaranteed by the per-case clean DB fixtures
+#     (nul_case_expect_invalid*, test_repository.c:1869-1928, each with revision=1 as
+#     its own baseline) and the nul_pos.db positive control, not by revision carry-over
+#     from an earlier case.
+#   - m8/m15b also hit the bare-metadata-table and documents-view fixtures at the same
+#     time because those fixtures reach the same guard decision point.
+#   - m20b and m22 are two different edits of the same if-block at repository.c:2010 and
+#     produce identical failure sets; they are counted as two runs, not two defects.
+#
+=== m1_revision ===
+anchor=repository.c:713
+audit_ref=round-1 B1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=6  (5 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:532
+  FAIL test_repository:542
+  FAIL test_repository:896
+  FAIL test_repository:986
+  FAIL test_repository:991
+
+=== m2_dedup ===
+anchor=repository.c:1636
+audit_ref=round-1 B1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=6  (5 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:945
+  FAIL test_repository:947
+  FAIL test_repository:1474
+  FAIL test_repository:1478
+  FAIL test_repository:1487
+
+=== m3_adjacent ===
+anchor=repository.c:1422
+audit_ref=round-1 B1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=10  (9 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1028
+  FAIL test_repository:1033
+  FAIL test_repository:1048
+  FAIL test_repository:1049
+  FAIL test_repository:1177
+  FAIL test_repository:1183
+  FAIL test_repository:1193
+  FAIL test_repository:1194
+  FAIL test_repository:1292
+
+=== m4_u64_fallback ===
+anchor=u64.c:51
+audit_ref=round-1 B2
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=3  (2 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_u64:105
+  FAIL test_u64:109
+
+=== m5_schema_additional ===
+anchor=schema.c:413
+audit_ref=round-1 B5
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=3  (2 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_schema:69
+  FAIL test_schema:273
+
+=== m6_sync ===
+anchor=repository.c:2366
+audit_ref=round-1 B3
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m7_gap_latch ===
+anchor=repository.c:1716
+audit_ref=round-1 B1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=3  (2 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1378
+  FAIL test_repository:1386
+
+=== m8_trace_guard ===
+anchor=repository.c:2393
+audit_ref=round-1 B3
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=4  (3 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2866
+  FAIL test_repository:2198
+  FAIL test_repository:2595
+
+=== m9_page_budget ===
+anchor=repository.c:975
+audit_ref=round-1 B4
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m9b_doc_bytes ===
+anchor=repository.c:1099
+audit_ref=round-1 B4
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1775
+  FAIL test_repository:1778
+  FAIL test_repository:1819
+  FAIL test_repository:1822
+
+=== m10_nul_guard_raw ===
+anchor=schema.c:42
+audit_ref=round-1 B5
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=7  (6 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+
+=== m11_parse_nul ===
+anchor=repository.c:502
+audit_ref=round-1 B5
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=18  (17 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1890
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+  FAIL test_repository:1881
+  FAIL test_repository:1886
+
+=== m12_boundary_structure ===
+anchor=repository.c:1560
+audit_ref=round-2 R2-B2
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1249
+  FAIL test_repository:1256
+  FAIL test_repository:1284
+  FAIL test_repository:1292
+
+=== m13_first_available_zero ===
+anchor=repository.c:1573
+audit_ref=round-2 R2-B2
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=4  (3 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1271
+  FAIL test_repository:1284
+  FAIL test_repository:1292
+
+=== m14_gap_latch_early ===
+anchor=repository.c:1658
+audit_ref=round-2 R2-B1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=3  (2 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:1478
+  FAIL test_repository:1487
+
+=== m16_sqlite_prefix ===
+anchor=repository.c:291
+audit_ref=round-3 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=2  (1 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2198
+
+=== m17_verify_columns ===
+anchor=repository.c:2061
+audit_ref=round-3 B-2
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m18_verify_key_index ===
+anchor=repository.c:2065
+audit_ref=round-3 B-2
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m20b_any_matching_index ===
+anchor=repository.c:2010
+audit_ref=round-4 B-1
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m21b_skip_column_collation ===
+anchor=repository.c:1897
+audit_ref=round-4 B-1
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m22_skip_extra_unique_index ===
+anchor=repository.c:2010
+audit_ref=round-4 B-1
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m25_regex_bounded_zero ===
+anchor=regex.c:531
+audit_ref=round-4 N-3
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=3  (2 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_regex:80
+  FAIL test_regex:93
+
+=== m26_partial_unique ===
+anchor=repository.c:2000
+audit_ref=round-5 B-1
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m27_regex_min_seed ===
+anchor=regex.c:562
+audit_ref=round-4 N-3
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=2  (1 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_regex:28
+
+=== m28_official_objects ===
+anchor=repository.c:2071
+audit_ref=round-6 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2475
+  FAIL test_repository:2250
+  FAIL test_repository:2476
+
+=== m29_table_info ===
+anchor=repository.c:1856
+audit_ref=round-6 B-2
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m30_hidden_only ===
+anchor=repository.c:1881
+audit_ref=round-6 B-2
+edit=
+OK configure=0 build=0 ctest=0
+assertion_failures=0  (0 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+
+=== m31_put_changes ===
+anchor=repository.c:438
+audit_ref=round-6 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2623
+  FAIL test_repository:2628
+  FAIL test_repository:2642
+  FAIL test_repository:2647
+
+=== m32_delete_changes ===
+anchor=repository.c:477
+audit_ref=round-6 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=4  (3 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2680
+  FAIL test_repository:2684
+  FAIL test_repository:2692
+
+=== m15b_view_double ===
+anchor=repository.c:256, repository.c:2388, repository.c:2393
+audit_ref=round-2 R2-B3
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2866
+  FAIL test_repository:2125
+  FAIL test_repository:2198
+  FAIL test_repository:2595
+
+=== m26b_partial_plus_objects ===
+anchor=repository.c:2000, repository.c:2070
+audit_ref=round-5 B-1 (joint)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2475
+  FAIL test_repository:2250
+  FAIL test_repository:2476
+note=本段 4 条红行全是 (11) trigger 夹具 (:2475/:2476) 与 :2250 x2，不含 :2460/:2461，
+     不能作为 partial-UNIQUE 分支的可观测证据（round-8 N-1 (1)）
+
+=== m33_ddl_skipped ===
+anchor=repository.c:2077
+audit_ref=round-7 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=13  (12 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m34_ddl_length_only ===
+anchor=repository.c:2281
+audit_ref=round-7 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=5  (4 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m34b_ddl_text_not_compared ===
+anchor=repository.c:2281
+audit_ref=round-7 B-1
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=13  (12 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m17_verify_columns_plus_ddl_off ===
+anchor=repository.c:2061, repository.c:2077
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=33  (32 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2438
+  FAIL test_repository:2250
+  FAIL test_repository:2439
+  FAIL test_repository:2250
+  FAIL test_repository:2442
+  FAIL test_repository:2250
+  FAIL test_repository:2443
+  FAIL test_repository:2250
+  FAIL test_repository:2446
+  FAIL test_repository:2250
+  FAIL test_repository:2447
+  FAIL test_repository:2250
+  FAIL test_repository:2490
+  FAIL test_repository:2250
+  FAIL test_repository:2491
+  FAIL test_repository:2250
+  FAIL test_repository:2504
+  FAIL test_repository:2250
+  FAIL test_repository:2506
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m18_verify_key_index_plus_ddl_off ===
+anchor=repository.c:2065, repository.c:2077
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=25  (24 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2521
+  FAIL test_repository:2250
+  FAIL test_repository:2523
+  FAIL test_repository:2250
+  FAIL test_repository:2527
+  FAIL test_repository:2250
+  FAIL test_repository:2529
+  FAIL test_repository:2250
+  FAIL test_repository:2533
+  FAIL test_repository:2250
+  FAIL test_repository:2535
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m20b_any_matching_index_plus_ddl_off ===
+anchor=repository.c:2010, repository.c:2075
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=17  (16 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2521
+  FAIL test_repository:2250
+  FAIL test_repository:2523
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m21b_skip_column_collation_plus_ddl_off ===
+anchor=repository.c:1897, repository.c:2077
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=17  (16 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2442
+  FAIL test_repository:2250
+  FAIL test_repository:2443
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m22_skip_extra_unique_index_plus_ddl_off ===
+anchor=repository.c:2010, repository.c:2076
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=17  (16 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2521
+  FAIL test_repository:2250
+  FAIL test_repository:2523
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m26_partial_unique_plus_ddl_off ===
+anchor=repository.c:2000, repository.c:2076
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=13  (12 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m29_table_info_plus_ddl_off ===
+anchor=repository.c:1856, repository.c:2077
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=17  (16 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2504
+  FAIL test_repository:2250
+  FAIL test_repository:2506
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m30_hidden_only_plus_ddl_off ===
+anchor=repository.c:1881, repository.c:2077
+audit_ref=round-7 B-1 joint (with m33)
+edit=
+OK configure=0 build=0 ctest=8
+assertion_failures=17  (16 real assertion failures; denominators repository 865 / u64 90 / schema 131 / regex 46)
+  FAIL test_repository:2250
+  FAIL test_repository:2490
+  FAIL test_repository:2250
+  FAIL test_repository:2491
+  FAIL test_repository:2250
+  FAIL test_repository:2542
+  FAIL test_repository:2250
+  FAIL test_repository:2543
+  FAIL test_repository:2250
+  FAIL test_repository:2554
+  FAIL test_repository:2250
+  FAIL test_repository:2555
+  FAIL test_repository:2250
+  FAIL test_repository:2567
+  FAIL test_repository:2250
+  FAIL test_repository:2568
+
+=== m26c_partial_plus_objects_plus_ddl (three-point joint, separate log) ===
+anchor=repository.c:2000, repository.c:2071, repository.c:2077
+audit_ref=round-5 B-1 + round-8 N-1 (1)
+edit=m26 (partial UNIQUE CONFLICT -> continue) + m28 (verify_official_objects -> OK) + m33 (verify_official_ddl -> OK)
+patch=OK configure=0 build=0 ctest=8
+assertion_failures=20  (20 real assertion failures; denominator repository 865)
+  FAIL repository.c:2250  (x10, one per rejected fixture)
+  FAIL repository.c:2460
+  FAIL repository.c:2461
+  FAIL repository.c:2475
+  FAIL repository.c:2476
+  FAIL repository.c:2542
+  FAIL repository.c:2543
+  FAIL repository.c:2554
+  FAIL repository.c:2555
+  FAIL repository.c:2567
+  FAIL repository.c:2568
+note=20 = 4 partial (:2250 + :2460/:2461) + 4 trigger (:2475/:2476) + 12 from m33.
+     Only this three-point joint makes the partial-UNIQUE fail-closed branch observable.
+
+# points=43 named=34 joint=9 caught=33 not_caught=10
+# not_caught_list=m6_sync,m9_page_budget,m17_verify_columns,m18_verify_key_index,m20b_any_matching_index,m21b_skip_column_collation,m22_skip_extra_unique_index,m26_partial_unique,m29_table_info,m30_hidden_only

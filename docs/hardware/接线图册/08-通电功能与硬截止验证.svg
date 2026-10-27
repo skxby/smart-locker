@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>通电功能与硬截止验证</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">08  通电功能与硬截止验证</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">工具：已有示波器 / 万用表 / ST-LINK / 日志PC；需要对应验证固件，本轮不编写、不执行产品卡。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">08 / 14</text>
+<rect x="65" y="155" width="1470" height="165" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="155" width="5" height="165" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="192" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">A 先验证 MOS，不接真实锁</text>
+<text x="85" y="231" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">锁从 OUT± 拔掉；OUT+ 与 OUT− 间接一只 10k 测试负载（12V时约0.014W）。</text>
+<text x="85" y="259" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">万用表 DC V：红笔 OUT+，黑笔 OUT−。PWM=0V 和3.3V分别测，不能悬空。</text>
+<text x="85" y="287" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">必须先确认输入允许3.3V；高有效候选预期：低时接近0V、高时接近输入电压。</text>
+<text x="85" y="315" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">这只验证小负载开关；不证明锁电流能力。异常先断12V，核端子、极性与接线。</text>
+<rect x="65" y="331" width="1470" height="165" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="331" width="5" height="165" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="85" y="368" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">B 复位默认关闭与硬件截止</text>
+<text x="85" y="407" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">示波器CH1探PWM(PB6)，地夹只夹MCU GND；CH2测OUT−对DC−（先核两地关系）。</text>
+<text x="85" y="435" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">用10k假负载测上电/复位/MCU掉电默认关闭；单测MOS时先拔PC0采样线。</text>
+<text x="85" y="463" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">后续固件用TIM4_CH1/AF2硬件单脉冲；测试停止RTOS进度但保持定时器时钟运行。</text>
+<text x="85" y="491" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">定时器调试冻结会改变行为，先记录DBG配置；不能只用任务延时或ISR拉低当证据。</text>
+<rect x="65" y="507" width="1470" height="165" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="507" width="5" height="165" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="85" y="544" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">C 最后才接锁与选保险</text>
+<text x="85" y="583" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先取得锁允许电压/最长通电时间，设脉宽不超过该值；尾杆能操作、门保持打开。</text>
+<text x="85" y="611" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">硬截止通过后再接锁；万用表红表笔插有保险的电流孔，选足量程，串入锁供电正线。</text>
+<text x="85" y="639" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">严禁电流档并联电源；量完立即把表笔插回VΩ孔。普通表可能漏掉启动峰值。</text>
+<text x="85" y="667" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">记录启动/保持电流、线温、释放时间；按线材/锁和保险曲线选型，不能靠保险限制脉宽。</text>
+<rect x="65" y="683" width="1470" height="165" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="683" width="5" height="165" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="720" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">D 通信、刷卡与ADC功能</text>
+<text x="85" y="759" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">ST-LINK先连目标读ID；日志115200/8N1由验证固件配置；RC522读VersionReg/卡UID。</text>
+<text x="85" y="787" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">Flash只经板载SPI1读JEDEC/容量，不写擦旧内容；蜂鸣器GPIO高低测试并记录极性。</text>
+<text x="85" y="815" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">ADC用已知输入对比万用表；核VREF+、最长适合采样时间、滤波及标定误差。</text>
+<text x="85" y="843" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK先确认板型/IO原理图；ADuM每侧电源相对各自地测，确认方向后做UART收发。</text>
+<rect x="65" y="859" width="1470" height="165" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="859" width="5" height="165" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="896" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">E 整机复查与停止条件</text>
+<text x="85" y="935" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">相机插RK USB HOST，确认/dev/video节点、画面/焦点/固定光照；屏幕保持原配接法。</text>
+<text x="85" y="963" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">试关门：不夹线、工具不误压微动、门磁只在门关到位闭合；锁与锁扣不可仅靠胶粘。</text>
+<text x="85" y="991" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">普通接地示波器通道地共用：不得同时夹隔离两侧；跨隔离测量需合适差分/隔离探头。</text>
+<text x="85" y="1019" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">发烫、掉电重启、锁不断电、ADC超范围立即断12V；留记录，不能标阶段PASS。</text></svg>

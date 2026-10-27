@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "relocated_entries": 800,
+  "relocated_regular_files_hash_verified": 2075,
+  "s1_01_files_unchanged": 29,
+  "visible_home_loose_files": [],
+  "visible_home_directories": 23,
+  "driver_status": "PASS",
+  "home_remainder_status": "PASS",
+  "permanently_deleted": false,
+  "errors": [],
+  "design_checks": "manual/contracts/stage_plan/vision/feasibility PASS",
+  "temporary_files_created": false,
+  "previous_batch_report": {
+    "status": "PASS_WITH_REPORTED_PERMISSION_LIMIT",
+    "date": "2026-10-23",
+    "relocated_entries": 626,
+    "relocated_files": 1555,
+    "all_manifested_files_hash_verified": 1797,
+    "permission_blocked_directories": 10,
+    "permanently_deleted": false,
+    "desktop_and_project_links_verified": true,
+    "finish_script_bash_syntax": "PASS",
+    "python_syntax": "PASS",
+    "design_checks": {
+      "manual": "PASS",
+      "contracts": "PASS",
+      "stage_plan": "PASS",
+      "vision": "PASS",
+      "feasibility": "PASS"
+    },
+    "card_state_changed": false,
+    "business_source_changed": false,
+    "temporary_files_created": false
+  }
+}

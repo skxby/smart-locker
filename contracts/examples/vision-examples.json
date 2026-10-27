@@ -1,0 +1,359 @@
+[
+  {
+    "name": "bounded_capture",
+    "schema": "VisionCaptureRequest",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "kind": "CAPTURE",
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 1,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "expected_worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "expected_camera_generation": "00000000-0000-0000-0000-000000000005",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "issued_mono_ms": "900",
+      "deadline_mono_ms": "3900",
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "frame_count": 3
+    }
+  },
+  {
+    "name": "three_frame_result",
+    "schema": "VisionCaptureResult",
+    "valid": true,
+    "value": {
+      "v": 1,
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 1,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "kind": "CAPTURE_RESULT",
+      "worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "camera_generation": "00000000-0000-0000-0000-000000000005",
+      "completed_mono_ms": "1250",
+      "status": "OK",
+      "frames": [
+        {
+          "sequence": "1",
+          "captured_mono_ms": "1000",
+          "frame_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        },
+        {
+          "sequence": "2",
+          "captured_mono_ms": "1100",
+          "frame_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        },
+        {
+          "sequence": "3",
+          "captured_mono_ms": "1200",
+          "frame_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        }
+      ]
+    }
+  },
+  {
+    "name": "shadow_uncalibrated",
+    "schema": "VisionPolicy",
+    "valid": true,
+    "value": {
+      "mode": "SHADOW",
+      "expected_class": "multimeter",
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "threshold_ppm": null,
+      "margin_ppm": null,
+      "thresholds_validated": false,
+      "frame_count": 3,
+      "min_frame_gap_ms": 100,
+      "capture_deadline_ms": 3000,
+      "max_result_age_ms": 2000
+    }
+  },
+  {
+    "name": "required_without_thresholds_rejected",
+    "schema": "VisionPolicy",
+    "valid": false,
+    "value": {
+      "mode": "REQUIRED",
+      "expected_class": "multimeter",
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "threshold_ppm": null,
+      "margin_ppm": null,
+      "thresholds_validated": false,
+      "frame_count": 3,
+      "min_frame_gap_ms": 100,
+      "capture_deadline_ms": 3000,
+      "max_result_age_ms": 2000
+    }
+  },
+  {
+    "name": "wrong_slot_rejected",
+    "schema": "VisionCaptureRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "kind": "CAPTURE",
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 3,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "expected_worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "expected_camera_generation": "00000000-0000-0000-0000-000000000005",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "issued_mono_ms": "900",
+      "deadline_mono_ms": "3900",
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "frame_count": 3
+    }
+  },
+  {
+    "name": "arbitrary_path_rejected",
+    "schema": "VisionCaptureRequest",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "kind": "CAPTURE",
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 1,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "expected_worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "expected_camera_generation": "00000000-0000-0000-0000-000000000005",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "issued_mono_ms": "900",
+      "deadline_mono_ms": "3900",
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "frame_count": 3,
+      "path": "/etc/passwd"
+    }
+  },
+  {
+    "name": "wrong_class_count_rejected",
+    "schema": "VisionCaptureResult",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 1,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "kind": "CAPTURE_RESULT",
+      "worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "camera_generation": "00000000-0000-0000-0000-000000000005",
+      "completed_mono_ms": "1250",
+      "status": "OK",
+      "frames": [
+        {
+          "sequence": "1",
+          "captured_mono_ms": "1000",
+          "frame_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        },
+        {
+          "sequence": "2",
+          "captured_mono_ms": "1100",
+          "frame_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        },
+        {
+          "sequence": "3",
+          "captured_mono_ms": "1200",
+          "frame_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing_ok_frame_rejected",
+    "schema": "VisionCaptureResult",
+    "valid": false,
+    "value": {
+      "v": 1,
+      "capture_id": "00000000-0000-0000-0000-000000000001",
+      "operation_id": "00000000-0000-0000-0000-000000000002",
+      "phase": "PRE_ACCESS",
+      "slot_id": 1,
+      "camera_id": "slot-1",
+      "service_instance_id": "00000000-0000-0000-0000-000000000003",
+      "guard": {
+        "device_id": "000000000000000000000000",
+        "journal_epoch": "00000000-0000-0000-0000-000000000014",
+        "boot_id": "1",
+        "physical_revision": "5",
+        "host_session_id": "00000000-0000-0000-0000-000000000015"
+      },
+      "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pipeline_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "camera_profile_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "policy_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "kind": "CAPTURE_RESULT",
+      "worker_instance_id": "00000000-0000-0000-0000-000000000004",
+      "camera_generation": "00000000-0000-0000-0000-000000000005",
+      "completed_mono_ms": "1250",
+      "status": "OK",
+      "frames": [
+        {
+          "sequence": "1",
+          "captured_mono_ms": "1000",
+          "frame_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        },
+        {
+          "sequence": "2",
+          "captured_mono_ms": "1100",
+          "frame_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+          "quality": "VALID",
+          "scores_ppm": [
+            10000,
+            12000,
+            930000,
+            12000,
+            12000,
+            12000,
+            12000
+          ],
+          "inference_ms": 40
+        }
+      ]
+    }
+  }
+]

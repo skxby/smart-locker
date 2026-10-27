@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "contract_version": "0.1.2",
+  "stages": 5,
+  "task_cards": 37,
+  "public_routes_mapped": 22,
+  "internal_ports_mapped": 70,
+  "uart_requests_mapped": 11,
+  "private_rpc_mapped": 26,
+  "active_task": null,
+  "implementation_cards_done": 0,
+  "runtime_or_hardware_tested": false
+}

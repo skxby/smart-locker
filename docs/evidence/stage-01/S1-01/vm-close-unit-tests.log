@@ -1,0 +1,6 @@
+PER_TEST test_bounded_queue EXIT=0 97 checks
+PER_TEST test_build_info EXIT=0 5 checks
+PER_TEST test_clock EXIT=0 53 checks
+PER_TEST test_log EXIT=0 164 checks
+PER_TEST test_numeric EXIT=0 133 checks
+PER_TEST test_uuid EXIT=0 53 checks

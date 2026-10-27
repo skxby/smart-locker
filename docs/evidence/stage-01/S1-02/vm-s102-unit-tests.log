@@ -1,0 +1,23 @@
+PASS common.bounded_queue (97 checks)
+rc=0 test=common.bounded_queue
+PASS common.build_info (5 checks)
+rc=0 test=common.build_info
+PASS common.clock (53 checks)
+rc=0 test=common.clock
+PASS common.log (164 checks)
+rc=0 test=common.log
+PASS common.numeric (133 checks)
+rc=0 test=common.numeric
+PASS common.uuid (53 checks)
+rc=0 test=common.uuid
+PASS storage.event_key (80 checks)
+rc=0 test=storage.event_key
+PASS storage.regex (46 checks)
+rc=0 test=storage.regex
+PASS storage.repository (865 checks)
+rc=0 test=storage.repository
+PASS storage.schema (131 checks)
+rc=0 test=storage.schema
+PASS storage.u64 (90 checks)
+rc=0 test=storage.u64
+TOTAL_ASSERTIONS=1717

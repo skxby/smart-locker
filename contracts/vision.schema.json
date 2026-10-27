@@ -1,0 +1,1068 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:locker:vision:0.2.1",
+  "$defs": {
+    "DeviceId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "U64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$",
+      "description": "十进制uint64字符串，解析器还须检查<=18446744073709551615，不得经浮点转换。"
+    },
+    "Uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "VisionCaptureRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request",
+        "result",
+        "state",
+        "evidence_id"
+      ],
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/VisionCaptureRequest"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VisionCaptureResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "enum": [
+            "REQUESTED",
+            "COMMITTED",
+            "FAILED",
+            "EXPIRED"
+          ]
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "VisionCaptureRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "camera_id",
+        "service_instance_id",
+        "expected_worker_instance_id",
+        "expected_camera_generation",
+        "guard",
+        "issued_mono_ms",
+        "deadline_mono_ms",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "frame_count"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "CAPTURE"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "camera_id": {
+          "const": "slot-1"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expected_worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expected_camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "issued_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "deadline_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frame_count": {
+          "const": 3
+        }
+      }
+    },
+    "VisionCaptureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "camera_id",
+        "service_instance_id",
+        "worker_instance_id",
+        "camera_generation",
+        "guard",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "completed_mono_ms",
+        "status",
+        "frames"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "CAPTURE_RESULT"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "camera_id": {
+          "const": "slot-1"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "completed_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "status": {
+          "enum": [
+            "OK",
+            "CAMERA_ERROR",
+            "MODEL_ERROR",
+            "TIMEOUT",
+            "INVALID_FRAME"
+          ]
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisionFrame"
+          },
+          "minItems": 0,
+          "maxItems": 3
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "OK"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "frames": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/VisionFrame"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            }
+          }
+        }
+      ]
+    },
+    "VisionControlRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "request_id",
+        "service_instance_id"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "enum": [
+            "HELLO",
+            "STATUS"
+          ]
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionControlResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "request_id",
+        "service_instance_id",
+        "status"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "STATUS"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "status": {
+          "$ref": "#/$defs/VisionWorkerStatus"
+        }
+      }
+    },
+    "VisionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "expected_class",
+        "predicted_class",
+        "confidence_ppm",
+        "verdict",
+        "guard",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "frame_keys",
+        "service_instance_id",
+        "worker_instance_id",
+        "camera_generation",
+        "captured_first_mono_ms",
+        "captured_last_mono_ms",
+        "received_mono_ms",
+        "reason_code",
+        "manual_review",
+        "accepted_mono_ms"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "predicted_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "empty",
+                "heat_gun",
+                "multimeter",
+                "oscilloscope",
+                "power_supply",
+                "soldering_iron",
+                "wire_cutter"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verdict": {
+          "enum": [
+            "MATCH",
+            "EMPTY",
+            "MISMATCH",
+            "UNCERTAIN",
+            "UNAVAILABLE",
+            "STALE",
+            "CONFLICT"
+          ]
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frame_keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "minItems": 0,
+          "maxItems": 3
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "captured_first_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "captured_last_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "received_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "reason_code": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "manual_review": {
+          "type": "boolean"
+        },
+        "accepted_mono_ms": {
+          "$ref": "#/$defs/U64"
+        }
+      }
+    },
+    "VisionEvidencePage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisionEvidence"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "VisionFrame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "captured_mono_ms",
+        "frame_sha256",
+        "quality",
+        "scores_ppm",
+        "inference_ms"
+      ],
+      "properties": {
+        "sequence": {
+          "$ref": "#/$defs/U64"
+        },
+        "captured_mono_ms": {
+          "$ref": "#/$defs/U64",
+          "description": "Conservative exposure-start lower bound: SOE timestamp or driver timestamp minus a verified exposure/pipeline upper bound stored in camera profile. MONOTONIC alone is insufficient."
+        },
+        "frame_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "quality": {
+          "enum": [
+            "VALID",
+            "DARK",
+            "BLURRED",
+            "OCCLUDED",
+            "INVALID"
+          ]
+        },
+        "scores_ppm": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "minItems": 7,
+          "maxItems": 7
+        },
+        "inference_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "VisionGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "host_session_id"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "host_session_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionOperationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "policy",
+        "pre_capture_id",
+        "post_capture_id",
+        "pre_evidence_id",
+        "post_evidence_id",
+        "deadline_mono_ms",
+        "service_instance_id",
+        "manual_override_reason"
+      ],
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "policy": {
+          "$ref": "#/$defs/VisionPolicy"
+        },
+        "pre_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pre_evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deadline_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "manual_override_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "VisionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "expected_class",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "threshold_ppm",
+        "margin_ppm",
+        "thresholds_validated",
+        "frame_count",
+        "min_frame_gap_ms",
+        "capture_deadline_ms",
+        "max_result_age_ms"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "DISABLED_FOR_FOUNDATION",
+            "SHADOW",
+            "REQUIRED"
+          ]
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "threshold_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "margin_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thresholds_validated": {
+          "type": "boolean"
+        },
+        "frame_count": {
+          "const": 3
+        },
+        "min_frame_gap_ms": {
+          "const": 100
+        },
+        "capture_deadline_ms": {
+          "const": 3000
+        },
+        "max_result_age_ms": {
+          "const": 2000,
+          "description": "Initial Core acceptance freshness only; committed evidence remains guard-bound during the original 120-second WAIT_CONFIRM window."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "REQUIRED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "bundle_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "pipeline_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "camera_profile_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "threshold_ppm": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000
+              },
+              "margin_ppm": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000
+              },
+              "thresholds_validated": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "VisionSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "VisionStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "state",
+        "model_id",
+        "expected_class",
+        "worker_instance_id",
+        "last_observed_mono_ms",
+        "camera_ready",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "thresholds_validated",
+        "reasons"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "DISABLED_FOR_FOUNDATION",
+            "SHADOW",
+            "REQUIRED"
+          ]
+        },
+        "state": {
+          "enum": [
+            "DISABLED",
+            "UNAVAILABLE",
+            "STARTING",
+            "READY",
+            "BUSY",
+            "DEGRADED"
+          ]
+        },
+        "model_id": {
+          "const": "equipment-v11"
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "worker_instance_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_observed_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_ready": {
+          "type": "boolean"
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thresholds_validated": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      }
+    },
+    "VisionWorkerStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "worker_instance_id",
+        "camera_generation",
+        "sampled_mono_ms",
+        "state",
+        "camera_ready",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "active_capture_id",
+        "reasons"
+      ],
+      "properties": {
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "state": {
+          "enum": [
+            "STARTING",
+            "READY",
+            "BUSY",
+            "DEGRADED"
+          ]
+        },
+        "camera_ready": {
+          "type": "boolean"
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      }
+    }
+  },
+  "x-transport": {
+    "path": "/run/locker/vision.sock",
+    "type": "AF_UNIX SOCK_SEQPACKET",
+    "request_max_bytes": 8192,
+    "response_max_bytes": 16384,
+    "max_inflight_captures": 1,
+    "queue_capacity": 4,
+    "peer": "service UID/PID/start-instance verified; no TCP listener"
+  },
+  "description": "视觉证据/私有worker/策略的设计契约，禁止图像上传、任意文件路径或视觉直接开锁。"
+}

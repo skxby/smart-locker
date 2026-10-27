@@ -1,0 +1,11 @@
+# audit B1/B2 reproduction probe against the remediated source
+# date: 2026-10-23T21:48:58+08:00
+# source: docs/evidence/stage-01/S1-01/probe-b1-b2.c
+# command: gcc -std=c11 -Wall -Wextra -Wpedantic -Werror -Ihost/common/include -Icontracts/include probe-b1-b2.c host/common/src/log.c host/common/src/clock.c -lpthread
+PROBE_BUILD_EXIT=0
+B1_BEARER note="Bearer [redacted]"
+B1_QUOTED note={"password":"[redacted]"}
+B1_VARIANTS_LEAK=0
+B2_17TH_LEAK=0
+B2_SINK note="token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted]"
+PROBE_EXIT=0

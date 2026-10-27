@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>小板元件脚与安装</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">06  小板元件脚与安装</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">使用原有两片 3×7cm 洞洞板；不根据未核实模块尺寸裁板或钻孔。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">06 / 14</text>
+<rect x="65" y="165" width="720" height="265" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="165" width="5" height="265" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="85" y="202" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">A板：输入与分配 · 元件面朝上</text>
+<text x="85" y="241" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">左边：12V 输入端子（+ / −）及保险后的入口</text>
+<text x="85" y="269" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">中间：470µF/25V + 100nF（并联于输入）</text>
+<text x="85" y="297" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">右边：12V 输出到 MOS DC+ / DC−</text>
+<text x="85" y="325" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">下边：MCU 地 / MOS 信号地的分配焊点</text>
+<text x="85" y="353" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">MOS 单独用尼龙柱或绝缘支撑固定在旁边</text>
+<text x="85" y="381" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">KF301 是 5.0mm 脚距；须试插，不强塞 2.54mm 孔</text>
+<rect x="815" y="165" width="720" height="265" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="165" width="5" height="265" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="835" y="202" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">B板：分压与低电流分配</text>
+<text x="835" y="241" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">上方：3V3 / GND 分配焊点，各自同网</text>
+<text x="835" y="269" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">中间：100k 上臂 → ADC节点 → 22k 下臂</text>
+<text x="835" y="297" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">100nF 紧靠节点和 GND；引到 PC0 的线尽量短</text>
+<text x="835" y="325" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">下方：PE0 / PE1 各自 10k 上拉 → 3V3</text>
+<text x="835" y="353" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">每个网络标名；洞洞板相邻孔默认不导通</text>
+<text x="835" y="381" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">分配点和功率线分开；不用连片锡承载锁电流</text>
+<rect x="65" y="475" width="1470" height="45" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="77" y="502" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="white">器件</text>
+<text x="357" y="502" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="white">第一个端点</text>
+<text x="657" y="502" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="white">另一个端点</text>
+<text x="967" y="502" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="white">辨认与处理</text>
+<rect x="65" y="520" width="1470" height="45" rx="5" fill="#f0f5f8" stroke="#f0f5f8"/>
+<text x="77" y="547" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">470µF/25V</text>
+<text x="357" y="547" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">保险后12V+</text>
+<text x="657" y="547" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">12V−</text>
+<text x="967" y="547" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">壳体负极条纹=−；长脚仅新件参考</text>
+<rect x="65" y="565" width="1470" height="45" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="77" y="592" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">100nF / 104（输入）</text>
+<text x="357" y="592" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">保险后12V+</text>
+<text x="657" y="592" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">12V−</text>
+<text x="967" y="592" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">无极性</text>
+<rect x="65" y="610" width="1470" height="45" rx="5" fill="#f0f5f8" stroke="#f0f5f8"/>
+<text x="77" y="637" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">100k 上臂</text>
+<text x="357" y="637" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">保险后12V+</text>
+<text x="657" y="637" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">ADC节点</text>
+<text x="967" y="637" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">棕黑黑橙棕(1%)；以测阻为准</text>
+<rect x="65" y="655" width="1470" height="45" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="77" y="682" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">22k 下臂</text>
+<text x="357" y="682" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">ADC节点</text>
+<text x="657" y="682" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">MCU GND</text>
+<text x="967" y="682" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">红红黑红棕(1%)；以测阻为准</text>
+<rect x="65" y="700" width="1470" height="45" rx="5" fill="#f0f5f8" stroke="#f0f5f8"/>
+<text x="77" y="727" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">100nF / 104（滤波）</text>
+<text x="357" y="727" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">ADC节点</text>
+<text x="657" y="727" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">MCU GND</text>
+<text x="967" y="727" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">无极性</text>
+<rect x="65" y="745" width="1470" height="45" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="77" y="772" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">10k ×2 输入上拉</text>
+<text x="357" y="772" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">3V3 分配点</text>
+<text x="657" y="772" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">PE0 / PE1（各一只）</text>
+<text x="967" y="772" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">棕黑黑红棕(1%)</text>
+<rect x="65" y="790" width="1470" height="45" rx="5" fill="#f0f5f8" stroke="#f0f5f8"/>
+<text x="77" y="817" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">10k PWM 下拉</text>
+<text x="357" y="817" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">PWM / PB6</text>
+<text x="657" y="817" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">模块信号 GND</text>
+<text x="967" y="817" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">仅适用确认高有效的模块</text>
+<rect x="65" y="835" width="1470" height="45" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="77" y="862" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">1N4007</text>
+<text x="357" y="862" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">K 有色环 → LOCK+</text>
+<text x="657" y="862" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">A 无环 → LOCK−</text>
+<text x="967" y="862" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">紧靠线圈；跨接，分别包热缩管</text>
+<rect x="65" y="880" width="1470" height="45" rx="5" fill="#f0f5f8" stroke="#f0f5f8"/>
+<text x="77" y="907" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">端子 / 接头</text>
+<text x="357" y="907" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">按网络名标记</text>
+<text x="657" y="907" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">同名点连通</text>
+<text x="967" y="907" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">插头朝外，拧紧后轻拉检查</text>
+<text x="65" y="991" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">焊接：先电阻和瓷片，再排针和端子，最后电解；锁回路用 22AWG 铜线跨接，交叉处保持绝缘。</text>
+<text x="65" y="1027" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">先放实物并标孔，再焊；背面观察会左右镜像，不按元件面坐标直接抄背面。尼龙柱高度以焊点不触底为准。</text></svg>

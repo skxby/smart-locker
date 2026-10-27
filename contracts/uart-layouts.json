@@ -1,0 +1,748 @@
+{
+  "version": 1,
+  "source_of_enumerations": "contracts/contract-source.json",
+  "header": [
+    {
+      "name": "magic",
+      "bytes": 2,
+      "hex": "4c4b"
+    },
+    {
+      "name": "version",
+      "bytes": 1,
+      "value": 1
+    },
+    {
+      "name": "type",
+      "bytes": 1
+    },
+    {
+      "name": "payload_len",
+      "bytes": 2,
+      "endian": "little"
+    },
+    {
+      "name": "request_no",
+      "bytes": 4,
+      "endian": "little"
+    }
+  ],
+  "request_prefix": [
+    {
+      "name": "session_id",
+      "type": "uuid",
+      "note": "HELLO uses all zero; all other requests use active session"
+    }
+  ],
+  "response_prefix": [
+    {
+      "name": "session_id",
+      "type": "uuid"
+    },
+    {
+      "name": "result",
+      "type": "u16",
+      "enum_ref": "wire_result"
+    }
+  ],
+  "limits": {
+    "max_payload": 512,
+    "max_event_count": 4,
+    "prepare_deadline_ms": 2000
+  },
+  "crc": {
+    "name": "CRC-16/CCITT-FALSE",
+    "polynomial": "0x1021",
+    "initial": "0xffff",
+    "reflect_input": false,
+    "reflect_output": false,
+    "xorout": "0x0000",
+    "coverage": "header offset 2 through payload end",
+    "wire_endian": "little",
+    "golden_ascii": "123456789",
+    "golden_value": "0x29b1"
+  },
+  "common_rules": {
+    "byte_order": "little",
+    "uuid": "16 raw bytes in RFC UUID textual hex order; all-zero only means absent or HELLO session",
+    "cursor": "boot_id u64 followed by event_seq u64; (0,0) is start/empty sentinel",
+    "error_response": "If result != 0, payload is exactly the 18-byte response_prefix and no body",
+    "fixed_strings": "No textual strings in v1 wire layout",
+    "event_array": "event_count determines array length; no padding"
+  },
+  "event_record": [
+    {
+      "name": "boot_id",
+      "type": "u64"
+    },
+    {
+      "name": "event_seq",
+      "type": "u64"
+    },
+    {
+      "name": "mono_ms",
+      "type": "u64"
+    },
+    {
+      "name": "event_type",
+      "type": "u16",
+      "enum_ref": "device_event_type"
+    },
+    {
+      "name": "reason",
+      "type": "u16",
+      "enum_ref": "wire_result",
+      "note": "wire_result or 0; type-specific detail carries narrower reason"
+    },
+    {
+      "name": "operation_id",
+      "type": "uuid"
+    },
+    {
+      "name": "command_id",
+      "type": "uuid"
+    },
+    {
+      "name": "door",
+      "type": "u8",
+      "enum_ref": "door_state"
+    },
+    {
+      "name": "item",
+      "type": "u8",
+      "enum_ref": "item_state"
+    },
+    {
+      "name": "flags",
+      "type": "u16",
+      "bitmap_ref": "observation_flags"
+    },
+    {
+      "name": "supply_mv",
+      "type": "u32"
+    },
+    {
+      "name": "physical_revision",
+      "type": "u64"
+    },
+    {
+      "name": "detail",
+      "type": "u64"
+    },
+    {
+      "name": "card_uid_len",
+      "type": "u8",
+      "allowed": [
+        0,
+        4,
+        7,
+        10
+      ]
+    },
+    {
+      "name": "card_uid",
+      "type": "bytes10",
+      "note": "first card_uid_len bytes valid, remaining bytes zero"
+    },
+    {
+      "name": "reserved",
+      "type": "u8",
+      "value": 0
+    }
+  ],
+  "bitmaps": {
+    "observation_flags": {
+      "SUPPLY_VALID": 0,
+      "PHYSICAL_STABLE": 1,
+      "HISTORY_INCOMPLETE": 2,
+      "JOURNAL_DEGRADED": 3,
+      "PULSE_ACTIVE": 4
+    },
+    "capabilities": {
+      "DOOR_AND_ITEM": 0,
+      "PERSISTENT_JOURNAL": 1,
+      "CARD_READER": 2,
+      "SUPPLY_ADC": 3,
+      "BOUNDED_PULSE": 4
+    }
+  },
+  "sentinels": {
+    "uuid_absent": "00000000-0000-0000-0000-000000000000",
+    "cursor_start": {
+      "boot_id": "0",
+      "event_seq": "0"
+    },
+    "supply_unknown": "0xffffffff",
+    "age_unknown": "0xffffffff",
+    "detail_unknown": "0xffffffffffffffff"
+  },
+  "messages": [
+    {
+      "name": "HELLO",
+      "type": 1,
+      "request": [
+        {
+          "name": "new_session_id",
+          "type": "uuid"
+        },
+        {
+          "name": "host_instance_id",
+          "type": "uuid"
+        },
+        {
+          "name": "requested_version",
+          "type": "u8",
+          "value": 1
+        }
+      ],
+      "response": [
+        {
+          "name": "device_uid",
+          "type": "bytes12"
+        },
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "firmware_major",
+          "type": "u8"
+        },
+        {
+          "name": "firmware_minor",
+          "type": "u8"
+        },
+        {
+          "name": "firmware_patch",
+          "type": "u8"
+        },
+        {
+          "name": "capabilities",
+          "type": "u32",
+          "bitmap_ref": "capabilities"
+        },
+        {
+          "name": "device_mode",
+          "type": "u8",
+          "enum_ref": "wire_device_mode"
+        },
+        {
+          "name": "journal_state",
+          "type": "u8",
+          "enum_ref": "wire_journal_state"
+        },
+        {
+          "name": "action_watermark",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "GET_SNAPSHOT",
+      "type": 2,
+      "response_name": "SNAPSHOT",
+      "request": [],
+      "response": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "sampled_mono_ms",
+          "type": "u64"
+        },
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "door",
+          "type": "u8",
+          "enum_ref": "door_state"
+        },
+        {
+          "name": "item",
+          "type": "u8",
+          "enum_ref": "item_state"
+        },
+        {
+          "name": "supply_mv",
+          "type": "u32"
+        },
+        {
+          "name": "flags",
+          "type": "u16",
+          "bitmap_ref": "observation_flags"
+        },
+        {
+          "name": "dropped_events",
+          "type": "u64",
+          "note": "cumulative since journal epoch, unknown=u64 max; HISTORY_INCOMPLETE remains latched even with contiguous event_seq"
+        },
+        {
+          "name": "first_available",
+          "type": "cursor"
+        },
+        {
+          "name": "last_committed",
+          "type": "cursor"
+        },
+        {
+          "name": "ack_persisted",
+          "type": "cursor"
+        },
+        {
+          "name": "active_operation_id",
+          "type": "uuid"
+        },
+        {
+          "name": "active_command_id",
+          "type": "uuid"
+        },
+        {
+          "name": "active_command_state",
+          "type": "u8",
+          "enum_ref": "command_state"
+        },
+        {
+          "name": "active_session_id",
+          "type": "uuid"
+        },
+        {
+          "name": "active_action_no",
+          "type": "u64"
+        },
+        {
+          "name": "action_watermark",
+          "type": "u64"
+        },
+        {
+          "name": "device_mode",
+          "type": "u8",
+          "enum_ref": "wire_device_mode"
+        },
+        {
+          "name": "journal_state",
+          "type": "u8",
+          "enum_ref": "wire_journal_state"
+        }
+      ]
+    },
+    {
+      "name": "FETCH_EVENTS",
+      "type": 3,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "after",
+          "type": "cursor"
+        },
+        {
+          "name": "max_count",
+          "type": "u8",
+          "min": 1,
+          "max": 4
+        }
+      ],
+      "response": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "first_available",
+          "type": "cursor"
+        },
+        {
+          "name": "last_committed",
+          "type": "cursor"
+        },
+        {
+          "name": "next_after",
+          "type": "cursor"
+        },
+        {
+          "name": "event_count",
+          "type": "u8",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "name": "has_more",
+          "type": "u8",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "name": "gap_before_page",
+          "type": "u8",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "name": "events",
+          "type": "event96_array",
+          "count_field": "event_count",
+          "max_count": 4
+        }
+      ]
+    },
+    {
+      "name": "ACK_PERSISTED",
+      "type": 4,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "through",
+          "type": "cursor"
+        }
+      ],
+      "response": [
+        {
+          "name": "ack_persisted",
+          "type": "cursor"
+        }
+      ]
+    },
+    {
+      "name": "RESUME_READY",
+      "type": 5,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "expected_boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "expected_physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "persisted_through",
+          "type": "cursor"
+        }
+      ],
+      "response": [
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "device_mode",
+          "type": "u8",
+          "enum_ref": "wire_device_mode"
+        }
+      ]
+    },
+    {
+      "name": "DISARM",
+      "type": 6,
+      "request": [
+        {
+          "name": "reason",
+          "type": "u16",
+          "enum_ref": "wire_result"
+        }
+      ],
+      "response": [
+        {
+          "name": "device_mode",
+          "type": "u8",
+          "enum_ref": "wire_device_mode"
+        },
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "EXECUTE_UNLOCK",
+      "type": 7,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "expected_boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "expected_physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "action_no",
+          "type": "u64"
+        },
+        {
+          "name": "not_after_mcu_ms",
+          "type": "u64",
+          "note": "expected_boot monotonic deadline; derived conservatively from 15s presence proof; MCU rechecks before drive"
+        },
+        {
+          "name": "operation_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_id",
+          "type": "uuid"
+        },
+        {
+          "name": "slot_id",
+          "type": "u16",
+          "value": 1
+        },
+        {
+          "name": "kind",
+          "type": "u8",
+          "enum_ref": "operation_kind"
+        }
+      ],
+      "response": [
+        {
+          "name": "operation_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_state",
+          "type": "u8",
+          "enum_ref": "command_state"
+        },
+        {
+          "name": "action_no",
+          "type": "u64"
+        },
+        {
+          "name": "command_session_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "reason",
+          "type": "u16",
+          "enum_ref": "wire_result"
+        }
+      ]
+    },
+    {
+      "name": "QUERY_COMMAND",
+      "type": 8,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "command_id",
+          "type": "uuid"
+        }
+      ],
+      "response": [
+        {
+          "name": "operation_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_state",
+          "type": "u8",
+          "enum_ref": "command_state"
+        },
+        {
+          "name": "action_no",
+          "type": "u64"
+        },
+        {
+          "name": "command_session_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "reason",
+          "type": "u16",
+          "enum_ref": "wire_result"
+        }
+      ]
+    },
+    {
+      "name": "HOST_HEALTH",
+      "type": 9,
+      "request": [
+        {
+          "name": "host_instance_id",
+          "type": "uuid"
+        },
+        {
+          "name": "ui_instance_id",
+          "type": "uuid"
+        },
+        {
+          "name": "core_progress",
+          "type": "u64"
+        },
+        {
+          "name": "ui_progress",
+          "type": "u64"
+        },
+        {
+          "name": "core_observed_age_ms",
+          "type": "u32"
+        },
+        {
+          "name": "ui_observed_age_ms",
+          "type": "u32"
+        },
+        {
+          "name": "supervisor_state",
+          "type": "u8",
+          "enum_ref": "wire_supervisor_state"
+        }
+      ],
+      "response": [
+        {
+          "name": "received_mono_ms",
+          "type": "u64"
+        },
+        {
+          "name": "device_mode",
+          "type": "u8",
+          "enum_ref": "wire_device_mode"
+        }
+      ]
+    },
+    {
+      "name": "TIME_ANCHOR",
+      "type": 10,
+      "request": [
+        {
+          "name": "anchor_id",
+          "type": "u32"
+        },
+        {
+          "name": "host_utc_ms",
+          "type": "u64"
+        },
+        {
+          "name": "host_monotonic_ms",
+          "type": "u64"
+        }
+      ],
+      "response": [
+        {
+          "name": "anchor_id",
+          "type": "u32"
+        },
+        {
+          "name": "boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "mcu_receive_mono_ms",
+          "type": "u64"
+        },
+        {
+          "name": "mcu_send_mono_ms",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "RELEASE_CONTEXT",
+      "type": 11,
+      "request": [
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "expected_boot_id",
+          "type": "u64"
+        },
+        {
+          "name": "expected_physical_revision",
+          "type": "u64"
+        },
+        {
+          "name": "operation_id",
+          "type": "uuid"
+        },
+        {
+          "name": "command_id",
+          "type": "uuid"
+        }
+      ],
+      "response": [
+        {
+          "name": "already_released",
+          "type": "u8",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "name": "physical_revision",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "asynchronous": [
+    {
+      "name": "DEVICE_EVENT",
+      "type": 64,
+      "payload": [
+        {
+          "name": "session_id",
+          "type": "uuid"
+        },
+        {
+          "name": "journal_epoch",
+          "type": "uuid"
+        },
+        {
+          "name": "record",
+          "type": "event96"
+        }
+      ]
+    }
+  ]
+}

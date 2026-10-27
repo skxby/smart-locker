@@ -1,0 +1,150 @@
+你是独立审计 AI（round-9，超轮联合确认轮），审计对象是阶段 1 任务卡 S1-02（SQLite 单写仓储与事务）的实现与证据。项目根：%REPO%（Windows；不是 git 仓库，git status 会 exit 128）。契约基线 0.2.1（contracts/contract-source.json，status REVIEW_DRAFT）。
+
+【审计职责】只读审计，不修改实现/正式测试/契约/生成物/stage-plan/README/summary/handoff；只新增你自己的审计报告文件 docs/evidence/stage-01/S1-02/audit-round9.md。不置 DONE、不跨卡、不 commit/push。
+
+【必须阅读的输入】
+1. 根 AGENTS.md、README.md、docs/stages/README.md、config/development/stage-plan.json。
+2. 任务卡原文（docs/stages/stage-01-task-cards.md 的 S1-02 节 + 阶段公共约束/门禁）：
+---
+【阶段公共约束（原文）】
+# 阶段 1 任务卡：主机骨架、SQLite 与模拟设备
+
+状态：S1-01 已完成（DONE），下一卡 S1-02；逐卡结果以stage-plan和真实报告为准。契约0.2.1，7张卡按[单卡规则](README.md)执行，规格文档不替代验收。
+
+## 1. 目标、输入与验收环境
+
+本阶段交付可在 Linux 主机运行的 `locker-service`、本机初始化工具 `locker-admin`、独立模拟设备 `locker-device-sim`，以及契约/集成测试。使用一柜格、一工具，在没有 MCU、柜锁、Android 或 LVGL 的情况下验证借还状态、数据库、接口和恢复语义。
+
+必读输入：
+
+1. [阶段 0 主规格](stage-00-architecture.md)及[模块所有权](../architecture/module-ownership.md)。
+2. [契约机器真源](../../contracts/contract-source.json)、[OpenAPI](../../contracts/openapi.json)、[C 接口头](../../contracts/include/locker_contracts.h)。
+3. [内部接口](../architecture/internal-interfaces.md)、[UART-v1](../architecture/uart-v1.md)和[正式消息样例](../../contracts/examples/)。
+
+实现语言为C，POSIX主机开发/验证默认使用用户已有VMware Ubuntu x86_64；用户确认复用S1-01历史VM验证的同一台guest，不要求WSL或新装Ubuntu。构建采用CMake/CTest。源码主副本当前在Windows，固定快照同步到VM本地Linux文件系统构建；见[VM工作流](../development/vm-ubuntu-workflow.md)。S1-01保留已写代码与历史证据，只对最新整改源在该VM补复验；不改成Windows或Python服务。缺连接/工具条件如实记录，不改写历史PASS。
+
+依赖复用既定 CivetWeb、SQLite、cJSON、libsodium 及 TLS 库，不自研 HTTP、密码算法或数据库。实际版本与来源在实施时锁定到提交/tag，并记录 license；禁止使用浮动 `master` 获取不可复现的产物。
+
+本阶段全部设备结果均为模拟。启动日志、配置样例和测试报告必须明确 `device backend: simulator`；不能为标识模拟擅自给公共 schema 添加字段。
+
+本阶段只实现原22个API与无视觉基础流程；OpenAPI中的getVisionStatus/getOperationVisionEvidence按x-first-implementation-card在S2-14实现，不能用空成功占位。测试报告标明后续接口未交付。CoreConfig.vision_policy必须明确DISABLED_FOR_FOUNDATION，不启动worker；82个声明不意味着本卡需全部实现。
+
+## 2. 执行顺序与并行前提
+
+```text
+S1-01 构建与基础设施
+  ├── S1-02 SQLite 仓储 ─────┐
+  └── S1-03 设备端口/模拟器 ─┤
+                            └── S1-04 业务核心
+                                  └── S1-05 HTTPS/本机 IPC
+                                        └── S1-06 装配/初始化
+                                              └── S1-07 集成审计
+```
+
+S1-02 与 S1-03 可并行，前提是 S1-01 已固定构建入口、公共类型和内存生命周期，双方只改自己的目录。S1-05 可在 S1-04 的调用端口冻结后先做鉴权/边界测试，不能自行补业务规则。S1-06 由唯一集成负责人维护根 CMake 与运行配置，其余模块提交局部构建文件。
+
+每张卡开始前运行契约检查；发现接口矛盾就登记变更请求，由契约负责人统一修正。所有卡不得自行改 `contracts/`、生成器或将不通过的测试删去。生成接口只有声明，不能靠空实现或固定成功返回完成卡片。
+
+### S1-01：构建入口与基础设施
+
+- **输入**：主规格、公共 C 接口、资源上限和模块所有权。
+- **可改目录**：根 `CMakeLists.txt`、`host/common/`、`tests/unit/common/`、`deployment/host/` 的依赖说明；根入口仅该卡/集成负责人维护。
+- **产出**：模块化 CMake；有界队列、单调时钟、UUID/u64 边界工具、可注入测试时钟、受限日志；依赖锁定清单。业务生产路径使用真实时钟，测试替身不能通过公共 API 控制。
+- **验收**：干净 Linux 环境可配置并构建基础库；队列满时明确失败；消息生命周期不依赖调用方栈；u64 零、最大值、越界和非法文本有测试；日志不输出 token/密码。
+- **禁止越界**：不建业务状态、不编造 REST 路由、不实现锁驱动、不先搭一个与正式类型不同的临时框架。
+- **DONE 证据**：运行环境、锁定依赖来源/许可、配置/构建/CTest 命令和实际结果。
+
+
+【本卡原文】
+### S1-02：SQLite 单写仓储与事务
+
+- **输入**：主规格的四类状态、幂等/outbox、事件键、水位和恢复规则；Repository 声明。
+- **可改目录**：`host/storage/`、`tests/unit/storage/`；只提供局部 CMake 接入文件。
+- **产出**：唯一 `schema-v1.sql`、迁移元数据、Repository 实现；逻辑覆盖用户/会话/卡绑定、工具/借用、操作、动作/outbox、设备事件/游标、幂等记录和人工核验。不允许 HTTP/UI 直接调用仓储。
+- **固定约束**：按internal-data.schema.json实现受控集合、事务/查询/分页恢复DTO，不另造跨模块结构。操作占位与账本变化由事务保护；操作+幂等+outbox 一起提交；新事件+Core提供的投影变化+游标一起提交；事件唯一键含 journal_epoch；u64 按已校验十进制文本存储并按数值比较。WAL、`synchronous=FULL`；首次初始化与损坏/迁移失败区分，失败不能自动清库。
+- **验收**：同一事件重复导入不重复推进；失败事务不留下半个占位/outbox；两个竞争申请只能一个成功；数据库重新打开仍保留有效借用、未决操作和幂等结果；游标不能越过缺口、倒退或把 10 排在 2 前。
+- **禁止越界**：不自行决定借还成功、不发送设备动作、不更改公共 schema 或状态枚举。
+- **DONE 证据**：DDL 与字段映射说明、事务/重开数据库测试、错误路径结果；注明尚未验证 RK 存储介质掉电可靠性。
+
+### S1-03：UART 字节端口与独立模拟设备
+
+【阶段门禁与统一验证入口（原文）】
+## 3. 阶段门禁：必须实跑的场景
+
+| 场景 | 必须观察到的结果 |
+|---|---|
+| 完整借出/归还 | 正确用户、到柜证明、开关门与物品变化、本人人工确认；借用账本正确闭环 |
+| 竞争与重试 | 两用户争同柜只一人占位；网络响应丢失后同幂等键不产生新操作；同键异正文冲突 |
+| 用户和管理员权限 | 越权操作、原始卡信息读取、匿名/过期会话拒绝；人工核验留下理由与原事件 |
+| 传感器与确认冲突 | 只有 ACK、只开关门、物品 UNKNOWN、提前确认和再次变位不被写成成功 |
+| 实时与历史读卡 | 当前有效证明只消费一次；历史补取、重复或旧 session 的卡事件均不开柜 |
+| 副作用响应丢失 | EXECUTE 发送后丢 ACK：只查询/核对，不重发；模拟动作计数最多一次 |
+| 服务重启 | 未决动作转待核验；不把旧 outbox 迁到新 session；终结操作和有效借用保留 |
+| 设备重连屏障 | 先补取落库再 ACK；期间物理版本变化导致 RESUME_READY 失败并重新核对 |
+| 日志与事件缺口 | 去重不重复推进；缺口保持不可新操作；日志失败不能开锁；journal_epoch 改变不碰撞旧事件 |
+| 数据库事务失败 | 无半条借用/占位/outbox；没有未提交业务意图驱动设备 |
+| 网络/IPC边界 | TLS 不信任失败；公共接口无 presence/模拟/直接开锁；私有 IPC 不能仅凭 source 字符串通过 |
+| 背压与退出 | 队列满显式失败，慢 WS 不阻塞业务，正常退出可重新打开库和 socket |
+
+超时测试使用注入的单调时钟，避免真实等待数分钟；集成测试至少另保留一项真实时钟烟测，防止仅在替身时间下工作。故障注入通过正式测试控制入口实现，不在生产路径堆一次性开关。
+
+预期统一验证入口：
+
+```text
+python scripts/check_contracts.py
+python scripts/check_stage_plan.py
+cmake -S "$HOME/locker-workspace/src" -B "$HOME/locker-workspace/build/host" -DLOCKER_BUILD_HOST=ON -DLOCKER_BUILD_TESTS=ON
+cmake --build "$HOME/locker-workspace/build/host"
+ctest --test-dir "$HOME/locker-workspace/build/host" --output-on-failure
+```
+
+CMake 选项由 S1-01 创建；当前阶段只有契约检查属于阶段 0，不能宣称以上构建命令已可运行。依赖缺失或环境不支持时真实报告，不写虚构通过记录。VM构建/测试产物进入工作区build（与src同级），不写源码目录，正式测试证据写入阶段报告；不得把临时数据库、运行 socket、测试凭据和调试打印提交为正式代码。
+
+---
+3. 契约真源：contracts/contract-source.json、contracts/internal-data-source.json、contracts/internal-data.schema.json、contracts/include/locker_contracts.h（Repository 六端口 :190/:211/:213/:215/:273/:275/:277，DTO :143-:147，事件批量 :120）。
+4. 实现：host/storage/（schema-v1.sql、src/{repository,schema,u64,event_key,regex}.c、include/locker/storage/*.h、CMakeLists.txt、README.md、cmake/embed_file.cmake、third_party/{sqlite,cjson}）。
+5. 测试：tests/unit/storage/{test_repository,test_schema,test_u64,test_event_key,test_regex}.c 与 CMakeLists.txt；tests/unit/common/test_support.h。
+6. 证据：docs/evidence/stage-01/S1-02/ 下 summary.md、handoff.md、mutation.log、source-manifest.txt、manifest.sha256、configure/build/ctest/unit-tests/asan-*/tsan-*/design-checks 日志、vm-s102-* 全套、audit.md 与 audit-round2..8.md（前八轮结论，用于核对本轮整改是否真的闭环）。
+7. 架构依据：docs/architecture/internal-interfaces.md、uart-v1.md、traceability.md、module-ownership.md、stage-00-architecture.md 相关节。
+
+【前八轮已整改的历史问题（本轮须逐条核对是否真正闭环，不能只看开发方自述）】
+- round-1 B1–B5：游标连续性、last_committed 上界、缺 documents 表被当首次初始化、分页预算、cJSON 嵌入 NUL。
+- round-2：全重复页丢 gap 标志、半零游标、只有 documents 视图的痕迹库。
+- round-3：db_user_object_count LIKE 下划线通配、verify_schema_tables 只查表名。
+- round-4：反向排序组合绕过唯一索引匹配、regex 有界重复多生成一个 atom。
+- round-5 B-1：verify_key_index 跳过所有 partial UNIQUE（已改为 fail-closed CONFLICT，repository.c:1973 入口、:2000–:2003 判定、夹具 SQL_PARTIAL_UNIQUE_INDEX test_repository.c:2318、断言 :2426/:2427、对象数 :2432、变异 m26 单点被对象清单检查遮蔽 + m26b 联合点 8/829）。round-5 N-1/N-2 是归因与文档问题。
+- round-6 B-1/P1：未知持久触发器被接纳。官方 DDL 建库 + 合法元数据后 `CREATE TRIGGER skip_second BEFORE INSERT ON documents WHEN NEW.key='2111…' BEGIN SELECT RAISE(IGNORE); END;` 重新 open 通过全部结构检查；此后命中 WHEN 的 PUT 被静默丢弃（sqlite3_changes()==0 且无 SQL 错误），apply_change 仍推进 snapshot_revision 并 COMMIT，端口报成功但内容缺失。开发方整改：新增 verify_official_objects（repository.c:2079，SQL :2089，type 判定 :2106、重名 :2114、未知表名 :2124、对象数 :2130），由 verify_schema_tables 末尾 :2070 调用；db_put_document 加 sqlite3_changes(db)!=1 → IO_ERROR（:438），db_delete_document 加 existed && changes!=1 → IO_ERROR（:477）。回归：夹具 SQL_TRIGGER_IGNORE test_repository.c:2328、struct_trigger.db 双模式 CONFLICT（:2441/:2442）+ 对象数 4（:2449）、新用例 test_silently_ignored_write_detected（:2529）。变异 m28 5/829、m31 5/829、m32 4/829。
+- round-6 B-2/P2：pragma_table_info 隐藏生成列。`ALTER TABLE documents ADD COLUMN extra TEXT GENERATED ALWAYS AS (...) VIRTUAL NOT NULL;` 之后 table_info 仍报官方 3 列，只有 table_xinfo 才多出 hidden=2 的列，之后合法 AuditRecord 报 NOT NULL constraint failed。开发方整改：verify_table_columns（:1849）改用 pragma_table_xinfo（SQL :1856），读 hidden（:1876），列名/类型比较前 hidden!=0 → CONFLICT（:1881）。回归：SQL_GENERATED_COLUMN（:2337）与 SQL_GENERATED_APPENDED（:2346），双模式 CONFLICT（:2455/:2469）、对象数 3（:2464/:2479）。变异 m29 5/829、m29b 5/829、m30 5/829。
+- round-6 N-1/P2：mutation 归因冲突（m15b 口径、m10/m11 归因、独立缺陷折算、原始输出被清理）。开发方整改：mutation.log 重写为 32 个具名段 + 11 行 SOURCE_FINGERPRINT，统一口径，删除独立缺陷折算，只保留「32 次运行 / 29 次变红 / 3 次未捕获」。
+- round-6 N-2/P3：VM 保留路径与 partial UNIQUE 影响描述错误。开发方整改：四条实际路径（S1-02/src、build/S1-02/20261024-174830、logs/S1-02/20261024-174830、artifacts/S1-02），partial UNIQUE 描述改为「两条同属 audits 的 AuditRecord 被拒」。
+- round-7 B-1/P2：表内 CHECK / FOREIGN KEY 仍绕过 schema 接纳核验。官方 DDL 建库 + 合法元数据后，只把 documents 重建为 `CREATE TABLE documents (collection TEXT NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL, PRIMARY KEY(collection, key), CHECK(key <> '21111111-2222-4333-8444-555555555555')) WITHOUT ROWID;`，table_xinfo 三列、索引、对象清单、metadata、quick_check 全部与官方一致，两种 initialize_empty 都通过 open；此后提交合法两 audits 的 change，第二条 PUT 报 CHECK constraint failed 并回滚，即「被当作可用仓储打开后才失败」。开发方整改：新增 `verify_official_ddl`（repository.c:2244，SQL :2254 `SELECT sql FROM sqlite_master WHERE type='table' AND name=?1`，逐字节比对由 `expected_table_ddl`（:2157）从唯一 schema-v1.sql 提取的期望文本，判定 :2280–:2287），由 verify_schema_tables 末尾 :2077 调用（真实顺序 :2061 列 → :2065 键索引 → :2071 对象清单 → :2077 DDL 文本）。回归夹具：SQL_CHECK_CONSTRAINT test_repository.c:2381、SQL_FOREIGN_KEY :2390、SQL_DDL_SAME_LEN_DIFFERENT_TEXT :2400（小写等价定义，sqlite_master 存储长度同为 164 B 但内容不同，只有逐字节比较能拒），断言 :2542/:2543、:2554/:2555、:2567/:2568，对象数 :2550/:2561/:2575；正对照 test_official_ddl_positive_control :2725。变异：m33 12/863、m34 4/863、m34b 12/863。
+- round-8（PASS，4 项非阻塞）：N-1 mutation 归因（联合点被当独立缺陷、m26b 4 条红行被算作 partial 证据、assertion_failures 差 1 未说明）；N-2 断言合计算术错误（1715 = 505+1210 vs 文档 1707 = 505+1202）；N-3 `test_official_ddl_positive_control` 的 key 不命中 `CHECK(key <> UUID_KEY)`、正对照保真度不足；N-4「配置期」表述与构建期 `add_custom_command` 不符、README 的 VM 源码入口写错。开发方整改：mutation.log joint 段改为完整分解式；断言统一 1717（common 505 + storage 1212、repository 865）；新增 `build_audit_record_with_id` 并把正对照改用 `k_first_id` 与 `UUID_KEY`；六处「配置期」改「构建期」、README 改 `S1-02/src` + `build/S1-02/<run>`。
+- round-7 N-1/P2：mutation 精确含义、执行顺序与整改表矛盾（m29 与 m29b 在保留日志里是完全相同的变异；对象清单被说成在键索引之前；round-6 整改表多算尾部汇总行；m26b 8 条失败中只有 4 条属于 partial 夹具）。开发方整改：删除 m29b 点位（重复执行）；统一 af-1 口径（assertion_failures 含尾部 suite 汇总行）；改正真实调用顺序；round-6/7 整改表计数改为 m28 4、m31 4、m32 3、m29 4、m30 4、m33 12、m34 4、m34b 12；把变异定义与完整原始输出转存为正式证据 mutation-batch.py / mutation-batch.log（563 行）与 mutation-joint-m26c.py / .log，不再随临时目录删除。
+
+【本轮要求】
+- 独立复核，不得照搬开发方或前几轮结论；每条结论必须给出文件:行号 与可复现依据。
+- 若你能运行 C 端（本机 Windows 无法 WSL/ssh，只能做静态审查 + Python/Node 辅助计算），如实写明 configure/build/CTest/ASan/TSan/mutation 为 NOT_RUN，并说明这是环境限制而非 PASS。已保存的 Linux/VM 日志属开发方历史记录，只能作为「被审计材料」核对其内部一致性（如 summary/handoff 的数字与日志是否一致、manifest 是否 32/32、指纹是否匹配源码），不能写成本轮独立 PASS。
+- 重点检查：任务卡固定约束是否逐条落实（受控集合、事务/幂等/outbox 同事务、新事件+投影+游标同事务、事件唯一键含 journal_epoch、u64 十进制文本与数值比较、WAL+synchronous=FULL、首次初始化与损坏/迁移失败区分且失败不清库）；六端口语义与 DTO 边界；错误路径是否 fail-closed；分页/游标/恢复语义；文档与实现是否一致（行号、断言数 1717 = common 505 + storage 1212、42 次变异运行 32 次变红 10 次未捕获、证据 56 个文件、VM run_id 20261024-213500）；是否有越界改动（改 contracts/、生成器、根 CMake 之外共享文件、删测试、假数据）。
+- 结论用 PASS 或 FAIL。FAIL 必须列阻塞项（B-x）与非阻塞项（N-x），每项含级别 P1/P2/P3、文件:行号、缺陷机制、复现/验证方法、修复方向。PASS 也要列出剩余风险与未运行项。
+- 报告写成中文 Markdown，开头给结论与修改边界，末尾给「本轮独立执行/未执行清单」。
+
+
+【超轮联合确认规则（用户 m12834 起生效，本轮适用）】
+本卡审计已进行 8 轮，超过 3 轮阈值。按用户规则，从本轮起改为「开发 AI 与审计 AI 共同修复并共同确认通过」：
+- 你的报告必须明确区分三类：①**本轮独立复核**（你自己动手算/查/复现的）；②**开发方自述/历史日志**（只能当被审材料核对内部一致性，不能当作你的 PASS）；③**因环境限制无法执行**（NOT_RUN）。
+- 对 round-8 提出的 4 项非阻塞 N-1～N-4，必须逐项给出「已关闭 / 仍未关闭 / 部分关闭」的独立判断，并写清判定依据（文件:行号 + 数字）。
+- 若你认为某项仍未关闭，必须给出「最小可复现步骤 + 期望 vs 实际」，供开发 AI 在同一轮内修复；不要只给结论。
+- 若本轮未发现新的阻塞项，且 round-8 的 4 项非阻塞均已关闭，结论写 PASS，并在报告里明确写「联合确认通过」。
+- 本轮 PASS 仍不得置 DONE、不得改 stage-plan；收尾由开发方按「收尾与下一卡交接指令」执行。
+
+【round-9 定向核对要求（必须自己验证，不能只看自述）】
+1. **N-1 mutation 归因**：`mutation.log` 头部 joint 段是否为完整分解式（`m17+ 32 = 16 + 6 + 10`、`m18+ 24 = 12 + 6 + 6`、`m20b+/m21b+/m22+ 16 = 8 + 6 + 2`、`m26+ 12 = 6 + 6 + 0`、`m29+/m30+ 16 = 8 + 6 + 2`），这三项之和是否等于对应的 `assertion_failures`；m26b 段是否明确写「4 条全部来自 ⑪ trigger 夹具、不含 :2460 :2461」；是否仍存在「把 42 次运行折算成独立缺陷数」的表述（应为 0 处）。summary.md §5.4 八个联合点行尾是否逐行标注了拆分，且与 mutation.log 头部一致。
+2. **N-2 断言合计数**：自己从 `unit-tests.log` 与 `vm-s102-unit-tests.log` 逐行求和，核对 common = 505、storage = 1212（event_key 80 / regex 46 / repository 865 / schema 131 / u64 90）、合计 = 1717；再核对 summary.md §5.1 断言表、handoff.md 的四处引用（`:406`、`:509`、`:519`、`:611`）是否全部为 1717/1212/865，是否还有残留的 1715/1210/1707/1202/863（历史整改表里作为「旧值」引述的除外）。
+3. **N-3 正对照保真度**：`test_official_ddl_positive_control`（`test_repository.c` 内）是否真的用 `k_first_id` 与 `UUID_KEY` 提交两条 audits，且断言 `strstr` 证明 key == value.id（即 key 恰好是 `CHECK(key <> UUID_KEY)` 的谓词命中值）；是否因此断言数由 1707 增至 1717；`build_audit_record_with_id` 是否与 `build_audit_record` 行为一致（除 id 可指定外）。
+4. **N-4 构建期表述与 VM 路径**：`host/storage/` 下是否还有「配置期」残留（应全部为「构建期（add_custom_command）」）；`host/storage/README.md` 的 VM canonical 段是否为 `$HOME/locker-workspace/S1-02/src` + `build/S1-02/<run>` + `logs/S1-02/<run>` + `artifacts/S1-02`，且与 `vm-s102-run-summary.log` 的四条路径一致。
+5. **本轮新取证的自洽性**：VM run_id 是否统一为 `20261024-213500`（summary/handoff/run-id.txt/vm-s102-run-id.txt/vm-s102-run-summary.log 五处一致）；快照 sha256 是否统一为 `f4279ba59ad7b013bdc9811a8e3f6eafc093e214ea3ea92a79ad92784b47c69f` / 81796615 B / 1113 条目；WSL2 与 VM 两份 unit-tests.log 是否逐项一致（865 / 1717）。
+6. **mutation 证据可重放性**：`mutation-batch.py` 的 POINTS 表是否为 42 项、每项 4 元组、锚点是否用 `count==1` 校验（不等则 `PATCH_PATTERN_COUNT` 中止）；`mutation-batch.log` 是否 563 行、42 个 section、每个 section 都有 `patch=OK configure=0 build=0`；`mutation-joint-m26c.py/.log` 是否为 m26+m28+m33 三点联合且 20 条失败。
+7. **残留与边界**：证据目录是否真的是 56 个文件（列出差异即报）；summary.md / handoff.md 是否还有过期数字（1681/829/1609/1583/193500/174830/152903/91150adc/0cca50dc/8be11115/55 文件/七轮 等，历史整改表引述旧值的除外）；是否仍有 `s102_` 临时脚本或 `.tmp` 文件留在仓库；是否有越界改动（`contracts/`、生成器、根 CMake 之外共享文件、删测试、假数据）。
+8. **当前源码指纹**（自己算，sha256 前 12 / 字节 / 行）：`repository.c` b9ab2abaa41e / 95832 / 2469；`test_repository.c` f1cc609cf4cf / 138538 / 2983；`host/storage/CMakeLists.txt` 3d184f052d2b / 3832；`host/storage/README.md` 45133f6c1483 / 7850；`schema-v1.sql` c2d3dfcf8cf8 / 2350。若与 `source-manifest.txt`（自身 sha256 `817ddb073ba2a35b3b69e83e5fc3d8f72429ad27d3f22e076a967edecfa6dd0a`、3563 B、generated 2026-10-24T20:59:57+08:00）不符，即为阻塞项。
+
+【输出】把完整审计报告写入 docs/evidence/stage-01/S1-02/audit-round9.md（UTF-8），并在回复末尾给出 20 行以内摘要（结论 + 阻塞项标题）。不要修改任何其他文件。

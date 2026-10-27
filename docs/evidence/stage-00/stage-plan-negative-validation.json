@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "contract_version": "0.1.2",
+  "cases": [
+    {
+      "case": "dependency_cycle",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "dependency cycle: S1-01"
+    },
+    {
+      "case": "missing_port_owner",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "delivery coverage drift: internal_ports"
+    },
+    {
+      "case": "unbacked_done",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "DONE report outside assigned evidence path: S1-01"
+    },
+    {
+      "case": "run_before_dependency",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "card ran before dependency passed: S1-02"
+    },
+    {
+      "case": "run_after_failed_stage_gate",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "previous stage gate not PASS: S2-01"
+    }
+  ],
+  "runtime_or_hardware_tested": false
+}

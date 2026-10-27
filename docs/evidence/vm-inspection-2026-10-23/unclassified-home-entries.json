@@ -1,0 +1,781 @@
+{
+  "note": "Not an authorization to delete. Includes normal home folders, model environments and unclassified historical files.",
+  "entries": [
+    {
+      "name": "99proxy",
+      "kind": "file"
+    },
+    {
+      "name": "Kconfig.good",
+      "kind": "file"
+    },
+    {
+      "name": "_compile-err.txt",
+      "kind": "file"
+    },
+    {
+      "name": "_diag.txt",
+      "kind": "file"
+    },
+    {
+      "name": "_diag2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_drvfixw.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_drvw.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_fixsrc.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_fixsrc2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_killph0c.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_l1w.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_launch2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_sync.txt",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-cargo-config.toml",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-checkwrap.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-diag2.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-fixsrc.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-fixsrc2.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-launch.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-launch2.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-nicdiag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-proxytest.sh",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-resize.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-rfcverify.log",
+      "kind": "file"
+    },
+    {
+      "name": "_vm-snap.log",
+      "kind": "file"
+    },
+    {
+      "name": "_wb-key.pub",
+      "kind": "file"
+    },
+    {
+      "name": "a2",
+      "kind": "directory"
+    },
+    {
+      "name": "a3audit_probe.sh",
+      "kind": "file"
+    },
+    {
+      "name": "a3audit_probe2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "a3audit_probe3.sh",
+      "kind": "file"
+    },
+    {
+      "name": "a3audit_probe4.sh",
+      "kind": "file"
+    },
+    {
+      "name": "aarch64-linux-musl-cross",
+      "kind": "directory"
+    },
+    {
+      "name": "advtest-5.sh",
+      "kind": "file"
+    },
+    {
+      "name": "advtest-6.sh",
+      "kind": "file"
+    },
+    {
+      "name": "am-v4",
+      "kind": "directory"
+    },
+    {
+      "name": "am-v4b",
+      "kind": "directory"
+    },
+    {
+      "name": "amdiag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "apt-diag.log",
+      "kind": "file"
+    },
+    {
+      "name": "apt-diag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "apt-tools.log",
+      "kind": "file"
+    },
+    {
+      "name": "aptdiag.log",
+      "kind": "file"
+    },
+    {
+      "name": "at.sh",
+      "kind": "file"
+    },
+    {
+      "name": "at2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "bge_model",
+      "kind": "directory"
+    },
+    {
+      "name": "bge_model.tgz",
+      "kind": "file"
+    },
+    {
+      "name": "bge_work",
+      "kind": "directory"
+    },
+    {
+      "name": "body.sh",
+      "kind": "file"
+    },
+    {
+      "name": "body2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "boot-check.log",
+      "kind": "file"
+    },
+    {
+      "name": "build-bzimage.log",
+      "kind": "file"
+    },
+    {
+      "name": "build-status.log",
+      "kind": "file"
+    },
+    {
+      "name": "busname-test.log",
+      "kind": "file"
+    },
+    {
+      "name": "busname-test.sh",
+      "kind": "file"
+    },
+    {
+      "name": "c2-clippy.log",
+      "kind": "file"
+    },
+    {
+      "name": "c2-odc.log",
+      "kind": "file"
+    },
+    {
+      "name": "c3-rustdoc.log",
+      "kind": "file"
+    },
+    {
+      "name": "c3.out",
+      "kind": "file"
+    },
+    {
+      "name": "calib_npy.tgz",
+      "kind": "file"
+    },
+    {
+      "name": "cargo-config.toml",
+      "kind": "file"
+    },
+    {
+      "name": "cfg-gap.log",
+      "kind": "file"
+    },
+    {
+      "name": "check0_base_optimize.onnx",
+      "kind": "file"
+    },
+    {
+      "name": "check1_fold_constant.onnx",
+      "kind": "file"
+    },
+    {
+      "name": "check2_correct_ops.onnx",
+      "kind": "file"
+    },
+    {
+      "name": "check3_fuse_ops.onnx",
+      "kind": "file"
+    },
+    {
+      "name": "clippy-run.log",
+      "kind": "file"
+    },
+    {
+      "name": "config-evidence",
+      "kind": "file"
+    },
+    {
+      "name": "config.before-hwmon-m",
+      "kind": "file"
+    },
+    {
+      "name": "config.before-kcfix",
+      "kind": "file"
+    },
+    {
+      "name": "config.before-lead-restore",
+      "kind": "file"
+    },
+    {
+      "name": "config.polluted-1142",
+      "kind": "file"
+    },
+    {
+      "name": "cycle-pin.sh",
+      "kind": "file"
+    },
+    {
+      "name": "day29_bge转rknn.py",
+      "kind": "file"
+    },
+    {
+      "name": "emerg-diag.log",
+      "kind": "file"
+    },
+    {
+      "name": "emerg-diag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "fs-build-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "fulltest-fix2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "gapply.err",
+      "kind": "file"
+    },
+    {
+      "name": "gapply2.err",
+      "kind": "file"
+    },
+    {
+      "name": "gate-v5d.sh",
+      "kind": "file"
+    },
+    {
+      "name": "grub-final.log",
+      "kind": "file"
+    },
+    {
+      "name": "grub-final.sh",
+      "kind": "file"
+    },
+    {
+      "name": "hhh",
+      "kind": "directory"
+    },
+    {
+      "name": "hwmon-test",
+      "kind": "directory"
+    },
+    {
+      "name": "hwmon.rs.bak-v02",
+      "kind": "file"
+    },
+    {
+      "name": "i2c-tools.deb",
+      "kind": "file"
+    },
+    {
+      "name": "initramfs",
+      "kind": "directory"
+    },
+    {
+      "name": "initramfs.cpio.gz",
+      "kind": "file"
+    },
+    {
+      "name": "inline-test.sh",
+      "kind": "file"
+    },
+    {
+      "name": "land-launch.sh",
+      "kind": "file"
+    },
+    {
+      "name": "libi2c0.deb",
+      "kind": "file"
+    },
+    {
+      "name": "libx86-1.deb",
+      "kind": "file"
+    },
+    {
+      "name": "line-len.sh",
+      "kind": "file"
+    },
+    {
+      "name": "linelen2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "linux-rust",
+      "kind": "directory"
+    },
+    {
+      "name": "llama.cpp-src",
+      "kind": "directory"
+    },
+    {
+      "name": "main,c",
+      "kind": "file"
+    },
+    {
+      "name": "models",
+      "kind": "directory"
+    },
+    {
+      "name": "myproject",
+      "kind": "directory"
+    },
+    {
+      "name": "net-diag.log",
+      "kind": "file"
+    },
+    {
+      "name": "net-diag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "net-diag2.log",
+      "kind": "file"
+    },
+    {
+      "name": "net-diag2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "net-restore.log",
+      "kind": "file"
+    },
+    {
+      "name": "net-restore.sh",
+      "kind": "file"
+    },
+    {
+      "name": "net-up.log",
+      "kind": "file"
+    },
+    {
+      "name": "newkernel-diag.log",
+      "kind": "file"
+    },
+    {
+      "name": "newkernel-diag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "newprod.sh",
+      "kind": "file"
+    },
+    {
+      "name": "odc.log",
+      "kind": "file"
+    },
+    {
+      "name": "oops.sh",
+      "kind": "file"
+    },
+    {
+      "name": "osdiag.log",
+      "kind": "file"
+    },
+    {
+      "name": "p1-build.log",
+      "kind": "file"
+    },
+    {
+      "name": "p1-odc.log",
+      "kind": "file"
+    },
+    {
+      "name": "phase0b2-v3-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "phase0b2-v4-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "phase0b2-v5-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "phase0b2-v5b-launch.log",
+      "kind": "file"
+    },
+    {
+      "name": "phase0c.log",
+      "kind": "file"
+    },
+    {
+      "name": "pi.sh",
+      "kind": "file"
+    },
+    {
+      "name": "postfix-diag.log",
+      "kind": "file"
+    },
+    {
+      "name": "postfix-diag.sh",
+      "kind": "file"
+    },
+    {
+      "name": "probe-now.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe10.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe12.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe14.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe15.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe16.sh",
+      "kind": "file"
+    },
+    {
+      "name": "probe16.txt",
+      "kind": "file"
+    },
+    {
+      "name": "probe17.sh",
+      "kind": "file"
+    },
+    {
+      "name": "probe18.txt",
+      "kind": "file"
+    },
+    {
+      "name": "probe2.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe5-fromerrno.txt",
+      "kind": "file"
+    },
+    {
+      "name": "probe6.txt",
+      "kind": "file"
+    },
+    {
+      "name": "probe8.txt",
+      "kind": "file"
+    },
+    {
+      "name": "probe9.log",
+      "kind": "file"
+    },
+    {
+      "name": "probe9.sh",
+      "kind": "file"
+    },
+    {
+      "name": "probe9.txt",
+      "kind": "file"
+    },
+    {
+      "name": "proj101env",
+      "kind": "directory"
+    },
+    {
+      "name": "qwen1.5b-q4_k_m.gguf",
+      "kind": "file"
+    },
+    {
+      "name": "read-edid.deb",
+      "kind": "file"
+    },
+    {
+      "name": "readlog.sh",
+      "kind": "file"
+    },
+    {
+      "name": "regcount2.sh",
+      "kind": "file"
+    },
+    {
+      "name": "regcount3.sh",
+      "kind": "file"
+    },
+    {
+      "name": "remat.sh",
+      "kind": "file"
+    },
+    {
+      "name": "requirements_cp38-1.6.0.txt",
+      "kind": "file"
+    },
+    {
+      "name": "restore-olddef.log",
+      "kind": "file"
+    },
+    {
+      "name": "rknn-env",
+      "kind": "directory"
+    },
+    {
+      "name": "rknn-env152",
+      "kind": "directory"
+    },
+    {
+      "name": "rknn_toolkit2-1.5.2+b642f30c-cp38-cp38-linux_x86_64.whl",
+      "kind": "file"
+    },
+    {
+      "name": "rknn_toolkit2-1.6.0+81f21f4d-cp38-cp38-linux_x86_64.whl",
+      "kind": "file"
+    },
+    {
+      "name": "rust-next-rev.txt",
+      "kind": "file"
+    },
+    {
+      "name": "rust_driver_hwmon.ko",
+      "kind": "file"
+    },
+    {
+      "name": "rustup-init-bin",
+      "kind": "file"
+    },
+    {
+      "name": "rustup.sh",
+      "kind": "file"
+    },
+    {
+      "name": "sata-check.log",
+      "kind": "file"
+    },
+    {
+      "name": "series-build",
+      "kind": "directory"
+    },
+    {
+      "name": "series-v2",
+      "kind": "directory"
+    },
+    {
+      "name": "series-v3",
+      "kind": "directory"
+    },
+    {
+      "name": "series-v4",
+      "kind": "directory"
+    },
+    {
+      "name": "series-v5",
+      "kind": "directory"
+    },
+    {
+      "name": "series-verify",
+      "kind": "directory"
+    },
+    {
+      "name": "show-amtest.sh",
+      "kind": "file"
+    },
+    {
+      "name": "show-body.sh",
+      "kind": "file"
+    },
+    {
+      "name": "show-script.sh",
+      "kind": "file"
+    },
+    {
+      "name": "snap",
+      "kind": "directory"
+    },
+    {
+      "name": "sshkey-add.log",
+      "kind": "file"
+    },
+    {
+      "name": "sshkey-add.sh",
+      "kind": "file"
+    },
+    {
+      "name": "state.txt",
+      "kind": "file"
+    },
+    {
+      "name": "state3.log",
+      "kind": "file"
+    },
+    {
+      "name": "test",
+      "kind": "directory"
+    },
+    {
+      "name": "tf4env",
+      "kind": "directory"
+    },
+    {
+      "name": "tmp108.ko",
+      "kind": "file"
+    },
+    {
+      "name": "torch-2.4.1+cpu-cp312-cp312-linux_x86_64.whl",
+      "kind": "file"
+    },
+    {
+      "name": "ubuntu.sources",
+      "kind": "file"
+    },
+    {
+      "name": "up.sh",
+      "kind": "file"
+    },
+    {
+      "name": "verify-grub.sh",
+      "kind": "file"
+    },
+    {
+      "name": "verify-pin.sh",
+      "kind": "file"
+    },
+    {
+      "name": "vk.log",
+      "kind": "file"
+    },
+    {
+      "name": "vllm-env",
+      "kind": "directory"
+    },
+    {
+      "name": "vllm.log",
+      "kind": "file"
+    },
+    {
+      "name": "vm-cmp-v2final.sh",
+      "kind": "file"
+    },
+    {
+      "name": "vmci-probe.log",
+      "kind": "file"
+    },
+    {
+      "name": "vmci-probe2.log",
+      "kind": "file"
+    },
+    {
+      "name": "xyx.git",
+      "kind": "directory"
+    },
+    {
+      "name": "下载",
+      "kind": "directory"
+    },
+    {
+      "name": "公共",
+      "kind": "directory"
+    },
+    {
+      "name": "图片",
+      "kind": "directory"
+    },
+    {
+      "name": "文档",
+      "kind": "directory"
+    },
+    {
+      "name": "桌面",
+      "kind": "directory"
+    },
+    {
+      "name": "模板",
+      "kind": "directory"
+    },
+    {
+      "name": "视频",
+      "kind": "directory"
+    },
+    {
+      "name": "音乐",
+      "kind": "directory"
+    }
+  ]
+}

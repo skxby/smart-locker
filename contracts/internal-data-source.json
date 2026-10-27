@@ -1,0 +1,3359 @@
+{
+  "version": 1,
+  "status": "REVIEW_DRAFT",
+  "max_json_bytes": 65535,
+  "schemas": {
+    "InternalRpcRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "request_id",
+        "method",
+        "session_token",
+        "path_ids",
+        "query",
+        "idempotency_key",
+        "params"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "request_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "login",
+            "getCurrentSession",
+            "logout",
+            "getDevice",
+            "getSnapshot",
+            "listTools",
+            "getTool",
+            "createOperation",
+            "getOperation",
+            "confirmOperation",
+            "cancelOperation",
+            "listLoans",
+            "listEvents",
+            "listReviews",
+            "resolveOperation",
+            "listUsers",
+            "createUser",
+            "updateUser",
+            "listCardObservations",
+            "bindCard",
+            "unbindCard",
+            "presence.submit",
+            "progress.report",
+            "ui.restart.request",
+            "maintenance.reconcile",
+            "health.get",
+            "getVisionStatus",
+            "getOperationVisionEvidence"
+          ]
+        },
+        "session_token": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 43,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path_ids": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        },
+        "query": {
+          "type": "object"
+        },
+        "idempotency_key": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "params": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "login"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getCurrentSession"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "logout"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 43,
+                    "maxLength": 128
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getDevice"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getSnapshot"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listTools"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getTool"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "tool_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "tool_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "createOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/CreateOperationRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "confirmOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/RevisionRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "cancelOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/CancelRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listLoans"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listEvents"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  },
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listReviews"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "resolveOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/ResolveRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listUsers"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "createUser"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "updateUser"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/PatchUserRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listCardObservations"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "bindCard"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/BindCardRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "unbindCard"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_revision": {
+                    "$ref": "#/components/schemas/U64"
+                  }
+                },
+                "required": [
+                  "user_revision"
+                ]
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "presence.submit"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/components/schemas/LocalPresenceRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "progress.report"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/components/schemas/ProgressReport"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "ui.restart.request"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/components/schemas/RestartRequest"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "maintenance.reconcile"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/components/schemas/MaintenanceRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/components/schemas/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "health.get"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getVisionStatus"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {}
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getOperationVisionEvidence"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation_id"
+                ],
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/components/schemas/Uuid"
+                  }
+                }
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SupervisorRpcAck": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "PROGRESS_RECORDED"
+            },
+            "target": {
+              "enum": [
+                "SERVICE",
+                "UI"
+              ]
+            },
+            "instance_id": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "progress": {
+              "$ref": "#/components/schemas/U64"
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "instance_id",
+            "progress"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "UI_RESTART_ACCEPTED"
+            },
+            "incident_id": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "state": {
+              "enum": [
+                "QUEUED",
+                "STARTED",
+                "OBSERVED_RUNNING",
+                "FAILED"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "incident_id",
+            "state"
+          ]
+        }
+      ]
+    },
+    "InternalRpcResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "request_id",
+        "status",
+        "body"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "request_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "body": {}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 204
+            },
+            "body": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "enum": [
+                200,
+                201,
+                202
+              ]
+            },
+            "body": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/SessionResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/UserResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/DeviceResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/SnapshotResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolListResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/OperationResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/LoanPageResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/EventPageResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/ReviewListResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/UserListResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/CardObservationListResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/CardBindingResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/SupervisorRpcAck"
+                },
+                {
+                  "$ref": "#/components/schemas/SupervisorHealthResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/VisionStatusResponse"
+                },
+                {
+                  "$ref": "#/components/schemas/VisionEvidencePageResponse"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "enum": [
+                400,
+                401,
+                403,
+                404,
+                409,
+                422,
+                429,
+                503
+              ]
+            },
+            "body": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      ]
+    },
+    "UserRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user": {
+          "$ref": "#/components/schemas/User"
+        },
+        "password_hash": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "user",
+        "password_hash"
+      ]
+    },
+    "SessionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "user_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "token_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "expires_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        },
+        "revoked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "token_hash",
+        "expires_at",
+        "revoked"
+      ]
+    },
+    "CardRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "uid_hex": {
+          "type": "string",
+          "pattern": "^([0-9a-f]{8}|[0-9a-f]{14}|[0-9a-f]{20})$"
+        },
+        "bound_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        }
+      },
+      "required": [
+        "user_id",
+        "uid_hex",
+        "bound_at"
+      ]
+    },
+    "ToolRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "tool_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slot_id",
+        "tool_revision",
+        "enabled"
+      ]
+    },
+    "OperationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "$ref": "#/components/schemas/Operation"
+        },
+        "baseline": {
+          "$ref": "#/components/schemas/PhysicalSnapshot"
+        },
+        "related_loan_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_instance_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "proof_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "CARD",
+                "LOCAL_UI"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "proof_consumed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "operation",
+        "baseline",
+        "related_loan_id",
+        "host_instance_id",
+        "proof_source",
+        "proof_consumed"
+      ]
+    },
+    "OutboxRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "session_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "journal_epoch": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "expected_boot_id": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "expected_physical_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "action_no": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "not_after_mcu_ms": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "kind": {
+          "$ref": "#/components/schemas/OperationKind"
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "state": {
+          "enum": [
+            "PREPARED",
+            "SEND_ATTEMPTED",
+            "ACCEPTED",
+            "UNRESOLVED",
+            "FINISHED",
+            "REJECTED"
+          ]
+        },
+        "attempted_at": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "operation_id",
+        "session_id",
+        "journal_epoch",
+        "expected_boot_id",
+        "expected_physical_revision",
+        "action_no",
+        "not_after_mcu_ms",
+        "kind",
+        "slot_id",
+        "state",
+        "attempted_at"
+      ]
+    },
+    "IdempotencyRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "method": {
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        },
+        "key": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "request_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "response_status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "response_json": {
+          "type": "string",
+          "maxLength": 32768,
+          "minLength": 1
+        },
+        "expires_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        }
+      },
+      "required": [
+        "actor_id",
+        "method",
+        "path",
+        "key",
+        "request_hash",
+        "response_status",
+        "response_json",
+        "expires_at"
+      ]
+    },
+    "AuditRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "actor_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time_quality": {
+          "$ref": "#/components/schemas/TimeQuality"
+        },
+        "source_event": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/EventKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "actor_id",
+        "operation_id",
+        "type",
+        "reason",
+        "occurred_at",
+        "time_quality",
+        "source_event"
+      ]
+    },
+    "SlotGuardRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "slot_id": {
+          "const": 1
+        },
+        "operation_id": {
+          "$ref": "#/components/schemas/Uuid"
+        }
+      },
+      "required": [
+        "slot_id",
+        "operation_id"
+      ]
+    },
+    "IndexRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "maxLength": 192,
+          "minLength": 1
+        },
+        "resource_id": {
+          "$ref": "#/components/schemas/Uuid"
+        }
+      },
+      "required": [
+        "value",
+        "resource_id"
+      ]
+    },
+    "DeviceStateRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "#/components/schemas/Device"
+        },
+        "last_snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "active_command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "device",
+        "last_snapshot_revision",
+        "active_command_id"
+      ]
+    },
+    "ImportCursorRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/components/schemas/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "through": {
+          "$ref": "#/components/schemas/EventKey"
+        },
+        "continuity_ok": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "through",
+        "continuity_ok"
+      ]
+    },
+    "DeviceEventRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/components/schemas/EventKey"
+        },
+        "mono_ms": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "event_type": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 15
+        },
+        "reason": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "door": {
+          "$ref": "#/components/schemas/DoorState"
+        },
+        "item": {
+          "$ref": "#/components/schemas/ItemState"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "supply_mv": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detail": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "card_uid_hex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "key",
+        "mono_ms",
+        "physical_revision",
+        "event_type",
+        "reason",
+        "operation_id",
+        "command_id",
+        "door",
+        "item",
+        "flags",
+        "supply_mv",
+        "detail",
+        "card_uid_hex"
+      ]
+    },
+    "RepoDocument": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "users"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/UserRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "sessions"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/SessionRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "cards"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/CardRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "tools"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/ToolRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "operations"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/OperationRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "loans"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/Loan"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "outbox"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/OutboxRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "idempotency"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/IdempotencyRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "audits"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/AuditRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "slot_guards"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/SlotGuardRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "username_index"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/IndexRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "card_uid_index"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/IndexRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "device_state"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/DeviceStateRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "import_cursors"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/ImportCursorRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "device_events"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/DeviceEventRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_operations"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/VisionOperationRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_captures"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/VisionCaptureRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_evidence"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/components/schemas/VisionEvidence"
+            }
+          }
+        }
+      ]
+    },
+    "RepoCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collection": {
+          "enum": [
+            "users",
+            "sessions",
+            "cards",
+            "tools",
+            "operations",
+            "loans",
+            "outbox",
+            "idempotency",
+            "audits",
+            "slot_guards",
+            "username_index",
+            "card_uid_index",
+            "device_state",
+            "import_cursors",
+            "device_events",
+            "vision_operations",
+            "vision_captures",
+            "vision_evidence"
+          ]
+        },
+        "key": {
+          "type": "string",
+          "maxLength": 192,
+          "minLength": 1
+        },
+        "condition": {
+          "enum": [
+            "ABSENT",
+            "EXISTS"
+          ]
+        }
+      },
+      "required": [
+        "collection",
+        "key",
+        "condition"
+      ]
+    },
+    "RepoMutation": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "const": "PUT"
+            },
+            "document": {
+              "$ref": "#/components/schemas/RepoDocument"
+            }
+          },
+          "required": [
+            "op",
+            "document"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "const": "DELETE"
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            }
+          },
+          "required": [
+            "op",
+            "collection",
+            "key"
+          ]
+        }
+      ]
+    },
+    "RepositoryChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "expected_snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "new_snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/RepoCheck"
+          },
+          "maxItems": 32
+        },
+        "mutations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/RepoMutation"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "schema_version",
+        "expected_snapshot_revision",
+        "new_snapshot_revision",
+        "checks",
+        "mutations"
+      ]
+    },
+    "RepositoryQuery": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "after_key": {
+              "type": "null"
+            },
+            "limit": {
+              "const": 1
+            }
+          },
+          "required": [
+            "schema_version",
+            "collection",
+            "key",
+            "after_key",
+            "limit"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "null"
+            },
+            "after_key": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 192,
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "schema_version",
+            "collection",
+            "key",
+            "after_key",
+            "limit"
+          ]
+        }
+      ]
+    },
+    "RepositoryQueryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/RepoDocument"
+          },
+          "maxItems": 100
+        },
+        "next_after_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "snapshot_revision",
+        "documents",
+        "next_after_key"
+      ]
+    },
+    "RepositoryRecoveryPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "collection": {
+          "enum": [
+            "users",
+            "sessions",
+            "cards",
+            "tools",
+            "operations",
+            "loans",
+            "outbox",
+            "idempotency",
+            "audits",
+            "slot_guards",
+            "username_index",
+            "card_uid_index",
+            "device_state",
+            "import_cursors",
+            "device_events",
+            "vision_operations",
+            "vision_captures",
+            "vision_evidence"
+          ]
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/RepoDocument"
+          },
+          "maxItems": 100
+        },
+        "next_after_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "snapshot_revision",
+        "collection",
+        "documents",
+        "next_after_key"
+      ]
+    },
+    "MaintenanceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "journal_epoch": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "snapshot_revision",
+        "reason"
+      ]
+    },
+    "SupervisorProgressObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instance_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "progress": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "instance_id",
+        "progress",
+        "observed_age_ms",
+        "sampled_mono_ms"
+      ]
+    },
+    "SupervisorHealthResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supervisor_instance_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "service": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/SupervisorProgressObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ui": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/SupervisorProgressObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "$ref": "#/components/schemas/SupervisorState"
+        },
+        "restart_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "window_attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "cooldown_remaining_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        },
+        "budget_ready": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "supervisor_instance_id",
+        "sampled_mono_ms",
+        "service",
+        "ui",
+        "state",
+        "restart_count",
+        "window_attempts",
+        "cooldown_remaining_ms",
+        "budget_ready"
+      ]
+    }
+  },
+  "repository_collections": {
+    "users": "UserRecord",
+    "sessions": "SessionRecord",
+    "cards": "CardRecord",
+    "tools": "ToolRecord",
+    "operations": "OperationRecord",
+    "loans": "Loan",
+    "outbox": "OutboxRecord",
+    "idempotency": "IdempotencyRecord",
+    "audits": "AuditRecord",
+    "slot_guards": "SlotGuardRecord",
+    "username_index": "IndexRecord",
+    "card_uid_index": "IndexRecord",
+    "device_state": "DeviceStateRecord",
+    "import_cursors": "ImportCursorRecord",
+    "device_events": "DeviceEventRecord",
+    "vision_operations": "VisionOperationRecord",
+    "vision_captures": "VisionCaptureRecord",
+    "vision_evidence": "VisionEvidence"
+  },
+  "rules": [
+    "文档存储模型是首版SQLite实现策略；record字段由这些schema冻结，不能注入SQL。",
+    "RepoDocument.value必须满足其collection对应schema，不能只满足anyOf中的任意一种。",
+    "仓储可以使用固定documents(collection,key,value_json)与meta；(collection,key)唯一，受控参数绑定。",
+    "Core在BEGIN IMMEDIATE事务中检查expected_snapshot_revision和checks，成功时new_snapshot_revision=expected+1；所有mutations和meta同提交，失败全部回滚。",
+    "users以user.id为key，username_index以规范化username为key；cards以user_id为key，card_uid_index以uid_hex为key，绑定与唯一性索引同事务更新。",
+    "slot_guards以字符串1为key，申请必须检查ABSENT并PUT，结束必须核验operation_id后DELETE；REVIEW_REQUIRED保持此记录。",
+    "loans以loan.id为key；归还关闭原记录，禁止覆盖借用者。事件键固定为device_id/epoch/20位补零boot/20位补零seq，按字节序即可保持数值顺序，不经浮点。",
+    "公开API不能调用任意仓储mutation；只有Core线程构造已验证RepositoryChange。会话/密码哈希/UID行只在内部使用。",
+    "查询按collection和key参数绑定，分页按key字节序；key与after_key互斥，页大小同时受limit和65535字节上限，未读完必须返回next_after_key。",
+    "恢复接口按collection分页，不一次装载无限历史；Core在开放请求前按同一snapshot_revision完成必要集合恢复。",
+    "locker_repo_import_events在同一事务做新事件去重导入、合法projection_change及连续游标推进；重复输入不能重复改变投影。",
+    "u64以经校验的十进制文本存储，禁止SQLite浮点/lexicographic大小比较；比较长度后比较同长度文本或在C以uint64解析。",
+    "日志格式化/数据库损坏不自动清库，schema不兼容明确报错；初始化只走本机CLI。",
+    "Vision captures/pinned policy/evidence belong to Core transactions; public query projections are sanitized; images and paths never enter RepositoryChange. Model/camera/policy changes only apply between operations; restart invalidates in-flight captures and requires reconciliation.",
+    "vision_evidence key is canonical operation_id + / + evidence_id (73 bytes). Core starts list at operation_id+/, returns only that prefix and matching operation_id fields, stops at first other prefix. Exact evidence references construct the same key. Cursor is opaque and bound to operation_id/snapshot_revision; never scan all evidence or expose another operation."
+  ],
+  "command_bindings": [
+    {
+      "operation_id": "login",
+      "core_kind": "SESSION_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "logout",
+      "core_kind": "SESSION_REVOKE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "getCurrentSession",
+      "core_kind": "SESSION_CURRENT",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getDevice",
+      "core_kind": "DEVICE_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getSnapshot",
+      "core_kind": "SNAPSHOT_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listTools",
+      "core_kind": "TOOLS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getTool",
+      "core_kind": "TOOL_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "createOperation",
+      "core_kind": "OPERATION_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "getOperation",
+      "core_kind": "OPERATION_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "confirmOperation",
+      "core_kind": "OPERATION_CONFIRM",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "cancelOperation",
+      "core_kind": "OPERATION_CANCEL",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listLoans",
+      "core_kind": "LOANS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listEvents",
+      "core_kind": "EVENTS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listReviews",
+      "core_kind": "REVIEWS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "resolveOperation",
+      "core_kind": "OPERATION_RESOLVE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listUsers",
+      "core_kind": "USERS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "createUser",
+      "core_kind": "USER_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "updateUser",
+      "core_kind": "USER_UPDATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listCardObservations",
+      "core_kind": "CARD_OBSERVATIONS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "bindCard",
+      "core_kind": "CARD_BIND",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "unbindCard",
+      "core_kind": "CARD_UNBIND",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "subscribeChanges",
+      "core_kind": "WS_SUBSCRIBE",
+      "mode": "TRANSPORT"
+    },
+    {
+      "operation_id": "getVisionStatus",
+      "core_kind": "VISION_STATUS_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getOperationVisionEvidence",
+      "core_kind": "VISION_EVIDENCE_LIST",
+      "mode": "QUERY"
+    }
+  ],
+  "internal_rpc": {
+    "version": 1,
+    "transport": "AF_UNIX SOCK_SEQPACKET",
+    "encoding": "UTF-8 JSON without BOM or trailing NUL",
+    "request_max_bytes": 8192,
+    "response_max_bytes": 65535,
+    "request_schema": "InternalRpcRequest",
+    "response_schema": "InternalRpcResponse",
+    "method_bindings": [
+      {
+        "method": "login",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/sessions",
+        "params_schema": "LoginRequest",
+        "response_schema": "SessionResponse",
+        "success_status": 200,
+        "principal": "LOGIN_CREDENTIALS",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "getCurrentSession",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/sessions/current",
+        "params_schema": null,
+        "response_schema": "UserResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "logout",
+        "socket": "service.sock",
+        "route_method": "DELETE",
+        "route_path": "/sessions/current",
+        "params_schema": null,
+        "response_schema": null,
+        "success_status": 204,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "getDevice",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/device",
+        "params_schema": null,
+        "response_schema": "DeviceResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "getSnapshot",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/snapshot",
+        "params_schema": null,
+        "response_schema": "SnapshotResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "listTools",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/tools",
+        "params_schema": null,
+        "response_schema": "ToolListResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "getTool",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/tools/{tool_id}",
+        "params_schema": null,
+        "response_schema": "ToolResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "createOperation",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/operations",
+        "params_schema": "CreateOperationRequest",
+        "response_schema": "OperationResponse",
+        "success_status": 201,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "getOperation",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/operations/{operation_id}",
+        "params_schema": null,
+        "response_schema": "OperationResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "confirmOperation",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/operations/{operation_id}/confirm",
+        "params_schema": "RevisionRequest",
+        "response_schema": "OperationResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "cancelOperation",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/operations/{operation_id}/cancel",
+        "params_schema": "CancelRequest",
+        "response_schema": "OperationResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "listLoans",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/loans",
+        "params_schema": null,
+        "response_schema": "LoanPageResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "listEvents",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/events",
+        "params_schema": null,
+        "response_schema": "EventPageResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "listReviews",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/reviews",
+        "params_schema": null,
+        "response_schema": "ReviewListResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "resolveOperation",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/operations/{operation_id}/resolve",
+        "params_schema": "ResolveRequest",
+        "response_schema": "OperationResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "listUsers",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/users",
+        "params_schema": null,
+        "response_schema": "UserListResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "createUser",
+        "socket": "service.sock",
+        "route_method": "POST",
+        "route_path": "/users",
+        "params_schema": "CreateUserRequest",
+        "response_schema": "UserResponse",
+        "success_status": 201,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "updateUser",
+        "socket": "service.sock",
+        "route_method": "PATCH",
+        "route_path": "/users/{user_id}",
+        "params_schema": "PatchUserRequest",
+        "response_schema": "UserResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "listCardObservations",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/card-observations",
+        "params_schema": null,
+        "response_schema": "CardObservationListResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "bindCard",
+        "socket": "service.sock",
+        "route_method": "PUT",
+        "route_path": "/users/{user_id}/card",
+        "params_schema": "BindCardRequest",
+        "response_schema": "CardBindingResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "unbindCard",
+        "socket": "service.sock",
+        "route_method": "DELETE",
+        "route_path": "/users/{user_id}/card",
+        "params_schema": null,
+        "response_schema": "CardBindingResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": true
+      },
+      {
+        "method": "presence.submit",
+        "socket": "service.sock",
+        "params_schema": "LocalPresenceRequest",
+        "response_schema": "OperationResponse",
+        "success_status": 200,
+        "principal": "PEER_AND_OWNER_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": "IDEMPOTENCY_KEY"
+      },
+      {
+        "method": "progress.report",
+        "socket": "supervisor.sock",
+        "params_schema": "ProgressReport",
+        "response_schema": "SupervisorRpcAck",
+        "success_status": 200,
+        "principal": "PEER_INSTANCE_BINDING",
+        "source": "LOCAL_SUPERVISOR",
+        "idempotency": "NONE"
+      },
+      {
+        "method": "ui.restart.request",
+        "socket": "supervisor.sock",
+        "params_schema": "RestartRequest",
+        "response_schema": "SupervisorRpcAck",
+        "success_status": 202,
+        "principal": "PEER_INSTANCE_BINDING",
+        "source": "LOCAL_SUPERVISOR",
+        "idempotency": "INCIDENT_ID"
+      },
+      {
+        "method": "maintenance.reconcile",
+        "socket": "service.sock",
+        "params_schema": "MaintenanceRequest",
+        "response_schema": "DeviceResponse",
+        "success_status": 200,
+        "principal": "ADMIN_SESSION_AND_LOCAL_ADMIN_CLI_PEER",
+        "source": "LOCAL_ADMIN_CLI",
+        "idempotency": "IDEMPOTENCY_KEY"
+      },
+      {
+        "method": "health.get",
+        "socket": "supervisor.sock",
+        "params_schema": null,
+        "response_schema": "SupervisorHealthResponse",
+        "success_status": 200,
+        "principal": "REGISTERED_SERVICE_PEER_INSTANCE",
+        "source": "LOCAL_SUPERVISOR",
+        "idempotency": "NONE"
+      },
+      {
+        "method": "getVisionStatus",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/vision/status",
+        "params_schema": null,
+        "response_schema": "VisionStatusResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      },
+      {
+        "method": "getOperationVisionEvidence",
+        "socket": "service.sock",
+        "route_method": "GET",
+        "route_path": "/operations/{operation_id}/vision",
+        "params_schema": null,
+        "response_schema": "VisionEvidencePageResponse",
+        "success_status": 200,
+        "principal": "REVALIDATE_SESSION_AND_OWNER",
+        "source": "LOCAL_UI",
+        "idempotency": false
+      }
+    ],
+    "rules": [
+      "One packet contains exactly one JSON object, no batches. Duplicate keys, invalid UTF-8, trailing data and unknown fields are rejected.",
+      "Service socket rejects supervisor methods; supervisor socket rejects business and presence methods. subscribeChanges is unavailable over RPC.",
+      "SO_PEERCRED and socket filesystem permissions create trusted peer identity; principal and source are never accepted from JSON.",
+      "Public methods reuse the public operationId route, path/query types, params body schema, authentication, idempotency, success status and success/error schema.",
+      "LVGL uses asynchronous IPC. Replies match request_id; Core submission_token remains private and cannot be supplied by an RPC client.",
+      "Nested public body.request_id equals envelope request_id. Preserve public status; 204 has body=null.",
+      "presence.submit requires owner session and trusted UI peer. Supervisor methods use bound peer instance and session_token=null.",
+      "Supervisor restart deduplicates by incident_id across request_id retries. Progress ACK proves receipt, not overall health.",
+      "Pagination honors whole-packet UTF-8 response byte limit as well as item limit; keep next cursor, never truncate JSON or a record.",
+      "An unpaged query exceeding the response cap returns bounded 503 QUEUE_FULL Error; undelivered mutation replies never cancel or re-execute committed actions.",
+      "recvmsg checks MSG_TRUNC. Oversized/truncated packets never execute; close if request_id cannot be trusted.",
+      "Never log session_token, password or sensitive raw params. Retry side effects with original idempotency_key/incident_id; never auto replay presence after reconnect.",
+      "maintenance.reconcile is local admin CLI only: no active operation, current ledger matches stable closed-door state, fresh versions and healthy journal; records reason, never pulses or erases evidence."
+    ]
+  },
+  "source_fields": {
+    "principal": "Core重新验证当前session_id与user/role，不相信客户端actor或之前已过期的鉴权缓存。",
+    "request_id": "对外排障ID可来自X-Request-ID，不作为内部等待键。",
+    "submission_token": "Core每次入队由安全随机源生成，只在同进程receipt和wait_result使用；禁止客户端指定。"
+  }
+}

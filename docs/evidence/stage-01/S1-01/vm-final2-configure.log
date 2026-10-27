@@ -1,0 +1,16 @@
+# command: cmake -S /home/%USER%/locker-workspace/S1-01/src -B /home/%USER%/locker-workspace/S1-01/build/verify2-20261023-220157 -DLOCKER_BUILD_HOST=ON -DLOCKER_BUILD_TESTS=ON -DLOCKER_WARNINGS_AS_ERRORS=ON
+# date: 2026-10-23T22:01:57+08:00
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-01/build/verify2-20261023-220157
+CONFIGURE_EXIT=0

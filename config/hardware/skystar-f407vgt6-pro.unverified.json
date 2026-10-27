@@ -1,0 +1,96 @@
+{
+  "profile_version": 1,
+  "profile_id": "skystar-stm32f407vgt6-pro",
+  "status": "UNVERIFIED",
+  "driver_stack": "STM32_HAL",
+  "board": {
+    "vendor": "LCKFB",
+    "model": "SkyStar STM32F407VGT6 PRO",
+    "mcu": "STM32F407VGT6",
+    "package": "LQFP100",
+    "firmware_flash_bytes": 1048576,
+    "sram_total_bytes": 196608,
+    "dma_ccm_allowed": false
+  },
+  "resources": {
+    "external_flash_expected": "W25Q128",
+    "lse_expected": true,
+    "onboard_debug_probe_expected": false,
+    "onboard_independent_vcp_expected": false,
+    "battery_holder_populated_expected": false,
+    "headers_soldering_required": true,
+    "uart_isolator_expected": "ADuM1201"
+  },
+  "pins": {
+    "door": null,
+    "item": null,
+    "lock_output": null,
+    "alarm": null,
+    "rc522_cs": null,
+    "rc522_reset": null,
+    "supply_adc": null,
+    "uart_link_tx": null,
+    "uart_link_rx": null,
+    "uart_console_tx": null,
+    "uart_console_rx": null,
+    "flash_cs": null,
+    "flash_sck": null,
+    "flash_miso": null,
+    "flash_mosi": null,
+    "rc522_sck": null,
+    "rc522_miso": null,
+    "rc522_mosi": null
+  },
+  "peripherals": {
+    "uart_link": null,
+    "uart_console": null,
+    "flash_spi": null,
+    "rc522_spi": null,
+    "supply_adc": null,
+    "lock_timer": null,
+    "hal_tick_timer": null
+  },
+  "polarity": {
+    "door_closed_raw_level": null,
+    "item_present_raw_level": null,
+    "lock_active_raw_level": null,
+    "alarm_active_raw_level": null
+  },
+  "timing": {
+    "input_debounce_ms": null,
+    "lock_pulse_ms": null,
+    "lock_timer_channel": null
+  },
+  "flash": {
+    "jedec_verified": null,
+    "capacity_bytes_verified": null,
+    "sector_bytes_verified": null,
+    "page_bytes_verified": null
+  },
+  "supply": {
+    "rk_uart_io_mv_verified": null,
+    "host_input_mv_verified": null,
+    "divider_upper_ohms": null,
+    "divider_lower_ohms": null,
+    "adc_reference_mv_verified": null
+  },
+  "verification": {
+    "identity": false,
+    "pin_map": false,
+    "headers_soldered": false,
+    "flash_geometry": false,
+    "door_polarity": false,
+    "item_polarity": false,
+    "lock_default_off": false,
+    "lock_hardware_cutoff": false,
+    "uart_voltage": false,
+    "uart_poweroff": false,
+    "adc_range": false,
+    "mechanical_fixture": false
+  },
+  "evidence": [],
+  "sources": [
+    "https://wiki.lckfb.com/zh-hans/fdb/skystar.html",
+    "https://wiki.lckfb.com/zh-hans/fdb/lckfb-daplink-emulator.html"
+  ]
+}

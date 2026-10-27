@@ -1,0 +1,32 @@
+{
+  "algorithm": "CRC-16/CCITT-FALSE",
+  "canonical_check": "123456789 -> 0x29b1",
+  "vectors": [
+    {
+      "name": "hello_request",
+      "type": 1,
+      "request_no": 1,
+      "payload_hex": "000000000000000000000000000000000000000000004000800000000000000a0000000000004000800000000000000b01",
+      "frame_hex": "4c4b0101310001000000000000000000000000000000000000000000000000004000800000000000000a0000000000004000800000000000000b01d8bd",
+      "valid": true
+    },
+    {
+      "name": "snapshot_request",
+      "type": 2,
+      "request_no": 2,
+      "payload_hex": "0000000000004000800000000000000a",
+      "frame_hex": "4c4b01021000020000000000000000004000800000000000000a6eea",
+      "valid": true
+    },
+    {
+      "name": "crc_error",
+      "frame_hex": "4c4b01021000020000000000000000004000800000000000000a6eeb",
+      "valid": false
+    },
+    {
+      "name": "oversized_header",
+      "frame_hex": "4c4b0102010203000000",
+      "valid": false
+    }
+  ]
+}

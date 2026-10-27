@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "contract_version": "0.2.1",
+  "vision_schema_refs": 58,
+  "schema_examples": 8,
+  "rejected_semantic_fixtures": 5,
+  "distinct_frames_with_identical_pixels": "ACCEPTED",
+  "rejected_cross_operation_pages": 2,
+  "source_assets_hash_verified": 0,
+  "source_model": "MobileNetV3-Large v11 / 7 classes",
+  "camera_owned": false,
+  "camera_candidate": "CAM-UVC-HBVCAM-F2170HD",
+  "camera_interface": "USB2.0 UVC (uvcvideo)",
+  "vision_increment_cny": "50.56",
+  "vision_increment_settled": false,
+  "rknn_available": false,
+  "model_inference_tested": false,
+  "hardware_tested": false
+}

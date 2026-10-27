@@ -1,0 +1,10 @@
+RUN=close-20261023-225902
+BUILD=/home/%USER%/locker-workspace/build/S1-01/close-20261023-225902
+LOGS=/home/%USER%/locker-workspace/logs/S1-01/close-20261023-225902
+vm-close-build.log
+vm-close-configure.log
+vm-close-ctest.log
+vm-close-environment.log
+vm-close-index.log
+vm-close-source-fingerprint.log
+vm-close-unit-tests.log

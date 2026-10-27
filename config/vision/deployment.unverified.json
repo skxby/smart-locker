@@ -1,0 +1,69 @@
+{
+  "status": "UNVERIFIED",
+  "mode_target": "REQUIRED",
+  "foundation_mode": "DISABLED_FOR_FOUNDATION",
+  "camera": {
+    "owned": false,
+    "camera_id": "slot-1",
+    "device_path": null,
+    "format": null,
+    "width": null,
+    "height": null,
+    "roi": null,
+    "profile_sha256": null,
+    "mount_verified": false,
+    "candidate": {
+      "selection_id": "CAM-UVC-HBVCAM-F2170HD",
+      "interface": "USB2.0 UVC (uvcvideo)",
+      "sensor_class": "200万像素 1080P CMOS UVC 免驱模组",
+      "capture_format": "YUYV 640x480@30",
+      "lens_mm": 3.6,
+      "fov_diagonal_deg": "75",
+      "focus": "manual_locked",
+      "requires_manual_exposure": true,
+      "requires_monotonic_timestamp": true,
+      "board_usb_port_verified": false,
+      "vendor_selected": true,
+      "price_settled": false,
+      "target_price_cny": "33.76",
+      "price_band_cny": "33.76-34.73",
+      "decision_doc": "docs/hardware/相机选型与成本.md",
+      "model": "HBVCAM-F2170HD V66",
+      "vendor": "深圳市汇博视捷（HBVCAM）",
+      "item_id": "665676380491",
+      "sku_id": "5559151920752",
+      "sku_label": "75°无畸变/手动调焦",
+      "url": "https://item.taobao.com/item.htm?id=665676380491&skuId=5559151920752",
+      "includes_cable": true,
+      "mount_holes": "4 x 3.0mm, spacing 24x22mm"
+    }
+  },
+  "model": {
+    "model_id": "equipment-v11",
+    "rknn_path": null,
+    "bundle_sha256": null,
+    "pipeline_sha256": null,
+    "toolkit_version": null,
+    "runtime_version": null,
+    "driver_version": null
+  },
+  "policy": {
+    "expected_class": "multimeter",
+    "threshold_ppm": null,
+    "margin_ppm": null,
+    "thresholds_validated": false
+  },
+  "additional_cost": {
+    "camera_cny": null,
+    "lighting_cny": null,
+    "mount_cny": null,
+    "shipping_cny": null,
+    "covered_by_existing_200_cny_budget": false,
+    "vision_increment_cap_cny": "55.00",
+    "vision_increment_candidate_total_cny": "50.56",
+    "prices_settled": false,
+    "lighting_power": "用户已有5V USB充电头，独立供电；不与相机共口",
+    "camera_power": "必须由RK的USB主机口供电与传数据，充电头不能代替主机"
+  },
+  "real_cabinet_validation": "NOT_RUN"
+}

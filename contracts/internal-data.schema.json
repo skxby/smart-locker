@@ -1,0 +1,5548 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:locker:contracts:internal-data:0.2.1",
+  "$defs": {
+    "Uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "U64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$",
+      "description": "十进制uint64字符串，解析器还须检查<=18446744073709551615，不得经浮点转换。"
+    },
+    "DeviceId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "LoginRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "$ref": "#/$defs/Role"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "user_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "display_name",
+        "role",
+        "enabled",
+        "user_revision"
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 43,
+          "maxLength": 128,
+          "writeOnly": false
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "user": {
+          "$ref": "#/$defs/User"
+        }
+      },
+      "required": [
+        "token",
+        "expires_at",
+        "user"
+      ]
+    },
+    "EventKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "event_seq": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "event_seq"
+      ]
+    },
+    "PhysicalSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "door": {
+          "$ref": "#/$defs/DoorState"
+        },
+        "item": {
+          "$ref": "#/$defs/ItemState"
+        },
+        "supply_mv": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time_quality": {
+          "$ref": "#/$defs/TimeQuality"
+        },
+        "continuity_ok": {
+          "type": "boolean"
+        },
+        "dropped_events": {
+          "$ref": "#/$defs/U64"
+        },
+        "durable_cursor": {
+          "$ref": "#/$defs/EventKey"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "door",
+        "item",
+        "supply_mv",
+        "observed_age_ms",
+        "time_quality",
+        "continuity_ok",
+        "dropped_events",
+        "durable_cursor"
+      ]
+    },
+    "Device": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "cabinet_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "contract_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "simulated": {
+          "type": "boolean"
+        },
+        "mode": {
+          "$ref": "#/$defs/DeviceMode"
+        },
+        "health_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "maxItems": 16
+        },
+        "ui_restart_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Supervisor cumulative reserved UI restart attempts; null when no trustworthy current observation."
+        },
+        "physical": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhysicalSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "device_id",
+        "cabinet_name",
+        "contract_version",
+        "simulated",
+        "mode",
+        "health_reasons",
+        "ui_restart_count",
+        "physical"
+      ]
+    },
+    "Tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "slot_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1
+        },
+        "availability": {
+          "$ref": "#/$defs/ToolAvailability"
+        },
+        "tool_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slot_id",
+        "availability",
+        "tool_revision"
+      ]
+    },
+    "Evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "history_complete": {
+          "type": "boolean"
+        },
+        "door_open_seen": {
+          "type": "boolean"
+        },
+        "item_transition_seen": {
+          "type": "boolean"
+        },
+        "physical": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PhysicalSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EventKey"
+          },
+          "maxItems": 32
+        },
+        "manual_resolution": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "history_complete",
+        "door_open_seen",
+        "item_transition_seen",
+        "physical",
+        "source_events",
+        "manual_resolution"
+      ]
+    },
+    "Operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "tool_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/OperationKind"
+        },
+        "actor_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "state": {
+          "$ref": "#/$defs/OperationState"
+        },
+        "operation_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AllowedAction"
+          },
+          "maxItems": 6
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        }
+      },
+      "required": [
+        "id",
+        "tool_id",
+        "kind",
+        "actor_id",
+        "state",
+        "operation_revision",
+        "command_id",
+        "reason_code",
+        "created_at",
+        "updated_at",
+        "allowed_actions",
+        "evidence"
+      ]
+    },
+    "CreateOperationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/OperationKind"
+        },
+        "tool_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "tool_id",
+        "kind",
+        "tool_revision"
+      ]
+    },
+    "RevisionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "operation_revision"
+      ]
+    },
+    "CancelRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "operation_revision",
+        "reason"
+      ]
+    },
+    "ResolveRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "operation_revision",
+        "physical_revision",
+        "resolution",
+        "reason"
+      ]
+    },
+    "Loan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "tool_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "borrower_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "borrow_operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "return_operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "opened_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "closed_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tool_id",
+        "borrower_id",
+        "borrow_operation_id",
+        "return_operation_id",
+        "opened_at",
+        "closed_at"
+      ]
+    },
+    "BusinessEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time_quality": {
+          "$ref": "#/$defs/TimeQuality"
+        },
+        "source_event": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EventKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "manual": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "operation_id",
+        "type",
+        "message",
+        "occurred_at",
+        "time_quality",
+        "source_event",
+        "manual"
+      ]
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "password": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 128
+        },
+        "role": {
+          "$ref": "#/$defs/Role"
+        }
+      },
+      "required": [
+        "username",
+        "display_name",
+        "password",
+        "role"
+      ]
+    },
+    "PatchUserRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "$ref": "#/$defs/Role"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "user_revision"
+      ],
+      "minProperties": 2
+    },
+    "CardObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "masked_uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "masked_uid",
+        "observed_age_ms",
+        "consumed"
+      ]
+    },
+    "BindCardRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "observation_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "user_revision",
+        "observation_id"
+      ]
+    },
+    "CardBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "bound": {
+          "type": "boolean"
+        },
+        "masked_uid": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 32
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "user_id",
+        "bound",
+        "masked_uid",
+        "user_revision"
+      ]
+    },
+    "Snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "#/$defs/Device"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Tool"
+          },
+          "maxItems": 1
+        },
+        "active_operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Operation"
+          },
+          "maxItems": 1
+        },
+        "loans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Loan"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "device",
+        "tools",
+        "active_operations",
+        "loans"
+      ]
+    },
+    "WsChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "resource.changed"
+        },
+        "resource": {
+          "type": "string",
+          "enum": [
+            "tool",
+            "operation",
+            "loan",
+            "device",
+            "review",
+            "user"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "type",
+        "resource",
+        "id",
+        "snapshot_revision"
+      ]
+    },
+    "WsResync": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "resync_required"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "type",
+        "snapshot_revision"
+      ]
+    },
+    "LocalPresenceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_revision": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "operation_id",
+        "operation_revision"
+      ]
+    },
+    "ProgressReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": [
+            "SERVICE",
+            "UI"
+          ]
+        },
+        "instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "progress": {
+          "$ref": "#/$defs/U64"
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Age at the source sampled_mono_ms, not send time; preserve both through queues. Fresh completed-loop sample uses zero; unknown uses uint32 max."
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "target",
+        "instance_id",
+        "progress",
+        "observed_age_ms",
+        "sampled_mono_ms"
+      ]
+    },
+    "RestartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "const": "UI"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "incident_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "target",
+        "reason",
+        "incident_id"
+      ]
+    },
+    "ToolList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Tool"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "UserList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/User"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "ReviewList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Operation"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "CardObservationList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CardObservation"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "LoanPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Loan"
+          },
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ]
+    },
+    "EventPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BusinessEvent"
+          },
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ]
+    },
+    "VisionSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "VisionGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "host_session_id"
+      ],
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "host_session_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "expected_class",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "threshold_ppm",
+        "margin_ppm",
+        "thresholds_validated",
+        "frame_count",
+        "min_frame_gap_ms",
+        "capture_deadline_ms",
+        "max_result_age_ms"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "DISABLED_FOR_FOUNDATION",
+            "SHADOW",
+            "REQUIRED"
+          ]
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "threshold_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "margin_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thresholds_validated": {
+          "type": "boolean"
+        },
+        "frame_count": {
+          "const": 3
+        },
+        "min_frame_gap_ms": {
+          "const": 100
+        },
+        "capture_deadline_ms": {
+          "const": 3000
+        },
+        "max_result_age_ms": {
+          "const": 2000,
+          "description": "Initial Core acceptance freshness only; committed evidence remains guard-bound during the original 120-second WAIT_CONFIRM window."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "REQUIRED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "bundle_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "pipeline_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "camera_profile_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "threshold_ppm": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000
+              },
+              "margin_ppm": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000
+              },
+              "thresholds_validated": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "VisionFrame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "captured_mono_ms",
+        "frame_sha256",
+        "quality",
+        "scores_ppm",
+        "inference_ms"
+      ],
+      "properties": {
+        "sequence": {
+          "$ref": "#/$defs/U64"
+        },
+        "captured_mono_ms": {
+          "$ref": "#/$defs/U64",
+          "description": "Conservative exposure-start lower bound: SOE timestamp or driver timestamp minus a verified exposure/pipeline upper bound stored in camera profile. MONOTONIC alone is insufficient."
+        },
+        "frame_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "quality": {
+          "enum": [
+            "VALID",
+            "DARK",
+            "BLURRED",
+            "OCCLUDED",
+            "INVALID"
+          ]
+        },
+        "scores_ppm": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "minItems": 7,
+          "maxItems": 7
+        },
+        "inference_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "VisionCaptureRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "camera_id",
+        "service_instance_id",
+        "expected_worker_instance_id",
+        "expected_camera_generation",
+        "guard",
+        "issued_mono_ms",
+        "deadline_mono_ms",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "frame_count"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "CAPTURE"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "camera_id": {
+          "const": "slot-1"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expected_worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expected_camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "issued_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "deadline_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frame_count": {
+          "const": 3
+        }
+      }
+    },
+    "VisionCaptureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "camera_id",
+        "service_instance_id",
+        "worker_instance_id",
+        "camera_generation",
+        "guard",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "completed_mono_ms",
+        "status",
+        "frames"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "CAPTURE_RESULT"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "camera_id": {
+          "const": "slot-1"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "completed_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "status": {
+          "enum": [
+            "OK",
+            "CAMERA_ERROR",
+            "MODEL_ERROR",
+            "TIMEOUT",
+            "INVALID_FRAME"
+          ]
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisionFrame"
+          },
+          "minItems": 0,
+          "maxItems": 3
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "OK"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "frames": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/VisionFrame"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            }
+          }
+        }
+      ]
+    },
+    "VisionWorkerStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "worker_instance_id",
+        "camera_generation",
+        "sampled_mono_ms",
+        "state",
+        "camera_ready",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "active_capture_id",
+        "reasons"
+      ],
+      "properties": {
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "state": {
+          "enum": [
+            "STARTING",
+            "READY",
+            "BUSY",
+            "DEGRADED"
+          ]
+        },
+        "camera_ready": {
+          "type": "boolean"
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      }
+    },
+    "VisionControlRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "request_id",
+        "service_instance_id"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "enum": [
+            "HELLO",
+            "STATUS"
+          ]
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionControlResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "kind",
+        "request_id",
+        "service_instance_id",
+        "status"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "kind": {
+          "const": "STATUS"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "status": {
+          "$ref": "#/$defs/VisionWorkerStatus"
+        }
+      }
+    },
+    "VisionStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "state",
+        "model_id",
+        "expected_class",
+        "worker_instance_id",
+        "last_observed_mono_ms",
+        "camera_ready",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "thresholds_validated",
+        "reasons"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "DISABLED_FOR_FOUNDATION",
+            "SHADOW",
+            "REQUIRED"
+          ]
+        },
+        "state": {
+          "enum": [
+            "DISABLED",
+            "UNAVAILABLE",
+            "STARTING",
+            "READY",
+            "BUSY",
+            "DEGRADED"
+          ]
+        },
+        "model_id": {
+          "const": "equipment-v11"
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "worker_instance_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_observed_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_ready": {
+          "type": "boolean"
+        },
+        "bundle_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pipeline_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_profile_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thresholds_validated": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 8
+        }
+      }
+    },
+    "VisionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "capture_id",
+        "operation_id",
+        "phase",
+        "slot_id",
+        "expected_class",
+        "predicted_class",
+        "confidence_ppm",
+        "verdict",
+        "guard",
+        "bundle_sha256",
+        "pipeline_sha256",
+        "camera_profile_sha256",
+        "policy_sha256",
+        "frame_keys",
+        "service_instance_id",
+        "worker_instance_id",
+        "camera_generation",
+        "captured_first_mono_ms",
+        "captured_last_mono_ms",
+        "received_mono_ms",
+        "reason_code",
+        "manual_review",
+        "accepted_mono_ms"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "phase": {
+          "enum": [
+            "PRE_ACCESS",
+            "POST_CLOSE"
+          ]
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "expected_class": {
+          "enum": [
+            "heat_gun",
+            "multimeter",
+            "oscilloscope",
+            "power_supply",
+            "soldering_iron",
+            "wire_cutter"
+          ]
+        },
+        "predicted_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "empty",
+                "heat_gun",
+                "multimeter",
+                "oscilloscope",
+                "power_supply",
+                "soldering_iron",
+                "wire_cutter"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence_ppm": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verdict": {
+          "enum": [
+            "MATCH",
+            "EMPTY",
+            "MISMATCH",
+            "UNCERTAIN",
+            "UNAVAILABLE",
+            "STALE",
+            "CONFLICT"
+          ]
+        },
+        "guard": {
+          "$ref": "#/$defs/VisionGuard"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pipeline_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "camera_profile_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frame_keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "minItems": 0,
+          "maxItems": 3
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "worker_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "camera_generation": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "captured_first_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "captured_last_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "received_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "reason_code": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "manual_review": {
+          "type": "boolean"
+        },
+        "accepted_mono_ms": {
+          "$ref": "#/$defs/U64"
+        }
+      }
+    },
+    "VisionEvidencePage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisionEvidence"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "VisionOperationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "policy",
+        "pre_capture_id",
+        "post_capture_id",
+        "pre_evidence_id",
+        "post_evidence_id",
+        "deadline_mono_ms",
+        "service_instance_id",
+        "manual_override_reason"
+      ],
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "policy": {
+          "$ref": "#/$defs/VisionPolicy"
+        },
+        "pre_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_capture_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pre_evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deadline_mono_ms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/U64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "service_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "manual_override_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "VisionCaptureRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request",
+        "result",
+        "state",
+        "evidence_id"
+      ],
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/VisionCaptureRequest"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VisionCaptureResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "enum": [
+            "REQUESTED",
+            "COMMITTED",
+            "FAILED",
+            "EXPIRED"
+          ]
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Role": {
+      "type": "string",
+      "enum": [
+        "USER",
+        "ADMIN"
+      ]
+    },
+    "OperationKind": {
+      "type": "string",
+      "enum": [
+        "BORROW",
+        "RETURN"
+      ]
+    },
+    "OperationState": {
+      "type": "string",
+      "enum": [
+        "REQUESTED",
+        "ACCESS_PENDING",
+        "ACCESS_ACTIVE",
+        "WAIT_CONFIRM",
+        "REVIEW_REQUIRED",
+        "COMPLETED",
+        "CANCELLED",
+        "NO_CHANGE",
+        "FAILED"
+      ]
+    },
+    "DoorState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "CLOSED",
+        "OPEN"
+      ]
+    },
+    "ItemState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "ABSENT",
+        "PRESENT"
+      ]
+    },
+    "DeviceMode": {
+      "type": "string",
+      "enum": [
+        "OFFLINE",
+        "RECONCILING",
+        "READY",
+        "DEGRADED"
+      ]
+    },
+    "ToolAvailability": {
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "RESERVED",
+        "BORROWED",
+        "REVIEW",
+        "UNAVAILABLE"
+      ]
+    },
+    "TimeQuality": {
+      "type": "string",
+      "enum": [
+        "UNSYNCED",
+        "ESTIMATED",
+        "HOST_SYNCED"
+      ]
+    },
+    "Resolution": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_BORROW",
+        "COMPLETE_RETURN",
+        "NO_CHANGE"
+      ]
+    },
+    "CommandState": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ACCEPTED",
+        "PULSE_STARTED",
+        "PULSE_FINISHED",
+        "REJECTED",
+        "UNKNOWN_RESULT"
+      ]
+    },
+    "AllowedAction": {
+      "type": "string",
+      "enum": [
+        "PRESENT_AT_CABINET",
+        "WAIT",
+        "CONFIRM",
+        "CANCEL",
+        "ADMIN_REVIEW"
+      ]
+    },
+    "AlarmPattern": {
+      "type": "string",
+      "enum": [
+        "OFF",
+        "NOTICE",
+        "FAULT"
+      ]
+    },
+    "ProgressTarget": {
+      "type": "string",
+      "enum": [
+        "SERVICE",
+        "UI"
+      ]
+    },
+    "McuTaskId": {
+      "type": "string",
+      "enum": [
+        "CONTROL",
+        "COMMUNICATION",
+        "PERIPHERAL_STORAGE",
+        "HEALTH"
+      ]
+    },
+    "SupervisorState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "RUNNING",
+        "UI_RECOVERING",
+        "LIMITED"
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "error",
+        "request_id"
+      ],
+      "properties": {
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "message",
+            "retryable",
+            "operation_id"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "VALIDATION_ERROR",
+                "UNAUTHENTICATED",
+                "FORBIDDEN",
+                "NOT_FOUND",
+                "SLOT_BUSY",
+                "STATE_CONFLICT",
+                "REVISION_CONFLICT",
+                "IDEMPOTENCY_CONFLICT",
+                "CARD_ALREADY_BOUND",
+                "PHYSICAL_PRECONDITION_FAILED",
+                "RATE_LIMITED",
+                "DEVICE_UNAVAILABLE",
+                "RECOVERY_REQUIRED",
+                "STORAGE_UNAVAILABLE",
+                "QUEUE_FULL",
+                "RESULT_PENDING",
+                "VISION_UNAVAILABLE",
+                "VISION_CONFLICT"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "retryable": {
+              "type": "boolean",
+              "description": "只允许按规范查询/复用原幂等键重试；不代表可重放硬件动作。"
+            },
+            "operation_id": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "CardBindingResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/CardBinding"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "CardObservationListResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/CardObservationList"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "DeviceResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Device"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "EventPageResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/EventPage"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "LoanPageResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/LoanPage"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "OperationResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Operation"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "ReviewListResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/ReviewList"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "SessionResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Session"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "SnapshotResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Snapshot"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "ToolResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/Tool"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "ToolListResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/ToolList"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "UserResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/User"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "UserListResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/UserList"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionEvidencePageResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/VisionEvidencePage"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "VisionStatusResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data",
+        "snapshot_revision",
+        "request_id"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/VisionStatus"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      }
+    },
+    "InternalRpcRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "request_id",
+        "method",
+        "session_token",
+        "path_ids",
+        "query",
+        "idempotency_key",
+        "params"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "login",
+            "getCurrentSession",
+            "logout",
+            "getDevice",
+            "getSnapshot",
+            "listTools",
+            "getTool",
+            "createOperation",
+            "getOperation",
+            "confirmOperation",
+            "cancelOperation",
+            "listLoans",
+            "listEvents",
+            "listReviews",
+            "resolveOperation",
+            "listUsers",
+            "createUser",
+            "updateUser",
+            "listCardObservations",
+            "bindCard",
+            "unbindCard",
+            "presence.submit",
+            "progress.report",
+            "ui.restart.request",
+            "maintenance.reconcile",
+            "health.get",
+            "getVisionStatus",
+            "getOperationVisionEvidence"
+          ]
+        },
+        "session_token": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 43,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path_ids": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/Uuid"
+          }
+        },
+        "query": {
+          "type": "object"
+        },
+        "idempotency_key": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "params": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "login"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/LoginRequest"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getCurrentSession"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "logout"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 43,
+                    "maxLength": 128
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getDevice"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getSnapshot"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listTools"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getTool"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "tool_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "tool_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "createOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/CreateOperationRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "confirmOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/RevisionRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "cancelOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/CancelRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listLoans"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listEvents"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  },
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listReviews"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "resolveOperation"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "operation_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/ResolveRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listUsers"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "createUser"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/CreateUserRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "updateUser"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/PatchUserRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "listCardObservations"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "bindCard"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/BindCardRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "unbindCard"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user_revision": {
+                    "$ref": "#/$defs/U64"
+                  }
+                },
+                "required": [
+                  "user_revision"
+                ]
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "presence.submit"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/$defs/LocalPresenceRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "progress.report"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/$defs/ProgressReport"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "ui.restart.request"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "$ref": "#/$defs/RestartRequest"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "maintenance.reconcile"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {}
+              },
+              "params": {
+                "$ref": "#/$defs/MaintenanceRequest"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "$ref": "#/$defs/Uuid"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "health.get"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "null"
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getVisionStatus"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {}
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {}
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "getOperationVisionEvidence"
+              }
+            },
+            "required": [
+              "method"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path_ids": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "operation_id"
+                ],
+                "properties": {
+                  "operation_id": {
+                    "$ref": "#/$defs/Uuid"
+                  }
+                }
+              },
+              "query": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "cursor": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  }
+                }
+              },
+              "params": {
+                "type": "null"
+              },
+              "session_token": {
+                "type": "string",
+                "minLength": 43,
+                "maxLength": 128
+              },
+              "idempotency_key": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SupervisorRpcAck": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "PROGRESS_RECORDED"
+            },
+            "target": {
+              "enum": [
+                "SERVICE",
+                "UI"
+              ]
+            },
+            "instance_id": {
+              "$ref": "#/$defs/Uuid"
+            },
+            "progress": {
+              "$ref": "#/$defs/U64"
+            }
+          },
+          "required": [
+            "kind",
+            "target",
+            "instance_id",
+            "progress"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "UI_RESTART_ACCEPTED"
+            },
+            "incident_id": {
+              "$ref": "#/$defs/Uuid"
+            },
+            "state": {
+              "enum": [
+                "QUEUED",
+                "STARTED",
+                "OBSERVED_RUNNING",
+                "FAILED"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "incident_id",
+            "state"
+          ]
+        }
+      ]
+    },
+    "InternalRpcResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "request_id",
+        "status",
+        "body"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "request_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "body": {}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": 204
+            },
+            "body": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "enum": [
+                200,
+                201,
+                202
+              ]
+            },
+            "body": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/SessionResponse"
+                },
+                {
+                  "$ref": "#/$defs/UserResponse"
+                },
+                {
+                  "$ref": "#/$defs/DeviceResponse"
+                },
+                {
+                  "$ref": "#/$defs/SnapshotResponse"
+                },
+                {
+                  "$ref": "#/$defs/ToolListResponse"
+                },
+                {
+                  "$ref": "#/$defs/ToolResponse"
+                },
+                {
+                  "$ref": "#/$defs/OperationResponse"
+                },
+                {
+                  "$ref": "#/$defs/LoanPageResponse"
+                },
+                {
+                  "$ref": "#/$defs/EventPageResponse"
+                },
+                {
+                  "$ref": "#/$defs/ReviewListResponse"
+                },
+                {
+                  "$ref": "#/$defs/UserListResponse"
+                },
+                {
+                  "$ref": "#/$defs/CardObservationListResponse"
+                },
+                {
+                  "$ref": "#/$defs/CardBindingResponse"
+                },
+                {
+                  "$ref": "#/$defs/SupervisorRpcAck"
+                },
+                {
+                  "$ref": "#/$defs/SupervisorHealthResponse"
+                },
+                {
+                  "$ref": "#/$defs/VisionStatusResponse"
+                },
+                {
+                  "$ref": "#/$defs/VisionEvidencePageResponse"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "enum": [
+                400,
+                401,
+                403,
+                404,
+                409,
+                422,
+                429,
+                503
+              ]
+            },
+            "body": {
+              "$ref": "#/$defs/Error"
+            }
+          }
+        }
+      ]
+    },
+    "UserRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user": {
+          "$ref": "#/$defs/User"
+        },
+        "password_hash": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "user",
+        "password_hash"
+      ]
+    },
+    "SessionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "user_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "token_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "revoked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "token_hash",
+        "expires_at",
+        "revoked"
+      ]
+    },
+    "CardRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "uid_hex": {
+          "type": "string",
+          "pattern": "^([0-9a-f]{8}|[0-9a-f]{14}|[0-9a-f]{20})$"
+        },
+        "bound_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "user_id",
+        "uid_hex",
+        "bound_at"
+      ]
+    },
+    "ToolRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "tool_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slot_id",
+        "tool_revision",
+        "enabled"
+      ]
+    },
+    "OperationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "$ref": "#/$defs/Operation"
+        },
+        "baseline": {
+          "$ref": "#/$defs/PhysicalSnapshot"
+        },
+        "related_loan_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "proof_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "CARD",
+                "LOCAL_UI"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "proof_consumed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "operation",
+        "baseline",
+        "related_loan_id",
+        "host_instance_id",
+        "proof_source",
+        "proof_consumed"
+      ]
+    },
+    "OutboxRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "session_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "expected_boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "expected_physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "action_no": {
+          "$ref": "#/$defs/U64"
+        },
+        "not_after_mcu_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "kind": {
+          "$ref": "#/$defs/OperationKind"
+        },
+        "slot_id": {
+          "const": 1
+        },
+        "state": {
+          "enum": [
+            "PREPARED",
+            "SEND_ATTEMPTED",
+            "ACCEPTED",
+            "UNRESOLVED",
+            "FINISHED",
+            "REJECTED"
+          ]
+        },
+        "attempted_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "operation_id",
+        "session_id",
+        "journal_epoch",
+        "expected_boot_id",
+        "expected_physical_revision",
+        "action_no",
+        "not_after_mcu_ms",
+        "kind",
+        "slot_id",
+        "state",
+        "attempted_at"
+      ]
+    },
+    "IdempotencyRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "method": {
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        },
+        "key": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "request_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "response_status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "response_json": {
+          "type": "string",
+          "maxLength": 32768,
+          "minLength": 1
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "actor_id",
+        "method",
+        "path",
+        "key",
+        "request_hash",
+        "response_status",
+        "response_json",
+        "expires_at"
+      ]
+    },
+    "AuditRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "actor_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time_quality": {
+          "$ref": "#/$defs/TimeQuality"
+        },
+        "source_event": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EventKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "actor_id",
+        "operation_id",
+        "type",
+        "reason",
+        "occurred_at",
+        "time_quality",
+        "source_event"
+      ]
+    },
+    "SlotGuardRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "slot_id": {
+          "const": 1
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "slot_id",
+        "operation_id"
+      ]
+    },
+    "IndexRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "maxLength": 192,
+          "minLength": 1
+        },
+        "resource_id": {
+          "$ref": "#/$defs/Uuid"
+        }
+      },
+      "required": [
+        "value",
+        "resource_id"
+      ]
+    },
+    "DeviceStateRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "#/$defs/Device"
+        },
+        "last_snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "active_command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "device",
+        "last_snapshot_revision",
+        "active_command_id"
+      ]
+    },
+    "ImportCursorRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/$defs/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "through": {
+          "$ref": "#/$defs/EventKey"
+        },
+        "continuity_ok": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "through",
+        "continuity_ok"
+      ]
+    },
+    "DeviceEventRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/EventKey"
+        },
+        "mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "event_type": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 15
+        },
+        "reason": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "door": {
+          "$ref": "#/$defs/DoorState"
+        },
+        "item": {
+          "$ref": "#/$defs/ItemState"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "supply_mv": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detail": {
+          "$ref": "#/$defs/U64"
+        },
+        "card_uid_hex": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "key",
+        "mono_ms",
+        "physical_revision",
+        "event_type",
+        "reason",
+        "operation_id",
+        "command_id",
+        "door",
+        "item",
+        "flags",
+        "supply_mv",
+        "detail",
+        "card_uid_hex"
+      ]
+    },
+    "RepoDocument": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "users"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/UserRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "sessions"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/SessionRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "cards"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/CardRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "tools"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/ToolRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "operations"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/OperationRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "loans"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/Loan"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "outbox"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/OutboxRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "idempotency"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/IdempotencyRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "audits"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/AuditRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "slot_guards"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/SlotGuardRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "username_index"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/IndexRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "card_uid_index"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/IndexRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "device_state"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/DeviceStateRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "import_cursors"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/ImportCursorRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "device_events"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/DeviceEventRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_operations"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/VisionOperationRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_captures"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/VisionCaptureRecord"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "collection",
+            "key",
+            "value"
+          ],
+          "properties": {
+            "collection": {
+              "const": "vision_evidence"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "value": {
+              "$ref": "#/$defs/VisionEvidence"
+            }
+          }
+        }
+      ]
+    },
+    "RepoCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collection": {
+          "enum": [
+            "users",
+            "sessions",
+            "cards",
+            "tools",
+            "operations",
+            "loans",
+            "outbox",
+            "idempotency",
+            "audits",
+            "slot_guards",
+            "username_index",
+            "card_uid_index",
+            "device_state",
+            "import_cursors",
+            "device_events",
+            "vision_operations",
+            "vision_captures",
+            "vision_evidence"
+          ]
+        },
+        "key": {
+          "type": "string",
+          "maxLength": 192,
+          "minLength": 1
+        },
+        "condition": {
+          "enum": [
+            "ABSENT",
+            "EXISTS"
+          ]
+        }
+      },
+      "required": [
+        "collection",
+        "key",
+        "condition"
+      ]
+    },
+    "RepoMutation": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "const": "PUT"
+            },
+            "document": {
+              "$ref": "#/$defs/RepoDocument"
+            }
+          },
+          "required": [
+            "op",
+            "document"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "const": "DELETE"
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            }
+          },
+          "required": [
+            "op",
+            "collection",
+            "key"
+          ]
+        }
+      ]
+    },
+    "RepositoryChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "expected_snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "new_snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RepoCheck"
+          },
+          "maxItems": 32
+        },
+        "mutations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RepoMutation"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "schema_version",
+        "expected_snapshot_revision",
+        "new_snapshot_revision",
+        "checks",
+        "mutations"
+      ]
+    },
+    "RepositoryQuery": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 192
+            },
+            "after_key": {
+              "type": "null"
+            },
+            "limit": {
+              "const": 1
+            }
+          },
+          "required": [
+            "schema_version",
+            "collection",
+            "key",
+            "after_key",
+            "limit"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "collection": {
+              "enum": [
+                "users",
+                "sessions",
+                "cards",
+                "tools",
+                "operations",
+                "loans",
+                "outbox",
+                "idempotency",
+                "audits",
+                "slot_guards",
+                "username_index",
+                "card_uid_index",
+                "device_state",
+                "import_cursors",
+                "device_events",
+                "vision_operations",
+                "vision_captures",
+                "vision_evidence"
+              ]
+            },
+            "key": {
+              "type": "null"
+            },
+            "after_key": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 192,
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "schema_version",
+            "collection",
+            "key",
+            "after_key",
+            "limit"
+          ]
+        }
+      ]
+    },
+    "RepositoryQueryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RepoDocument"
+          },
+          "maxItems": 100
+        },
+        "next_after_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "snapshot_revision",
+        "documents",
+        "next_after_key"
+      ]
+    },
+    "RepositoryRecoveryPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "collection": {
+          "enum": [
+            "users",
+            "sessions",
+            "cards",
+            "tools",
+            "operations",
+            "loans",
+            "outbox",
+            "idempotency",
+            "audits",
+            "slot_guards",
+            "username_index",
+            "card_uid_index",
+            "device_state",
+            "import_cursors",
+            "device_events",
+            "vision_operations",
+            "vision_captures",
+            "vision_evidence"
+          ]
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RepoDocument"
+          },
+          "maxItems": 100
+        },
+        "next_after_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 192,
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "snapshot_revision",
+        "collection",
+        "documents",
+        "next_after_key"
+      ]
+    },
+    "MaintenanceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "journal_epoch": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/$defs/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "snapshot_revision": {
+          "$ref": "#/$defs/U64"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "snapshot_revision",
+        "reason"
+      ]
+    },
+    "SupervisorProgressObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "progress": {
+          "$ref": "#/$defs/U64"
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/$defs/U64"
+        }
+      },
+      "required": [
+        "instance_id",
+        "progress",
+        "observed_age_ms",
+        "sampled_mono_ms"
+      ]
+    },
+    "SupervisorHealthResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supervisor_instance_id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/$defs/U64"
+        },
+        "service": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SupervisorProgressObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ui": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SupervisorProgressObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "$ref": "#/$defs/SupervisorState"
+        },
+        "restart_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "window_attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "cooldown_remaining_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        },
+        "budget_ready": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "supervisor_instance_id",
+        "sampled_mono_ms",
+        "service",
+        "ui",
+        "state",
+        "restart_count",
+        "window_attempts",
+        "cooldown_remaining_ms",
+        "budget_ready"
+      ]
+    }
+  },
+  "x-collection-schemas": {
+    "users": "UserRecord",
+    "sessions": "SessionRecord",
+    "cards": "CardRecord",
+    "tools": "ToolRecord",
+    "operations": "OperationRecord",
+    "loans": "Loan",
+    "outbox": "OutboxRecord",
+    "idempotency": "IdempotencyRecord",
+    "audits": "AuditRecord",
+    "slot_guards": "SlotGuardRecord",
+    "username_index": "IndexRecord",
+    "card_uid_index": "IndexRecord",
+    "device_state": "DeviceStateRecord",
+    "import_cursors": "ImportCursorRecord",
+    "device_events": "DeviceEventRecord",
+    "vision_operations": "VisionOperationRecord",
+    "vision_captures": "VisionCaptureRecord",
+    "vision_evidence": "VisionEvidence"
+  },
+  "x-rules": [
+    "文档存储模型是首版SQLite实现策略；record字段由这些schema冻结，不能注入SQL。",
+    "RepoDocument.value必须满足其collection对应schema，不能只满足anyOf中的任意一种。",
+    "仓储可以使用固定documents(collection,key,value_json)与meta；(collection,key)唯一，受控参数绑定。",
+    "Core在BEGIN IMMEDIATE事务中检查expected_snapshot_revision和checks，成功时new_snapshot_revision=expected+1；所有mutations和meta同提交，失败全部回滚。",
+    "users以user.id为key，username_index以规范化username为key；cards以user_id为key，card_uid_index以uid_hex为key，绑定与唯一性索引同事务更新。",
+    "slot_guards以字符串1为key，申请必须检查ABSENT并PUT，结束必须核验operation_id后DELETE；REVIEW_REQUIRED保持此记录。",
+    "loans以loan.id为key；归还关闭原记录，禁止覆盖借用者。事件键固定为device_id/epoch/20位补零boot/20位补零seq，按字节序即可保持数值顺序，不经浮点。",
+    "公开API不能调用任意仓储mutation；只有Core线程构造已验证RepositoryChange。会话/密码哈希/UID行只在内部使用。",
+    "查询按collection和key参数绑定，分页按key字节序；key与after_key互斥，页大小同时受limit和65535字节上限，未读完必须返回next_after_key。",
+    "恢复接口按collection分页，不一次装载无限历史；Core在开放请求前按同一snapshot_revision完成必要集合恢复。",
+    "locker_repo_import_events在同一事务做新事件去重导入、合法projection_change及连续游标推进；重复输入不能重复改变投影。",
+    "u64以经校验的十进制文本存储，禁止SQLite浮点/lexicographic大小比较；比较长度后比较同长度文本或在C以uint64解析。",
+    "日志格式化/数据库损坏不自动清库，schema不兼容明确报错；初始化只走本机CLI。",
+    "Vision captures/pinned policy/evidence belong to Core transactions; public query projections are sanitized; images and paths never enter RepositoryChange. Model/camera/policy changes only apply between operations; restart invalidates in-flight captures and requires reconciliation.",
+    "vision_evidence key is canonical operation_id + / + evidence_id (73 bytes). Core starts list at operation_id+/, returns only that prefix and matching operation_id fields, stops at first other prefix. Exact evidence references construct the same key. Cursor is opaque and bound to operation_id/snapshot_revision; never scan all evidence or expose another operation."
+  ],
+  "x-command-bindings": [
+    {
+      "operation_id": "login",
+      "core_kind": "SESSION_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "logout",
+      "core_kind": "SESSION_REVOKE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "getCurrentSession",
+      "core_kind": "SESSION_CURRENT",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getDevice",
+      "core_kind": "DEVICE_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getSnapshot",
+      "core_kind": "SNAPSHOT_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listTools",
+      "core_kind": "TOOLS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getTool",
+      "core_kind": "TOOL_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "createOperation",
+      "core_kind": "OPERATION_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "getOperation",
+      "core_kind": "OPERATION_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "confirmOperation",
+      "core_kind": "OPERATION_CONFIRM",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "cancelOperation",
+      "core_kind": "OPERATION_CANCEL",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listLoans",
+      "core_kind": "LOANS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listEvents",
+      "core_kind": "EVENTS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "listReviews",
+      "core_kind": "REVIEWS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "resolveOperation",
+      "core_kind": "OPERATION_RESOLVE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listUsers",
+      "core_kind": "USERS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "createUser",
+      "core_kind": "USER_CREATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "updateUser",
+      "core_kind": "USER_UPDATE",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "listCardObservations",
+      "core_kind": "CARD_OBSERVATIONS_LIST",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "bindCard",
+      "core_kind": "CARD_BIND",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "unbindCard",
+      "core_kind": "CARD_UNBIND",
+      "mode": "COMMAND"
+    },
+    {
+      "operation_id": "subscribeChanges",
+      "core_kind": "WS_SUBSCRIBE",
+      "mode": "TRANSPORT"
+    },
+    {
+      "operation_id": "getVisionStatus",
+      "core_kind": "VISION_STATUS_GET",
+      "mode": "QUERY"
+    },
+    {
+      "operation_id": "getOperationVisionEvidence",
+      "core_kind": "VISION_EVIDENCE_LIST",
+      "mode": "QUERY"
+    }
+  ],
+  "description": "内部仓储/恢复DTO设计契约，不是公共HTTP API或SQL执行入口。"
+}

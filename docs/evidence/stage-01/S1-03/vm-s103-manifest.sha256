@@ -1,0 +1,28 @@
+# S1-03 source manifest
+# scope=root CMakeLists.txt + host/device/ + host/simulator/ + tests/unit/device/ + tests/contract/device/
+# generated=2026-10-26T09:52:00+08:00
+d8f1850b39794dec69da396d3cd894c98de16cf9ce96b6b76d53617b8eb7f459  4090  CMakeLists.txt
+7bb766cd517a39cdeb88bae02957ae61e770cdc58c042dae95618060f8023126  797  host/device/CMakeLists.txt
+fe1eac6e5d932386c2ea15795e671a1c547157d3578403291a2075abcd73a607  9763  host/device/README.md
+390af779943e9f86029f079b764422b57572fb7cabe7949c67f321d856c32511  7048  host/device/include/locker/device/codec.h
+4a51972fed87106e511e8bf3ccacb23a70d2c3cc44cdb979e01c4181ceef37e8  2553  host/device/include/locker/device/transport.h
+6bb4ea57b45bdc02eeaf2bc988b30eb28191254a80a04bc2e76d44fd30043437  4303  host/device/include/locker/device/wire.h
+b8bb1650cb3e6c4ac44fbf10adb7153483fa6237e4cc56b5ded2db3eebf828c4  48259  host/device/src/codec.c
+8110920a24eb4f109bf92ef32c110679238cc82002a38fabf7a421d6f2ba87e6  39388  host/device/src/port.c
+611619e377b8b0993ae20c4f66fb71ec0820471f6fc1ced0a4bf39072e8eddb7  8866  host/device/src/transport.c
+8c532948cca1874605bdf3db4b3ef990cd8faa64c5a88c39ad71fe0fadef7f31  7980  host/device/src/wire.c
+38e323558edaeb34494a9234c1cf998b4246d8475c41eab406ff3c6d398b0051  1520  host/simulator/CMakeLists.txt
+b8f9e0e1c7e14549bd7732d4aca33115e7a81bdd7abc39d0bac0de8bb72015ad  8821  host/simulator/README.md
+21260867401789ec910007009d559059194d5bac6d3371dc41026ea4921709e6  5604  host/simulator/include/locker/simulator/sim.h
+3d81fd2b53f4e88798bd86f58f9afd335c8f568005622797dec71a0431cfb470  99545  host/simulator/src/sim.c
+d07612eac07b85fdae9e3a0c83d23b46c7f7421792d1fbe0784af1336cb14088  36946  host/simulator/src/sim_main.c
+977630d510db925f51391bb24a4cd794fbea46351293a0791fcb8bc36f6dda9c  2180  tests/contract/device/CMakeLists.txt
+d8657d854563366f17d648e2b1ac5460309d81e2913c0e3804aa344f37a66b64  52611  tests/contract/device/daemon_smoke.py
+cc58e47b26adcc8c805efef295cbbbc71c2ab904c8f44f470a097b161c570772  87535  tests/contract/device/test_device_port.c
+421fe6fddf5d4cf7e76630224bc403ed0d3d22300320e6bb079b545e200e4e6c  14849  tests/contract/device/test_golden_frames.c
+cb8a5a701287b06ed498653f93d1d54831255915f879921353d722a694ce4e11  984  tests/unit/device/CMakeLists.txt
+7243fbb2e46c8aa39cbb0388e7fecd54fec623f5bcfb7b43e92d560c19ee42b0  10664  tests/unit/device/device_test_support.h
+d8a26e31ba2b3cee9ec5f74d76e29cea06bf44425d3b4df2c0e6aded069b08d2  39632  tests/unit/device/test_codec.c
+cba82f070087cd4405e276ef575befa92eecf91b6f6eddad4b176617ead86281  42809  tests/unit/device/test_sim_journal.c
+a8b2227ecfbbea9573f90e87c9fab47d677b71ebd25e7d7a9adb2d4f9fcc5b37  69822  tests/unit/device/test_sim_protocol.c
+709d109fada7be704e67272ae2dda9426af4a91835e214434b229e81cbc824a8  14631  tests/unit/device/test_wire.c

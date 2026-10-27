@@ -1,0 +1,39 @@
+# Generated runtime/build residue; contract outputs remain tracked deliverables.
+__pycache__/
+*.py[cod]
+.venv/
+build/
+build-asan/
+build-tsan/
+runtime/
+*.db
+*.db-wal
+*.db-shm
+*.sock
+*.key
+*.pem
+*.p12
+*.keystore
+*.jks
+.env
+**/Objects/
+**/Listings/
+*.uvguix.*
+
+# 本地临时工作目录（S1-04 阶段的锚点脚本与传输包，不属交付物）。
+# 结论已写入 docs/evidence/，中间脚本保留在本机即可。
+.s104-stage/
+
+# 43 MB 用户原始压缩包：内容是 STM32F4xx_HAL_Code/ 的同义副本，
+# 且脚本从目录读取，不从 zip 读取（scripts/setup_firmware_dependencies.py:59）。
+STM32F4xx_HAL_Code.zip
+
+# 固件依赖的本地只读原始库：firmware/third_party/stm32f4 已按
+# deployment/firmware/dependencies.lock.json 逐文件 sha256 锁定（213 文件），
+# 且 AGENTS.md 要求不修改用户原库；保留在本机，不入库。
+STM32F4xx_HAL_Code/
+
+# 词法/格式模型等本地产物
+*.bin
+*.onnx
+*.rknn

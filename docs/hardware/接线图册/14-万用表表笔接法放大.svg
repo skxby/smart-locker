@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>万用表表笔接法放大</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">14  万用表表笔接法放大</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">只画直流电压测量；读数为预期示例，仪表量程按自己的万用表说明书选择。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">14 / 14</text>
+<text x="65" y="193" font-family="Microsoft YaHei,sans-serif" font-size="28" fill="#172d46">A 分压节点电压</text>
+<rect x="135" y="225" width="340" height="245" rx="5" fill="#f0cf75" stroke="#a16716"/>
+<rect x="160" y="245" width="290" height="65" rx="5" fill="#deebda" stroke="#deebda"/>
+<text x="180" y="288" font-family="Microsoft YaHei,sans-serif" font-size="35" fill="#172d46">2.164 V</text>
+<circle cx="305" cy="367" r="30" fill="#536477"/>
+<text x="155" y="432" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">COM 黑      VΩ 红</text>
+<text x="140" y="503" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">直流电压 DC V</text>
+<polyline points="200,455 200,600 165,600" fill="none" stroke="#536477" stroke-width="5"/>
+<polyline points="403,455 403,685 675,685" fill="none" stroke="#c34b35" stroke-width="5"/>
+<circle cx="165" cy="600" r="7" fill="#536477"/>
+<circle cx="675" cy="685" r="7" fill="#c34b35"/>
+<text x="65" y="578" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">黑：B / MCU GND</text>
+<text x="280" y="737" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#c34b35">红：A / 两电阻公共点</text>
+<text x="855" y="193" font-family="Microsoft YaHei,sans-serif" font-size="28" fill="#172d46">B MOS输出电压</text>
+<rect x="925" y="225" width="340" height="245" rx="5" fill="#f0cf75" stroke="#a16716"/>
+<rect x="950" y="245" width="290" height="65" rx="5" fill="#deebda" stroke="#deebda"/>
+<text x="970" y="288" font-family="Microsoft YaHei,sans-serif" font-size="35" fill="#172d46">约12 V</text>
+<circle cx="1095" cy="367" r="30" fill="#536477"/>
+<text x="945" y="432" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">COM 黑      VΩ 红</text>
+<text x="930" y="503" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">直流电压 DC V</text>
+<polyline points="990,455 990,600 955,600" fill="none" stroke="#536477" stroke-width="5"/>
+<polyline points="1193,455 1193,685 1465,685" fill="none" stroke="#c34b35" stroke-width="5"/>
+<circle cx="955" cy="600" r="7" fill="#536477"/>
+<circle cx="1465" cy="685" r="7" fill="#c34b35"/>
+<text x="855" y="578" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">黑：MOS OUT−</text>
+<text x="1070" y="737" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#c34b35">红：MOS OUT+</text>
+<rect x="65" y="785" width="710" height="240" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="785" width="5" height="240" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="822" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">A：测分压时</text>
+<text x="85" y="861" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PC0信号线先从MCU拔掉，红笔触节点A。</text>
+<text x="85" y="889" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">供电为12.00V时，节点理想约2.164V。</text>
+<text x="85" y="917" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">黑笔接分压板地，不能接锁负OUT−。</text>
+<text x="85" y="945" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">任何换线先断电；MCU断电时防ADC注入。</text>
+<text x="85" y="973" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">测量后按VREF+范围决定能否接回PC0。</text>
+<rect x="815" y="785" width="720" height="240" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="785" width="5" height="240" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="835" y="822" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">B：测MOS时，锁先不接</text>
+<text x="835" y="861" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">OUT+与OUT−之间接10k电阻测试负载。</text>
+<text x="835" y="889" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">红OUT+、黑OUT−；不要量到DC−冒充输出。</text>
+<text x="835" y="917" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">高有效候选：PWM低→约0V，高→约12V。</text>
+<text x="835" y="945" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">黑COM、红VΩ；电流孔在本图中不使用。</text>
+<text x="835" y="973" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">电流档绝不跨接电源；功率能力仍需另测。</text></svg>

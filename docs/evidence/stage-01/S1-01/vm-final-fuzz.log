@@ -1,0 +1,9 @@
+# deterministic scrub fuzz (fixed-seed xorshift64, 200000 iterations) under ASan+UBSan
+# date: 2026-10-23T21:49:03+08:00
+# source: docs/evidence/stage-01/S1-01/probe-scrub-fuzz.c
+FUZZ_BUILD_EXIT=0
+FUZZ_ITERATIONS=200000
+FUZZ_MAX_OUT=511 (buffer 512)
+FUZZ_FAILURES=0
+FUZZ_EXIT=0
+FUZZ_SANITIZER_REPORTS=0

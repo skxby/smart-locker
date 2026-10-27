@@ -1,0 +1,31 @@
+CMakeLists.txt: OK
+host/device/CMakeLists.txt: OK
+host/device/README.md: OK
+host/device/include/locker/device/codec.h: OK
+host/device/include/locker/device/transport.h: OK
+host/device/include/locker/device/wire.h: OK
+host/device/src/codec.c: OK
+host/device/src/port.c: OK
+host/device/src/transport.c: OK
+host/device/src/wire.c: OK
+host/simulator/CMakeLists.txt: OK
+host/simulator/README.md: OK
+host/simulator/include/locker/simulator/sim.h: OK
+host/simulator/src/sim.c: OK
+host/simulator/src/sim_main.c: OK
+tests/contract/device/CMakeLists.txt: OK
+tests/contract/device/daemon_smoke.py: OK
+tests/contract/device/test_device_port.c: OK
+tests/contract/device/test_golden_frames.c: OK
+tests/unit/device/CMakeLists.txt: OK
+tests/unit/device/device_test_support.h: OK
+tests/unit/device/test_codec.c: OK
+tests/unit/device/test_sim_journal.c: OK
+tests/unit/device/test_sim_protocol.c: OK
+tests/unit/device/test_wire.c: OK
+MANIFEST_LINES=25
+SHACHECK_OK=25
+SHACHECK_FAILED=0
+SHACHECK_EXIT=0
+SRC_STRAY_ARTIFACTS=0
+SRC_FILES=1174

@@ -1,0 +1,15 @@
+{
+  "workspace": "/home/%USER%/locker-workspace",
+  "directories": [
+    "/home/%USER%/locker-workspace/src",
+    "/home/%USER%/locker-workspace/build",
+    "/home/%USER%/locker-workspace/runtime/service",
+    "/home/%USER%/locker-workspace/runtime/simulator",
+    "/home/%USER%/locker-workspace/logs",
+    "/home/%USER%/locker-workspace/artifacts"
+  ],
+  "created_or_verified": true,
+  "sources_moved": false,
+  "build_or_tests_executed": false
+}
+PREPARE_EXIT=0

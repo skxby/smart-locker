@@ -1,0 +1,90 @@
+[
+  {
+    "name": "slot_claim_transaction",
+    "schema": "RepositoryChange",
+    "valid": true,
+    "value": {
+      "schema_version": 1,
+      "expected_snapshot_revision": "0",
+      "new_snapshot_revision": "1",
+      "checks": [
+        {
+          "collection": "slot_guards",
+          "key": "1",
+          "condition": "ABSENT"
+        }
+      ],
+      "mutations": [
+        {
+          "op": "PUT",
+          "document": {
+            "collection": "slot_guards",
+            "key": "1",
+            "value": {
+              "slot_id": 1,
+              "operation_id": "00000000-0000-4000-8000-000000000003"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "exact_user_lookup",
+    "schema": "RepositoryQuery",
+    "valid": true,
+    "value": {
+      "schema_version": 1,
+      "collection": "users",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "after_key": null,
+      "limit": 1
+    }
+  },
+  {
+    "name": "recovery_page",
+    "schema": "RepositoryRecoveryPage",
+    "valid": true,
+    "value": {
+      "schema_version": 1,
+      "snapshot_revision": "1",
+      "collection": "slot_guards",
+      "documents": [
+        {
+          "collection": "slot_guards",
+          "key": "1",
+          "value": {
+            "slot_id": 1,
+            "operation_id": "00000000-0000-4000-8000-000000000003"
+          }
+        }
+      ],
+      "next_after_key": null
+    }
+  },
+  {
+    "name": "wrong_collection_payload",
+    "schema": "RepoDocument",
+    "valid": false,
+    "value": {
+      "collection": "users",
+      "key": "1",
+      "value": {
+        "slot_id": 1,
+        "operation_id": "00000000-0000-4000-8000-000000000003"
+      }
+    }
+  },
+  {
+    "name": "exact_and_page_conflict",
+    "schema": "RepositoryQuery",
+    "valid": false,
+    "value": {
+      "schema_version": 1,
+      "collection": "users",
+      "key": "00000000-0000-4000-8000-000000000001",
+      "after_key": "00000000-0000-4000-8000-000000000002",
+      "limit": 1
+    }
+  }
+]

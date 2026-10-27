@@ -1,0 +1,5591 @@
+{
+  "created_at": "2026-10-23T22:51:03.849679+08:00",
+  "status": "PASS",
+  "moves": [
+    {
+      "origin": "/home/%USER%/99proxy",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/99proxy",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 101,
+          "mtime_ns": 1792082189023291000,
+          "sha256": "020618dd2d314a3242d38d6a75ec77e90ef72740ae11bbdde8272eb2921230a1",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/Kconfig.good",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/Kconfig.good",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4884,
+          "mtime_ns": 1792300303353078861,
+          "sha256": "36e2aca8f40d72094fd32fa5f8a6f19fc18234ee62ae6197c31bf58b8ad4e075",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_compile-err.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_compile-err.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 8,
+          "mtime_ns": 1792090305015904238,
+          "sha256": "7cc3b4c227e4619acd8a40bdb05f9b997f05d177e8baa50367e68f6bc4673a91",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_diag.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_diag.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 24,
+          "mtime_ns": 1792090321810903885,
+          "sha256": "e93636499bd3d48ff5953ff8df1fb9240c1fbdfc4b67ba3b82ee955e25bf78a4",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_diag2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_diag2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 794,
+          "mtime_ns": 1792086807755826000,
+          "sha256": "10dd98929186291f46166c2c3f707571ee4bc0e3338df064cb71fcad41d4907b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_drvfixw.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_drvfixw.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 80,
+          "mtime_ns": 1792128023297114000,
+          "sha256": "5c2ef3c07875761c54876a7d511f5cc54b527ded41629ba5f7413c4060b1eb59",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_drvw.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_drvw.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 101,
+          "mtime_ns": 1792127793143034000,
+          "sha256": "285d152f0998939ed2d0db308c4a78bee88028130144b67739738b2241fc3d51",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_fixsrc.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_fixsrc.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 533,
+          "mtime_ns": 1792086836525290000,
+          "sha256": "32182e780958463e8b95f4794455edee7eb39cec2645b76a43004ba2fd8b67c6",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_fixsrc2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_fixsrc2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 796,
+          "mtime_ns": 1792086854986527000,
+          "sha256": "3dc9425510123e6414118b57f9eb5488eb54078c460c68941a1003c4b7d2fccf",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_killph0c.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_killph0c.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 106,
+          "mtime_ns": 1792086319317039000,
+          "sha256": "d3834d28542e6068fae724594dd309c5b747c8eab52592c5cc59da9529f684cc",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_l1w.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_l1w.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 58,
+          "mtime_ns": 1792128157020545000,
+          "sha256": "599f1558d17bec482fabcb89191dc2db3b23001f3a8472d66676cb9d5456a9e2",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_launch2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_launch2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 347,
+          "mtime_ns": 1792086524732696000,
+          "sha256": "9d4304745f50b65190747e614d3a0e88ecb9a1c0d58ace4c1e75d09a651f9ab5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_sync.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_sync.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2,
+          "mtime_ns": 1792088080618951110,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-cargo-config.toml",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-cargo-config.toml",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 319,
+          "mtime_ns": 1792085825567531000,
+          "sha256": "11d50c53a39dc909e4797ee17c1dac27acfadafaa9e570f0c0fc2e91c9bf4bd8",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-checkwrap.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-checkwrap.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 116,
+          "mtime_ns": 1792085234292744000,
+          "sha256": "7f167922626a0d2771a393a51f452ead372d1ae4ea2f49e77182ce08f9837d4c",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-diag2.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-diag2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1003,
+          "mtime_ns": 1792086812004977842,
+          "sha256": "14696edafc1cc9261bf1e5220e8e595842867eba5908c483954d7dc2f366f105",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-fixsrc.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-fixsrc.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 744,
+          "mtime_ns": 1792086840247977247,
+          "sha256": "321911fc2b97e184a6888331fe9ed0f87354b2e5e8dd9d0923c6f54e2c7457a2",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-fixsrc2.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-fixsrc2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 651,
+          "mtime_ns": 1792086862231976784,
+          "sha256": "1d2e21d70b03a16127ad91d19006149dab9b721602c2d83a129e5ae06601de75",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 299,
+          "mtime_ns": 1792085886091997353,
+          "sha256": "7357479e65c40ffde41b081995df7f78fca66b8f6126e7c147413d13ac36bb04",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-launch.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-launch.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 442,
+          "mtime_ns": 1792085825536544000,
+          "sha256": "892d6c4be71e05f84b0f1dfa1b218d03a114ebd87921aeb89b06a77b8a6a6b99",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-launch2.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-launch2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 336,
+          "mtime_ns": 1792086535621983666,
+          "sha256": "c8fd002d073d348beacdb645ce5fd762896c20d03001e6007d3407e78258e9ea",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-nicdiag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/_vm-nicdiag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 564,
+          "mtime_ns": 1792081366343780000,
+          "sha256": "ad22fd589218afe958f77fedef5fad61403283d8648ab7d5a45d8c81421009ce",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-proxytest.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/_vm-proxytest.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 747,
+          "mtime_ns": 1792081672228518000,
+          "sha256": "be47c8b424e2b6fe267b83458686ce538a2be8cbfad96fc041ff1c28d59e9e77",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-resize.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/_vm-resize.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1328,
+          "mtime_ns": 1792085850747998098,
+          "sha256": "f2021aaec18e24c681e55f7080567760d9bbba98b9053e44883f1290722dea8b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-rfcverify.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-rfcverify.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 127,
+          "mtime_ns": 1792086186518475954,
+          "sha256": "fc9eb95607897f858d65bb1abdfff412f3c467346ee446f42e4ae6415ccef881",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_vm-snap.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/_vm-snap.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 647,
+          "mtime_ns": 1792085293632919292,
+          "sha256": "db12f838b0d99875abaa0d1c1d795f83acbe3ca87ad54b3c71e7c7b2d9481bc2",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/_wb-key.pub",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/_wb-key.pub",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 103,
+          "mtime_ns": 1792115082592795000,
+          "sha256": "14e413d9edaf466d1ad0e762eb5c83396a99504b863e532dc3e2d6e189f66c8c",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/a3audit_probe.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/a3audit_probe.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 590,
+          "mtime_ns": 1792150084816496000,
+          "sha256": "9c3554b264c7e65119eb5ec7eaa8bde5499cd495a5cd466bee16d44a03cd7795",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/a3audit_probe2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/a3audit_probe2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 520,
+          "mtime_ns": 1792150208006921000,
+          "sha256": "6537783e1331c501421a82827fe105520f5dd1ad716c60f565dba1648a90f10a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/a3audit_probe3.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/a3audit_probe3.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 513,
+          "mtime_ns": 1792150239212544000,
+          "sha256": "e50b806740a194005708fec8522fd24bf9ed0d96a7b06059c71114843864eb48",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/a3audit_probe4.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/a3audit_probe4.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 512,
+          "mtime_ns": 1792150301360595000,
+          "sha256": "cefe961366fb13da7b39d30ef0d219c5dfbb3a4859130298f96f83e40ec1bc09",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/advtest-5.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/advtest-5.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2407,
+          "mtime_ns": 1792264247379434036,
+          "sha256": "6c7c375cd1e98ed6f22ca67dd15da76b78a82e339592c7b0574e5874635fc61a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/advtest-6.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/advtest-6.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2156,
+          "mtime_ns": 1792264247631434017,
+          "sha256": "164b61652700facfb44cb4d9a90dd6b7ed5b48cccf19b13d1c18c64031521351",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/amdiag.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/amdiag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 482,
+          "mtime_ns": 1792310259914301148,
+          "sha256": "eeff53c444d494529bfd9b315afa7707bc9c5732692338a49d7daca002321a72",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/apt-diag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/apt-diag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 5480,
+          "mtime_ns": 1792113040585281043,
+          "sha256": "48191fcad46f787440e02f55e785c70f5d112c3a380527a6a13f86c66a66d3be",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/apt-diag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/apt-diag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 750,
+          "mtime_ns": 1792113023607494000,
+          "sha256": "d08c450c0a9b7651fcdd6e07d8fc7b2edc439b84479a30de80df69961e310c19",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/apt-tools.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/apt-tools.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2296,
+          "mtime_ns": 1792113066037279055,
+          "sha256": "d8cdb8839c35478ee6c6ba1cdd2deae50529e96c24578b11c2b51d51626757fe",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/aptdiag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/aptdiag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1000,
+          "mtime_ns": 1792083576271955480,
+          "sha256": "7a32a0d1682c1fabb3881c824cff786883b9560c8bbc94f2206197c4db746efe",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/at.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/at.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2986,
+          "mtime_ns": 1792311257897223195,
+          "sha256": "aba22cfa20f617a29e44cfc0f481efb06fca5169feb915cd1be36dedbe4aba04",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/at2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/at2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2769,
+          "mtime_ns": 1792311273924221943,
+          "sha256": "fe47e3b2fcbf37802804f71df7728d5fa69687684b509863a4a71c586442cea6",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/bge_model.tgz",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/bge_model.tgz",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 55954766,
+          "mtime_ns": 1788486551394026092,
+          "sha256": "9f5cc8bde2446063c454ff8cb44eb1d5b93d5aec72e1bdc98b73b926d0688b3a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/body.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/body.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 184,
+          "mtime_ns": 1792255060203561314,
+          "sha256": "f6d251f8fd70c460c19d0c04613cf7b46d2a59fd2fa4153f8eceb0d6fb591eb9",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/body2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/body2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 76,
+          "mtime_ns": 1792254198203430915,
+          "sha256": "16038057bfdf46e9291834319545fd9be8cc2c5ed8152bcadc9388de1e918673",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/boot-check.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/boot-check.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 365,
+          "mtime_ns": 1792115375420466795,
+          "sha256": "4afd73cbea5d0bdd947e83bda92e44ef6f74ccdba16b46af056e7b61f4c6a984",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/build-bzimage.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/build-bzimage.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1525,
+          "mtime_ns": 1792094347545819055,
+          "sha256": "e27a6af77ff3d4de63ee9f4b5fc65d06c5b866f8a95af5831c9897381cb587bf",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/build-status.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/build-status.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 443,
+          "mtime_ns": 1792096966250949475,
+          "sha256": "83713e26520c64d867d6c378c9e8dbeff7b4cbb33aec73d69013368cd30d3706",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/busname-test.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/busname-test.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 1689,
+          "mtime_ns": 1792115500974456988,
+          "sha256": "bb3acbe0e42aa959a01fc17979661160e0a242446f8ecabcecbf0696f59ebf11",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/busname-test.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/busname-test.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 960,
+          "mtime_ns": 1792115495136617000,
+          "sha256": "b31f565296364de24a2e0ccdeb1aa2f4b71769174c2ccf9ae7baff9cde73a152",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/c2-clippy.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/c2-clippy.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 389,
+          "mtime_ns": 1792124464856011674,
+          "sha256": "46be2e47417cc506b54015272a6968d0233f13bc8636f09aaacb19de81994dc7",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/c2-odc.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/c2-odc.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 27,
+          "mtime_ns": 1792123884077189654,
+          "sha256": "4c62b087afd858454003bf490a9b2d32a3da7abd7330b7d1d975e6436aa6240e",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/c3-rustdoc.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/c3-rustdoc.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 888,
+          "mtime_ns": 1792125042768268228,
+          "sha256": "8d0f2610bcec8c3445dd60c8140c85e2359187117836dd79d5314bc9a502c34a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/c3.out",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/c3.out",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792124706024051275,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/calib_npy.tgz",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/calib_npy.tgz",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1506,
+          "mtime_ns": 1788438351874480508,
+          "sha256": "4081accb0f8bf9c51f6c0739e03e4a4cae5a7e2ebae956ceb816f67d1742adff",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/cargo-config.toml",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/cargo-config.toml",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 484,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 319,
+          "mtime_ns": 1792086840247452902,
+          "sha256": "11d50c53a39dc909e4797ee17c1dac27acfadafaa9e570f0c0fc2e91c9bf4bd8",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/cfg-gap.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/cfg-gap.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3711,
+          "mtime_ns": 1792115660081444560,
+          "sha256": "66190d65313507ce712d4ccef14ef9f7c4bc3f012b8460ed3ba7fd1a1834603f",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/check0_base_optimize.onnx",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/check0_base_optimize.onnx",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 94847503,
+          "mtime_ns": 1788488027220255549,
+          "sha256": "43d41462644cd8e5aa77ee045549c1ad0a6b546648a45e0b786da770dac54255",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/check1_fold_constant.onnx",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/check1_fold_constant.onnx",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 94316900,
+          "mtime_ns": 1788488028595964540,
+          "sha256": "227b5dad97d241d116cec9f1bf19f4c84a5e43e99f7f57a34453069a5788ad36",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/check2_correct_ops.onnx",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/check2_correct_ops.onnx",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 94316753,
+          "mtime_ns": 1788488029015097154,
+          "sha256": "ffb520043b3e6b614ed17d46761afc73c7170389ca6e7331010a5c2992139007",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/check3_fuse_ops.onnx",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/check3_fuse_ops.onnx",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 94032805,
+          "mtime_ns": 1788488034747046858,
+          "sha256": "adeb7448602960f09c7810054ff09894a1cc506b7175d7b089133b23cab676da",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/clippy-run.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/clippy-run.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 624,
+          "mtime_ns": 1792121402749759937,
+          "sha256": "0b82f3f4be4df574ba9c91886d1ed4226d3be86a97cf60b2159d8149558f0672",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/config-evidence",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/config-evidence",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 153282,
+          "mtime_ns": 1792118450295285000,
+          "sha256": "4b0fff71b452adcbdcbb796f835ec420ff4a2e526c3a746c92a4297480189da5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/config.before-hwmon-m",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/config.before-hwmon-m",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 153282,
+          "mtime_ns": 1792258121590967187,
+          "sha256": "4b0fff71b452adcbdcbb796f835ec420ff4a2e526c3a746c92a4297480189da5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/config.before-kcfix",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/config.before-kcfix",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 151974,
+          "mtime_ns": 1792259917221362212,
+          "sha256": "0a12334b859cf8469b744e450f45a838d35a7ee66f862887d351fe49c72f0b3b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/config.before-lead-restore",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/config.before-lead-restore",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 152037,
+          "mtime_ns": 1792260097429908655,
+          "sha256": "dceba97a1acb7db9b59ba5caeaa5583b738e0526cee448faae5acbf861ab1b12",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/config.polluted-1142",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/config.polluted-1142",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 151983,
+          "mtime_ns": 1792122212110547330,
+          "sha256": "6e0e978afa36e0192a4cf138fe499a7db3ec81a4500418b1757a45443d3cd3a5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/cycle-pin.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/cycle-pin.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 265,
+          "mtime_ns": 1792318155964684382,
+          "sha256": "db2098c277873ebdd720889db5c49485a4447d806729053b3a9c7f74f8cdce79",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/day29_bge转rknn.py",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/day29_bge转rknn.py",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1056,
+          "mtime_ns": 1788438351882480786,
+          "sha256": "0fead7a1e40d70130b9de6275a6d64b4a1f753364d0bfbdba28ef782aaf7bced",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/emerg-diag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/emerg-diag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 5544,
+          "mtime_ns": 1792115617754447867,
+          "sha256": "76ea97169990d3cb20dbefc8688f4d1a273514ebaceee8b06a37c4c172b1ad53",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/emerg-diag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/emerg-diag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1598,
+          "mtime_ns": 1792115612094094000,
+          "sha256": "c0f7eb2bbfdf2bcad41acc96d7fdf1c6120baf3cbf529ad513dd7d2a879629a1",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/fs-build-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/fs-build-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2090,
+          "mtime_ns": 1792117929311831998,
+          "sha256": "de8463ad2b8eaae9f0261a33d1b19571ece672f3ee667fa34af5e011831f8746",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/fulltest-fix2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/fulltest-fix2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 566,
+          "mtime_ns": 1792321247002442939,
+          "sha256": "49e94700f9ed4ea16a057950440328508d7d583581e83fb3c5cf5eb289993aba",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/gapply.err",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/gapply.err",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792089170057928154,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/gapply2.err",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/gapply2.err",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792086186510066077,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/gate-v5d.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/gate-v5d.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 690,
+          "mtime_ns": 1792318320939671496,
+          "sha256": "be21e8749ed747e26b4965e15230eaca9d6e5f27b0d1ecea8470212f2a2f89e1",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/grub-final.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/grub-final.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 2952,
+          "mtime_ns": 1792115119366975483,
+          "sha256": "5cbdc8b4511c355a983d26a1d0b4f4ce2032643a4fcdc831d6c046fa74863624",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/grub-final.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/grub-final.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2065,
+          "mtime_ns": 1792115111991569000,
+          "sha256": "a54a28febc23eb8da38247e96af8f10fcd1763eeec82ada76e0da78b82add1bf",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/hwmon.rs.bak-v02",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/hwmon.rs.bak-v02",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 22550,
+          "mtime_ns": 1792125058172600567,
+          "sha256": "60c89006b3a06e84f7b38ae3a74c32488f1877dd0fefb6d0f59f5273ea278af0",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/i2c-tools.deb",
+      "destination": "/home/%USER%/Projects/tools/installers/i2c-tools.deb",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 80832,
+          "mtime_ns": 1792113469795492000,
+          "sha256": "220303964ed695e47fa33161c683294b4260ac5d4f7c2c2dfcb9f6e374741055",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/initramfs.cpio.gz",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/initramfs.cpio.gz",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1143366,
+          "mtime_ns": 1792090769120894459,
+          "sha256": "a481752631c32ab96a11eecab41fa785822ef0847fe4cb73c9771052bebbfa0b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/inline-test.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/inline-test.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 734,
+          "mtime_ns": 1792253614147887409,
+          "sha256": "2afc30d6e8689421f47a154cd2744d7f0ca86a2fce8dae6bd60f23169195e584",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/land-launch.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/land-launch.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 439,
+          "mtime_ns": 1792092547236756000,
+          "sha256": "60be756fdc994227c75fc3dcbbda5a49f7180c6f189f2720ac0fb65a09b12eda",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/libi2c0.deb",
+      "destination": "/home/%USER%/Projects/tools/installers/libi2c0.deb",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 6260,
+          "mtime_ns": 1792113463985681000,
+          "sha256": "e9f296c9c740939571c449f6fdcb437157f91c74201702499eb39cfba585e7f2",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/libx86-1.deb",
+      "destination": "/home/%USER%/Projects/tools/installers/libx86-1.deb",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 82678,
+          "mtime_ns": 1792113465836107000,
+          "sha256": "541b4a564f0baddac004b0c387c549c27fe685e5eb6b52a573d8b2f3a619626c",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/line-len.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/line-len.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 630,
+          "mtime_ns": 1792252138642593321,
+          "sha256": "ba258927c14174d2aeaa8722aa0b596312e85af4e269a6932c3fe4f7920417a8",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/linelen2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/linelen2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 180,
+          "mtime_ns": 1792254342766830496,
+          "sha256": "d71b54fd694c698889d3f9ec156fed54fd58c34ee3e1de286a4a764ae9c5c82e",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/main,c",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/main,c",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 10,
+          "mtime_ns": 1787292092927220863,
+          "sha256": "950391cc6792496a937813f5ba0188b9baf35efd81ee8d9137043bdc013cf75d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-diag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-diag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 804,
+          "mtime_ns": 1792113081786277825,
+          "sha256": "0e50c5bb39782d555b65ad5146b87f0472782e525be097f88c6fab463c6360ed",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-diag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-diag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 779,
+          "mtime_ns": 1792113075564131000,
+          "sha256": "f813de2a2b2d5d2c06a9acefcc81975f7c80013dbcffcd7531241cda97c589dd",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-diag2.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-diag2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 2459,
+          "mtime_ns": 1792113122130274673,
+          "sha256": "7bcb93e6baba92570ab867ed0596afb173eba302b454fc93917c596125f73eee",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-diag2.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-diag2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1173,
+          "mtime_ns": 1792113116493920000,
+          "sha256": "374055395ce9acd47d2a4519ee86f2daa0a8c1d829656a750d27a703d565bb3a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-restore.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-restore.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 634,
+          "mtime_ns": 1792113141241273180,
+          "sha256": "61a724b68421f462abfe78e843dcba391aeb1793a575a0fcff7d5577297b259d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-restore.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-restore.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1156,
+          "mtime_ns": 1792113133155568000,
+          "sha256": "9a6ffd7ba06b7bd7fa6daf8c9a30a0505d7dc5f2d656cca25f171d190a4cf122",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/net-up.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/net-up.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 32,
+          "mtime_ns": 1792113098200276542,
+          "sha256": "0d6446a900c0bdf77847d368f72017c38e1e53f858e6285477cb9309511d1302",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/newkernel-diag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/newkernel-diag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 9319,
+          "mtime_ns": 1792115582220450642,
+          "sha256": "6d60898a1075886202b53692516b61d454ccf5b38a8aec0e0d33a44348b36ba6",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/newkernel-diag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/newkernel-diag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1313,
+          "mtime_ns": 1792115576870048000,
+          "sha256": "13333869d7613304b4c349c0469b265b4a19cf290f7eb49769ec3c7fc864a2fa",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/newprod.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/newprod.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 357,
+          "mtime_ns": 1792254998742779258,
+          "sha256": "29c63a1cebbdfc8e1078f6fea9ca69bb2a00ac0cdd328601539aef12a6501398",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/odc.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/odc.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 27,
+          "mtime_ns": 1792122415442680835,
+          "sha256": "4c62b087afd858454003bf490a9b2d32a3da7abd7330b7d1d975e6436aa6240e",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/oops.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/oops.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 357,
+          "mtime_ns": 1792264263902432746,
+          "sha256": "3c4162b64851cdf491cbf451be7c39cba59c3230649b77ecf176b0c0dbb666ea",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/osdiag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/osdiag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 520,
+          "mtime_ns": 1792083617925954602,
+          "sha256": "172aa1dc4861f14253f223fb200a7e3fd81ab1eebf43996607da472272b5ec8d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/p1-build.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/p1-build.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 84,
+          "mtime_ns": 1792123802547568983,
+          "sha256": "106e80dabbe5b2cc61aa4fd4d2bbd13578f672a3836a211f68dfa0337e6aa2f7",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/p1-odc.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/p1-odc.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 27,
+          "mtime_ns": 1792123794992108858,
+          "sha256": "4c62b087afd858454003bf490a9b2d32a3da7abd7330b7d1d975e6436aa6240e",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/phase0b2-v3-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/phase0b2-v3-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792089374286923851,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/phase0b2-v4-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/phase0b2-v4-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792089865965913490,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/phase0b2-v5-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/phase0b2-v5-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792090070659909177,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/phase0b2-v5b-launch.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/phase0b2-v5b-launch.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 0,
+          "mtime_ns": 1792090725203895384,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/phase0c.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/phase0c.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1855,
+          "mtime_ns": 1792086917674975616,
+          "sha256": "41c713a4bc94cab212a275a87414f122134f13ed0fc855f9414823dfdae68ea4",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/pi.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/pi.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1080,
+          "mtime_ns": 1792311234057225057,
+          "sha256": "693e9de5b87d609676527c931061813be7cf2b396152020d39d099883825c9cc",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/postfix-diag.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/postfix-diag.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 0,
+          "gid": 0,
+          "bytes": 10951,
+          "mtime_ns": 1792114898839992709,
+          "sha256": "07dd1a34848ac5eee9e4775aef9958820c07033357da3d6b0b347e62cc6fa867",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/postfix-diag.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/postfix-diag.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2385,
+          "mtime_ns": 1792114892036518000,
+          "sha256": "9d41a8c25cc357b955253ddd0aecf558b602aa2370aad6fdd4af655682a48533",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe-now.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe-now.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 71,
+          "mtime_ns": 1792114873027994725,
+          "sha256": "77c9aa5f877c55da1152ddaed39bf901bfc29a138c5764c3ec73be319f2e3c57",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 834,
+          "mtime_ns": 1792083999388946564,
+          "sha256": "50a8b6e041596b42d715544c3eacdf040fc9054012477ef3d5de419b33f1de11",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe10.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe10.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 29059271,
+          "mtime_ns": 1792093296543841202,
+          "sha256": "41c6de407e30c15e23869920ffae7d83441333ff39baed8dd40eef980da85656",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe12.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe12.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 23246226,
+          "mtime_ns": 1792093492907837064,
+          "sha256": "8bf89343eff7d631ee28d42ce92c14682e5d27ef49c92c126a131ee51674c587",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe14.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe14.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1089,
+          "mtime_ns": 1792093667394833387,
+          "sha256": "2ff429b3d80d9aa0ae24fc2bca55797219508df1781eafb2e85a4fc93f4b2280",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe15.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe15.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 31853,
+          "mtime_ns": 1792093684509833026,
+          "sha256": "26e9eaf28b01f88ac2a246fee7ae28beeffdec191e356ac8ae0bbc0f1f4edcdd",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe16.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe16.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 596,
+          "mtime_ns": 1792093870131258000,
+          "sha256": "0d0a826a787d0582145aaaa7eb920c77750d02d5c2aa055afb67f4b2c67111ee",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe16.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe16.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4235,
+          "mtime_ns": 1792093880440828898,
+          "sha256": "35ecbf6e5bee9842b452b963a55cf10dc9f7482a569faa6d876eb88f37c9f34a",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe17.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe17.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 647,
+          "mtime_ns": 1792093914346623000,
+          "sha256": "3c51d1a80adb423d02d55275616dc977b9415ac5a7b72c930c9942d1d0ce2b2d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe18.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe18.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3440,
+          "mtime_ns": 1792094209495821964,
+          "sha256": "9bcfbafa786316d42d8e2d39c1100b17be2d9a63b75fc36fb2d28563718c7cd7",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe2.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 546,
+          "mtime_ns": 1792084026693945988,
+          "sha256": "9db38c0dab148c14d6663ea217b46e546f192f2a55d11a85a9544508db7007dd",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe5-fromerrno.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe5-fromerrno.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1543,
+          "mtime_ns": 1792092252849863194,
+          "sha256": "ce77d4b5017c17cfd4100a9cd324897f90e9b2ef409eb00558b9ea9d2c15cb7f",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe6.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe6.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2004,
+          "mtime_ns": 1792092395335860192,
+          "sha256": "e28c4990ee979ec8f6615a287cced35d8a5bad41f3875eee6eac2007811efa72",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe8.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe8.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1253,
+          "mtime_ns": 1792092956938848358,
+          "sha256": "9e264726f17cf2cd853ce7ba3cd54145479bd5a10726269a5ea2dfa8c8d7fd54",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe9.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe9.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 5,
+          "mtime_ns": 1792093836644829821,
+          "sha256": "d117fa006ba9208500b2930ce69cbde436c647afa917cb7396a9bc9111a46dd2",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe9.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe9.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 738,
+          "mtime_ns": 1792093065854667000,
+          "sha256": "6598a0939bd788dcea551f34271f6a2711e71739d66e67c7a41c1e35ff739ed9",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/probe9.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/probe9.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 417,
+          "mtime_ns": 1792093836644829821,
+          "sha256": "28fb7c7b5abc783ed0bb949579a440dee6d336d78a79666bca6933b88071edc1",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/qwen1.5b-q4_k_m.gguf",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/qwen1.5b-q4_k_m.gguf",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 986048672,
+          "mtime_ns": 1788096095896039029,
+          "sha256": "36f64f74ad3c34084e29c07437e249a33d8ef706b9e734c56f5e05489b73296d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/read-edid.deb",
+      "destination": "/home/%USER%/Projects/tools/installers/read-edid.deb",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 18954,
+          "mtime_ns": 1792113467868627000,
+          "sha256": "427ff1e6bb3c3c035065bd5649ba7cf2c32231ad28f643e0ff22cb82fdc1bced",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/readlog.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/readlog.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 118,
+          "mtime_ns": 1792309925100327300,
+          "sha256": "539196d44b83ec5fdc3b35f53c181b5f690615168fd5a257a47b6c0020f848ad",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/regcount2.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/regcount2.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 266,
+          "mtime_ns": 1792312004905164845,
+          "sha256": "73812435b0c756bde4b6ebffc54925ab5a0cbebf9cdbb90a7a1ed83f884056d3",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/regcount3.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/regcount3.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 286,
+          "mtime_ns": 1792312051714161189,
+          "sha256": "d98e7909bacce2389712622f13927b5b50cdf0f243b689feaad162a0cc4ba557",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/remat.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/remat.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 203,
+          "mtime_ns": 1792253893957865553,
+          "sha256": "f569476959d61980e876c5afa49abaccb89f77ac365b15bcc9df20df9a47db00",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/requirements_cp38-1.6.0.txt",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/requirements_cp38-1.6.0.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 330,
+          "mtime_ns": 1788438087466562132,
+          "sha256": "d92b5abda8fe21f5f77a03dc17f5aef8c1a95cd5b28d5c83079f603003f28a71",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/restore-olddef.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/restore-olddef.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 39,
+          "mtime_ns": 1792122219539696137,
+          "sha256": "e36c7ecbbf5852568fa50dc1af7d278dbc766d130411dff9986c98399cb3ec7b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rknn_toolkit2-1.5.2+b642f30c-cp38-cp38-linux_x86_64.whl",
+      "destination": "/home/%USER%/Projects/tools/installers/rknn_toolkit2-1.5.2+b642f30c-cp38-cp38-linux_x86_64.whl",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 38875566,
+          "mtime_ns": 1788439376038758997,
+          "sha256": "91d844ac2f683470370c6c1b6576488a1ab65523083711077a967c7506d3ee39",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rknn_toolkit2-1.6.0+81f21f4d-cp38-cp38-linux_x86_64.whl",
+      "destination": "/home/%USER%/Projects/tools/installers/rknn_toolkit2-1.6.0+81f21f4d-cp38-cp38-linux_x86_64.whl",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41193475,
+          "mtime_ns": 1788438087457561616,
+          "sha256": "fb79c8fd67fd035997cd10ac4675f1e36bdddf6fb17ef802de7fdf5c864ef70b",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rust-next-rev.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/rust-next-rev.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 107,
+          "mtime_ns": 1792083202734963351,
+          "sha256": "196d140540c432f5866a2ab9ec580526a32f6663983fe7fce62e8443e48912fc",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rust_driver_hwmon.ko",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/rust_driver_hwmon.ko",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 12712,
+          "mtime_ns": 1792094359999270179,
+          "sha256": "90443315d4ddfb34d2d2d436e002be2323af4783abf3fac97bc41df2721cb3ec",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rustup-init-bin",
+      "destination": "/home/%USER%/Projects/tools/installers/rustup-init-bin",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 21113232,
+          "mtime_ns": 1792086434241681000,
+          "sha256": "dda7234360b7f578ca8b0ddcb80145646fa61a67c1720a5abc7051b35c9fcb71",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/rustup.sh",
+      "destination": "/home/%USER%/Projects/tools/installers/rustup.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 29915,
+          "mtime_ns": 1792083239515962576,
+          "sha256": "7d0ea0f8eba7fa1ebfe998091cd7ec4501e33ec5ca6b884eb4d894d7da5170af",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/sata-check.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/sata-check.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1359,
+          "mtime_ns": 1792094620921998895,
+          "sha256": "31719d0318c2ad104118750adc1d217d9f064834a919ecc745db008599529f47",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/show-amtest.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/show-amtest.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 98,
+          "mtime_ns": 1792253909618532062,
+          "sha256": "28ad2d1b02798b6c9d8273c8d3ddf976cbeda1ffa3fa9a9f437ae3ab6cb8e4d5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/show-body.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/show-body.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 169,
+          "mtime_ns": 1792254189773842447,
+          "sha256": "23ea81c15e6f825efc34180074fe31c5b1ccba1be2d6fe06ecf8aa7b08864b9d",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/show-script.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/show-script.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 261,
+          "mtime_ns": 1792254193770842134,
+          "sha256": "20919b8a7b1189541f2ce720a7675528621cebc987658e16df377be107733fc0",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/sshkey-add.log",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/sshkey-add.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 49,
+          "mtime_ns": 1792115094371977436,
+          "sha256": "b10f1a863c45c84a57733a9c133b8620d9751f424eb1076cd9c5d179d1a2585f",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/sshkey-add.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/sshkey-add.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 599,
+          "mtime_ns": 1792115086723037000,
+          "sha256": "5816f6f7b700114e8a5b1c2bac9ca20449489d0f0bfce046f96eae4bbe01d2ab",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/state.txt",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/state.txt",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 149,
+          "mtime_ns": 1792093479955837337,
+          "sha256": "1578b56e120a491ad877ddd7c09885fd6883b4b8a9d77f1009d2f82b2f5a47f5",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/state3.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/state3.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 594,
+          "mtime_ns": 1792112968788286651,
+          "sha256": "9ede0169db4eac3c2ed3c7f73d27823538afa927e3f039dcc17e821a9e39ad06",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/tmp108.ko",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/tmp108.ko",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 21480,
+          "mtime_ns": 1792094359999552260,
+          "sha256": "95b458c94b05ce926fa8e200666146277bcfa5b62fc37af4f2ea2b02841ecc32",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/torch-2.4.1+cpu-cp312-cp312-linux_x86_64.whl",
+      "destination": "/home/%USER%/Projects/tools/installers/torch-2.4.1+cpu-cp312-cp312-linux_x86_64.whl",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 194846757,
+          "mtime_ns": 1788486708913358290,
+          "sha256": "8800deef0026011d502c0c256cc4b67d002347f63c3a38cd8e45f1f445c61364",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/ubuntu.sources",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/ubuntu.sources",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 502,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 235,
+          "mtime_ns": 1792083652142516000,
+          "sha256": "ccf9e4d485d2318bf5c6ea9c39d5959804d4a16c8768279443cc058c2786e623",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/up.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/up.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1175,
+          "mtime_ns": 1792311214134226613,
+          "sha256": "28cb1a1cd6b95c96da22b951b342bcfe5092c5665ed78f6fa6de80c5f6edc4df",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/verify-grub.sh",
+      "destination": "/home/%USER%/Projects/system-maintenance/originals/verify-grub.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 688,
+          "mtime_ns": 1792115141326973768,
+          "sha256": "2ebd7fc1924f160c7db6233484adb2c9ab31d94a1124532cdf0a9dc2bead5394",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/verify-pin.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/verify-pin.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 290,
+          "mtime_ns": 1792318001941696413,
+          "sha256": "ae569d5fc4e63747caa6c426e39f87bcc2780d531b96dcd4a8b7fe37cb979645",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/vk.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/vk.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 302,
+          "mtime_ns": 1792118257915005582,
+          "sha256": "f158de7c8c382b7b72699f7a166de28e9b4a87989536e8f6098f3dfbd8580a35",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/vllm.log",
+      "destination": "/home/%USER%/Projects/ai-lab/imported-assets/vllm.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 17692,
+          "mtime_ns": 1788349529734910752,
+          "sha256": "291d6ff2125d9785860b5dd0bbad9ca7e26bcafd8a1d2d2f849ee81e4e6e19b3",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/vm-cmp-v2final.sh",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/vm-cmp-v2final.sh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4545,
+          "mtime_ns": 1792204169653778206,
+          "sha256": "e1ddd7049ddc1be7e3fbc6b18ae0dca3f63c42f7b07bee7b9c155909278357f6",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/vmci-probe.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/vmci-probe.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1115,
+          "mtime_ns": 1792094806399994987,
+          "sha256": "f2446f35acdf5cba0c39fd9d35c149f008b28bf09d4df619caad6d275220bf27",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/vmci-probe2.log",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/vmci-probe2.log",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 401,
+          "mtime_ns": 1792094829970994490,
+          "sha256": "5b935ca4509a0a53f58993f05c7aba4e35e1a0c6efb023477b642e6753271935",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/hhh",
+      "destination": "/home/%USER%/Projects/legacy-learning/originals/hhh",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987267376442717,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987312155136069,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/COMMIT_EDITMSG",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 14,
+          "mtime_ns": 1785987312152328261,
+          "sha256": "a30c61b93bc666c03b97ca1ce2d1e7a8b2eb8cefc928ece868a858bd25bd5d26",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/FETCH_HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 90,
+          "mtime_ns": 1785986683310746060,
+          "sha256": "55dcf7d8e37c391e17788e0c7acc991c94f51b44c39651c028df2ffb3a098cc8",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 23,
+          "mtime_ns": 1785983484435452393,
+          "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/ORIG_HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1785984568380393788,
+          "sha256": "18fc9fab54f5a24bf2c45c94e29a7bf1fec4eddbeb1b18da9f41cf1ad337ab13",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/config",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 257,
+          "mtime_ns": 1785984269653328925,
+          "sha256": "3e855fef99c2af1e342c848bf2290cb2e3ad63d722fed242ad408dfc2d5aa68a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/description",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 73,
+          "mtime_ns": 1785983484429028676,
+          "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983484431028687,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/applypatch-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 478,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 896,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/fsmonitor-watchman.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4726,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/post-update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 189,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-applypatch.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 424,
+          "mtime_ns": 1785983484431028687,
+          "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1649,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-merge-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 416,
+          "mtime_ns": 1785983484429028676,
+          "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-push.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1374,
+          "mtime_ns": 1785983484431028687,
+          "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-rebase.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4898,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-receive.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 544,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/prepare-commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1492,
+          "mtime_ns": 1785983484431028687,
+          "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/push-to-checkout.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2783,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/sendemail-validate.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2308,
+          "mtime_ns": 1785983484430028681,
+          "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3650,
+          "mtime_ns": 1785983484431028687,
+          "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/index",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 137,
+          "mtime_ns": 1785987312150787636,
+          "sha256": "781bce8a7f17ba26f070ea3c6197274fb3407d0a55fd573a93700c6cd0c2eeee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983484431028687,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info/exclude",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 240,
+          "mtime_ns": 1785983484431028687,
+          "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983983815502475,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 461,
+          "mtime_ns": 1785987312153787091,
+          "sha256": "bd55c75644a879a2b726be8f412d1a77d3cd6d21a90f576b639a1d84ae1226e6",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984031269934508,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983983815502475,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 461,
+          "mtime_ns": 1785987312153787091,
+          "sha256": "bd55c75644a879a2b726be8f412d1a77d3cd6d21a90f576b639a1d84ae1226e6",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984031269934508,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984031269934508,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes/origin/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 438,
+          "mtime_ns": 1785987333430982197,
+          "sha256": "c7ae58f79476aa9c527a3cfb5767d4ff71d9d207ce4fd1e88e8f38b9c8979e17",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987312157786363,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/64",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987312152328261,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/64/6e5943e8ce829dbaa9a37fd0d71273db3f8665",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 153,
+          "mtime_ns": 1785987312152328261,
+          "sha256": "f9f330d89a6d954296f43852aa915d94f4d326f02ee2848211faf7b7e4ac58ee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/8f",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785986683306746010,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/8f/99351d0e4a7c151b84cb2e9d9f6682fe14a594",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 863,
+          "mtime_ns": 1785986683306746010,
+          "sha256": "1aeb38d054fc6fa57a35a43635fe162eec4878e8c312231783148149cf99b2ad",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/93",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983670082325994,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/93/30bf0aa55536557ae8733b2cad08abd11fa5e9",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 48,
+          "mtime_ns": 1785983670081326069,
+          "sha256": "a798ddef57665150f503442edc585b4cde94f67463a3d2257e5ec9426e84fe77",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/a8",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987309907196744,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/a8/b42d1f197b86975edd9aa8ff52e0b9d35e10b2",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 28,
+          "mtime_ns": 1785987309907196744,
+          "sha256": "5ae85ba7cedf9d9e27a68e825524fe98f50ebf66bbce147e12e6d1c8cd366b1f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/ad",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987312150787636,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/ad/edcce7b53f05bebbca7077ec59dd6bb6fc2a36",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 48,
+          "mtime_ns": 1785987312150787636,
+          "sha256": "58051153546c4d063c465e66c51de341f345138123be33a64c6ac154dc603e7e",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/b2",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983983813850321,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/b2/68b104c9ae2b5a635974629702ad53bbc266a4",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 123,
+          "mtime_ns": 1785983983813850321,
+          "sha256": "b8370d53ca9badf169936c28d33347c7db4b4d70d5f28aaa06db7041b3b44733",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/be",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785986683306746010,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/be/6bb04519cb27e883d4d404d8c0c145ab96e692",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 48,
+          "mtime_ns": 1785986683306746010,
+          "sha256": "d3e2e7781d67639179613a3b2218fe25a57c5b88648e000128a7ca146aaa6b8e",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/d9",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983530222316831,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/d9/5f44a673a847bd60a87f0ccad30d8fcbc60795",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 22,
+          "mtime_ns": 1785983530222316831,
+          "sha256": "e4bac864f772f72bb8dac5a6a796f5ba17f658e0f299ce83b6f3095444b2b106",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/f0",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785986683306746010,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/f0/7db45481ff7d1deb9999ff4671b1fe855cf4af",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 26,
+          "mtime_ns": 1785986683306746010,
+          "sha256": "8e39c682c2a19bafecfccaa4fc0b9338a340176b4bf50da07ce63410c2a5b357",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983484435452393,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/pack",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983484435452393,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984031269854606,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987312153787091,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1785987312153787091,
+          "sha256": "dae516cb6a740b94678a144a2396333da2a41e26bb9cf5b6804d27b876e1d822",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984031269854606,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785987333431982021,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes/origin/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1785987333430982197,
+          "sha256": "dae516cb6a740b94678a144a2396333da2a41e26bb9cf5b6804d27b876e1d822",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/tags",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785983484434159200,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "abc",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 17,
+          "mtime_ns": 1785987267374430392,
+          "sha256": "5d34fede9b5fbfe9e753f3cd5f619de28d6a295badf7183682bfcbe774b39551",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/myproject",
+      "destination": "/home/%USER%/Projects/legacy-learning/originals/myproject",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004201500473082,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".111.swp",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 12288,
+          "mtime_ns": 1786004205550568610,
+          "sha256": "8304b7e92cec444f33ef9270ba35ba156cac10ff6686ef094b7ecdc2be851af0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003150001026098,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/COMMIT_EDITMSG",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 15,
+          "mtime_ns": 1786003030184060400,
+          "sha256": "786c596403668bae4aae6929a17a396e490d1275cd9fd34024ed4b4e701c63b8",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/FETCH_HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 96,
+          "mtime_ns": 1786003149988474193,
+          "sha256": "6ba333b7699b01fabaf8fb9053631e2157cdf07b885f05beb6f1e039eeb82643",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 23,
+          "mtime_ns": 1786002374065853533,
+          "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/ORIG_HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1786003150000474547,
+          "sha256": "880ba048e21d56a307f1adfef66fcfeb7a30759fb8f4fa1a1391d9bfd2b4405f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/config",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 267,
+          "mtime_ns": 1786003073850279486,
+          "sha256": "eba48807eb702997ad235526a5a2dee2feee65fdb70b304b4cad5d41cbbdbc1c",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/description",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 73,
+          "mtime_ns": 1786002287559332061,
+          "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002287560331655,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/applypatch-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 478,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 896,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/fsmonitor-watchman.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4726,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/post-update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 189,
+          "mtime_ns": 1786002287559332061,
+          "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-applypatch.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 424,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1649,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-merge-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 416,
+          "mtime_ns": 1786002287559332061,
+          "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-push.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1374,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-rebase.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4898,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-receive.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 544,
+          "mtime_ns": 1786002287559332061,
+          "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/prepare-commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1492,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/push-to-checkout.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2783,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/sendemail-validate.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2308,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3650,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/index",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 137,
+          "mtime_ns": 1786003030183087826,
+          "sha256": "cee171e2b44bed947d9e423484ce031b8197f752d208806c4f89e9b71f7fa54d",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002287560331655,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info/exclude",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 240,
+          "mtime_ns": 1786002287560331655,
+          "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003030184876085,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 158,
+          "mtime_ns": 1786003030184087852,
+          "sha256": "8e1723133cc33771dd98fa1c547fad226073027d6158367a90e48ef55bbc9ec6",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073850279486,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003030184876085,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 158,
+          "mtime_ns": 1786003030184876085,
+          "sha256": "8e1723133cc33771dd98fa1c547fad226073027d6158367a90e48ef55bbc9ec6",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073850279486,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073850279486,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/logs/refs/remotes/origin/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 140,
+          "mtime_ns": 1786003073850279486,
+          "sha256": "25c418053f2fc2ff39e613cd8008b0a4f996772df91240718fa874bec5cded02",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003149997474459,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/3e",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002987867003665,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/3e/fd7862380e1958ba94f3597dbb0b5f8b154722",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 30,
+          "mtime_ns": 1786002987867003665,
+          "sha256": "6dd67ff91540fd9a4edaa498b05f8540b51f1b530807d2c2688a1157a225236c",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/c6",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003030184060400,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/c6/2ab89c9e6c7b233f399c29ae02d15fa65f1e68",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 124,
+          "mtime_ns": 1786003030184060400,
+          "sha256": "f7e76124d513fca6a2d9a78b3ad343a25011779e2a967667fd5c9e2750aec0c2",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/e7",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003030182087799,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/e7/3704486617196043121a7922d3cb7d949f6c0e",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 47,
+          "mtime_ns": 1786003030182087799,
+          "sha256": "a7f10b05f2313f88db221450058cfafdd5b54f05d7b46456b2a7a8f54a2bdbdb",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002287562530118,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/pack",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002287562530118,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073850279486,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003030184876085,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1786003030184087852,
+          "sha256": "880ba048e21d56a307f1adfef66fcfeb7a30759fb8f4fa1a1391d9bfd2b4405f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073850279486,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786003073851494005,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/remotes/origin/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1786003073850279486,
+          "sha256": "880ba048e21d56a307f1adfef66fcfeb7a30759fb8f4fa1a1391d9bfd2b4405f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/tags",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786002374062791549,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "111",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 14,
+          "mtime_ns": 1786003122635349429,
+          "sha256": "ed42329d864d140ed766bb5c6d4db5a3cc2c40d4e447c75daf224c801d832fc6",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/test",
+      "destination": "/home/%USER%/Projects/legacy-learning/originals/test",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984425131660335,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426265657175,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426266304782,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 23,
+          "mtime_ns": 1785984426264531836,
+          "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/config",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 257,
+          "mtime_ns": 1785984426265321000,
+          "sha256": "3e855fef99c2af1e342c848bf2290cb2e3ad63d722fed242ad408dfc2d5aa68a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/description",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 73,
+          "mtime_ns": 1785984425134660326,
+          "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984425135660323,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/applypatch-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 478,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 896,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/fsmonitor-watchman.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4726,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/post-update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 189,
+          "mtime_ns": 1785984425134660326,
+          "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-applypatch.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 424,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1649,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-merge-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 416,
+          "mtime_ns": 1785984425134660326,
+          "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-push.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1374,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-rebase.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4898,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/pre-receive.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 544,
+          "mtime_ns": 1785984425134660326,
+          "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/prepare-commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1492,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/push-to-checkout.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2783,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/sendemail-validate.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2308,
+          "mtime_ns": 1785984425134660326,
+          "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/hooks/update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3650,
+          "mtime_ns": 1785984425135660323,
+          "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/index",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 137,
+          "mtime_ns": 1785984426265657175,
+          "sha256": "3b8700317733ddaa274d0f5764ff10cf69bc6c8d9deac6a8bea9e40cf25df15a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984425136660321,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/info/exclude",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 240,
+          "mtime_ns": 1785984425136660321,
+          "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264852529,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 170,
+          "mtime_ns": 1785984426264852529,
+          "sha256": "1089729c23d3ecd076e7383a5791ccc9da489bceeabdbd7c5e2880859d96f793",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264852529,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264852529,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 170,
+          "mtime_ns": 1785984426264852529,
+          "sha256": "1089729c23d3ecd076e7383a5791ccc9da489bceeabdbd7c5e2880859d96f793",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264309799,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264309799,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/logs/refs/remotes/origin/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 170,
+          "mtime_ns": 1785984426264309799,
+          "sha256": "1089729c23d3ecd076e7383a5791ccc9da489bceeabdbd7c5e2880859d96f793",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984425138222842,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984425138222842,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects/pack",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426265644479,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects/pack/pack-1260bd94dcb377ed0060533733fbf507ea3699bd.idx",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1156,
+          "mtime_ns": 1785984426256657199,
+          "sha256": "56cdd54d57c19f46af11b672168f98b2b5e23a8c57fe1fe20d766e096821889a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects/pack/pack-1260bd94dcb377ed0060533733fbf507ea3699bd.pack",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 208,
+          "mtime_ns": 1785984426256657199,
+          "sha256": "621f9864c69d622d347676050a1c585a3aa005c6ee8656985ab7c9803228c437",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/objects/pack/pack-1260bd94dcb377ed0060533733fbf507ea3699bd.rev",
+          "kind": "file",
+          "mode": 292,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 64,
+          "mtime_ns": 1785984426258657194,
+          "sha256": "80b0d9e8b948c741f1c92a0bf2134ac4b3b56c74c5cc909108fac3dd5fcfc6b0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/packed-refs",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 114,
+          "mtime_ns": 1785984426263806159,
+          "sha256": "89e5e90be2d39e8b0d3b0d554cc95db7ac339bc234b6b92f725372f6eaff2e9f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426263806159,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264852529,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/heads/master",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 41,
+          "mtime_ns": 1785984426264852529,
+          "sha256": "18fc9fab54f5a24bf2c45c94e29a7bf1fec4eddbeb1b18da9f41cf1ad337ab13",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/remotes",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426263806159,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/remotes/origin",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426264309799,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/remotes/origin/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 32,
+          "mtime_ns": 1785984426264309799,
+          "sha256": "cdc65e67690c4c6475174e5ec662b70655246a2f3924354778835ab3be70aa76",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/.git/refs/tags",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1785984426123657568,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "yay1/abc",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1785984426265657175,
+          "sha256": "acd01b8d9dd35af20ccdcdb3f8ae813a45d3e5b6df5abf095e3d0a071fc3c335",
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/xyx.git",
+      "destination": "/home/%USER%/Projects/legacy-learning/originals/xyx.git",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015201959753,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015206489801,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/HEAD",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 23,
+          "mtime_ns": 1786004015206489801,
+          "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/config",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 92,
+          "mtime_ns": 1786004015204570895,
+          "sha256": "cfe7ba1238c9a78be7535d7c63bcaf5a4d5011d46b07c9b45d3bbf7d6c312dfe",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/description",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 73,
+          "mtime_ns": 1786004015201959753,
+          "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015202959780,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/applypatch-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 478,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 896,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/fsmonitor-watchman.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4726,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/post-update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 189,
+          "mtime_ns": 1786004015201959753,
+          "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-applypatch.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 424,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1649,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-merge-commit.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 416,
+          "mtime_ns": 1786004015201959753,
+          "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-push.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1374,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-rebase.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4898,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/pre-receive.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 544,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/prepare-commit-msg.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 1492,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/push-to-checkout.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2783,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/sendemail-validate.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2308,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/hooks/update.sample",
+          "kind": "file",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 3650,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015202959780,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/info/exclude",
+          "kind": "file",
+          "mode": 436,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 240,
+          "mtime_ns": 1786004015202959780,
+          "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015206489801,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/info",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015206489801,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/objects/pack",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015206489801,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015205731736,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/heads",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015205731736,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": ".git/refs/tags",
+          "kind": "directory",
+          "mode": 509,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1786004015205731736,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    },
+    {
+      "origin": "/home/%USER%/initramfs",
+      "destination": "/home/%USER%/kernel-driver-workspace/archive/home-supplement/initramfs",
+      "inventory": [
+        {
+          "relative": ".",
+          "kind": "directory",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1792090768944945249,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "bin",
+          "kind": "directory",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1792090768940894463,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "bin/busybox",
+          "kind": "file",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 2190672,
+          "mtime_ns": 1792090768899894464,
+          "sha256": "df12634c17fcdca839ae5dc47d7627b7558511f7645de7c99ccf097a0f28ed5b",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "bin/cat",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768940894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/dmesg",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768917894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/grep",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768935894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/insmod",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768909894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/mount",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768922894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/poweroff",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768926894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/rmmod",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768913894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/sh",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768904894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "bin/sleep",
+          "kind": "symlink",
+          "mode": 511,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 7,
+          "mtime_ns": 1792090768931894463,
+          "sha256": null,
+          "link": "busybox",
+          "rdev": null
+        },
+        {
+          "relative": "dev",
+          "kind": "directory",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1792090768855894464,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "init",
+          "kind": "file",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 213,
+          "mtime_ns": 1792090768948894463,
+          "sha256": "3e3228784d040491c3e7e217b59691bf65a74bfcfcab767d8e6db4b5be61b690",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "proc",
+          "kind": "directory",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1792090768856592782,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "rust_driver_hwmon.ko",
+          "kind": "file",
+          "mode": 420,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 11976,
+          "mtime_ns": 1792090768944945249,
+          "sha256": "c1509510cb036cabd8be8e43d09419956e3e834881f7e77a36458d1a602e5205",
+          "link": null,
+          "rdev": null
+        },
+        {
+          "relative": "sys",
+          "kind": "directory",
+          "mode": 493,
+          "uid": 1000,
+          "gid": 1000,
+          "bytes": 4096,
+          "mtime_ns": 1792090768856656099,
+          "sha256": null,
+          "link": null,
+          "rdev": null
+        }
+      ],
+      "completed": true
+    }
+  ],
+  "permanently_deleted": false,
+  "loose_file_count": 159,
+  "legacy_directory_count": 5,
+  "preserved_paths": [
+    "linux-rust",
+    "aarch64-linux-musl-cross",
+    "proj101env",
+    "rknn-env",
+    "rknn-env152",
+    "tf4env",
+    "vllm-env",
+    "bge_model",
+    "bge_work",
+    "models",
+    "llama.cpp-src",
+    "locker-workspace",
+    "kernel-driver-workspace",
+    "snap"
+  ],
+  "remaining_visible_entries": [
+    "Projects",
+    "aarch64-linux-musl-cross",
+    "bge_model",
+    "bge_work",
+    "kernel-driver-workspace",
+    "linux-rust",
+    "llama.cpp-src",
+    "locker-workspace",
+    "models",
+    "proj101env",
+    "rknn-env",
+    "rknn-env152",
+    "snap",
+    "tf4env",
+    "vllm-env",
+    "下载",
+    "公共",
+    "图片",
+    "文档",
+    "桌面",
+    "模板",
+    "视频",
+    "音乐"
+  ],
+  "remaining_visible_loose_files": []
+}

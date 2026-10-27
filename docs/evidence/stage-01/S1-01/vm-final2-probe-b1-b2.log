@@ -1,0 +1,9 @@
+# audit B1/B2 probe (probe-b1-b2.c), run against the remediated source
+# date: 2026-10-23T22:02:08+08:00
+PROBE_BUILD_EXIT=0
+B1_BEARER note="Bearer [redacted]"
+B1_QUOTED note={"password":"[redacted]"}
+B1_VARIANTS_LEAK=0
+B2_17TH_LEAK=0
+B2_SINK note="token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted] token=[redacted]"
+PROBE_EXIT=0

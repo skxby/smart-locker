@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>MOS锁回路与分压</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">04  MOS锁回路与分压</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">YYNMOS-1：按用户照片的端子名称绘图；右侧四端子的物理上下顺序必须翻看背面丝印确认。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">04 / 14</text>
+<rect x="60" y="180" width="310" height="160" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="60" y="180" width="5" height="160" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="80" y="217" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">P01 / B11 电源入口</text>
+<text x="80" y="256" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">DC 5.5×2.1 母头</text>
+<text x="80" y="284" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先实测中心 / 外圈极性</text>
+<text x="80" y="312" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">红 = 实测 +；黑 = 实测 −</text>
+<rect x="650" y="205" width="300" height="430" rx="5" fill="#e3f1e8" stroke="#237c6a"/>
+<text x="666" y="242" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#237c6a">B03 YYNMOS-1</text>
+<rect x="660" y="365" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="670" y="391" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">PWM</text>
+<rect x="660" y="414" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="670" y="440" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">GND</text>
+<rect x="823" y="251" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="833" y="277" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">DC−</text>
+<rect x="823" y="301" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="833" y="327" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">DC+</text>
+<rect x="823" y="436" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="833" y="462" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">OUT+</text>
+<rect x="823" y="491" width="119" height="39" rx="5" fill="#c2d49a" stroke="#237c6a"/>
+<text x="833" y="517" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">OUT−</text>
+<text x="668" y="569" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#172d46">按照片背面标字对应</text>
+<text x="668" y="593" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#172d46">到货须核实同版次</text>
+<text x="668" y="617" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#172d46">不要把正反面照抄</text>
+<rect x="1170" y="210" width="360" height="130" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1170" y="210" width="5" height="130" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="1190" y="247" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">B02 锁体</text>
+<text x="1190" y="286" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">LOCK+ ← OUT+</text>
+<text x="1190" y="314" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">LOCK− ← OUT−</text>
+<polyline points="370,220 500,220 500,270 815,270" fill="none" stroke="#536477" stroke-width="5"/>
+<polyline points="370,310 460,310 460,320 815,320" fill="none" stroke="#c34b35" stroke-width="5"/>
+<text x="390" y="212" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#536477">上路：P01− → DC−</text>
+<text x="390" y="359" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#c34b35">下路：P01+ → 保险 → DC+</text>
+<polyline points="950,455 1060,455 1060,272 1170,272" fill="none" stroke="#c34b35" stroke-width="5"/>
+<text x="972" y="448" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#c34b35">OUT+</text>
+<polyline points="950,510 1110,510 1110,315 1170,315" fill="none" stroke="#536477" stroke-width="5"/>
+<text x="975" y="539" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">OUT−</text>
+<rect x="1170" y="380" width="360" height="175" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1170" y="380" width="5" height="175" rx="5" fill="#a16716" stroke="#a16716"/>
+<text x="1190" y="417" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#a16716">B09a 1N4007 续流</text>
+<text x="1190" y="456" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">有色环的一端 K → LOCK+</text>
+<text x="1190" y="484" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">无环的一端 A → LOCK−</text>
+<text x="1190" y="512" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">跨接在锁两端，尽量靠锁体</text>
+<text x="1190" y="540" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">焊点分别热缩绝缘，非串联</text>
+<rect x="60" y="405" width="515" height="215" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="60" y="405" width="5" height="215" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="80" y="442" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">输入保护 / 控制</text>
+<text x="80" y="481" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">保险后 12V+ 接 470µF(+)；12V− 接 (−)</text>
+<text x="80" y="509" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">100nF 与 470µF 并联在输入端</text>
+<text x="80" y="537" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PB6 → PWM；10k：PWM → 模块 GND</text>
+<text x="80" y="565" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">模块 GND → MCU GND，单独信号回路</text>
+<text x="80" y="593" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">该下拉只适用于确认高电平有效的模块</text>
+<rect x="60" y="680" width="695" height="220" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="60" y="680" width="5" height="220" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="80" y="717" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">分压板：100k / 22k / 100nF</text>
+<text x="80" y="756" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">保险后 12V+ → 100k → 节点 ADC → 22k → 地</text>
+<text x="80" y="784" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">节点 ADC → P2-14 / PC0 / ADC123_IN10</text>
+<text x="80" y="812" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">100nF 接在节点 ADC 与地之间；地 → MCU GND</text>
+<text x="80" y="840" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">12V 时节点 ≈ 2.164V；15V 时 ≈ 2.705V</text>
+<text x="80" y="868" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">公式：输入电压 = 节点电压 × 122 / 22</text>
+<rect x="805" y="680" width="725" height="220" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="805" y="680" width="5" height="220" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="825" y="717" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">两个必须分清的网络</text>
+<text x="825" y="756" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">OUT− / LOCK− 不能额外短接到 DC− 或 MCU GND。</text>
+<text x="825" y="784" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">模块可能为低边开关：短接会绕过 MOS。</text>
+<text x="825" y="812" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">12V− 与 MCU GND：为分压采样在入口单点相连。</text>
+<text x="825" y="840" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">因此 MCU 与锁电源不隔离；MOS 光耦不构成整机隔离。</text>
+<text x="825" y="868" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK 地只留在 ADuM 的另一侧，不能画一条总地跨过去。</text>
+<text x="65" y="963" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">锁线：P01 → 保险 → DC±，OUT± → 锁，均用 22AWG；保险额定须实测选定，不能按 3A 占位施工。</text>
+<text x="65" y="995" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">分压按实际最高输入与实测 VREF+ 校核；例如 VREF+=2.5V 时不能照搬 15V 上限。</text>
+<text x="65" y="1027" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">锁未接时先测 MOS；高有效、默认关闭、硬件单脉冲截止验证通过前，不接真实锁做动作试验。</text></svg>

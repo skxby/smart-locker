@@ -1,0 +1,865 @@
+{
+  "format_version": 1,
+  "contract_version": "0.2.1",
+  "activity": "IMPLEMENTATION",
+  "active_task": "S1-04",
+  "recommended_next": "S1-04",
+  "execution_policy": "ONE_CARD_AT_A_TIME",
+  "stages": [
+    {
+      "id": 1,
+      "title": "主机模拟闭环",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "tasks": [
+        "S1-01",
+        "S1-02",
+        "S1-03",
+        "S1-04",
+        "S1-05",
+        "S1-06",
+        "S1-07"
+      ],
+      "gate_task": "S1-07",
+      "design_status": "DRAFT",
+      "implementation_status": "IN_PROGRESS",
+      "gate_result": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": 2,
+      "title": "HAL实物闭环",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "tasks": [
+        "S2-01",
+        "S2-02",
+        "S2-03",
+        "S2-04",
+        "S2-05",
+        "S2-06",
+        "S2-07",
+        "S2-08",
+        "S2-09",
+        "S2-10",
+        "S2-11",
+        "S2-12",
+        "S2-13",
+        "S2-14",
+        "S2-15",
+        "S2-16"
+      ],
+      "gate_task": "S2-16",
+      "design_status": "DRAFT",
+      "implementation_status": "NOT_STARTED",
+      "gate_result": "NOT_RUN",
+      "evidence": null,
+      "task_specs": [
+        "docs/stages/stage-02-hal-hardware-task-cards.md",
+        "docs/stages/stage-02b-vision-task-cards.md"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Android与触摸端",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "tasks": [
+        "S3-01",
+        "S3-02",
+        "S3-03",
+        "S3-04",
+        "S3-05",
+        "S3-06",
+        "S3-07"
+      ],
+      "gate_task": "S3-07",
+      "design_status": "DRAFT",
+      "implementation_status": "NOT_STARTED",
+      "gate_result": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": 4,
+      "title": "独立记录与监护",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "tasks": [
+        "S4-01",
+        "S4-02",
+        "S4-03",
+        "S4-04",
+        "S4-05",
+        "S4-06",
+        "S4-07",
+        "S4-08"
+      ],
+      "gate_task": "S4-08",
+      "design_status": "DRAFT",
+      "implementation_status": "NOT_STARTED",
+      "gate_result": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": 5,
+      "title": "部署与现场交付",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "tasks": [
+        "S5-01",
+        "S5-02",
+        "S5-03",
+        "S5-04",
+        "S5-05",
+        "S5-06",
+        "S5-07"
+      ],
+      "gate_task": "S5-07",
+      "design_status": "DRAFT",
+      "implementation_status": "NOT_STARTED",
+      "gate_result": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "tasks": [
+    {
+      "id": "S1-01",
+      "stage": 1,
+      "title": "构建与基础设施",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [],
+      "primary_paths": [
+        "host/common/",
+        "CMakeLists.txt",
+        "deployment/host/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "DONE",
+      "report": "docs/evidence/stage-01/S1-01/summary.md"
+    },
+    {
+      "id": "S1-02",
+      "stage": 1,
+      "title": "SQLite仓储",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-01"
+      ],
+      "primary_paths": [
+        "host/storage/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "DONE",
+      "report": "docs/evidence/stage-01/S1-02/summary.md"
+    },
+    {
+      "id": "S1-03",
+      "stage": 1,
+      "title": "设备协议与模拟器",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-01"
+      ],
+      "primary_paths": [
+        "host/device/",
+        "host/simulator/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "DONE",
+      "report": "docs/evidence/stage-01/S1-03/summary.md"
+    },
+    {
+      "id": "S1-04",
+      "stage": 1,
+      "title": "业务核心",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-02",
+        "S1-03"
+      ],
+      "primary_paths": [
+        "host/domain/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "IN_PROGRESS",
+      "report": null
+    },
+    {
+      "id": "S1-05",
+      "stage": 1,
+      "title": "HTTPS/IPC",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-04"
+      ],
+      "primary_paths": [
+        "host/http/",
+        "host/ipc/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S1-06",
+      "stage": 1,
+      "title": "装配与初始化",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-05"
+      ],
+      "primary_paths": [
+        "host/runtime/",
+        "host/cli/",
+        "deployment/host/",
+        "CMakeLists.txt"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S1-07",
+      "stage": 1,
+      "title": "主机集成审计",
+      "spec": "docs/stages/stage-01-task-cards.md",
+      "depends_on": [
+        "S1-06"
+      ],
+      "primary_paths": [
+        "tests/integration/",
+        "tests/contract/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-01",
+      "stage": 2,
+      "title": "HAL与BSP",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S1-07"
+      ],
+      "primary_paths": [
+        "firmware/board/",
+        "firmware/hal/",
+        "firmware/config/",
+        "deployment/firmware/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-02",
+      "stage": 2,
+      "title": "输入与SPI",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-01"
+      ],
+      "primary_paths": [
+        "firmware/drivers/",
+        "firmware/board/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-03",
+      "stage": 2,
+      "title": "UART DMA",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-02"
+      ],
+      "primary_paths": [
+        "firmware/transport/",
+        "firmware/tasks/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-04",
+      "stage": 2,
+      "title": "真实Journal",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-02"
+      ],
+      "primary_paths": [
+        "firmware/journal/",
+        "firmware/drivers/flash/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-05",
+      "stage": 2,
+      "title": "Control与硬截止",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-03",
+        "S2-04"
+      ],
+      "primary_paths": [
+        "firmware/control/",
+        "firmware/board/",
+        "firmware/tasks/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-06",
+      "stage": 2,
+      "title": "RK串口及首用部署",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-05"
+      ],
+      "primary_paths": [
+        "host/device/",
+        "host/runtime/",
+        "host/cli/",
+        "deployment/target/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-07",
+      "stage": 2,
+      "title": "整柜闭环",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-06"
+      ],
+      "primary_paths": [
+        "tests/hardware/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-08",
+      "stage": 2,
+      "title": "硬件阶段审计",
+      "spec": "docs/stages/stage-02-hal-hardware-task-cards.md",
+      "depends_on": [
+        "S2-07"
+      ],
+      "primary_paths": [
+        "tests/hardware/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-09",
+      "stage": 2,
+      "title": "模型资产/导出来源",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-08"
+      ],
+      "primary_paths": [
+        "deployment/vision/",
+        "tools/vision/",
+        "tests/vision/model/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-10",
+      "stage": 2,
+      "title": "统一预处理/量化验证",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-09"
+      ],
+      "primary_paths": [
+        "deployment/vision/",
+        "tools/vision/",
+        "tests/vision/preprocess/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-11",
+      "stage": 2,
+      "title": "相机与现场profile",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-10"
+      ],
+      "primary_paths": [
+        "host/vision-worker/camera/",
+        "config/vision/",
+        "deployment/vision/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-12",
+      "stage": 2,
+      "title": "RKNN视觉worker",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-11"
+      ],
+      "primary_paths": [
+        "host/vision-worker/",
+        "deployment/vision/",
+        "config/vision/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-13",
+      "stage": 2,
+      "title": "私有视觉IPC适配",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-12"
+      ],
+      "primary_paths": [
+        "host/vision/",
+        "host/vision-worker/",
+        "host/runtime/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-14",
+      "stage": 2,
+      "title": "Core持久证据与API",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-13"
+      ],
+      "primary_paths": [
+        "host/domain/",
+        "host/http/",
+        "host/ipc/",
+        "host/storage/",
+        "host/runtime/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-15",
+      "stage": 2,
+      "title": "视觉实物借还联调",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-14"
+      ],
+      "primary_paths": [
+        "tests/integration/vision/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S2-16",
+      "stage": 2,
+      "title": "视觉与阶段2审计",
+      "spec": "docs/stages/stage-02b-vision-task-cards.md",
+      "depends_on": [
+        "S2-15"
+      ],
+      "primary_paths": [
+        "docs/evidence/stage-02/",
+        "tests/contract/vision/"
+      ],
+      "scope_detail": "Exact path qualifiers/tests/docs in the assigned card; shared storage changes are made by its sole owner.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-01",
+      "stage": 3,
+      "title": "客户端类型与生命周期",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S2-16"
+      ],
+      "primary_paths": [
+        "app/lib/contracts/",
+        "app/lib/data/",
+        "app/lib/core/",
+        "terminal-ui/include/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-02",
+      "stage": 3,
+      "title": "Android配对会话",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-01"
+      ],
+      "primary_paths": [
+        "app/lib/features/pairing/",
+        "app/lib/features/session/",
+        "app/lib/data/security/",
+        "app/lib/data/network/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-03",
+      "stage": 3,
+      "title": "借还与幂等恢复",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-02"
+      ],
+      "primary_paths": [
+        "app/lib/features/locker/",
+        "app/lib/features/operations/",
+        "app/lib/data/intents/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-04",
+      "stage": 3,
+      "title": "管理与变化重查",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-03"
+      ],
+      "primary_paths": [
+        "app/lib/features/admin/",
+        "app/lib/features/history/",
+        "app/lib/data/changes/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-05",
+      "stage": 3,
+      "title": "LVGL异步IPC",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-01"
+      ],
+      "primary_paths": [
+        "terminal-ui/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-06",
+      "stage": 3,
+      "title": "双端真机闭环",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-04",
+        "S3-05"
+      ],
+      "primary_paths": [
+        "tests/integration/clients/",
+        "app/",
+        "terminal-ui/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S3-07",
+      "stage": 3,
+      "title": "客户端阶段审计",
+      "spec": "docs/stages/stage-03-clients-task-cards.md",
+      "depends_on": [
+        "S3-06"
+      ],
+      "primary_paths": [
+        "tests/contract/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-01",
+      "stage": 4,
+      "title": "日志容量与回收",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S3-07",
+        "S2-08"
+      ],
+      "primary_paths": [
+        "firmware/journal/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-02",
+      "stage": 4,
+      "title": "供电关联",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-01"
+      ],
+      "primary_paths": [
+        "firmware/control/",
+        "firmware/drivers/adc/",
+        "firmware/config/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-03",
+      "stage": 4,
+      "title": "MCU进度与IWDG",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-02"
+      ],
+      "primary_paths": [
+        "firmware/health/",
+        "firmware/tasks/",
+        "firmware/hal/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-04",
+      "stage": 4,
+      "title": "监督观察及健康搬运",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-03"
+      ],
+      "primary_paths": [
+        "host/runtime/",
+        "terminal-ui/",
+        "host/supervisor/",
+        "host/domain/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-05",
+      "stage": 4,
+      "title": "固定UI恢复",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-04"
+      ],
+      "primary_paths": [
+        "host/supervisor/",
+        "deployment/host/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-06",
+      "stage": 4,
+      "title": "监护与业务接线",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-05"
+      ],
+      "primary_paths": [
+        "host/domain/",
+        "host/device/",
+        "host/runtime/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-07",
+      "stage": 4,
+      "title": "故障矩阵",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-06"
+      ],
+      "primary_paths": [
+        "tests/integration/monitoring/",
+        "tests/fixtures/monitoring/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S4-08",
+      "stage": 4,
+      "title": "监护阶段审计",
+      "spec": "docs/stages/stage-04-monitoring-task-cards.md",
+      "depends_on": [
+        "S4-07"
+      ],
+      "primary_paths": [
+        "docs/evidence/stage-04/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-01",
+      "stage": 5,
+      "title": "制品与平台清单",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S4-08"
+      ],
+      "primary_paths": [
+        "deployment/releases/",
+        "deployment/target/",
+        "host/cli/",
+        "tests/maintenance/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-02",
+      "stage": 5,
+      "title": "启动权限配置",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-01"
+      ],
+      "primary_paths": [
+        "deployment/target/",
+        "host/runtime/",
+        "host/supervisor/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-03",
+      "stage": 5,
+      "title": "离线维护备份",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-02"
+      ],
+      "primary_paths": [
+        "host/cli/",
+        "deployment/maintenance/",
+        "tests/maintenance/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-04",
+      "stage": 5,
+      "title": "更新与程序回退",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-03"
+      ],
+      "primary_paths": [
+        "deployment/releases/",
+        "deployment/maintenance/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-05",
+      "stage": 5,
+      "title": "现场验收",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-04"
+      ],
+      "primary_paths": [
+        "tests/acceptance/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-06",
+      "stage": 5,
+      "title": "文档与演示",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-05"
+      ],
+      "primary_paths": [
+        "README.md",
+        "docs/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    },
+    {
+      "id": "S5-07",
+      "stage": 5,
+      "title": "最终交付审计",
+      "spec": "docs/stages/stage-05-delivery-task-cards.md",
+      "depends_on": [
+        "S5-06"
+      ],
+      "primary_paths": [
+        "tests/acceptance/",
+        "docs/evidence/stage-05/"
+      ],
+      "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
+      "status": "NOT_STARTED",
+      "report": null
+    }
+  ]
+}

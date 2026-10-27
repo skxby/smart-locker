@@ -1,0 +1,24 @@
+# S1-01 VM final re-verification - environment
+date=2026-10-23T21:48:41+08:00
+run_id=20261023-214841
+workspace=/home/%USER%/locker-workspace
+src=/home/%USER%/locker-workspace/src
+build=/home/%USER%/locker-workspace/build/S1-01/20261023-214841
+logs=/home/%USER%/locker-workspace/logs/S1-01/20261023-214841
+workspace_filesystem=ext4 /dev/sda2
+snapshot_sha256=6b75774ae3626dab85c398ce58a340a5bf3a3efd592788cfe900605d81836473
+snapshot_bytes=10663130
+snapshot_manifest_sha256=c47814bcc976802262752d63859919fa8a1e40adb356c24ab38fa4d523c6f217
+source_files=541
+source_bytes=26596767
+src_stray_build_artifacts=0
+uname=Linux 7.3.0-rc5 x86_64
+os_release=PRETTY_NAME="Ubuntu 26.04.1 LTS" VERSION_ID="26.04" 
+arch=x86_64
+cmake=cmake version 4.2.3
+gcc=gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+make=GNU Make 4.4.1
+ctest=ctest version 4.2.3
+python3=Python 3.14.4
+nproc=2
+guest_hostname=ubuntu

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>元件两脚与焊接分支放大</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">12  元件两脚与焊接分支放大</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">仅表示引脚、线头和电气连接；器件外形/脚距不作为采购或裁板尺寸依据。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">12 / 14</text>
+<rect x="65" y="165" width="700" height="335" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="165" width="5" height="335" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="202" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">电解电容：负极条纹 = 负脚</text>
+<text x="85" y="241" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">470µF / 25V，有正负极。</text>
+<text x="85" y="269" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">负极条纹沿壳体，对应下方负脚。</text>
+<text x="85" y="297" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">新件长脚通常是正；剪过脚不能靠长度。</text>
+<rect x="130" y="350" width="160" height="95" rx="5" fill="#263946" stroke="#263946"/>
+<rect x="250" y="350" width="22" height="95" rx="5" fill="#dfe9ef" stroke="#dfe9ef"/>
+<text x="250" y="387" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#536477">−</text>
+<polyline points="165,445 165,475 350,475" fill="none" stroke="#c34b35" stroke-width="4"/>
+<text x="360" y="474" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#c34b35">正脚 → 保险后12V+</text>
+<polyline points="255,445 255,515 350,515" fill="none" stroke="#536477" stroke-width="4"/>
+<text x="360" y="518" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">负脚 → 12V−入口</text>
+<rect x="815" y="165" width="720" height="335" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="165" width="5" height="335" rx="5" fill="#a16716" stroke="#a16716"/>
+<text x="835" y="202" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#a16716">二极管：有色环 = 阴极K</text>
+<text x="835" y="241" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">1N4007有方向；不叫电源正负脚。</text>
+<text x="835" y="269" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">有环K接LOCK+；无环A接LOCK−。</text>
+<text x="835" y="297" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">接在线圈两端，不串进锁的供电线。</text>
+<polyline points="875,420 965,420" fill="none" stroke="#536477" stroke-width="4"/>
+<rect x="965" y="393" width="170" height="54" rx="5" fill="#242b32" stroke="#242b32"/>
+<rect x="1100" y="393" width="15" height="54" rx="5" fill="#dfe9ef" stroke="#dfe9ef"/>
+<polyline points="1135,420 1450,420" fill="none" stroke="#c34b35" stroke-width="4"/>
+<text x="855" y="481" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">A 无环 → LOCK−</text>
+<text x="1165" y="481" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#c34b35">K 有环 → LOCK+</text>
+<rect x="65" y="575" width="700" height="200" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="575" width="5" height="200" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="612" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">瓷片100nF与电阻</text>
+<text x="85" y="651" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">100nF常标104，两脚无极性。</text>
+<text x="85" y="679" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">输入去耦：一脚12V+，另一脚12V−。</text>
+<text x="85" y="707" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">ADC滤波：一脚采样A点，另一脚地B点。</text>
+<text x="85" y="735" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">电阻无方向；100k与22k不可装反位置。</text>
+<rect x="815" y="575" width="720" height="200" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="575" width="5" height="200" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="835" y="612" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">一个节点可以拆成多个焊盘</text>
+<text x="835" y="651" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">相邻洞洞板孔默认不导通。</text>
+<text x="835" y="679" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">要用绝缘导线或短跳线把同名焊点连起来。</text>
+<text x="835" y="707" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">不要四根线硬塞一个杜邦孔或螺丝端子。</text>
+<text x="835" y="735" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">功率分支用足额连接器/铜导线，不拖锡作线。</text>
+<text x="70" y="845" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#172d46">示例：ADC节点的四个焊盘，同一条蓝线连通。</text>
+<circle cx="180" cy="925" r="7" fill="#176da6"/>
+<text x="140" y="882" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">100k端</text>
+<circle cx="525" cy="925" r="7" fill="#176da6"/>
+<text x="485" y="882" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">22k端</text>
+<circle cx="870" cy="925" r="7" fill="#176da6"/>
+<text x="830" y="882" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">104一脚</text>
+<circle cx="1215" cy="925" r="7" fill="#176da6"/>
+<text x="1175" y="882" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">PC0信号线</text>
+<polyline points="180,925 1215,925" fill="none" stroke="#176da6" stroke-width="5"/>
+<text x="70" y="1007" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">焊完先断电通断：四个蓝点两两相通；与地不应因误焊直接短接（电阻/电容会影响读数）。</text></svg>

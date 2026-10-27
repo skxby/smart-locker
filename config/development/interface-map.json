@@ -1,0 +1,1490 @@
+{
+  "format_version": 1,
+  "contract_version": "0.2.1",
+  "flows": {
+    "F1": "主机模拟业务闭环",
+    "F2": "HAL实物与恢复",
+    "F3": "Android/LVGL统一接口",
+    "F4": "独立监护与健康",
+    "F5": "部署与离线维护",
+    "F6": "视觉证据/物理融合"
+  },
+  "public_routes": [
+    {
+      "operation_id": "login",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-02",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "getCurrentSession",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-02",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "logout",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-02",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "getDevice",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-02",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "getSnapshot",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-02",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "listTools",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "getTool",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "createOperation",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "operation_id": "getOperation",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "operation_id": "confirmOperation",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "operation_id": "cancelOperation",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "operation_id": "listLoans",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "listEvents",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-03",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "listReviews",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "resolveOperation",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "listUsers",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "createUser",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "updateUser",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "listCardObservations",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "bindCard",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "unbindCard",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "subscribeChanges",
+      "implementation": "S1-05",
+      "core": "S1-04",
+      "client": "S3-04",
+      "verification": [
+        "S1-07",
+        "S3-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "operation_id": "getVisionStatus",
+      "implementation": "S2-14",
+      "core": "S2-14",
+      "client": "S3-04",
+      "verification": [
+        "S2-16",
+        "S3-07"
+      ],
+      "flow": "F6"
+    },
+    {
+      "operation_id": "getOperationVisionEvidence",
+      "implementation": "S2-14",
+      "core": "S2-14",
+      "client": "S3-03",
+      "verification": [
+        "S2-16",
+        "S3-07"
+      ],
+      "flow": "F6"
+    }
+  ],
+  "internal_ports": [
+    {
+      "name": "locker_core_submit",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_wait_result",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_apply_device_event",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_apply_device_reply",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_tick",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_query",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_repo_commit_change",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_repo_import_events",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_repo_load_recovery",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_open",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_get_snapshot",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_execute_once",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_query_command",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_fetch_events",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_ack_persisted",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_resume_ready",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_release_context",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_send_health",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_events_try_publish",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_local_presence_submit",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_supervisor_report_progress",
+      "implementation": "S4-04",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "locker_supervisor_request_ui_restart",
+      "implementation": "S4-05",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "mcu_control_submit_unlock",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_control_observe_inputs",
+      "implementation": "S2-05",
+      "refinement": [
+        "S4-02"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_control_on_journal_result",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_control_make_snapshot",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_control_release_context",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_append",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_commit_intent",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_read_page",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_ack",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_read_inputs",
+      "implementation": "S2-02",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_start_bounded_pulse",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_force_off",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_spi_transfer",
+      "implementation": "S2-02",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_health_report_progress",
+      "implementation": "S2-05",
+      "refinement": [
+        "S4-03"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_health_evaluate",
+      "implementation": "S2-05",
+      "refinement": [
+        "S4-03"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "locker_repo_open",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_repo_query",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_repo_close",
+      "implementation": "S1-02",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_create",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_start",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_stop",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_destroy",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_core_authenticate",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_create",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_close",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_destroy",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_device_time_anchor",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_events_create",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_events_destroy",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_supervisor_create",
+      "implementation": "S4-04",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "locker_supervisor_destroy",
+      "implementation": "S4-04",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "mcu_control_init",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_init",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_health_init",
+      "implementation": "S2-05",
+      "refinement": [
+        "S4-03"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "locker_device_bind_sink",
+      "implementation": "S1-03",
+      "refinement": [
+        "S2-06"
+      ],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_http_start",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_http_stop",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_http_destroy",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_ipc_start",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_ipc_stop",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_ipc_destroy",
+      "implementation": "S1-05",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "mcu_journal_bind_sink",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_apply_profile",
+      "implementation": "S2-01",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_board_set_alarm",
+      "implementation": "S2-02",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "locker_local_maintenance_reconcile",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F1"
+    },
+    {
+      "name": "locker_supervisor_get_health",
+      "implementation": "S4-04",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "locker_core_apply_supervisor_health",
+      "implementation": "S4-04",
+      "refinement": [],
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "locker_core_get_progress",
+      "implementation": "S1-04",
+      "refinement": [],
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "locker_vision_create",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_bind_sink",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_open",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_submit",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_get_status",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_close",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_vision_destroy",
+      "implementation": "S2-13",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_core_bind_vision",
+      "implementation": "S2-14",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_core_apply_vision_result",
+      "implementation": "S2-14",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "locker_core_apply_vision_status",
+      "implementation": "S2-14",
+      "refinement": [],
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "mcu_control_bind_sink",
+      "implementation": "S2-05",
+      "refinement": [],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "mcu_journal_control",
+      "implementation": "S2-04",
+      "refinement": [
+        "S4-01"
+      ],
+      "verification": [
+        "S2-08"
+      ],
+      "flow": "F2"
+    }
+  ],
+  "uart_requests": [
+    {
+      "name": "HELLO",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "GET_SNAPSHOT",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "FETCH_EVENTS",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-04",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "ACK_PERSISTED",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-04",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "RESUME_READY",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "DISARM",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "EXECUTE_UNLOCK",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "QUERY_COMMAND",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "HOST_HEALTH",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "name": "TIME_ANCHOR",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    },
+    {
+      "name": "RELEASE_CONTEXT",
+      "host": "S1-03",
+      "mcu_transport": "S2-03",
+      "mcu_semantics": "S2-05",
+      "real_link": "S2-06",
+      "verification": [
+        "S1-07",
+        "S2-08"
+      ],
+      "flow": "F2"
+    }
+  ],
+  "local_methods": [
+    {
+      "method": "login",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "getCurrentSession",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "logout",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "getDevice",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "getSnapshot",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listTools",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "getTool",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "createOperation",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "getOperation",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "confirmOperation",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "cancelOperation",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listLoans",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listEvents",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listReviews",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "resolveOperation",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listUsers",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "createUser",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "updateUser",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "listCardObservations",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "bindCard",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "unbindCard",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "presence.submit",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "progress.report",
+      "socket": "supervisor.sock",
+      "implementation": "S4-04",
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "method": "ui.restart.request",
+      "socket": "supervisor.sock",
+      "implementation": "S4-05",
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "method": "maintenance.reconcile",
+      "socket": "service.sock",
+      "implementation": "S1-05",
+      "verification": [
+        "S1-07"
+      ],
+      "flow": "F3"
+    },
+    {
+      "method": "health.get",
+      "socket": "supervisor.sock",
+      "implementation": "S4-04",
+      "verification": [
+        "S4-08"
+      ],
+      "flow": "F4"
+    },
+    {
+      "method": "getVisionStatus",
+      "socket": "service.sock",
+      "implementation": "S2-14",
+      "verification": [
+        "S2-16",
+        "S3-07"
+      ],
+      "flow": "F6"
+    },
+    {
+      "method": "getOperationVisionEvidence",
+      "socket": "service.sock",
+      "implementation": "S2-14",
+      "verification": [
+        "S2-16",
+        "S3-07"
+      ],
+      "flow": "F6"
+    }
+  ],
+  "vision_worker_messages": [
+    {
+      "name": "HELLO",
+      "implementation": "S2-13",
+      "producer": "S2-13",
+      "consumer": "S2-12",
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "STATUS",
+      "implementation": "S2-13",
+      "producer": "S2-13",
+      "consumer": "S2-12",
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    },
+    {
+      "name": "CAPTURE",
+      "implementation": "S2-13",
+      "producer": "S2-14",
+      "consumer": "S2-12",
+      "verification": [
+        "S2-16"
+      ],
+      "flow": "F6"
+    }
+  ]
+}

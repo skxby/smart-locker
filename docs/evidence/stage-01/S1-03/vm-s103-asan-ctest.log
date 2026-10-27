@@ -1,0 +1,45 @@
+Test project /home/%USER%/locker-workspace/build/S1-03/20261026-095548-asan
+      Start  1: common.test_bounded_queue
+ 1/19 Test  #1: common.test_bounded_queue ............   Passed    0.07 sec
+      Start  2: common.test_build_info
+ 2/19 Test  #2: common.test_build_info ...............   Passed    0.01 sec
+      Start  3: common.test_clock
+ 3/19 Test  #3: common.test_clock ....................   Passed    0.03 sec
+      Start  4: common.test_log
+ 4/19 Test  #4: common.test_log ......................   Passed    0.01 sec
+      Start  5: common.test_numeric
+ 5/19 Test  #5: common.test_numeric ..................   Passed    0.01 sec
+      Start  6: common.test_uuid
+ 6/19 Test  #6: common.test_uuid .....................   Passed    0.01 sec
+      Start  7: storage.test_event_key
+ 7/19 Test  #7: storage.test_event_key ...............   Passed    0.01 sec
+      Start  8: storage.test_regex
+ 8/19 Test  #8: storage.test_regex ...................   Passed    0.01 sec
+      Start  9: storage.test_u64
+ 9/19 Test  #9: storage.test_u64 .....................   Passed    0.01 sec
+      Start 10: storage.test_schema
+10/19 Test #10: storage.test_schema ..................   Passed    0.02 sec
+      Start 11: storage.test_repository
+11/19 Test #11: storage.test_repository ..............   Passed    0.79 sec
+      Start 12: storage.schema_source_drift
+12/19 Test #12: storage.schema_source_drift ..........   Passed    0.04 sec
+      Start 13: device.test_codec
+13/19 Test #13: device.test_codec ....................   Passed    0.02 sec
+      Start 14: device.test_wire
+14/19 Test #14: device.test_wire .....................   Passed    0.02 sec
+      Start 15: device.test_sim_journal
+15/19 Test #15: device.test_sim_journal ..............   Passed    0.24 sec
+      Start 16: device.test_sim_protocol
+16/19 Test #16: device.test_sim_protocol .............   Passed    0.16 sec
+      Start 17: contract.device.test_golden_frames
+17/19 Test #17: contract.device.test_golden_frames ...   Passed    0.03 sec
+      Start 18: contract.device.test_device_port
+18/19 Test #18: contract.device.test_device_port .....   Passed    5.92 sec
+      Start 19: contract.device.daemon_smoke
+19/19 Test #19: contract.device.daemon_smoke .........   Passed    4.41 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =  11.84 sec
+ASAN_CTEST_EXIT=0
+ASAN_REPORTS=0

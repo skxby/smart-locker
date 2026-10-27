@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "target": "STM32F407VGTx",
+  "clock_profile": "hse8_168",
+  "compiler": "Product: MDK-ARM Lite 5.14\r\nComponent: ARM Compiler 5.05 update 1 (build 106)\r\nTool: armcc [4d0efa]",
+  "translation_units": 32,
+  "dependencies_hashed": 254,
+  "image_sha256": "641b663b51b244552129a14a407fa76ed18af1d9b22023ec70252880093a8cd6",
+  "compile_link_only": true,
+  "hardware_tested": false,
+  "cabinet_business_implemented": false,
+  "memory": {
+    "rom_bytes": 6952,
+    "ram_bytes": 17816
+  },
+  "size_output": ""
+}

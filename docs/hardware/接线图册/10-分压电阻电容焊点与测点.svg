@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>分压电阻电容焊点与测点</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">10  分压电阻电容焊点与测点</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">这张图按电气节点画：每个圆点是一处连接；同一个节点允许由多个焊盘用导线连成。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">10 / 14</text>
+<text x="80" y="212" font-family="Microsoft YaHei,sans-serif" font-size="27" fill="#c34b35">保险后12V+</text>
+<polyline points="100,350 250,350" fill="none" stroke="#c34b35" stroke-width="4"/>
+<polyline points="250,350 280,350" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="280" y="333" width="125" height="34" rx="5" fill="#eee0c3" stroke="#a16716"/>
+<polyline points="405,350 435,350" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="275" y="312" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">R1 = 100k 上臂</text>
+<polyline points="435,350 720,350" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="580" cy="350" r="7" fill="#176da6"/>
+<text x="592" y="341" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#176da6">A：采样节点</text>
+<polyline points="720,350 750,350" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="750" y="333" width="125" height="34" rx="5" fill="#eee0c3" stroke="#a16716"/>
+<polyline points="875,350 905,350" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="745" y="312" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">R2 = 22k 下臂</text>
+<polyline points="905,350 1030,350 1030,650" fill="none" stroke="#536477" stroke-width="4"/>
+<text x="1000" y="712" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#536477">B：MCU GND</text>
+<polyline points="580,350 580,460" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="580,460 580,504" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="552,504 608,504" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="552,522 608,522" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="580,522 580,575" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="620" y="510" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">C3 = 100nF / 104</text>
+<polyline points="580,575 580,650 1030,650" fill="none" stroke="#536477" stroke-width="4"/>
+<circle cx="1030" cy="650" r="7" fill="#536477"/>
+<polyline points="720,350 720,220 1160,220" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="720" cy="350" r="7" fill="#176da6"/>
+<rect x="1160" y="170" width="370" height="170" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1160" y="170" width="5" height="170" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="1180" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">MCU 采样端</text>
+<text x="1180" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">P2-14 = PC0</text>
+<text x="1180" y="274" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先拔掉此线测节点A</text>
+<text x="1180" y="302" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">电压合格再断电接回</text>
+<text x="280" y="430" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">左脚：12V+  右脚：A</text>
+<text x="750" y="430" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">左脚：A  右脚：B</text>
+<rect x="65" y="490" width="420" height="200" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="490" width="5" height="200" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="527" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">A点必须连这四个端点</text>
+<text x="85" y="566" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">① R1(100k)的一端</text>
+<text x="85" y="594" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">② R2(22k)的一端</text>
+<text x="85" y="622" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">③ C3(100nF)的一脚</text>
+<text x="85" y="650" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">④ 通往PC0的信号线</text>
+<rect x="65" y="765" width="700" height="250" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="765" width="5" height="250" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="802" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">用什么量、表笔在哪</text>
+<text x="85" y="841" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">万用表黑笔COM → B（分压地）。</text>
+<text x="85" y="869" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">红笔VΩ → A（两电阻公共焊点）。</text>
+<text x="85" y="897" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">选 DC V；不是电流档，不是通断档。</text>
+<text x="85" y="925" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PC0先不接，输入12.00V时约2.164V。</text>
+<text x="85" y="953" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">3V3、VREF+、输入范围合格后才接ADC。</text>
+<rect x="805" y="765" width="725" height="250" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="805" y="765" width="5" height="250" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="825" y="802" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">断电与回流边界</text>
+<text x="825" y="841" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">B → MCU GND；MCU地支路 → 12V−入口。</text>
+<text x="825" y="869" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">C3不串在信号线上，两脚分别到A和B。</text>
+<text x="825" y="897" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">R1/R2无方向，但阻值和所在位置不能互换。</text>
+<text x="825" y="925" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">MCU断电时12V可能经R1/R2向ADC注入电流。</text>
+<text x="825" y="953" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">掉电兼容未验证：单独测MOS时先拔PC0线。</text>
+<text x="1170" y="466" font-family="Microsoft YaHei,sans-serif" font-size="26" fill="#172d46">12V × 22 / 122</text>
+<text x="1170" y="522" font-family="Microsoft YaHei,sans-serif" font-size="32" fill="#176da6">≈ 2.164V</text>
+<text x="1140" y="605" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#c34b35">15V仅算例，不是已验上限。</text></svg>

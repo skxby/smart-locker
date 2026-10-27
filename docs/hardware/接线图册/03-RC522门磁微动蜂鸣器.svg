@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>RC522门磁微动蜂鸣器</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">03  RC522门磁微动蜂鸣器</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">按端子名字连接，不按模块排针顺序猜；一条横线就是一根导线。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">03 / 14</text>
+<rect x="65" y="160" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="160" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="187" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S01  P1-25 · PB13 / SPI2_SCK</text>
+<text x="978" y="187" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · SCK</text>
+<polyline points="630,184 960,184" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="158" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="173" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">黄 · 母对母</text>
+<rect x="65" y="211" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="211" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="238" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S02  P1-28 · PB14 / SPI2_MISO</text>
+<text x="978" y="238" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · MISO</text>
+<polyline points="630,235 960,235" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="209" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="224" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">绿 · 母对母</text>
+<rect x="65" y="262" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="262" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="289" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S03  P1-27 · PB15 / SPI2_MOSI</text>
+<text x="978" y="289" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · MOSI</text>
+<polyline points="630,286 960,286" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="260" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="275" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">蓝 · 母对母</text>
+<rect x="65" y="313" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="313" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="340" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S04  P1-26 · PB12 / GPIO CS</text>
+<text x="978" y="340" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · SDA / SS / NSS</text>
+<polyline points="630,337 960,337" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="311" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="326" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">白 · 母对母</text>
+<rect x="65" y="364" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="364" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="391" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S05  P2-12 · PE3 / GPIO</text>
+<text x="978" y="391" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · RST</text>
+<polyline points="630,388 960,388" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="362" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="377" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">紫 · 母对母</text>
+<rect x="65" y="415" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="415" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="442" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S06  P1-38 · 3V3 分配点</text>
+<text x="978" y="442" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · 3.3V</text>
+<polyline points="630,439 960,439" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="413" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="428" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">红 · 仅3.3V</text>
+<rect x="65" y="466" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="466" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="493" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S07  MCU GND 分配点</text>
+<text x="978" y="493" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">RC522 · GND</text>
+<polyline points="630,490 960,490" fill="none" stroke="#536477" stroke-width="3"/>
+<rect x="672" y="464" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="479" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#536477">黑</text>
+<rect x="65" y="517" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="517" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="544" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S08  P2-19 · PE0 / EXTI0</text>
+<text x="978" y="544" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">门磁 · 带线触点任一端</text>
+<polyline points="630,541 960,541" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="515" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="530" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">信号 + 地成对</text>
+<rect x="65" y="568" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="568" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="595" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S09  MCU GND 分配点</text>
+<text x="978" y="595" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">门磁 · 触点另一端</text>
+<polyline points="630,592 960,592" fill="none" stroke="#536477" stroke-width="3"/>
+<rect x="672" y="566" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="581" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#536477">无极性</text>
+<rect x="65" y="619" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="619" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="646" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S10  P2-18 · PE1 / EXTI1</text>
+<text x="978" y="646" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">微动 · NO（两线款任一端）</text>
+<polyline points="630,643 960,643" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="617" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="632" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">信号 + 地成对</text>
+<rect x="65" y="670" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="670" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="697" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S11  MCU GND 分配点</text>
+<text x="978" y="697" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">微动 · COM（另一端）</text>
+<polyline points="630,694 960,694" fill="none" stroke="#536477" stroke-width="3"/>
+<rect x="672" y="668" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="683" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#536477">无极性</text>
+<rect x="65" y="721" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="721" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="748" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S12  P2-13 · PE2 / GPIO</text>
+<text x="978" y="748" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">蜂鸣器模块 · IN / S</text>
+<polyline points="630,745 960,745" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="719" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="734" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">高有效待测</text>
+<rect x="65" y="772" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="772" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="799" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S13  3V3 分配点（先核模块规格）</text>
+<text x="978" y="799" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">蜂鸣器模块 · VCC / +</text>
+<polyline points="630,796 960,796" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="770" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="785" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">候选3.3V</text>
+<rect x="65" y="823" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="823" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="850" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">S14  MCU GND 分配点</text>
+<text x="978" y="850" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">蜂鸣器模块 · GND / −</text>
+<polyline points="630,847 960,847" fill="none" stroke="#536477" stroke-width="3"/>
+<rect x="672" y="821" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="836" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#536477">黑</text>
+<rect x="65" y="894" width="720" height="150" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="894" width="5" height="150" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="931" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">传感器输入各配一个 10k 上拉</text>
+<text x="85" y="970" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">3V3 → 10k → PE0；门磁接在 PE0 与 GND 间</text>
+<text x="85" y="998" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">3V3 → 10k → PE1；微动接在 PE1 与 GND 间</text>
+<text x="85" y="1026" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">设计预期：磁铁靠近 / 微动按下 = LOW，仍需实测</text>
+<rect x="815" y="894" width="720" height="150" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="894" width="5" height="150" rx="5" fill="#a16716" stroke="#a16716"/>
+<text x="835" y="931" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#a16716">其余脚与供电</text>
+<text x="835" y="970" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RC522 IRQ 不接；SDA 在 SPI 模式是 CS，不是 I²C</text>
+<text x="835" y="998" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">蜂鸣器是带驱动模块，不把裸蜂鸣器接 GPIO</text>
+<text x="835" y="1026" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">3V3 / GND 用焊接分配点；不能多根线硬塞杜邦孔</text></svg>

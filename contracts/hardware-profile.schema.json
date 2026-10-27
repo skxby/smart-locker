@@ -1,0 +1,1124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:locker:hardware-profile:1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "profile_version": {
+      "const": 1
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "status": {
+      "enum": [
+        "UNVERIFIED",
+        "VERIFIED"
+      ]
+    },
+    "driver_stack": {
+      "const": "STM32_HAL"
+    },
+    "board": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "vendor": {
+          "const": "LCKFB"
+        },
+        "model": {
+          "const": "SkyStar STM32F407VGT6 PRO"
+        },
+        "mcu": {
+          "const": "STM32F407VGT6"
+        },
+        "package": {
+          "const": "LQFP100"
+        },
+        "firmware_flash_bytes": {
+          "const": 1048576
+        },
+        "sram_total_bytes": {
+          "const": 196608
+        },
+        "dma_ccm_allowed": {
+          "const": false
+        }
+      },
+      "required": [
+        "vendor",
+        "model",
+        "mcu",
+        "package",
+        "firmware_flash_bytes",
+        "sram_total_bytes",
+        "dma_ccm_allowed"
+      ]
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "external_flash_expected": {
+          "const": "W25Q128"
+        },
+        "lse_expected": {
+          "const": true
+        },
+        "onboard_debug_probe_expected": {
+          "const": false
+        },
+        "onboard_independent_vcp_expected": {
+          "const": false
+        },
+        "battery_holder_populated_expected": {
+          "const": false
+        },
+        "headers_soldering_required": {
+          "const": true
+        },
+        "uart_isolator_expected": {
+          "const": "ADuM1201"
+        }
+      },
+      "required": [
+        "external_flash_expected",
+        "lse_expected",
+        "onboard_debug_probe_expected",
+        "onboard_independent_vcp_expected",
+        "battery_holder_populated_expected",
+        "headers_soldering_required",
+        "uart_isolator_expected"
+      ]
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "door": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "item": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_output": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alarm": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_cs": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_reset": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supply_adc": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uart_link_tx": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uart_link_rx": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uart_console_tx": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uart_console_rx": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flash_cs": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flash_sck": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flash_miso": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flash_mosi": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_sck": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_miso": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_mosi": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^P[A-I]([0-9]|1[0-5])$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "door",
+        "item",
+        "lock_output",
+        "alarm",
+        "rc522_cs",
+        "rc522_reset",
+        "supply_adc",
+        "uart_link_tx",
+        "uart_link_rx",
+        "uart_console_tx",
+        "uart_console_rx",
+        "flash_cs",
+        "flash_sck",
+        "flash_miso",
+        "flash_mosi",
+        "rc522_sck",
+        "rc522_miso",
+        "rc522_mosi"
+      ]
+    },
+    "peripherals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "uart_link": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "USART1",
+                "USART2",
+                "USART3",
+                "UART4",
+                "UART5",
+                "USART6"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uart_console": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "USART1",
+                "USART2",
+                "USART3",
+                "UART4",
+                "UART5",
+                "USART6"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flash_spi": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SPI1",
+                "SPI2",
+                "SPI3"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rc522_spi": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SPI1",
+                "SPI2",
+                "SPI3"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supply_adc": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "ADC1",
+                "ADC2",
+                "ADC3"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_timer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "TIM1",
+                "TIM2",
+                "TIM3",
+                "TIM4",
+                "TIM5",
+                "TIM8",
+                "TIM9",
+                "TIM10",
+                "TIM11",
+                "TIM12",
+                "TIM13",
+                "TIM14"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hal_tick_timer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "TIM6",
+                "TIM7"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "uart_link",
+        "uart_console",
+        "flash_spi",
+        "rc522_spi",
+        "supply_adc",
+        "lock_timer",
+        "hal_tick_timer"
+      ]
+    },
+    "polarity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "door_closed_raw_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "item_present_raw_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_active_raw_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alarm_active_raw_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "door_closed_raw_level",
+        "item_present_raw_level",
+        "lock_active_raw_level",
+        "alarm_active_raw_level"
+      ]
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_debounce_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_pulse_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_timer_channel": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "input_debounce_ms",
+        "lock_pulse_ms",
+        "lock_timer_channel"
+      ]
+    },
+    "flash": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "jedec_verified": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{6}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capacity_bytes_verified": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 2097152
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sector_bytes_verified": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "page_bytes_verified": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 16
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "jedec_verified",
+        "capacity_bytes_verified",
+        "sector_bytes_verified",
+        "page_bytes_verified"
+      ]
+    },
+    "supply": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rk_uart_io_mv_verified": {
+          "anyOf": [
+            {
+              "enum": [
+                1800,
+                3300
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_input_mv_verified": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 24000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "divider_upper_ohms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "divider_lower_ohms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adc_reference_mv_verified": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "rk_uart_io_mv_verified",
+        "host_input_mv_verified",
+        "divider_upper_ohms",
+        "divider_lower_ohms",
+        "adc_reference_mv_verified"
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identity": {
+          "type": "boolean"
+        },
+        "pin_map": {
+          "type": "boolean"
+        },
+        "headers_soldered": {
+          "type": "boolean"
+        },
+        "flash_geometry": {
+          "type": "boolean"
+        },
+        "door_polarity": {
+          "type": "boolean"
+        },
+        "item_polarity": {
+          "type": "boolean"
+        },
+        "lock_default_off": {
+          "type": "boolean"
+        },
+        "lock_hardware_cutoff": {
+          "type": "boolean"
+        },
+        "uart_voltage": {
+          "type": "boolean"
+        },
+        "uart_poweroff": {
+          "type": "boolean"
+        },
+        "adc_range": {
+          "type": "boolean"
+        },
+        "mechanical_fixture": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "identity",
+        "pin_map",
+        "headers_soldered",
+        "flash_geometry",
+        "door_polarity",
+        "item_polarity",
+        "lock_default_off",
+        "lock_hardware_cutoff",
+        "uart_voltage",
+        "uart_poweroff",
+        "adc_range",
+        "mechanical_fixture"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "maxItems": 32
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "minItems": 1,
+      "maxItems": 8
+    }
+  },
+  "required": [
+    "profile_version",
+    "profile_id",
+    "status",
+    "driver_stack",
+    "board",
+    "resources",
+    "pins",
+    "peripherals",
+    "polarity",
+    "timing",
+    "flash",
+    "supply",
+    "verification",
+    "evidence",
+    "sources"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "VERIFIED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "verification": {
+            "properties": {
+              "identity": {
+                "const": true
+              },
+              "pin_map": {
+                "const": true
+              },
+              "headers_soldered": {
+                "const": true
+              },
+              "flash_geometry": {
+                "const": true
+              },
+              "door_polarity": {
+                "const": true
+              },
+              "item_polarity": {
+                "const": true
+              },
+              "lock_default_off": {
+                "const": true
+              },
+              "lock_hardware_cutoff": {
+                "const": true
+              },
+              "uart_voltage": {
+                "const": true
+              },
+              "uart_poweroff": {
+                "const": true
+              },
+              "adc_range": {
+                "const": true
+              },
+              "mechanical_fixture": {
+                "const": true
+              }
+            }
+          },
+          "evidence": {
+            "minItems": 1
+          },
+          "pins": {
+            "properties": {
+              "door": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "item": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "lock_output": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "alarm": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_cs": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_reset": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "supply_adc": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "uart_link_tx": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "uart_link_rx": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "uart_console_tx": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "uart_console_rx": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "flash_cs": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "flash_sck": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "flash_miso": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "flash_mosi": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_sck": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_miso": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_mosi": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "polarity": {
+            "properties": {
+              "door_closed_raw_level": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "item_present_raw_level": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "lock_active_raw_level": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "alarm_active_raw_level": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "timing": {
+            "properties": {
+              "lock_pulse_ms": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "lock_timer_channel": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "input_debounce_ms": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "peripherals": {
+            "properties": {
+              "uart_link": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "uart_console": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "flash_spi": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "rc522_spi": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "supply_adc": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "lock_timer": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "hal_tick_timer": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "flash": {
+            "properties": {
+              "jedec_verified": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "capacity_bytes_verified": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "sector_bytes_verified": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "page_bytes_verified": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "supply": {
+            "properties": {
+              "rk_uart_io_mv_verified": {
+                "const": 3300
+              },
+              "host_input_mv_verified": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "divider_upper_ohms": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "divider_lower_ohms": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "adc_reference_mv_verified": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "peripherals": {
+            "properties": {
+              "lock_timer": {
+                "enum": [
+                  "TIM10",
+                  "TIM11",
+                  "TIM13",
+                  "TIM14"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "timing": {
+            "properties": {
+              "lock_timer_channel": {
+                "const": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "peripherals": {
+            "properties": {
+              "lock_timer": {
+                "enum": [
+                  "TIM9",
+                  "TIM12"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "timing": {
+            "properties": {
+              "lock_timer_channel": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

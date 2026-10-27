@@ -1,0 +1,14 @@
+# audit B1-R/B3 boundary probe (probe-boundary.c), run against the remediated source
+# date: 2026-10-23T22:02:08+08:00
+PROBE_BUILD_EXIT=0
+LONG_KEY_SENSITIVE=1
+long_key ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=long_key aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=[redacted]
+quoted_password ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=quoted_password note=password='[redacted]'
+json_single_quoted ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=json_single_quoted note={'password':'[redacted]'}
+single_quoted_key ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=single_quoted_key note='password'='[redacted]'
+long_private_key ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=long_private_key kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk-Private-Key=[redacted]
+unterminated_single ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=unterminated_single note=password='[redacted]
+prose ts=980234 utc=1792764128702 level=INFO backend=simulator component=audit event=prose note="it's a plain sentence"
+BENIGN_KEY_SENSITIVE=0
+LEAK_CASES=0
+PROBE_EXIT=0

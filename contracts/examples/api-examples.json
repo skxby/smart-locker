@@ -1,0 +1,167 @@
+[
+  {
+    "name": "create_borrow",
+    "schema": "CreateOperationRequest",
+    "valid": true,
+    "value": {
+      "tool_id": "00000000-0000-4000-8000-000000000002",
+      "kind": "BORROW",
+      "tool_revision": "1"
+    }
+  },
+  {
+    "name": "waiting_for_user_confirmation",
+    "schema": "Operation",
+    "valid": true,
+    "value": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "tool_id": "00000000-0000-4000-8000-000000000002",
+      "kind": "BORROW",
+      "actor_id": "00000000-0000-4000-8000-000000000001",
+      "state": "WAIT_CONFIRM",
+      "operation_revision": "5",
+      "command_id": "00000000-0000-4000-8000-000000000004",
+      "reason_code": null,
+      "created_at": "2026-10-20T10:00:00+08:00",
+      "updated_at": "2026-10-20T10:00:20+08:00",
+      "allowed_actions": [
+        "CONFIRM",
+        "CANCEL"
+      ],
+      "evidence": {
+        "history_complete": true,
+        "door_open_seen": true,
+        "item_transition_seen": true,
+        "physical": {
+          "device_id": "00112233445566778899aabb",
+          "journal_epoch": "00000000-0000-4000-8000-000000000008",
+          "boot_id": "1",
+          "physical_revision": "5",
+          "door": "CLOSED",
+          "item": "ABSENT",
+          "supply_mv": 12000,
+          "observed_age_ms": 40,
+          "time_quality": "HOST_SYNCED",
+          "continuity_ok": true,
+          "dropped_events": "0",
+          "durable_cursor": {
+            "device_id": "00112233445566778899aabb",
+            "journal_epoch": "00000000-0000-4000-8000-000000000008",
+            "boot_id": "1",
+            "event_seq": "6"
+          }
+        },
+        "source_events": [
+          {
+            "device_id": "00112233445566778899aabb",
+            "journal_epoch": "00000000-0000-4000-8000-000000000008",
+            "boot_id": "1",
+            "event_seq": "6"
+          }
+        ],
+        "manual_resolution": false
+      }
+    }
+  },
+  {
+    "name": "ws_invalidation",
+    "schema": "WsChange",
+    "valid": true,
+    "value": {
+      "type": "resource.changed",
+      "resource": "operation",
+      "id": "00000000-0000-4000-8000-000000000003",
+      "snapshot_revision": "12"
+    }
+  },
+  {
+    "name": "ws_resync",
+    "schema": "WsResync",
+    "valid": true,
+    "value": {
+      "type": "resync_required",
+      "snapshot_revision": "12"
+    }
+  },
+  {
+    "name": "client_cannot_supply_actor",
+    "schema": "CreateOperationRequest",
+    "valid": false,
+    "value": {
+      "tool_id": "00000000-0000-4000-8000-000000000002",
+      "kind": "BORROW",
+      "tool_revision": "1",
+      "actor_id": "00000000-0000-4000-8000-000000000009"
+    }
+  },
+  {
+    "name": "u64_must_not_be_number",
+    "schema": "RevisionRequest",
+    "valid": false,
+    "value": {
+      "operation_revision": 5
+    }
+  },
+  {
+    "name": "invalid_operation_state",
+    "schema": "Operation",
+    "valid": false,
+    "value": {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "tool_id": "00000000-0000-4000-8000-000000000002",
+      "kind": "BORROW",
+      "actor_id": "00000000-0000-4000-8000-000000000001",
+      "state": "LOCK_OPEN_SUCCESS",
+      "operation_revision": "5",
+      "command_id": "00000000-0000-4000-8000-000000000004",
+      "reason_code": null,
+      "created_at": "2026-10-20T10:00:00+08:00",
+      "updated_at": "2026-10-20T10:00:20+08:00",
+      "allowed_actions": [
+        "CONFIRM",
+        "CANCEL"
+      ],
+      "evidence": {
+        "history_complete": true,
+        "door_open_seen": true,
+        "item_transition_seen": true,
+        "physical": {
+          "device_id": "00112233445566778899aabb",
+          "journal_epoch": "00000000-0000-4000-8000-000000000008",
+          "boot_id": "1",
+          "physical_revision": "5",
+          "door": "CLOSED",
+          "item": "ABSENT",
+          "supply_mv": 12000,
+          "observed_age_ms": 40,
+          "time_quality": "HOST_SYNCED",
+          "continuity_ok": true,
+          "dropped_events": "0",
+          "durable_cursor": {
+            "device_id": "00112233445566778899aabb",
+            "journal_epoch": "00000000-0000-4000-8000-000000000008",
+            "boot_id": "1",
+            "event_seq": "6"
+          }
+        },
+        "source_events": [
+          {
+            "device_id": "00112233445566778899aabb",
+            "journal_epoch": "00000000-0000-4000-8000-000000000008",
+            "boot_id": "1",
+            "event_seq": "6"
+          }
+        ],
+        "manual_resolution": false
+      }
+    }
+  },
+  {
+    "name": "u64_overflow",
+    "schema": "RevisionRequest",
+    "valid": false,
+    "value": {
+      "operation_revision": "18446744073709551616"
+    }
+  }
+]

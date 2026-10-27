@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>隔离通信下载与日志</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">05  隔离通信下载与日志</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">ADuM1201 芯片编号用于核对模块通断；不能把芯片脚号直接当商品排针顺序。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">05 / 14</text>
+<rect x="65" y="170" width="445" height="180" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="170" width="5" height="180" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">MCU 侧：独立的地 GND1</text>
+<text x="85" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">P2-29 / PD5 = USART2_TX (AF7)</text>
+<text x="85" y="274" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">P2-28 / PD6 = USART2_RX (AF7)</text>
+<text x="85" y="302" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">MCU 3V3 → VDD1（芯片1）</text>
+<text x="85" y="330" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">MCU GND → GND1（芯片4）</text>
+<rect x="1095" y="170" width="440" height="180" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1095" y="170" width="5" height="180" rx="5" fill="#237c6a" stroke="#237c6a"/>
+<text x="1115" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#237c6a">RK 侧：独立的地 GND2</text>
+<text x="1115" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK UART_RX ← VOB（芯片6）</text>
+<text x="1115" y="274" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK UART_TX → VIA（芯片7）</text>
+<text x="1115" y="302" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK 的匹配 IO 电源 → VDD2（8）</text>
+<text x="1115" y="330" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK GND → GND2（芯片5）</text>
+<rect x="570" y="170" width="465" height="180" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="570" y="170" width="5" height="180" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="590" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">ADuM1201 两个反向通道</text>
+<text x="590" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PD5 → VIB(3) → VOB(6) → RK_RX</text>
+<text x="590" y="274" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PD6 ← VOA(2) ← VIA(7) ← RK_TX</text>
+<text x="590" y="302" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">每侧 VDD 与 GND 间并 100nF</text>
+<text x="590" y="330" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先核实模块已有去耦再补焊</text>
+<polyline points="510,250 565,250" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="1035,250 1090,250" fill="none" stroke="#237c6a" stroke-width="4"/>
+<rect x="65" y="380" width="1470" height="80" rx="5" fill="#fff4e9" stroke="#fff4e9"/>
+<text x="85" y="410" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#c34b35">RK 型号未知：物理针号、串口复用、设备节点、IO 电压仍待核；不是 USB / RS232 / RS485 接口。</text>
+<text x="85" y="442" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#c34b35">仅当 RK UART 确认为 3.3V TTL 才使用本图 3.3V 方案；1.8V 不能直接接 ADuM1201。</text>
+<rect x="65" y="495" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="495" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="522" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">D01  H1-03 / SWCLK (PA14)</text>
+<text x="978" y="522" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">ST-LINK · SWCLK</text>
+<polyline points="630,519 960,519" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="493" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="508" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">20cm内</text>
+<rect x="65" y="551" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="551" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="578" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">D02  H1-05 / SWDIO (PA13)</text>
+<text x="978" y="578" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">ST-LINK · SWDIO</text>
+<polyline points="630,575 960,575" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="549" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="564" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">20cm内</text>
+<rect x="65" y="607" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="607" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="634" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">D03  H1-04 或 H1-06 / GND</text>
+<text x="978" y="634" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">ST-LINK · GND</text>
+<polyline points="630,631 960,631" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="605" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="620" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">黑</text>
+<rect x="65" y="663" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="663" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="690" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">D04  H1-09 / NRST</text>
+<text x="978" y="690" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">ST-LINK · NRST / RST（若引出）</text>
+<polyline points="630,687 960,687" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="661" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="676" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">可选</text>
+<rect x="65" y="719" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="719" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="746" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">L01  H1-10 / PA9 / TX</text>
+<text x="978" y="746" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">CH340 · RXD</text>
+<polyline points="630,743 960,743" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="717" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="732" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">3.3V TTL</text>
+<rect x="65" y="775" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="775" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="802" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">L02  H1-04 或 H1-06 / GND</text>
+<text x="978" y="802" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">CH340 · GND</text>
+<polyline points="630,799 960,799" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="773" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="788" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">黑</text>
+<rect x="65" y="831" width="560" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="965" y="831" width="570" height="45" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="858" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">L03  H1-08 / PA10 / RX</text>
+<text x="978" y="858" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">CH340 · TXD（需输入时才接）</text>
+<polyline points="630,855 960,855" fill="none" stroke="#176da6" stroke-width="3"/>
+<rect x="672" y="829" width="246" height="26" rx="5" fill="white" stroke="white"/>
+<text x="678" y="844" font-family="Microsoft YaHei,sans-serif" font-size="16" fill="#176da6">先测TX高电平</text>
+<rect x="65" y="915" width="720" height="125" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="915" width="5" height="125" rx="5" fill="#a16716" stroke="#a16716"/>
+<text x="85" y="952" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#a16716">避免倒供电</text>
+<text x="85" y="991" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">F407 由 Type-C 供电；ST-LINK 的 5V 不接。</text>
+<text x="85" y="1019" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">克隆 ST-LINK 的 3.3V 可能是输出：未确认前不接。</text>
+<text x="85" y="1047" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">正规探头 VTref 才接 H1-02 作为参考；先看探头说明。</text>
+<rect x="815" y="915" width="720" height="125" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="915" width="5" height="125" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="835" y="952" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">隔离边界</text>
+<text x="835" y="991" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">CH340 的 VCC 不接；USB 只接调试 PC。</text>
+<text x="835" y="1019" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">调试 PC / 示波器地可能绕过隔离，接前查地路径。</text>
+<text x="835" y="1047" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">不要把 GND1 与 GND2 用跳线或同一地夹连接。</text></svg>

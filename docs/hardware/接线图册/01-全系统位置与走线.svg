@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>全系统位置与走线</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">01  全系统位置与走线</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">先安排位置，再按 02–06 页逐线连接；这是安装示意，不是按比例加工图。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">01 / 14</text>
+<rect x="55" y="165" width="960" height="690" rx="5" fill="#f7f9fb" stroke="#cdd9e2"/>
+<text x="80" y="205" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#172d46">柜内正视 · 刚性绝缘安装背板</text>
+<rect x="90" y="240" width="260" height="130" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="90" y="240" width="5" height="130" rx="5" fill="#237c6a" stroke="#237c6a"/>
+<text x="110" y="277" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#237c6a">C01 USB 相机</text>
+<text x="110" y="316" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">上后方朝工具区</text>
+<text x="110" y="344" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">随附 USB 线 → RK HOST</text>
+<rect x="390" y="240" width="250" height="130" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="390" y="240" width="5" height="130" rx="5" fill="#237c6a" stroke="#237c6a"/>
+<text x="410" y="277" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#237c6a">C02 白光补光</text>
+<text x="410" y="316" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">侧上方斜照，避反光</text>
+<text x="410" y="344" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">5V USB → 独立充电口</text>
+<rect x="700" y="240" width="270" height="130" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="700" y="240" width="5" height="130" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="720" y="277" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">B04 门磁</text>
+<text x="720" y="316" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">带线件固定柜框</text>
+<text x="720" y="344" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">磁铁固定柜门</text>
+<rect x="90" y="430" width="260" height="150" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="90" y="430" width="5" height="150" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="110" y="467" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">天空星 F407</text>
+<text x="110" y="506" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">P1 / P2 → 信号线</text>
+<text x="110" y="534" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">Type-C → 5V USB</text>
+<text x="110" y="562" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">距锁与强电回路留距离</text>
+<rect x="390" y="430" width="250" height="150" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="390" y="430" width="5" height="150" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="410" y="467" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">B07 ADuM1201</text>
+<text x="410" y="506" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">MCU 侧 / RK 侧分开</text>
+<text x="410" y="534" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">不要跨隔离接地</text>
+<text x="410" y="562" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">短线、固定、可测</text>
+<rect x="700" y="430" width="270" height="150" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="700" y="430" width="5" height="150" rx="5" fill="#237c6a" stroke="#237c6a"/>
+<text x="720" y="467" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#237c6a">RK3568 + 原配屏</text>
+<text x="720" y="506" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">用原配电源和屏线</text>
+<text x="720" y="534" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">相机接 USB HOST</text>
+<text x="720" y="562" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">网口 → 路由器</text>
+<rect x="90" y="645" width="260" height="145" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="90" y="645" width="5" height="145" rx="5" fill="#a16716" stroke="#a16716"/>
+<text x="110" y="682" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#a16716">分压 / 保护小板</text>
+<text x="110" y="721" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">3×7cm 原板先不裁</text>
+<text x="110" y="749" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">端子朝外，线可拆</text>
+<text x="110" y="777" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">元件面朝上，背面绝缘</text>
+<rect x="390" y="645" width="250" height="145" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="390" y="645" width="5" height="145" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="410" y="682" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">B03 MOS 模块</text>
+<text x="410" y="721" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">独立固定，端子朝外</text>
+<text x="410" y="749" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">不要硬焊到洞洞板</text>
+<text x="410" y="777" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">锁功率线走另一侧</text>
+<rect x="700" y="645" width="270" height="145" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="700" y="645" width="5" height="145" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="720" y="682" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">B02 锁体 + 锁扣</text>
+<text x="720" y="721" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">柜门边缘，刚性支撑</text>
+<text x="720" y="749" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">保留尾杆手动通道</text>
+<text x="720" y="777" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">红黑 22AWG → MOS</text>
+<polyline points="348,500 390,500" fill="none" stroke="#176da6" stroke-width="3"/>
+<polyline points="640,500 698,500" fill="none" stroke="#237c6a" stroke-width="3"/>
+<polyline points="520,790 520,825 825,825 825,790" fill="none" stroke="#c34b35" stroke-width="5"/>
+<rect x="1055" y="165" width="490" height="185" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1055" y="165" width="5" height="185" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="1075" y="202" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">柜门 / 工具区</text>
+<text x="1075" y="241" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">B01 RC522：门外非金属刷卡面</text>
+<text x="1075" y="269" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">B05 微动：工具托架下，限定行程</text>
+<text x="1075" y="297" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">B20 蜂鸣器：开孔朝外，避相机</text>
+<text x="1075" y="325" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">门铰链线束留弯，不能夹线</text>
+<rect x="1055" y="380" width="490" height="215" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1055" y="380" width="5" height="215" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="1075" y="417" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">线材与固定</text>
+<text x="1075" y="456" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">锁：22AWG 铜软线 + 螺丝端子</text>
+<text x="1075" y="484" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">信号：20cm 母对母杜邦线</text>
+<text x="1075" y="512" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">无排针器件：焊接后套热缩管</text>
+<text x="1075" y="540" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">板底尼龙柱架空，不能贴裸金属</text>
+<text x="1075" y="568" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">线两端贴同一线号；先量后剪</text>
+<rect x="1055" y="625" width="490" height="220" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1055" y="625" width="5" height="220" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="1075" y="662" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">电源分配</text>
+<text x="1075" y="701" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">12V/2A → 保险 → MOS → 锁</text>
+<text x="1075" y="729" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">5V USB → F407 Type-C</text>
+<text x="1075" y="757" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">RK：只用原配电源</text>
+<text x="1075" y="785" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">灯：独立 USB 充电口，核总电流</text>
+<text x="1075" y="813" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">外壳内只走低压成品适配器输出</text>
+<text x="75" y="911" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">布线：锁电源成对并行或轻绞；SPI 短线，先以低速调试；ADC 靠 MCU、远离 MOS 和锁线。</text>
+<text x="75" y="949" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">安装距离先以 5cm 分区作为起点，最终以关门、开锁、相机画面和干扰实测调整。</text>
+<text x="75" y="987" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">现有 1m 锁电源线须量路由总长；若不够，报告补线成本，不拉紧、不拼杜邦线。</text>
+<text x="75" y="1025" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">锁扣、微动和门铰链依赖实物尺寸；无手电钻时优先复用带孔刚性支撑，不在纸箱上承力。</text></svg>

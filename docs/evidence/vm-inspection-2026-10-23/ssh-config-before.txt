@@ -1,0 +1,3 @@
+Host 192.0.2.11
+  HostName 192.0.2.11
+  User %USER%

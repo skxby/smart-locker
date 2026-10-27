@@ -1,0 +1,62 @@
+# ASan+UBSan build+test of the full unit suite (round 2)
+# date: 2026-10-23T22:02:09+08:00
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-01/build/asan2-220208
+ASAN_CONFIGURE_EXIT=0
+[  5%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[ 10%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[ 15%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[ 21%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[ 26%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[ 31%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[ 36%] Linking C static library liblocker_common.a
+[ 36%] Built target locker_common
+[ 42%] Building C object tests/unit/common/CMakeFiles/test_bounded_queue.dir/test_bounded_queue.c.o
+[ 47%] Building C object tests/unit/common/CMakeFiles/test_build_info.dir/test_build_info.c.o
+[ 52%] Linking C executable test_build_info
+[ 57%] Linking C executable test_bounded_queue
+[ 57%] Built target test_build_info
+[ 63%] Building C object tests/unit/common/CMakeFiles/test_clock.dir/test_clock.c.o
+[ 63%] Built target test_bounded_queue
+[ 68%] Building C object tests/unit/common/CMakeFiles/test_log.dir/test_log.c.o
+[ 73%] Linking C executable test_clock
+[ 73%] Built target test_clock
+[ 78%] Building C object tests/unit/common/CMakeFiles/test_numeric.dir/test_numeric.c.o
+[ 84%] Linking C executable test_log
+[ 89%] Linking C executable test_numeric
+[ 89%] Built target test_log
+[ 89%] Built target test_numeric
+[ 94%] Building C object tests/unit/common/CMakeFiles/test_uuid.dir/test_uuid.c.o
+[100%] Linking C executable test_uuid
+[100%] Built target test_uuid
+ASAN_BUILD_EXIT=0
+Test project /home/%USER%/locker-workspace/S1-01/build/asan2-220208
+    Start 1: common.test_bounded_queue
+1/6 Test #1: common.test_bounded_queue ........   Passed    0.05 sec
+    Start 2: common.test_build_info
+2/6 Test #2: common.test_build_info ...........   Passed    0.03 sec
+    Start 3: common.test_clock
+3/6 Test #3: common.test_clock ................   Passed    0.05 sec
+    Start 4: common.test_log
+4/6 Test #4: common.test_log ..................   Passed    0.03 sec
+    Start 5: common.test_numeric
+5/6 Test #5: common.test_numeric ..............   Passed    0.03 sec
+    Start 6: common.test_uuid
+6/6 Test #6: common.test_uuid .................   Passed    0.03 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.22 sec
+ASAN_CTEST_EXIT=0
+ASAN_SANITIZER_REPORTS=0

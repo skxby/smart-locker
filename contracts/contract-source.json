@@ -1,0 +1,2229 @@
+{
+  "contract_version": "0.2.1",
+  "status": "REVIEW_DRAFT",
+  "date": "2026-10-22",
+  "scope": {
+    "slots": 1,
+    "tools": 1,
+    "mobile": "Android",
+    "network": "LAN",
+    "automatic_recovery_target": "UI_ONLY",
+    "mcu_driver_stack": "STM32_HAL",
+    "vision": "RK3568_MOBILENET_CLASSIFICATION_EVIDENCE"
+  },
+  "constants": {
+    "UART_BAUD": 115200,
+    "UART_MAX_PAYLOAD": 512,
+    "UART_HEADER_BYTES": 10,
+    "UART_EVENT_BYTES": 96,
+    "UART_MAX_EVENTS": 4,
+    "UART_DMA_BYTES": 2048,
+    "CORE_QUEUE_CAPACITY": 64,
+    "WS_QUEUE_CAPACITY": 16,
+    "HTTP_BODY_MAX": 4096,
+    "LOCAL_PACKET_MAX": 65535,
+    "IDEMPOTENCY_DAYS": 30,
+    "SESSION_HOURS": 8,
+    "PRESENCE_TTL_MS": 15000,
+    "PHYSICAL_FRESH_MS": 2000,
+    "PREPARE_DEADLINE_MS": 2000,
+    "REQUEST_TTL_MS": 120000,
+    "WAIT_OPEN_MS": 30000,
+    "WAIT_CLOSE_MS": 120000,
+    "WAIT_CONFIRM_MS": 120000,
+    "HOST_TIMEOUT_MS": 5000,
+    "HOST_BOOT_GRACE_MS": 120000,
+    "UI_BOOT_GRACE_MS": 30000,
+    "UI_RESTART_WINDOW_MS": 600000,
+    "UI_RESTART_LIMIT": 3,
+    "UI_RESTART_COOLDOWN_MS": 60000,
+    "LOCK_PULSE_MAX_MS": 1000,
+    "CORE_RESULT_WAIT_MS": 1000,
+    "CARD_OBSERVATION_MS": 30000,
+    "MAX_HOST_RESULT_BYTES": 65535,
+    "TIME_ANCHOR_PERIOD_MS": 2000,
+    "TIME_ANCHOR_MAX_RTT_MS": 200,
+    "TIME_ANCHOR_MAX_AGE_MS": 3000,
+    "CORE_COMPLETION_TOKEN_BYTES": 16,
+    "COMPLETION_RETENTION_MS": 60000,
+    "MAX_USERS": 100,
+    "LOCAL_REQUEST_MAX": 8192,
+    "VISION_REQUEST_MAX": 8192,
+    "VISION_RESPONSE_MAX": 16384,
+    "VISION_QUEUE_CAPACITY": 4,
+    "VISION_FRAME_COUNT": 3,
+    "VISION_CAPTURE_DEADLINE_MS": 3000,
+    "VISION_RESULT_MAX_AGE_MS": 2000,
+    "VISION_STATUS_PERIOD_MS": 1000,
+    "VISION_STATUS_TTL_MS": 3000,
+    "VISION_CONTROL_TIMEOUT_MS": 1000
+  },
+  "enums": {
+    "Role": [
+      "USER",
+      "ADMIN"
+    ],
+    "OperationKind": [
+      "BORROW",
+      "RETURN"
+    ],
+    "OperationState": [
+      "REQUESTED",
+      "ACCESS_PENDING",
+      "ACCESS_ACTIVE",
+      "WAIT_CONFIRM",
+      "REVIEW_REQUIRED",
+      "COMPLETED",
+      "CANCELLED",
+      "NO_CHANGE",
+      "FAILED"
+    ],
+    "DoorState": [
+      "UNKNOWN",
+      "CLOSED",
+      "OPEN"
+    ],
+    "ItemState": [
+      "UNKNOWN",
+      "ABSENT",
+      "PRESENT"
+    ],
+    "DeviceMode": [
+      "OFFLINE",
+      "RECONCILING",
+      "READY",
+      "DEGRADED"
+    ],
+    "ToolAvailability": [
+      "AVAILABLE",
+      "RESERVED",
+      "BORROWED",
+      "REVIEW",
+      "UNAVAILABLE"
+    ],
+    "TimeQuality": [
+      "UNSYNCED",
+      "ESTIMATED",
+      "HOST_SYNCED"
+    ],
+    "Resolution": [
+      "COMPLETE_BORROW",
+      "COMPLETE_RETURN",
+      "NO_CHANGE"
+    ],
+    "CommandState": [
+      "NONE",
+      "ACCEPTED",
+      "PULSE_STARTED",
+      "PULSE_FINISHED",
+      "REJECTED",
+      "UNKNOWN_RESULT"
+    ],
+    "AllowedAction": [
+      "PRESENT_AT_CABINET",
+      "WAIT",
+      "CONFIRM",
+      "CANCEL",
+      "ADMIN_REVIEW"
+    ],
+    "AlarmPattern": [
+      "OFF",
+      "NOTICE",
+      "FAULT"
+    ],
+    "ProgressTarget": [
+      "SERVICE",
+      "UI"
+    ],
+    "McuTaskId": [
+      "CONTROL",
+      "COMMUNICATION",
+      "PERIPHERAL_STORAGE",
+      "HEALTH"
+    ],
+    "SupervisorState": [
+      "UNKNOWN",
+      "RUNNING",
+      "UI_RECOVERING",
+      "LIMITED"
+    ]
+  },
+  "wire_enums": {
+    "operation_kind": {
+      "BORROW": 1,
+      "RETURN": 2
+    },
+    "command_state": {
+      "NONE": 0,
+      "ACCEPTED": 1,
+      "PULSE_STARTED": 2,
+      "PULSE_FINISHED": 3,
+      "REJECTED": 4,
+      "UNKNOWN_RESULT": 5
+    },
+    "device_event_type": {
+      "BOOT": 1,
+      "PULSE_STARTED": 2,
+      "PULSE_FINISHED": 3,
+      "DOOR_OPENED": 4,
+      "DOOR_CLOSED": 5,
+      "ITEM_REMOVED": 6,
+      "ITEM_PRESENT": 7,
+      "CARD_OBSERVED": 8,
+      "SUPPLY_CHANGED": 9,
+      "HEALTH_CHANGED": 10,
+      "JOURNAL_FAULT": 11,
+      "COMMAND_ACCEPTED": 12,
+      "CONTEXT_RELEASED": 13,
+      "CONTINUITY_LOST": 14,
+      "UI_RESTART_REQUEST": 15
+    },
+    "door_state": {
+      "UNKNOWN": 0,
+      "CLOSED": 1,
+      "OPEN": 2
+    },
+    "item_state": {
+      "UNKNOWN": 0,
+      "ABSENT": 1,
+      "PRESENT": 2
+    },
+    "wire_result": {
+      "OK": 0,
+      "BAD_VERSION": 1,
+      "BAD_SESSION": 2,
+      "NOT_READY": 3,
+      "BAD_PRECONDITION": 4,
+      "REPLAY_BLOCKED": 5,
+      "ACTION_GAP": 6,
+      "BUSY": 7,
+      "LOG_UNAVAILABLE": 8,
+      "UNKNOWN_RESULT": 9,
+      "BAD_PAYLOAD": 10,
+      "CURSOR_GAP": 11,
+      "PHYSICAL_CHANGED": 12,
+      "JOURNAL_CHANGED": 13,
+      "UNSUPPORTED": 14
+    },
+    "wire_device_mode": {
+      "RECONCILING": 0,
+      "READY": 1,
+      "DEGRADED": 2
+    },
+    "wire_journal_state": {
+      "UNINITIALIZED": 0,
+      "HEALTHY": 1,
+      "DEGRADED": 2,
+      "FAULT": 3,
+      "FULL": 4
+    },
+    "wire_supervisor_state": {
+      "UNKNOWN": 0,
+      "RUNNING": 1,
+      "UI_RECOVERING": 2,
+      "LIMITED": 3
+    }
+  },
+  "error_codes": [
+    {
+      "code": "VALIDATION_ERROR",
+      "http": 400,
+      "retryable": false
+    },
+    {
+      "code": "UNAUTHENTICATED",
+      "http": 401,
+      "retryable": false
+    },
+    {
+      "code": "FORBIDDEN",
+      "http": 403,
+      "retryable": false
+    },
+    {
+      "code": "NOT_FOUND",
+      "http": 404,
+      "retryable": false
+    },
+    {
+      "code": "SLOT_BUSY",
+      "http": 409,
+      "retryable": false
+    },
+    {
+      "code": "STATE_CONFLICT",
+      "http": 409,
+      "retryable": false
+    },
+    {
+      "code": "REVISION_CONFLICT",
+      "http": 409,
+      "retryable": false
+    },
+    {
+      "code": "IDEMPOTENCY_CONFLICT",
+      "http": 409,
+      "retryable": false
+    },
+    {
+      "code": "CARD_ALREADY_BOUND",
+      "http": 409,
+      "retryable": false
+    },
+    {
+      "code": "PHYSICAL_PRECONDITION_FAILED",
+      "http": 422,
+      "retryable": false
+    },
+    {
+      "code": "RATE_LIMITED",
+      "http": 429,
+      "retryable": true
+    },
+    {
+      "code": "DEVICE_UNAVAILABLE",
+      "http": 503,
+      "retryable": true
+    },
+    {
+      "code": "RECOVERY_REQUIRED",
+      "http": 503,
+      "retryable": false
+    },
+    {
+      "code": "STORAGE_UNAVAILABLE",
+      "http": 503,
+      "retryable": false
+    },
+    {
+      "code": "QUEUE_FULL",
+      "http": 503,
+      "retryable": true
+    },
+    {
+      "code": "RESULT_PENDING",
+      "http": 503,
+      "retryable": true
+    },
+    {
+      "code": "VISION_UNAVAILABLE",
+      "http": 503,
+      "retryable": true
+    },
+    {
+      "code": "VISION_CONFLICT",
+      "http": 409,
+      "retryable": false
+    }
+  ],
+  "schemas": {
+    "Uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "U64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$",
+      "description": "十进制uint64字符串，解析器还须检查<=18446744073709551615，不得经浮点转换。"
+    },
+    "DeviceId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "LoginRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "$ref": "#/components/schemas/Role"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "user_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "display_name",
+        "role",
+        "enabled",
+        "user_revision"
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 43,
+          "maxLength": 128,
+          "writeOnly": false
+        },
+        "expires_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        },
+        "user": {
+          "$ref": "#/components/schemas/User"
+        }
+      },
+      "required": [
+        "token",
+        "expires_at",
+        "user"
+      ]
+    },
+    "EventKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/components/schemas/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "event_seq": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "event_seq"
+      ]
+    },
+    "PhysicalSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/components/schemas/DeviceId"
+        },
+        "journal_epoch": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "boot_id": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "door": {
+          "$ref": "#/components/schemas/DoorState"
+        },
+        "item": {
+          "$ref": "#/components/schemas/ItemState"
+        },
+        "supply_mv": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time_quality": {
+          "$ref": "#/components/schemas/TimeQuality"
+        },
+        "continuity_ok": {
+          "type": "boolean"
+        },
+        "dropped_events": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "durable_cursor": {
+          "$ref": "#/components/schemas/EventKey"
+        }
+      },
+      "required": [
+        "device_id",
+        "journal_epoch",
+        "boot_id",
+        "physical_revision",
+        "door",
+        "item",
+        "supply_mv",
+        "observed_age_ms",
+        "time_quality",
+        "continuity_ok",
+        "dropped_events",
+        "durable_cursor"
+      ]
+    },
+    "Device": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": {
+          "$ref": "#/components/schemas/DeviceId"
+        },
+        "cabinet_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "contract_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "simulated": {
+          "type": "boolean"
+        },
+        "mode": {
+          "$ref": "#/components/schemas/DeviceMode"
+        },
+        "health_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "maxItems": 16
+        },
+        "ui_restart_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Supervisor cumulative reserved UI restart attempts; null when no trustworthy current observation."
+        },
+        "physical": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/PhysicalSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "device_id",
+        "cabinet_name",
+        "contract_version",
+        "simulated",
+        "mode",
+        "health_reasons",
+        "ui_restart_count",
+        "physical"
+      ]
+    },
+    "Tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "slot_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1
+        },
+        "availability": {
+          "$ref": "#/components/schemas/ToolAvailability"
+        },
+        "tool_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slot_id",
+        "availability",
+        "tool_revision"
+      ]
+    },
+    "Evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "history_complete": {
+          "type": "boolean"
+        },
+        "door_open_seen": {
+          "type": "boolean"
+        },
+        "item_transition_seen": {
+          "type": "boolean"
+        },
+        "physical": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/PhysicalSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/EventKey"
+          },
+          "maxItems": 32
+        },
+        "manual_resolution": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "history_complete",
+        "door_open_seen",
+        "item_transition_seen",
+        "physical",
+        "source_events",
+        "manual_resolution"
+      ]
+    },
+    "Operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "tool_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "kind": {
+          "$ref": "#/components/schemas/OperationKind"
+        },
+        "actor_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "state": {
+          "$ref": "#/components/schemas/OperationState"
+        },
+        "operation_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "command_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/AllowedAction"
+          },
+          "maxItems": 6
+        },
+        "evidence": {
+          "$ref": "#/components/schemas/Evidence"
+        }
+      },
+      "required": [
+        "id",
+        "tool_id",
+        "kind",
+        "actor_id",
+        "state",
+        "operation_revision",
+        "command_id",
+        "reason_code",
+        "created_at",
+        "updated_at",
+        "allowed_actions",
+        "evidence"
+      ]
+    },
+    "CreateOperationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tool_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "kind": {
+          "$ref": "#/components/schemas/OperationKind"
+        },
+        "tool_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "tool_id",
+        "kind",
+        "tool_revision"
+      ]
+    },
+    "RevisionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "operation_revision"
+      ]
+    },
+    "CancelRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "operation_revision",
+        "reason"
+      ]
+    },
+    "ResolveRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "physical_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "resolution": {
+          "$ref": "#/components/schemas/Resolution"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "operation_revision",
+        "physical_revision",
+        "resolution",
+        "reason"
+      ]
+    },
+    "Loan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "tool_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "borrower_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "borrow_operation_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "return_operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "opened_at": {
+          "$ref": "#/components/schemas/Timestamp"
+        },
+        "closed_at": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tool_id",
+        "borrower_id",
+        "borrow_operation_id",
+        "return_operation_id",
+        "opened_at",
+        "closed_at"
+      ]
+    },
+    "BusinessEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time_quality": {
+          "$ref": "#/components/schemas/TimeQuality"
+        },
+        "source_event": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/EventKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "manual": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "operation_id",
+        "type",
+        "message",
+        "occurred_at",
+        "time_quality",
+        "source_event",
+        "manual"
+      ]
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "password": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 128
+        },
+        "role": {
+          "$ref": "#/components/schemas/Role"
+        }
+      },
+      "required": [
+        "username",
+        "display_name",
+        "password",
+        "role"
+      ]
+    },
+    "PatchUserRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "$ref": "#/components/schemas/Role"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "user_revision"
+      ],
+      "minProperties": 2
+    },
+    "CardObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "masked_uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "consumed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "masked_uid",
+        "observed_age_ms",
+        "consumed"
+      ]
+    },
+    "BindCardRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_revision": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "observation_id": {
+          "$ref": "#/components/schemas/Uuid"
+        }
+      },
+      "required": [
+        "user_revision",
+        "observation_id"
+      ]
+    },
+    "CardBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "bound": {
+          "type": "boolean"
+        },
+        "masked_uid": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 32
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "user_id",
+        "bound",
+        "masked_uid",
+        "user_revision"
+      ]
+    },
+    "Snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "$ref": "#/components/schemas/Device"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Tool"
+          },
+          "maxItems": 1
+        },
+        "active_operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Operation"
+          },
+          "maxItems": 1
+        },
+        "loans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Loan"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "device",
+        "tools",
+        "active_operations",
+        "loans"
+      ]
+    },
+    "WsChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "resource.changed"
+        },
+        "resource": {
+          "type": "string",
+          "enum": [
+            "tool",
+            "operation",
+            "loan",
+            "device",
+            "review",
+            "user"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "type",
+        "resource",
+        "id",
+        "snapshot_revision"
+      ]
+    },
+    "WsResync": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "resync_required"
+        },
+        "snapshot_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "type",
+        "snapshot_revision"
+      ]
+    },
+    "LocalPresenceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "operation_revision": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "operation_id",
+        "operation_revision"
+      ]
+    },
+    "ProgressReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": [
+            "SERVICE",
+            "UI"
+          ]
+        },
+        "instance_id": {
+          "$ref": "#/components/schemas/Uuid"
+        },
+        "progress": {
+          "$ref": "#/components/schemas/U64"
+        },
+        "observed_age_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Age at the source sampled_mono_ms, not send time; preserve both through queues. Fresh completed-loop sample uses zero; unknown uses uint32 max."
+        },
+        "sampled_mono_ms": {
+          "$ref": "#/components/schemas/U64"
+        }
+      },
+      "required": [
+        "target",
+        "instance_id",
+        "progress",
+        "observed_age_ms",
+        "sampled_mono_ms"
+      ]
+    },
+    "RestartRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "const": "UI"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "incident_id": {
+          "$ref": "#/components/schemas/Uuid"
+        }
+      },
+      "required": [
+        "target",
+        "reason",
+        "incident_id"
+      ]
+    },
+    "ToolList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Tool"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "UserList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/User"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "ReviewList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Operation"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "CardObservationList": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CardObservation"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "LoanPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Loan"
+          },
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ]
+    },
+    "EventPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/BusinessEvent"
+          },
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ]
+    }
+  },
+  "public_routes": [
+    {
+      "method": "post",
+      "path": "/sessions",
+      "operation_id": "login",
+      "roles": [],
+      "input_schema": "LoginRequest",
+      "output_schema": "Session",
+      "idempotency": false,
+      "summary": "登录；每账号/来源每分钟最多5次失败，禁止记录凭据。"
+    },
+    {
+      "method": "get",
+      "path": "/sessions/current",
+      "operation_id": "getCurrentSession",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "User"
+    },
+    {
+      "method": "delete",
+      "path": "/sessions/current",
+      "operation_id": "logout",
+      "roles": [],
+      "input_schema": null,
+      "output_schema": null,
+      "success_status": 204,
+      "idempotency": false,
+      "summary": "撤销当前会话；不存在/已撤销也返回204，不改变任何借还。"
+    },
+    {
+      "method": "get",
+      "path": "/device",
+      "operation_id": "getDevice",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "Device"
+    },
+    {
+      "method": "get",
+      "path": "/snapshot",
+      "operation_id": "getSnapshot",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "Snapshot",
+      "summary": "一致视图；普通用户仅见本人操作和借用；其他工具只见可用性。"
+    },
+    {
+      "method": "get",
+      "path": "/tools",
+      "operation_id": "listTools",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "ToolList"
+    },
+    {
+      "method": "get",
+      "path": "/tools/{tool_id}",
+      "operation_id": "getTool",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "Tool"
+    },
+    {
+      "method": "post",
+      "path": "/operations",
+      "operation_id": "createOperation",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": "CreateOperationRequest",
+      "output_schema": "Operation",
+      "success_status": 201,
+      "idempotency": true,
+      "summary": "原子占位；201仅表示REQUESTED已提交。"
+    },
+    {
+      "method": "get",
+      "path": "/operations/{operation_id}",
+      "operation_id": "getOperation",
+      "roles": [
+        "OWNER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "Operation"
+    },
+    {
+      "method": "post",
+      "path": "/operations/{operation_id}/confirm",
+      "operation_id": "confirmOperation",
+      "roles": [
+        "OWNER"
+      ],
+      "input_schema": "RevisionRequest",
+      "output_schema": "Operation",
+      "idempotency": true,
+      "summary": "仅WAIT_CONFIRM；用户本人确认，不能传actor_id或成功状态。"
+    },
+    {
+      "method": "post",
+      "path": "/operations/{operation_id}/cancel",
+      "operation_id": "cancelOperation",
+      "roles": [
+        "OWNER"
+      ],
+      "input_schema": "CancelRequest",
+      "output_schema": "Operation",
+      "idempotency": true,
+      "summary": "REQUESTED可取消；可能已动作则进入REVIEW_REQUIRED。"
+    },
+    {
+      "method": "get",
+      "path": "/loans",
+      "operation_id": "listLoans",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "LoanPage",
+      "pagination": true
+    },
+    {
+      "method": "get",
+      "path": "/events",
+      "operation_id": "listEvents",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "EventPage",
+      "pagination": true,
+      "query_operation": true
+    },
+    {
+      "method": "get",
+      "path": "/reviews",
+      "operation_id": "listReviews",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "ReviewList"
+    },
+    {
+      "method": "post",
+      "path": "/operations/{operation_id}/resolve",
+      "operation_id": "resolveOperation",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": "ResolveRequest",
+      "output_schema": "Operation",
+      "idempotency": true,
+      "summary": "人工核验留原因；必须匹配原类型/用户和明确的闭门/物品状态。"
+    },
+    {
+      "method": "get",
+      "path": "/users",
+      "operation_id": "listUsers",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "UserList"
+    },
+    {
+      "method": "post",
+      "path": "/users",
+      "operation_id": "createUser",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": "CreateUserRequest",
+      "output_schema": "User",
+      "success_status": 201,
+      "idempotency": true
+    },
+    {
+      "method": "patch",
+      "path": "/users/{user_id}",
+      "operation_id": "updateUser",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": "PatchUserRequest",
+      "output_schema": "User",
+      "idempotency": true,
+      "summary": "不能停用/降权最后管理员；停用撤销会话而不删除借用。"
+    },
+    {
+      "method": "get",
+      "path": "/card-observations",
+      "operation_id": "listCardObservations",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "CardObservationList",
+      "summary": "只列30秒内实时观测的脱敏卡信息；历史补传不参与绑定。"
+    },
+    {
+      "method": "put",
+      "path": "/users/{user_id}/card",
+      "operation_id": "bindCard",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": "BindCardRequest",
+      "output_schema": "CardBinding",
+      "idempotency": true
+    },
+    {
+      "method": "delete",
+      "path": "/users/{user_id}/card",
+      "operation_id": "unbindCard",
+      "roles": [
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "CardBinding",
+      "idempotency": true,
+      "query_user_revision": true
+    },
+    {
+      "method": "get",
+      "path": "/ws",
+      "operation_id": "subscribeChanges",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": null,
+      "websocket": true,
+      "success_status": 101,
+      "summary": "Bearer在握手头；只推失效提示，无命令通道，不在URL携带token。"
+    },
+    {
+      "method": "get",
+      "path": "/vision/status",
+      "operation_id": "getVisionStatus",
+      "roles": [
+        "USER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "VisionStatus",
+      "implementation_card": "S2-14"
+    },
+    {
+      "method": "get",
+      "path": "/operations/{operation_id}/vision",
+      "operation_id": "getOperationVisionEvidence",
+      "roles": [
+        "OWNER",
+        "ADMIN"
+      ],
+      "input_schema": null,
+      "output_schema": "VisionEvidencePage",
+      "pagination": true,
+      "implementation_card": "S2-14"
+    }
+  ],
+  "internal_interfaces": [
+    {
+      "name": "locker_core_submit",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_submit(locker_core_t *core, const locker_command_t *command, locker_receipt_t *receipt);",
+      "semantics": "复制入有界队列；receipt含request/operation关联，排队不表示业务或物理完成。"
+    },
+    {
+      "name": "locker_core_wait_result",
+      "owner": "RK Core completion port",
+      "prototype": "locker_status_t locker_core_wait_result(locker_core_t *core, const locker_uuid_t *submission_token, uint32_t timeout_ms, locker_query_result_t *result);",
+      "semantics": "HTTP/IPC按Core生成的内部submission_token最多等待1000ms；不按客户端request_id寻址。超时不取消，复用原幂等键。"
+    },
+    {
+      "name": "locker_core_apply_device_event",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_apply_device_event(locker_core_t *core, const locker_device_event_t *event);",
+      "semantics": "事件键去重后在业务线程应用；补传不能产生柜前证明。"
+    },
+    {
+      "name": "locker_core_apply_device_reply",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_apply_device_reply(locker_core_t *core, const locker_device_reply_t *reply);",
+      "semantics": "设备适配器提交已解码HELLO/快照/命令结果/水位/健康响应；拷贝入队并按request/session匹配，不能用DEVICE_EVENT替代响应。"
+    },
+    {
+      "name": "locker_core_tick",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_tick(locker_core_t *core, uint64_t monotonic_ms);",
+      "semantics": "推进业务超时与真实核心进度，不等待外设。"
+    },
+    {
+      "name": "locker_core_query",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_query(locker_core_t *core, const locker_query_t *query, locker_query_result_t *result);",
+      "semantics": "Bounded HTTP/IPC wrapper: enqueue to Core, use private submission_token and wait <=1000ms; never read mutable domain or repository on caller thread."
+    },
+    {
+      "name": "locker_repo_commit_change",
+      "owner": "RK Storage",
+      "prototype": "locker_status_t locker_repo_commit_change(locker_repo_t *repo, const locker_change_t *change);",
+      "semantics": "操作+outbox+幂等+revision同一事务；仅业务线程调用。"
+    },
+    {
+      "name": "locker_repo_import_events",
+      "owner": "RK Storage",
+      "prototype": "locker_status_t locker_repo_import_events(locker_repo_t *repo, const locker_event_batch_t *batch, const locker_change_t *projection_change, locker_event_key_t *committed_cursor);",
+      "semantics": "新事件去重、可选投影变更和连续游标同事务；投影由Core构造，不由Repo猜业务。"
+    },
+    {
+      "name": "locker_repo_load_recovery",
+      "owner": "RK Storage",
+      "prototype": "locker_status_t locker_repo_load_recovery(locker_repo_t *repo, const locker_repo_query_t *query, locker_recovery_t *result);",
+      "semantics": "按集合/页恢复；结果DTO字段由internal-data.schema.json固定，不一次加载无限历史。"
+    },
+    {
+      "name": "locker_device_open",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_open(locker_device_t *device, const locker_device_config_t *config);",
+      "semantics": "真实串口或显式模拟字节流；创建新会话并禁止新动作直至核对。"
+    },
+    {
+      "name": "locker_device_get_snapshot",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_get_snapshot(locker_device_t *device, uint32_t request_no);",
+      "semantics": "异步取得持久化屏障快照。"
+    },
+    {
+      "name": "locker_device_execute_once",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_execute_once(locker_device_t *device, const locker_unlock_intent_t *intent);",
+      "semantics": "每物理command一次发送，超时查询，禁止自动重发。"
+    },
+    {
+      "name": "locker_device_query_command",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_query_command(locker_device_t *device, const locker_uuid_t *command_id);",
+      "semantics": "无副作用结果查询；未知不是未执行。"
+    },
+    {
+      "name": "locker_device_fetch_events",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_fetch_events(locker_device_t *device, const locker_event_key_t *after, uint8_t limit);",
+      "semantics": "limit<=4，返回连续范围和缺口。"
+    },
+    {
+      "name": "locker_device_ack_persisted",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_ack_persisted(locker_device_t *device, const locker_event_key_t *cursor);",
+      "semantics": "只能确认RK已提交的连续水位。"
+    },
+    {
+      "name": "locker_device_resume_ready",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_resume_ready(locker_device_t *device, const locker_ready_guard_t *guard);",
+      "semantics": "对物理版本、日志epoch和水位比较；不是无条件ARM。"
+    },
+    {
+      "name": "locker_device_release_context",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_release_context(locker_device_t *device, const locker_context_guard_t *guard);",
+      "semantics": "仅释放匹配的闭门上下文，不开锁、不改借用。"
+    },
+    {
+      "name": "locker_device_send_health",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_send_health(locker_device_t *device, const locker_health_report_t *report);",
+      "semantics": "携带真实实例/进度/年龄，适配器不得代增进度。"
+    },
+    {
+      "name": "locker_events_try_publish",
+      "owner": "RK Events",
+      "prototype": "locker_status_t locker_events_try_publish(locker_publisher_t *publisher, const locker_resource_change_t *change);",
+      "semantics": "有界非阻塞；满则客户端重新同步。"
+    },
+    {
+      "name": "locker_local_presence_submit",
+      "owner": "RK Local IPC",
+      "prototype": "locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer, const locker_presence_t *presence);",
+      "semantics": "私有SO_PEERCRED+登录会话+owner+revision；不能从HTTP调用。"
+    },
+    {
+      "name": "locker_supervisor_report_progress",
+      "owner": "Supervisor",
+      "prototype": "locker_status_t locker_supervisor_report_progress(locker_supervisor_t *supervisor, const locker_progress_t *progress);",
+      "semantics": "只接受service/UI可信peer的真实循环进度。"
+    },
+    {
+      "name": "locker_supervisor_request_ui_restart",
+      "owner": "Supervisor",
+      "prototype": "locker_status_t locker_supervisor_request_ui_restart(locker_supervisor_t *supervisor, const locker_restart_request_t *request);",
+      "semantics": "固定UI目标，限次冷却，无shell与锁动作。"
+    },
+    {
+      "name": "mcu_control_submit_unlock",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_submit_unlock(mcu_control_t *control, const mcu_request_context_t *request, const locker_unlock_intent_t *intent);",
+      "semantics": "排队->检查->异步提交意图->再检查->硬件定时脉冲。"
+    },
+    {
+      "name": "mcu_control_observe_inputs",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_observe_inputs(mcu_control_t *control, const locker_board_inputs_t *inputs);",
+      "semantics": "去抖、UNKNOWN、物理版本和连续性；实际电平由BSP转换。"
+    },
+    {
+      "name": "mcu_control_on_journal_result",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_on_journal_result(mcu_control_t *control, uint32_t token, locker_status_t result, const mcu_journal_state_t *state);",
+      "semantics": "只有提交成功且2000ms准备期限内、guard仍成立才能驱动。"
+    },
+    {
+      "name": "mcu_control_make_snapshot",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_make_snapshot(mcu_control_t *control, const mcu_request_context_t *request);",
+      "semantics": "捕获物理状态并等待此前事件提交，异步回屏障。"
+    },
+    {
+      "name": "mcu_control_release_context",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_release_context(mcu_control_t *control, const mcu_request_context_t *request, const locker_context_guard_t *guard);",
+      "semantics": "闭门、无脉冲、context/revision匹配才释放。"
+    },
+    {
+      "name": "mcu_journal_append",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_append(mcu_journal_t *journal, const locker_device_event_t *event, uint32_t token);",
+      "semantics": "复制入队；完成通过token回执；队列满锁定连续性故障。"
+    },
+    {
+      "name": "mcu_journal_commit_intent",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_commit_intent(mcu_journal_t *journal, const locker_unlock_intent_t *intent, uint32_t token);",
+      "semantics": "意图、水位、上下文作为同一持久化检查点提交。"
+    },
+    {
+      "name": "mcu_journal_read_page",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_read_page(mcu_journal_t *journal, const locker_event_key_t *after, uint8_t limit, locker_event_batch_t *result);",
+      "semantics": "返回最多4条和边界，不能伪造连续性。"
+    },
+    {
+      "name": "mcu_journal_ack",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_ack(mcu_journal_t *journal, const locker_event_key_t *cursor);",
+      "semantics": "推进已确认水位，保留未决动作检查点。"
+    },
+    {
+      "name": "mcu_board_read_inputs",
+      "owner": "MCU BSP",
+      "prototype": "locker_status_t mcu_board_read_inputs(locker_board_inputs_t *result);",
+      "semantics": "非阻塞规范化读数；未配置或不稳定返回UNKNOWN。"
+    },
+    {
+      "name": "mcu_board_start_bounded_pulse",
+      "owner": "MCU BSP",
+      "prototype": "locker_status_t mcu_board_start_bounded_pulse(uint16_t pulse_ms);",
+      "semantics": "仅Control调用；硬件截止<=1000ms且不超过锁实际允许值。"
+    },
+    {
+      "name": "mcu_board_force_off",
+      "owner": "MCU BSP",
+      "prototype": "void mcu_board_force_off(void);",
+      "semantics": "复位/异常优先关断；不等待文件系统或串口。"
+    },
+    {
+      "name": "mcu_board_spi_transfer",
+      "owner": "MCU BSP",
+      "prototype": "locker_status_t mcu_board_spi_transfer(uint8_t chip_select, const uint8_t *tx, uint8_t *rx, uint16_t length, uint32_t timeout_us);",
+      "semantics": "仅PeripheralStorage；有限长度/时间，不把结构体作为wire。"
+    },
+    {
+      "name": "mcu_health_report_progress",
+      "owner": "MCU Health",
+      "prototype": "locker_status_t mcu_health_report_progress(mcu_health_t *health, uint8_t task_id, uint64_t progress);",
+      "semantics": "任务真实进度，不能只观察定时中断。"
+    },
+    {
+      "name": "mcu_health_evaluate",
+      "owner": "MCU Health",
+      "prototype": "locker_status_t mcu_health_evaluate(mcu_health_t *health, uint64_t monotonic_ms);",
+      "semantics": "只在本地关键任务健康时允许喂狗；主机离线本身不停止记录。"
+    },
+    {
+      "name": "locker_repo_open",
+      "owner": "RK Storage",
+      "prototype": "locker_status_t locker_repo_open(const locker_repo_config_t *config, locker_repo_t **out);",
+      "semantics": "Schema-checked open; failure sets out to NULL; never clear corruption."
+    },
+    {
+      "name": "locker_repo_query",
+      "owner": "RK Storage",
+      "prototype": "locker_status_t locker_repo_query(locker_repo_t *repo, const locker_repo_query_t *query, locker_repo_result_t *result);",
+      "semantics": "Typed RepositoryQuery/Result; core-thread-only; byte-bounded pagination."
+    },
+    {
+      "name": "locker_repo_close",
+      "owner": "RK Storage",
+      "prototype": "void locker_repo_close(locker_repo_t *repo);",
+      "semantics": "Close after core stops; NULL-safe; no concurrent transaction."
+    },
+    {
+      "name": "locker_core_create",
+      "owner": "RK Runtime/Core",
+      "prototype": "locker_status_t locker_core_create(const locker_core_config_t *config, locker_repo_t *repo, locker_device_t *device, locker_publisher_t *publisher, locker_core_t **out);",
+      "semantics": "Dependencies are borrowed; fail with NULL; complete recovery before business readiness."
+    },
+    {
+      "name": "locker_core_start",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_start(locker_core_t *core);",
+      "semantics": "Start one owner thread; remain RECONCILING until synchronized."
+    },
+    {
+      "name": "locker_core_stop",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_stop(locker_core_t *core, uint32_t timeout_ms);",
+      "semantics": "Stop admission and drain or mark writes; timeout is not cancellation."
+    },
+    {
+      "name": "locker_core_destroy",
+      "owner": "RK Core",
+      "prototype": "void locker_core_destroy(locker_core_t *core);",
+      "semantics": "Only after successful stop and adapter callbacks cease; do not close borrowed dependencies."
+    },
+    {
+      "name": "locker_core_authenticate",
+      "owner": "RK Auth/Core",
+      "prototype": "locker_status_t locker_core_authenticate(locker_core_t *core, const locker_auth_request_t *request, locker_principal_t *result);",
+      "semantics": "Validate current session/user in core; recheck session at command execution."
+    },
+    {
+      "name": "locker_device_create",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_create(locker_device_t **out);",
+      "semantics": "Allocate unopened context; failure sets NULL."
+    },
+    {
+      "name": "locker_device_close",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_close(locker_device_t *device);",
+      "semantics": "Stop IO and callbacks; invalidate session without replaying EXECUTE."
+    },
+    {
+      "name": "locker_device_destroy",
+      "owner": "RK Device",
+      "prototype": "void locker_device_destroy(locker_device_t *device);",
+      "semantics": "Free only after close and thread join."
+    },
+    {
+      "name": "locker_device_time_anchor",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_time_anchor(locker_device_t *device, uint32_t request_no);",
+      "semantics": "Capture host request start and response arrival; normalize TIME_ANCHOR every 2 seconds."
+    },
+    {
+      "name": "locker_events_create",
+      "owner": "RK Events",
+      "prototype": "locker_status_t locker_events_create(locker_publisher_t **out);",
+      "semantics": "Create bounded change publisher; failure sets NULL."
+    },
+    {
+      "name": "locker_events_destroy",
+      "owner": "RK Events",
+      "prototype": "void locker_events_destroy(locker_publisher_t *publisher);",
+      "semantics": "Free after websocket closure and producer stop."
+    },
+    {
+      "name": "locker_supervisor_create",
+      "owner": "Supervisor",
+      "prototype": "locker_status_t locker_supervisor_create(const locker_supervisor_config_t *config, locker_supervisor_t **out);",
+      "semantics": "Fixed UI target and private IPC; independent restart-limit checkpoint."
+    },
+    {
+      "name": "locker_supervisor_destroy",
+      "owner": "Supervisor",
+      "prototype": "void locker_supervisor_destroy(locker_supervisor_t *supervisor);",
+      "semantics": "Release after supervisor loop stops; no ledger writes."
+    },
+    {
+      "name": "mcu_control_init",
+      "owner": "MCU Control",
+      "prototype": "locker_status_t mcu_control_init(const mcu_control_config_t *config, mcu_journal_t *journal, mcu_control_t **out);",
+      "semantics": "Return module-owned static context; unverified board config permits diagnostics only."
+    },
+    {
+      "name": "mcu_journal_init",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_init(const mcu_journal_config_t *config, mcu_journal_t **out);",
+      "semantics": "Static context; no automatic format; failed boot checkpoint forbids READY."
+    },
+    {
+      "name": "mcu_health_init",
+      "owner": "MCU Health",
+      "prototype": "locker_status_t mcu_health_init(const mcu_health_config_t *config, mcu_health_t **out);",
+      "semantics": "Static context; valid task deadlines required; host offline does not stop MCU."
+    },
+    {
+      "name": "locker_device_bind_sink",
+      "owner": "RK Device",
+      "prototype": "locker_status_t locker_device_bind_sink(locker_device_t *device, const locker_device_sink_t *sink);",
+      "semantics": "Before open; borrowed sink lives through close; callbacks borrow DTO only for call, receiver must copy; backpressure stops new execution/health until reconciliation."
+    },
+    {
+      "name": "locker_http_start",
+      "owner": "RK HTTP",
+      "prototype": "locker_status_t locker_http_start(const locker_http_config_t *config, locker_core_t *core, locker_publisher_t *publisher, locker_http_t **out);",
+      "semantics": "Start HTTPS/WS only; no local presence routes; dependencies borrowed."
+    },
+    {
+      "name": "locker_http_stop",
+      "owner": "RK HTTP",
+      "prototype": "locker_status_t locker_http_stop(locker_http_t *http, uint32_t timeout_ms);",
+      "semantics": "Stop admission and join workers; timeout forbids destroy."
+    },
+    {
+      "name": "locker_http_destroy",
+      "owner": "RK HTTP",
+      "prototype": "void locker_http_destroy(locker_http_t *http);",
+      "semantics": "After successful stop; do not release borrowed core/publisher."
+    },
+    {
+      "name": "locker_ipc_start",
+      "owner": "RK IPC",
+      "prototype": "locker_status_t locker_ipc_start(const locker_ipc_config_t *config, locker_core_t *core, locker_ipc_t **out);",
+      "semantics": "Restricted seqpacket service socket; verify peer credentials; dependencies borrowed."
+    },
+    {
+      "name": "locker_ipc_stop",
+      "owner": "RK IPC",
+      "prototype": "locker_status_t locker_ipc_stop(locker_ipc_t *ipc, uint32_t timeout_ms);",
+      "semantics": "Stop admission and join workers before destroying core."
+    },
+    {
+      "name": "locker_ipc_destroy",
+      "owner": "RK IPC",
+      "prototype": "void locker_ipc_destroy(locker_ipc_t *ipc);",
+      "semantics": "After successful stop; only remove owned socket path."
+    },
+    {
+      "name": "mcu_journal_bind_sink",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_bind_sink(mcu_journal_t *journal, const mcu_journal_sink_t *sink);",
+      "semantics": "Before storage task starts; borrowed static sink; callback queues token/result to Control, never drives GPIO."
+    },
+    {
+      "name": "mcu_board_apply_profile",
+      "owner": "MCU HAL BSP",
+      "prototype": "locker_status_t mcu_board_apply_profile(const mcu_board_profile_t *profile);",
+      "semantics": "HAL-only private binding; reject unverified pin/polarity/ADC/timer/IO settings, default lock off; no public network configuration."
+    },
+    {
+      "name": "mcu_board_set_alarm",
+      "owner": "MCU HAL BSP",
+      "prototype": "locker_status_t mcu_board_set_alarm(locker_alarm_pattern_t pattern);",
+      "semantics": "Nonblocking LED/buzzer pattern through verified HAL pins; does not drive lock or mutate custody."
+    },
+    {
+      "name": "locker_local_maintenance_reconcile",
+      "owner": "RK Local Admin",
+      "prototype": "locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer, const locker_maintenance_t *request);",
+      "semantics": "Trusted local admin CLI and current admin session; compare snapshot/epoch/boot/physical revision and ledger; clear only authorized hold, never pulse or hide gaps."
+    },
+    {
+      "name": "locker_supervisor_get_health",
+      "owner": "Supervisor",
+      "prototype": "locker_status_t locker_supervisor_get_health(locker_supervisor_t *supervisor, locker_supervisor_health_t *result);",
+      "semantics": "Read immutable local supervision snapshot; no process action. Restricted health.get RPC exposes this only to the registered service peer."
+    },
+    {
+      "name": "locker_core_apply_supervisor_health",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_apply_supervisor_health(locker_core_t *core, const locker_supervisor_health_t *health);",
+      "semantics": "Copy observation into Core queue; only Core updates public projection; stale cache never refreshes sample time."
+    },
+    {
+      "name": "locker_core_get_progress",
+      "owner": "RK Core",
+      "prototype": "locker_status_t locker_core_get_progress(locker_core_t *core, locker_progress_t *result);",
+      "semantics": "Nonblocking immutable observation of real Core loop; no queue wait, IO or synthetic progress increment."
+    },
+    {
+      "name": "locker_vision_create",
+      "prototype": "locker_status_t locker_vision_create(const locker_vision_config_t *config, locker_vision_t **out);",
+      "owner": "RK Vision",
+      "semantics": "Create unopened local adapter; no inference inside Core."
+    },
+    {
+      "name": "locker_vision_bind_sink",
+      "prototype": "locker_status_t locker_vision_bind_sink(locker_vision_t *vision, const locker_vision_sink_t *sink);",
+      "owner": "RK Vision",
+      "semantics": "Bind before open; callbacks borrow DTO only, Core receiver copies; sink lives until successful close."
+    },
+    {
+      "name": "locker_vision_open",
+      "prototype": "locker_status_t locker_vision_open(locker_vision_t *vision);",
+      "owner": "RK Vision",
+      "semantics": "Start bounded IO/HELLO; local worker can be unavailable without blocking Core."
+    },
+    {
+      "name": "locker_vision_submit",
+      "prototype": "locker_status_t locker_vision_submit(locker_vision_t *vision, const locker_vision_request_t *request);",
+      "owner": "RK Vision",
+      "semantics": "Validate and copy one persisted capture request to bounded queue; QUEUED is not evidence."
+    },
+    {
+      "name": "locker_vision_get_status",
+      "prototype": "locker_status_t locker_vision_get_status(locker_vision_t *vision, locker_vision_status_t *result);",
+      "owner": "RK Vision",
+      "semantics": "Nonblocking cached raw worker observation; source time never refreshed by reads."
+    },
+    {
+      "name": "locker_vision_close",
+      "prototype": "locker_status_t locker_vision_close(locker_vision_t *vision, uint32_t timeout_ms);",
+      "owner": "RK Vision",
+      "semantics": "Stop IO, invalidate captures and join callbacks; timeout forbids destroy, never replay requests."
+    },
+    {
+      "name": "locker_vision_destroy",
+      "prototype": "void locker_vision_destroy(locker_vision_t *vision);",
+      "owner": "RK Vision",
+      "semantics": "After successful close and Core producer stop only."
+    },
+    {
+      "name": "locker_core_bind_vision",
+      "prototype": "locker_status_t locker_core_bind_vision(locker_core_t *core, locker_vision_t *vision);",
+      "owner": "RK Core",
+      "semantics": "Before Core start; borrowed adapter lives until Core stop and all callbacks cease."
+    },
+    {
+      "name": "locker_core_apply_vision_result",
+      "prototype": "locker_status_t locker_core_apply_vision_result(locker_core_t *core, const locker_vision_result_t *result);",
+      "owner": "RK Core",
+      "semantics": "Copy validated raw result into Core queue; Core revalidates correlation, clocks, guards and commits evidence; no worker verdict trusted."
+    },
+    {
+      "name": "locker_core_apply_vision_status",
+      "prototype": "locker_status_t locker_core_apply_vision_status(locker_core_t *core, const locker_vision_status_t *status);",
+      "owner": "RK Core",
+      "semantics": "Copy source worker observation into Core queue; unknown/stale in REQUIRED fails closed, never synthetic READY."
+    },
+    {
+      "name": "mcu_control_bind_sink",
+      "owner": "MCU Control/Communication",
+      "prototype": "locker_status_t mcu_control_bind_sink(mcu_control_t *control, const mcu_control_sink_t *sink);",
+      "semantics": "Bind before tasks start. Async reply preserves copied session/request_no/type; callback queues to Communication, never GPIO; dependencies static until tasks stop."
+    },
+    {
+      "name": "mcu_journal_control",
+      "owner": "MCU Journal",
+      "prototype": "locker_status_t mcu_journal_control(mcu_journal_t *journal, const mcu_journal_control_request_t *request);",
+      "semantics": "Bounded queue RECOVER/BARRIER/FINALIZE/RELEASE. Storage owns metadata/checkpoints; control_result returns committed immutable state; no format or watermark rollback."
+    }
+  ],
+  "uart_messages": [
+    {
+      "name": "HELLO",
+      "type": 1,
+      "response_type": 129
+    },
+    {
+      "name": "GET_SNAPSHOT",
+      "type": 2,
+      "response_type": 130
+    },
+    {
+      "name": "FETCH_EVENTS",
+      "type": 3,
+      "response_type": 131
+    },
+    {
+      "name": "ACK_PERSISTED",
+      "type": 4,
+      "response_type": 132
+    },
+    {
+      "name": "RESUME_READY",
+      "type": 5,
+      "response_type": 133
+    },
+    {
+      "name": "DISARM",
+      "type": 6,
+      "response_type": 134
+    },
+    {
+      "name": "EXECUTE_UNLOCK",
+      "type": 7,
+      "response_type": 135
+    },
+    {
+      "name": "QUERY_COMMAND",
+      "type": 8,
+      "response_type": 136
+    },
+    {
+      "name": "HOST_HEALTH",
+      "type": 9,
+      "response_type": 137
+    },
+    {
+      "name": "TIME_ANCHOR",
+      "type": 10,
+      "response_type": 138
+    },
+    {
+      "name": "RELEASE_CONTEXT",
+      "type": 11,
+      "response_type": 139
+    }
+  ],
+  "local_methods": [
+    {
+      "method": "presence.submit",
+      "request_schema": "LocalPresenceRequest",
+      "authorization": "trusted UI peer UID + current user session + operation owner",
+      "public": false
+    },
+    {
+      "method": "progress.report",
+      "request_schema": "ProgressReport",
+      "authorization": "trusted registered service/UI instance",
+      "public": false
+    },
+    {
+      "method": "ui.restart.request",
+      "request_schema": "RestartRequest",
+      "authorization": "trusted service peer; UI fixed target; rate limit",
+      "public": false
+    },
+    {
+      "method": "maintenance.reconcile",
+      "request_schema": "MaintenanceRequest",
+      "authorization": "trusted local admin CLI peer + current ADMIN session + verified physical baseline",
+      "public": false
+    },
+    {
+      "method": "health.get",
+      "request_schema": null,
+      "authorization": "trusted registered service peer instance; supervisor socket only; read-only",
+      "public": false
+    }
+  ],
+  "invariants": [
+    "NO_PUBLIC_UNLOCK",
+    "ONE_ACTIVE_OPERATION_PER_SLOT",
+    "SINGLE_LEDGER_WRITER",
+    "SINGLE_LOCK_DRIVER_OWNER",
+    "DURABLE_INTENT_BEFORE_PULSE",
+    "NO_EXECUTE_RETRY",
+    "NO_HISTORICAL_EVENT_SIDE_EFFECTS",
+    "UNKNOWN_IS_NOT_FALSE",
+    "NO_AUTO_FORMAT",
+    "NO_READY_WITH_CONTINUITY_LOSS",
+    "LOCAL_PRESENCE_NOT_HTTP",
+    "HAL_ONLY_BEHIND_BSP",
+    "PROFILE_VERIFIED_BEFORE_HARDWARE_READY",
+    "NO_POLARITY_FROM_SKU_NAME",
+    "UNCOMMANDED_ACCESS_REQUIRES_LOCAL_RECONCILE"
+  ],
+  "privacy": {
+    "not_logged": [
+      "password",
+      "token",
+      "certificate_private_key"
+    ],
+    "users_see_other_operations": false,
+    "raw_card_uid_public": false
+  },
+  "references": [
+    "https://github.com/civetweb/civetweb",
+    "https://www.sqlite.org/lang_transaction.html",
+    "https://github.com/littlefs-project/littlefs",
+    "https://spec.openapis.org/oas/v3.1.1.html"
+  ],
+  "internal_data_source": "contracts/internal-data-source.json",
+  "vision_source": "contracts/vision-source.json"
+}

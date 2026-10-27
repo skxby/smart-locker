@@ -1,0 +1,5919 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Locker Local API",
+    "version": "0.2.1",
+    "description": "阶段0评审稿。无直接开锁/传感器覆盖/模拟注入公开接口；App与本机UI共享领域逻辑。"
+  },
+  "servers": [
+    {
+      "url": "https://{cabinet_host}:8443/api/v1",
+      "variables": {
+        "cabinet_host": {
+          "default": "127.0.0.1",
+          "description": "仅主机测试示例；Android从终端配对信息取实际局域网地址，不预设mDNS。"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/sessions": {
+      "post": {
+        "operationId": "login",
+        "summary": "登录；每账号/来源每分钟最多5次失败，禁止记录凭据。",
+        "x-roles": [],
+        "security": [],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/current": {
+      "get": {
+        "operationId": "getCurrentSession",
+        "summary": "getCurrentSession",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      },
+      "delete": {
+        "operationId": "logout",
+        "summary": "撤销当前会话；不存在/已撤销也返回204，不改变任何借还。",
+        "x-roles": [],
+        "security": [],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "已提交的业务结果；不表示物理锁已打开。"
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/device": {
+      "get": {
+        "operationId": "getDevice",
+        "summary": "getDevice",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/snapshot": {
+      "get": {
+        "operationId": "getSnapshot",
+        "summary": "一致视图；普通用户仅见本人操作和借用；其他工具只见可用性。",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/tools": {
+      "get": {
+        "operationId": "listTools",
+        "summary": "listTools",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/tools/{tool_id}": {
+      "get": {
+        "operationId": "getTool",
+        "summary": "getTool",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "tool_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/operations": {
+      "post": {
+        "operationId": "createOperation",
+        "summary": "原子占位；201仅表示REQUESTED已提交。",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponse"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "已创建资源的相对路径"
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOperationRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/{operation_id}": {
+      "get": {
+        "operationId": "getOperation",
+        "summary": "getOperation",
+        "x-roles": [
+          "OWNER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/operations/{operation_id}/confirm": {
+      "post": {
+        "operationId": "confirmOperation",
+        "summary": "仅WAIT_CONFIRM；用户本人确认，不能传actor_id或成功状态。",
+        "x-roles": [
+          "OWNER"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/{operation_id}/cancel": {
+      "post": {
+        "operationId": "cancelOperation",
+        "summary": "REQUESTED可取消；可能已动作则进入REVIEW_REQUIRED。",
+        "x-roles": [
+          "OWNER"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans": {
+      "get": {
+        "operationId": "listLoans",
+        "summary": "listLoans",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoanPageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/events": {
+      "get": {
+        "operationId": "listEvents",
+        "summary": "listEvents",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventPageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/reviews": {
+      "get": {
+        "operationId": "listReviews",
+        "summary": "listReviews",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/operations/{operation_id}/resolve": {
+      "post": {
+        "operationId": "resolveOperation",
+        "summary": "人工核验留原因；必须匹配原类型/用户和明确的闭门/物品状态。",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "listUsers",
+        "summary": "listUsers",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      },
+      "post": {
+        "operationId": "createUser",
+        "summary": "createUser",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "已创建资源的相对路径"
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "patch": {
+        "operationId": "updateUser",
+        "summary": "不能停用/降权最后管理员；停用撤销会话而不删除借用。",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchUserRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/card-observations": {
+      "get": {
+        "operationId": "listCardObservations",
+        "summary": "只列30秒内实时观测的脱敏卡信息；历史补传不参与绑定。",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardObservationListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/users/{user_id}/card": {
+      "put": {
+        "operationId": "bindCard",
+        "summary": "bindCard",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardBindingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BindCardRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "unbindCard",
+        "summary": "unbindCard",
+        "x-roles": [
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "同一用户/方法/路径/键绑定规范化参数；同键不同参数409；与状态变化同事务保存30天。"
+          },
+          {
+            "name": "user_revision",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/U64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardBindingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05"
+      }
+    },
+    "/ws": {
+      "get": {
+        "operationId": "subscribeChanges",
+        "summary": "Bearer在握手头；只推失效提示，无命令通道，不在URL携带token。",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "101": {
+            "description": "WebSocket切换；Bearer鉴权；仅发送WsChange/WsResync，不承载控制命令。"
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S1-05",
+        "x-websocket-message-schemas": [
+          "WsChange",
+          "WsResync"
+        ]
+      }
+    },
+    "/vision/status": {
+      "get": {
+        "operationId": "getVisionStatus",
+        "summary": "getVisionStatus",
+        "x-roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisionStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S2-14"
+      }
+    },
+    "/operations/{operation_id}/vision": {
+      "get": {
+        "operationId": "getOperationVisionEvidence",
+        "summary": "getOperationVisionEvidence",
+        "x-roles": [
+          "OWNER",
+          "ADMIN"
+        ],
+        "security": [
+          {
+            "bearerSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            },
+            "description": "可选排障关联；缺少时服务端生成，不承担幂等。"
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "已提交的业务结果；不表示物理锁已打开。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisionEvidencePageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "重试查询的最小等待秒数；不授权重放物理动作。"
+              }
+            }
+          },
+          "503": {
+            "description": "统一错误；非本人资源按404隐藏。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-first-implementation-card": "S2-14"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerSession": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "opaque random session"
+      }
+    },
+    "schemas": {
+      "Uuid": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "U64": {
+        "type": "string",
+        "pattern": "^(0|[1-9][0-9]{0,19})$",
+        "description": "十进制uint64字符串，解析器还须检查<=18446744073709551615，不得经浮点转换。"
+      },
+      "DeviceId": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{24}$"
+      },
+      "Timestamp": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "LoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "user_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "display_name",
+          "role",
+          "enabled",
+          "user_revision"
+        ]
+      },
+      "Session": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 128,
+            "writeOnly": false
+          },
+          "expires_at": {
+            "$ref": "#/components/schemas/Timestamp"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "token",
+          "expires_at",
+          "user"
+        ]
+      },
+      "EventKey": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device_id": {
+            "$ref": "#/components/schemas/DeviceId"
+          },
+          "journal_epoch": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "boot_id": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "event_seq": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "device_id",
+          "journal_epoch",
+          "boot_id",
+          "event_seq"
+        ]
+      },
+      "PhysicalSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device_id": {
+            "$ref": "#/components/schemas/DeviceId"
+          },
+          "journal_epoch": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "boot_id": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "physical_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "door": {
+            "$ref": "#/components/schemas/DoorState"
+          },
+          "item": {
+            "$ref": "#/components/schemas/ItemState"
+          },
+          "supply_mv": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "observed_age_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "time_quality": {
+            "$ref": "#/components/schemas/TimeQuality"
+          },
+          "continuity_ok": {
+            "type": "boolean"
+          },
+          "dropped_events": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "durable_cursor": {
+            "$ref": "#/components/schemas/EventKey"
+          }
+        },
+        "required": [
+          "device_id",
+          "journal_epoch",
+          "boot_id",
+          "physical_revision",
+          "door",
+          "item",
+          "supply_mv",
+          "observed_age_ms",
+          "time_quality",
+          "continuity_ok",
+          "dropped_events",
+          "durable_cursor"
+        ]
+      },
+      "Device": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device_id": {
+            "$ref": "#/components/schemas/DeviceId"
+          },
+          "cabinet_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "contract_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "simulated": {
+            "type": "boolean"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/DeviceMode"
+          },
+          "health_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "maxItems": 16
+          },
+          "ui_restart_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Supervisor cumulative reserved UI restart attempts; null when no trustworthy current observation."
+          },
+          "physical": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PhysicalSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "device_id",
+          "cabinet_name",
+          "contract_version",
+          "simulated",
+          "mode",
+          "health_reasons",
+          "ui_restart_count",
+          "physical"
+        ]
+      },
+      "Tool": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "slot_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1
+          },
+          "availability": {
+            "$ref": "#/components/schemas/ToolAvailability"
+          },
+          "tool_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slot_id",
+          "availability",
+          "tool_revision"
+        ]
+      },
+      "Evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "history_complete": {
+            "type": "boolean"
+          },
+          "door_open_seen": {
+            "type": "boolean"
+          },
+          "item_transition_seen": {
+            "type": "boolean"
+          },
+          "physical": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PhysicalSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventKey"
+            },
+            "maxItems": 32
+          },
+          "manual_resolution": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "history_complete",
+          "door_open_seen",
+          "item_transition_seen",
+          "physical",
+          "source_events",
+          "manual_resolution"
+        ]
+      },
+      "Operation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "tool_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/OperationKind"
+          },
+          "actor_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "state": {
+            "$ref": "#/components/schemas/OperationState"
+          },
+          "operation_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "command_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "$ref": "#/components/schemas/Timestamp"
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/Timestamp"
+          },
+          "allowed_actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllowedAction"
+            },
+            "maxItems": 6
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/Evidence"
+          }
+        },
+        "required": [
+          "id",
+          "tool_id",
+          "kind",
+          "actor_id",
+          "state",
+          "operation_revision",
+          "command_id",
+          "reason_code",
+          "created_at",
+          "updated_at",
+          "allowed_actions",
+          "evidence"
+        ]
+      },
+      "CreateOperationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tool_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/OperationKind"
+          },
+          "tool_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "tool_id",
+          "kind",
+          "tool_revision"
+        ]
+      },
+      "RevisionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "operation_revision"
+        ]
+      },
+      "CancelRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "operation_revision",
+          "reason"
+        ]
+      },
+      "ResolveRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "physical_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "resolution": {
+            "$ref": "#/components/schemas/Resolution"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "operation_revision",
+          "physical_revision",
+          "resolution",
+          "reason"
+        ]
+      },
+      "Loan": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "tool_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "borrower_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "borrow_operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "return_operation_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "opened_at": {
+            "$ref": "#/components/schemas/Timestamp"
+          },
+          "closed_at": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Timestamp"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "tool_id",
+          "borrower_id",
+          "borrow_operation_id",
+          "return_operation_id",
+          "opened_at",
+          "closed_at"
+        ]
+      },
+      "BusinessEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Timestamp"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "time_quality": {
+            "$ref": "#/components/schemas/TimeQuality"
+          },
+          "source_event": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EventKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "manual": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "operation_id",
+          "type",
+          "message",
+          "occurred_at",
+          "time_quality",
+          "source_event",
+          "manual"
+        ]
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[a-zA-Z0-9_.-]{3,32}$"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "required": [
+          "username",
+          "display_name",
+          "password",
+          "role"
+        ]
+      },
+      "PatchUserRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "user_revision"
+        ],
+        "minProperties": 2
+      },
+      "CardObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "masked_uid": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "observed_age_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "consumed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "masked_uid",
+          "observed_age_ms",
+          "consumed"
+        ]
+      },
+      "BindCardRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "observation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        },
+        "required": [
+          "user_revision",
+          "observation_id"
+        ]
+      },
+      "CardBinding": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "bound": {
+            "type": "boolean"
+          },
+          "masked_uid": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "user_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "user_id",
+          "bound",
+          "masked_uid",
+          "user_revision"
+        ]
+      },
+      "Snapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            },
+            "maxItems": 1
+          },
+          "active_operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "maxItems": 1
+          },
+          "loans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Loan"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "device",
+          "tools",
+          "active_operations",
+          "loans"
+        ]
+      },
+      "WsChange": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "resource.changed"
+          },
+          "resource": {
+            "type": "string",
+            "enum": [
+              "tool",
+              "operation",
+              "loan",
+              "device",
+              "review",
+              "user"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "type",
+          "resource",
+          "id",
+          "snapshot_revision"
+        ]
+      },
+      "WsResync": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "resync_required"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "type",
+          "snapshot_revision"
+        ]
+      },
+      "LocalPresenceRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "operation_revision": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "operation_id",
+          "operation_revision"
+        ]
+      },
+      "ProgressReport": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": [
+              "SERVICE",
+              "UI"
+            ]
+          },
+          "instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "observed_age_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295,
+            "description": "Age at the source sampled_mono_ms, not send time; preserve both through queues. Fresh completed-loop sample uses zero; unknown uses uint32 max."
+          },
+          "sampled_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          }
+        },
+        "required": [
+          "target",
+          "instance_id",
+          "progress",
+          "observed_age_ms",
+          "sampled_mono_ms"
+        ]
+      },
+      "RestartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "const": "UI"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "incident_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        },
+        "required": [
+          "target",
+          "reason",
+          "incident_id"
+        ]
+      },
+      "ToolList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "UserList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ReviewList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "CardObservationList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CardObservation"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "LoanPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Loan"
+            },
+            "maxItems": 100
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "EventPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BusinessEvent"
+            },
+            "maxItems": 100
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "VisionSha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "VisionGuard": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_id",
+          "journal_epoch",
+          "boot_id",
+          "physical_revision",
+          "host_session_id"
+        ],
+        "properties": {
+          "device_id": {
+            "$ref": "#/components/schemas/DeviceId"
+          },
+          "journal_epoch": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "boot_id": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "physical_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "host_session_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "VisionPolicy": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode",
+          "expected_class",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "policy_sha256",
+          "threshold_ppm",
+          "margin_ppm",
+          "thresholds_validated",
+          "frame_count",
+          "min_frame_gap_ms",
+          "capture_deadline_ms",
+          "max_result_age_ms"
+        ],
+        "properties": {
+          "mode": {
+            "enum": [
+              "DISABLED_FOR_FOUNDATION",
+              "SHADOW",
+              "REQUIRED"
+            ]
+          },
+          "expected_class": {
+            "enum": [
+              "heat_gun",
+              "multimeter",
+              "oscilloscope",
+              "power_supply",
+              "soldering_iron",
+              "wire_cutter"
+            ]
+          },
+          "bundle_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pipeline_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "camera_profile_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policy_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "threshold_ppm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "margin_ppm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "thresholds_validated": {
+            "type": "boolean"
+          },
+          "frame_count": {
+            "const": 3
+          },
+          "min_frame_gap_ms": {
+            "const": 100
+          },
+          "capture_deadline_ms": {
+            "const": 3000
+          },
+          "max_result_age_ms": {
+            "const": 2000,
+            "description": "Initial Core acceptance freshness only; committed evidence remains guard-bound during the original 120-second WAIT_CONFIRM window."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "REQUIRED"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "bundle_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "pipeline_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "camera_profile_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "threshold_ppm": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000
+                },
+                "margin_ppm": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000
+                },
+                "thresholds_validated": {
+                  "const": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      "VisionFrame": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "captured_mono_ms",
+          "frame_sha256",
+          "quality",
+          "scores_ppm",
+          "inference_ms"
+        ],
+        "properties": {
+          "sequence": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "captured_mono_ms": {
+            "$ref": "#/components/schemas/U64",
+            "description": "Conservative exposure-start lower bound: SOE timestamp or driver timestamp minus a verified exposure/pipeline upper bound stored in camera profile. MONOTONIC alone is insufficient."
+          },
+          "frame_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "quality": {
+            "enum": [
+              "VALID",
+              "DARK",
+              "BLURRED",
+              "OCCLUDED",
+              "INVALID"
+            ]
+          },
+          "scores_ppm": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            "minItems": 7,
+            "maxItems": 7
+          },
+          "inference_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        }
+      },
+      "VisionCaptureRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "v",
+          "kind",
+          "capture_id",
+          "operation_id",
+          "phase",
+          "slot_id",
+          "camera_id",
+          "service_instance_id",
+          "expected_worker_instance_id",
+          "expected_camera_generation",
+          "guard",
+          "issued_mono_ms",
+          "deadline_mono_ms",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "policy_sha256",
+          "frame_count"
+        ],
+        "properties": {
+          "v": {
+            "const": 1
+          },
+          "kind": {
+            "const": "CAPTURE"
+          },
+          "capture_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "phase": {
+            "enum": [
+              "PRE_ACCESS",
+              "POST_CLOSE"
+            ]
+          },
+          "slot_id": {
+            "const": 1
+          },
+          "camera_id": {
+            "const": "slot-1"
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "expected_worker_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "expected_camera_generation": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "guard": {
+            "$ref": "#/components/schemas/VisionGuard"
+          },
+          "issued_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "deadline_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "bundle_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "pipeline_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "camera_profile_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "policy_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "frame_count": {
+            "const": 3
+          }
+        }
+      },
+      "VisionCaptureResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "v",
+          "kind",
+          "capture_id",
+          "operation_id",
+          "phase",
+          "slot_id",
+          "camera_id",
+          "service_instance_id",
+          "worker_instance_id",
+          "camera_generation",
+          "guard",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "policy_sha256",
+          "completed_mono_ms",
+          "status",
+          "frames"
+        ],
+        "properties": {
+          "v": {
+            "const": 1
+          },
+          "kind": {
+            "const": "CAPTURE_RESULT"
+          },
+          "capture_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "phase": {
+            "enum": [
+              "PRE_ACCESS",
+              "POST_CLOSE"
+            ]
+          },
+          "slot_id": {
+            "const": 1
+          },
+          "camera_id": {
+            "const": "slot-1"
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "worker_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "camera_generation": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "guard": {
+            "$ref": "#/components/schemas/VisionGuard"
+          },
+          "bundle_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "pipeline_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "camera_profile_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "policy_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "completed_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "status": {
+            "enum": [
+              "OK",
+              "CAMERA_ERROR",
+              "MODEL_ERROR",
+              "TIMEOUT",
+              "INVALID_FRAME"
+            ]
+          },
+          "frames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VisionFrame"
+            },
+            "minItems": 0,
+            "maxItems": 3
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "OK"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "frames": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VisionFrame"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                }
+              }
+            }
+          }
+        ]
+      },
+      "VisionWorkerStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "worker_instance_id",
+          "camera_generation",
+          "sampled_mono_ms",
+          "state",
+          "camera_ready",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "active_capture_id",
+          "reasons"
+        ],
+        "properties": {
+          "worker_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "camera_generation": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "sampled_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "state": {
+            "enum": [
+              "STARTING",
+              "READY",
+              "BUSY",
+              "DEGRADED"
+            ]
+          },
+          "camera_ready": {
+            "type": "boolean"
+          },
+          "bundle_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pipeline_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "camera_profile_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "active_capture_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "minItems": 0,
+            "maxItems": 8
+          }
+        }
+      },
+      "VisionControlRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "v",
+          "kind",
+          "request_id",
+          "service_instance_id"
+        ],
+        "properties": {
+          "v": {
+            "const": 1
+          },
+          "kind": {
+            "enum": [
+              "HELLO",
+              "STATUS"
+            ]
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "VisionControlResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "v",
+          "kind",
+          "request_id",
+          "service_instance_id",
+          "status"
+        ],
+        "properties": {
+          "v": {
+            "const": 1
+          },
+          "kind": {
+            "const": "STATUS"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/VisionWorkerStatus"
+          }
+        }
+      },
+      "VisionStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode",
+          "state",
+          "model_id",
+          "expected_class",
+          "worker_instance_id",
+          "last_observed_mono_ms",
+          "camera_ready",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "thresholds_validated",
+          "reasons"
+        ],
+        "properties": {
+          "mode": {
+            "enum": [
+              "DISABLED_FOR_FOUNDATION",
+              "SHADOW",
+              "REQUIRED"
+            ]
+          },
+          "state": {
+            "enum": [
+              "DISABLED",
+              "UNAVAILABLE",
+              "STARTING",
+              "READY",
+              "BUSY",
+              "DEGRADED"
+            ]
+          },
+          "model_id": {
+            "const": "equipment-v11"
+          },
+          "expected_class": {
+            "enum": [
+              "heat_gun",
+              "multimeter",
+              "oscilloscope",
+              "power_supply",
+              "soldering_iron",
+              "wire_cutter"
+            ]
+          },
+          "worker_instance_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_observed_mono_ms": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/U64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "camera_ready": {
+            "type": "boolean"
+          },
+          "bundle_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pipeline_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "camera_profile_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "thresholds_validated": {
+            "type": "boolean"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "minItems": 0,
+            "maxItems": 8
+          }
+        }
+      },
+      "VisionEvidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "capture_id",
+          "operation_id",
+          "phase",
+          "slot_id",
+          "expected_class",
+          "predicted_class",
+          "confidence_ppm",
+          "verdict",
+          "guard",
+          "bundle_sha256",
+          "pipeline_sha256",
+          "camera_profile_sha256",
+          "policy_sha256",
+          "frame_keys",
+          "service_instance_id",
+          "worker_instance_id",
+          "camera_generation",
+          "captured_first_mono_ms",
+          "captured_last_mono_ms",
+          "received_mono_ms",
+          "reason_code",
+          "manual_review",
+          "accepted_mono_ms"
+        ],
+        "properties": {
+          "evidence_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "capture_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "phase": {
+            "enum": [
+              "PRE_ACCESS",
+              "POST_CLOSE"
+            ]
+          },
+          "slot_id": {
+            "const": 1
+          },
+          "expected_class": {
+            "enum": [
+              "heat_gun",
+              "multimeter",
+              "oscilloscope",
+              "power_supply",
+              "soldering_iron",
+              "wire_cutter"
+            ]
+          },
+          "predicted_class": {
+            "anyOf": [
+              {
+                "enum": [
+                  "empty",
+                  "heat_gun",
+                  "multimeter",
+                  "oscilloscope",
+                  "power_supply",
+                  "soldering_iron",
+                  "wire_cutter"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "confidence_ppm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "MATCH",
+              "EMPTY",
+              "MISMATCH",
+              "UNCERTAIN",
+              "UNAVAILABLE",
+              "STALE",
+              "CONFLICT"
+            ]
+          },
+          "guard": {
+            "$ref": "#/components/schemas/VisionGuard"
+          },
+          "bundle_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "pipeline_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "camera_profile_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "policy_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "frame_keys": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "minItems": 0,
+            "maxItems": 3
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "worker_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "camera_generation": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "captured_first_mono_ms": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/U64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "captured_last_mono_ms": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/U64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "received_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "manual_review": {
+            "type": "boolean"
+          },
+          "accepted_mono_ms": {
+            "$ref": "#/components/schemas/U64"
+          }
+        }
+      },
+      "VisionEvidencePage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VisionEvidence"
+            },
+            "minItems": 0,
+            "maxItems": 100
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "VisionOperationRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation_id",
+          "policy",
+          "pre_capture_id",
+          "post_capture_id",
+          "pre_evidence_id",
+          "post_evidence_id",
+          "deadline_mono_ms",
+          "service_instance_id",
+          "manual_override_reason"
+        ],
+        "properties": {
+          "operation_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/VisionPolicy"
+          },
+          "pre_capture_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "post_capture_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_evidence_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "post_evidence_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "deadline_mono_ms": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/U64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service_instance_id": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "manual_override_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 1024
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "VisionCaptureRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request",
+          "result",
+          "state",
+          "evidence_id"
+        ],
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/VisionCaptureRequest"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VisionCaptureResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "enum": [
+              "REQUESTED",
+              "COMMITTED",
+              "FAILED",
+              "EXPIRED"
+            ]
+          },
+          "evidence_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "USER",
+          "ADMIN"
+        ]
+      },
+      "OperationKind": {
+        "type": "string",
+        "enum": [
+          "BORROW",
+          "RETURN"
+        ]
+      },
+      "OperationState": {
+        "type": "string",
+        "enum": [
+          "REQUESTED",
+          "ACCESS_PENDING",
+          "ACCESS_ACTIVE",
+          "WAIT_CONFIRM",
+          "REVIEW_REQUIRED",
+          "COMPLETED",
+          "CANCELLED",
+          "NO_CHANGE",
+          "FAILED"
+        ]
+      },
+      "DoorState": {
+        "type": "string",
+        "enum": [
+          "UNKNOWN",
+          "CLOSED",
+          "OPEN"
+        ]
+      },
+      "ItemState": {
+        "type": "string",
+        "enum": [
+          "UNKNOWN",
+          "ABSENT",
+          "PRESENT"
+        ]
+      },
+      "DeviceMode": {
+        "type": "string",
+        "enum": [
+          "OFFLINE",
+          "RECONCILING",
+          "READY",
+          "DEGRADED"
+        ]
+      },
+      "ToolAvailability": {
+        "type": "string",
+        "enum": [
+          "AVAILABLE",
+          "RESERVED",
+          "BORROWED",
+          "REVIEW",
+          "UNAVAILABLE"
+        ]
+      },
+      "TimeQuality": {
+        "type": "string",
+        "enum": [
+          "UNSYNCED",
+          "ESTIMATED",
+          "HOST_SYNCED"
+        ]
+      },
+      "Resolution": {
+        "type": "string",
+        "enum": [
+          "COMPLETE_BORROW",
+          "COMPLETE_RETURN",
+          "NO_CHANGE"
+        ]
+      },
+      "CommandState": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "ACCEPTED",
+          "PULSE_STARTED",
+          "PULSE_FINISHED",
+          "REJECTED",
+          "UNKNOWN_RESULT"
+        ]
+      },
+      "AllowedAction": {
+        "type": "string",
+        "enum": [
+          "PRESENT_AT_CABINET",
+          "WAIT",
+          "CONFIRM",
+          "CANCEL",
+          "ADMIN_REVIEW"
+        ]
+      },
+      "AlarmPattern": {
+        "type": "string",
+        "enum": [
+          "OFF",
+          "NOTICE",
+          "FAULT"
+        ]
+      },
+      "ProgressTarget": {
+        "type": "string",
+        "enum": [
+          "SERVICE",
+          "UI"
+        ]
+      },
+      "McuTaskId": {
+        "type": "string",
+        "enum": [
+          "CONTROL",
+          "COMMUNICATION",
+          "PERIPHERAL_STORAGE",
+          "HEALTH"
+        ]
+      },
+      "SupervisorState": {
+        "type": "string",
+        "enum": [
+          "UNKNOWN",
+          "RUNNING",
+          "UI_RECOVERING",
+          "LIMITED"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error",
+          "request_id"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message",
+              "retryable",
+              "operation_id"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "VALIDATION_ERROR",
+                  "UNAUTHENTICATED",
+                  "FORBIDDEN",
+                  "NOT_FOUND",
+                  "SLOT_BUSY",
+                  "STATE_CONFLICT",
+                  "REVISION_CONFLICT",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CARD_ALREADY_BOUND",
+                  "PHYSICAL_PRECONDITION_FAILED",
+                  "RATE_LIMITED",
+                  "DEVICE_UNAVAILABLE",
+                  "RECOVERY_REQUIRED",
+                  "STORAGE_UNAVAILABLE",
+                  "QUEUE_FULL",
+                  "RESULT_PENDING",
+                  "VISION_UNAVAILABLE",
+                  "VISION_CONFLICT"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "retryable": {
+                "type": "boolean",
+                "description": "只允许按规范查询/复用原幂等键重试；不代表可重放硬件动作。"
+              },
+              "operation_id": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Uuid"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "CardBindingResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CardBinding"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "CardObservationListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CardObservationList"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "EventPageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EventPage"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "LoanPageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LoanPage"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "OperationResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Operation"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "ReviewListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ReviewList"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "SessionResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Session"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "SnapshotResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Snapshot"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "ToolResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Tool"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "ToolListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ToolList"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/User"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "UserListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UserList"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "VisionEvidencePageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VisionEvidencePage"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      },
+      "VisionStatusResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "data",
+          "snapshot_revision",
+          "request_id"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VisionStatus"
+          },
+          "snapshot_revision": {
+            "$ref": "#/components/schemas/U64"
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Uuid"
+          }
+        }
+      }
+    }
+  }
+}

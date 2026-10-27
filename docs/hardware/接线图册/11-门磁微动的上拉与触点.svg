@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>门磁微动的上拉与触点</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">11  门磁微动的上拉与触点</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">两根触点线没有电源正负；每个输入有自己的一只10k。三脚开关按壳体COM/NO/NC认，不猜位置。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">11 / 14</text>
+<text x="80" y="200" font-family="Microsoft YaHei,sans-serif" font-size="30" fill="#172d46">门磁输入</text>
+<text x="140" y="254" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#c34b35">3V3分配点</text>
+<polyline points="130,320 200,320" fill="none" stroke="#c34b35" stroke-width="4"/>
+<polyline points="200,320 230,320" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="230" y="303" width="125" height="34" rx="5" fill="#eee0c3" stroke="#a16716"/>
+<polyline points="355,320 385,320" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="225" y="282" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">10k 上拉电阻</text>
+<polyline points="385,320 510,320 510,450" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="510" cy="450" r="7" fill="#176da6"/>
+<text x="522" y="441" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#176da6">输入节点</text>
+<polyline points="510,450 690,450" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="530" y="414" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#176da6">P2-19 / PE0</text>
+<polyline points="510,450 510,525 420,525" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="420" cy="525" r="7" fill="#176da6"/>
+<polyline points="420,525 340,580" fill="none" stroke="#176da6" stroke-width="3"/>
+<circle cx="420" cy="615" r="7" fill="#536477"/>
+<polyline points="420,615 420,695 670,695" fill="none" stroke="#536477" stroke-width="4"/>
+<text x="130" y="582" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">门磁两根线</text>
+<text x="490" y="679" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#536477">MCU GND</text>
+<text x="80" y="773" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">触点开：输入约3.3V；触点闭：约0V。</text>
+<text x="850" y="200" font-family="Microsoft YaHei,sans-serif" font-size="30" fill="#172d46">工具在位输入</text>
+<text x="910" y="254" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#c34b35">3V3分配点</text>
+<polyline points="900,320 970,320" fill="none" stroke="#c34b35" stroke-width="4"/>
+<polyline points="970,320 1000,320" fill="none" stroke="#176da6" stroke-width="4"/>
+<rect x="1000" y="303" width="125" height="34" rx="5" fill="#eee0c3" stroke="#a16716"/>
+<polyline points="1125,320 1155,320" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="995" y="282" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#172d46">10k 上拉电阻</text>
+<polyline points="1155,320 1280,320 1280,450" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="1280" cy="450" r="7" fill="#176da6"/>
+<text x="1292" y="441" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#176da6">输入节点</text>
+<polyline points="1280,450 1460,450" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="1300" y="414" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#176da6">P2-18 / PE1</text>
+<polyline points="1280,450 1280,525 1190,525" fill="none" stroke="#176da6" stroke-width="4"/>
+<circle cx="1190" cy="525" r="7" fill="#176da6"/>
+<polyline points="1190,525 1110,580" fill="none" stroke="#176da6" stroke-width="3"/>
+<circle cx="1190" cy="615" r="7" fill="#536477"/>
+<polyline points="1190,615 1190,695 1440,695" fill="none" stroke="#536477" stroke-width="4"/>
+<text x="900" y="582" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">微动 COM 与 NO</text>
+<text x="1260" y="679" font-family="Microsoft YaHei,sans-serif" font-size="24" fill="#536477">MCU GND</text>
+<text x="850" y="773" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">触点开：输入约3.3V；触点闭：约0V。</text>
+<rect x="65" y="835" width="720" height="180" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="835" width="5" height="180" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="872" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">实物接线</text>
+<text x="85" y="911" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">门磁：任一根线到PE0，另一根到GND。</text>
+<text x="85" y="939" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">磁铁那一件不接线，靠近/远离测试触点。</text>
+<text x="85" y="967" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">微动两线NO款：任意一线PE1、另一线GND。</text>
+<text x="85" y="995" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">三脚款：COM到GND、NO到PE1，NC空着。</text>
+<rect x="815" y="835" width="720" height="180" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="815" y="835" width="5" height="180" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="835" y="872" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">表笔落点</text>
+<text x="835" y="911" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">断电：通断档，两笔只接脱离MCU的触点。</text>
+<text x="835" y="939" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">通电：DC V，黑笔GND，红笔PE0或PE1。</text>
+<text x="835" y="967" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">别把触点接3V3/GND两端直接短接电源。</text>
+<text x="835" y="995" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">门关/工具在位对应什么电平，逐项记录。</text></svg>

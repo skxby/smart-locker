@@ -1,0 +1,6 @@
+14e938a6502806e1518ac9160569e99717e9062e622da60c3aee8b4fd369898f  contracts/contract-source.json
+34306a869f92d2caece69c0c92a0eb84f2377ef0ff51af657c60ee7ad629340a  contracts/include/locker_contracts.h
+1418a51fc49d28c69a022fa5ac985eff183f72a13e790d5db137fab25217a8ba  host/common/src/log.c
+7e8cf73515becf2c17aef356c2d3ab1f3878bf12a731c18f02f6365f9be10f5f  tests/unit/common/test_log.c
+SRC_FILES=549
+SRC_STRAY_ARTIFACTS=0

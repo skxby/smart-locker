@@ -1,0 +1,1 @@
+{"status": "PASS", "contract_version": "0.2.1", "async_request_contexts": 3, "control_and_journal_completion_channels": "DECLARED", "exposure_negative_cases": 3, "two_wire_break_detection": "NOT_CLAIMED", "runtime_or_hardware_tested": false}

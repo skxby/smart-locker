@@ -1,0 +1,73 @@
+# non-vacuity round 2: re-break B1-R/B3 in a copy; new tests must fail
+# date: 2026-10-23T22:02:29+08:00
+# mutation script: docs/evidence/stage-01/S1-01/nonvacuity-mutate-r2.py
+MUTATION_APPLIED
+MUTATE_EXIT=0
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/build
+MUTATE_CONFIGURE_EXIT=0
+[  5%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[ 10%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[ 15%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[ 21%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[ 26%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[ 31%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[ 36%] Linking C static library liblocker_common.a
+[ 36%] Built target locker_common
+[ 42%] Building C object tests/unit/common/CMakeFiles/test_build_info.dir/test_build_info.c.o
+[ 47%] Building C object tests/unit/common/CMakeFiles/test_bounded_queue.dir/test_bounded_queue.c.o
+[ 52%] Linking C executable test_build_info
+[ 52%] Built target test_build_info
+[ 57%] Building C object tests/unit/common/CMakeFiles/test_clock.dir/test_clock.c.o
+[ 63%] Linking C executable test_bounded_queue
+[ 63%] Built target test_bounded_queue
+[ 68%] Linking C executable test_clock
+[ 73%] Building C object tests/unit/common/CMakeFiles/test_log.dir/test_log.c.o
+[ 73%] Built target test_clock
+[ 78%] Building C object tests/unit/common/CMakeFiles/test_numeric.dir/test_numeric.c.o
+[ 84%] Linking C executable test_numeric
+[ 84%] Built target test_numeric
+[ 89%] Building C object tests/unit/common/CMakeFiles/test_uuid.dir/test_uuid.c.o
+[ 94%] Linking C executable test_uuid
+[100%] Linking C executable test_log
+[100%] Built target test_uuid
+[100%] Built target test_log
+MUTATE_BUILD_EXIT=0
+Test project /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/build
+    Start 4: common.test_log
+1/1 Test #4: common.test_log ..................***Failed    0.01 sec
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:328: expected note="password='[redacted]'", got note="password=[redacted]'alpha beta'"
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:329: !test_text_contains(out, "alpha beta")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:334: expected password='[redacted]', got password=[redacted]'alpha beta'
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:339: expected {'password':'[redacted]'}, got {'password':[redacted]'alpha beta'}
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:344: expected 'password'='[redacted]', got 'password'=[redacted]'alpha beta'
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:349: !test_text_contains(out, "b c")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:354: !test_text_contains(out, "abc")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:355: !test_text_contains(out, "def")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:361: !test_text_contains(out, "B2")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:380: locker_log_key_is_sensitive(key)
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:390: !any_line_contains(&sink, "LONG_KEY_SECRET")
+FAIL /home/%USER%/locker-workspace/S1-01/build/mutated2r2-220229/tests/unit/common/test_log.c:391: any_line_contains(&sink, "[redacted]")
+FAIL common.log (12 of 164 checks failed)
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.02 sec
+
+The following tests FAILED:
+	  4 - common.test_log (Failed)
+Errors while running CTest
+MUTATED_TEST_LOG_EXIT=8
+MUTATED_FAILED_CHECKS=12

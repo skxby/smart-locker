@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "source_records": 1217,
+  "original_backup_and_curated_hashes_match": true,
+  "originals_removed": false,
+  "kernel_compiled_or_rebooted": false
+}

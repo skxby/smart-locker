@@ -1,0 +1,69 @@
+{
+  "audited_at": "2026-10-22",
+  "source_root": "E:/equipment-vision",
+  "model_id": "equipment-v11",
+  "arch": "mobilenet_v3_large",
+  "classes": [
+    "empty",
+    "heat_gun",
+    "multimeter",
+    "oscilloscope",
+    "power_supply",
+    "soldering_iron",
+    "wire_cutter"
+  ],
+  "img_size": 224,
+  "checkpoint_val_acc": 0.9241706161137441,
+  "checkpoint_load": "torch.load(weights_only=True, map_location=cpu)",
+  "onnx_input": [
+    "batch",
+    3,
+    224,
+    224
+  ],
+  "onnx_output": [
+    "batch",
+    7
+  ],
+  "onnx_opset": 18,
+  "onnx_numerical_parity_tested": false,
+  "rknn_path": null,
+  "hardware_tested": false,
+  "files": [
+    {
+      "relative_path": "README.md",
+      "bytes": 8285,
+      "sha256": "dd704810368014a4bf17f1c199dfd11d9ae068fc4141c71fce5d417216a1ea56"
+    },
+    {
+      "relative_path": "models/v11_with_empty/best.pt",
+      "bytes": 17033237,
+      "sha256": "f5b222fb4a9d76c5378cf2f93fa108f6590095075e18fe615b0e48c7bf37e084"
+    },
+    {
+      "relative_path": "models/v11_with_empty/classes.json",
+      "bytes": 179,
+      "sha256": "c87ac101220759bd21cd7f7d2ef11e3d898b143d0d43028fd98c77754c7bb379"
+    },
+    {
+      "relative_path": "models/v11_with_empty/metrics.json",
+      "bytes": 263,
+      "sha256": "fe316b422ba955f58f9e3579cf0556d5633d9f73d5a8e81fd3ffe66d1ea47e1a"
+    },
+    {
+      "relative_path": "models/equipment_cls/best.pt",
+      "bytes": 17033237,
+      "sha256": "f5b222fb4a9d76c5378cf2f93fa108f6590095075e18fe615b0e48c7bf37e084"
+    },
+    {
+      "relative_path": "models/equipment_cls/model.onnx",
+      "bytes": 17121001,
+      "sha256": "ba7775078c78b81ab827c3294fd576b926cfeb6e088b8a02a8f2dfaa3e047649"
+    },
+    {
+      "relative_path": "models/equipment_cls/model.json",
+      "bytes": 249,
+      "sha256": "588feb98851cd248cedd6d2a65a53478628069916b3feac17774b1b922862450"
+    }
+  ]
+}

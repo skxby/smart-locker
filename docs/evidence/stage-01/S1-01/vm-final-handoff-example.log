@@ -1,0 +1,5 @@
+# handoff.md section 3.2 fake clock example: compile + run
+# date: 2026-10-23T21:49:12+08:00
+# source: docs/evidence/stage-01/S1-01/handoff-example-compile.c
+HANDOFF_COMPILE_EXIT=0
+HANDOFF_RUN_EXIT=0

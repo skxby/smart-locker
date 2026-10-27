@@ -1,0 +1,228 @@
+{
+  "format_version": 1,
+  "scope": "host",
+  "card": "S1-01",
+  "contract_version": "0.2.1",
+  "description": "Host (Linux x86_64) dependency lock for the locker service. S1-01 established the lock shape, upstream sources, pinned commits and license obligations without downloading, vendoring or building any third-party source. S1-02 (integration owner) later vendored two of the pinned dependencies (SQLite amalgamation and cJSON) under host/storage/third_party/; that vendor step is recorded in the 'vendored' section below and does not change any pinned version, commit or archive digest.",
+  "maintained_by": {
+    "owner": "integration owner (root build entry + deployment/host)",
+    "last_updated_by_card": "S1-02",
+    "last_updated_at_local": "2026-10-24",
+    "reason": "N4 of the S1-02 audit: the lock still claimed that no dependency was vendored and listed cJSON as S1-05-only after S1-02 had already vendored SQLite and cJSON."
+  },
+  "policy": {
+    "source_of_truth": "docs/stages/stage-01-task-cards.md:17",
+    "rule": "Reuse the established CivetWeb, SQLite, cJSON, libsodium and TLS library; never write our own HTTP stack, password algorithm or database.",
+    "pinning": "Every entry is pinned to an immutable commit (plus the release tag when the upstream publishes one). Floating master/main, unversioned tarballs and configure-time downloads are forbidden.",
+    "enforcement": "A consuming card (S1-02 for SQLite and cJSON; S1-05 for CivetWeb, libsodium and the TLS backend) must add the vendored tree, confirm the recorded archive_sha256 against the file it vendors, and keep verified=true in the same commit that first links the dependency. configure must fail closed while any dependency it links has verified=false.",
+    "network_policy": "No fetch at CMake configure time. Vendored sources or a pre-populated cache only."
+  },
+  "network_status": {
+    "verified_online": true,
+    "checked_at_local": "2026-10-23",
+    "method": "Read-only HTTPS through the workstation HTTP proxy 127.0.0.1:7897 (GitHub REST API, raw.githubusercontent.com, codeload.github.com, www.sqlite.org). Nothing was installed, built or vendored.",
+    "scope": "Only metadata was verified: release tags, tag->commit resolution, archive sizes/SHA-256 and upstream license texts. No dependency was compiled or linked in this card.",
+    "consequence": "commit, tag and archive_sha256 are now filled in and verified=true for the four dependencies S1-01 could pin. The TLS backend stays a candidate list because the stage documents assign the choice to S1-05."
+  },
+  "dependencies": {
+    "sqlite": {
+      "consumer_card": "S1-02",
+      "purpose": "Single-writer repository, transactions and WAL durability.",
+      "upstream": "https://sqlite.org/",
+      "license_expected": "Public Domain (SQLite blessing)",
+      "license_verified": true,
+      "license": "Public Domain",
+      "license_evidence": "deployment/host/licenses/sqlite-PUBLIC-DOMAIN.txt",
+      "version": "3.54.1",
+      "version_macro": "SQLITE_VERSION_NUMBER 3054001",
+      "tag": "version-3.54.1 (amalgamation 3540100)",
+      "commit": null,
+      "commit_note": "SQLite is not distributed through git tags; the amalgamation zip is the release artifact and is pinned by its own SHA-256 instead of a commit.",
+      "archive_url": "https://www.sqlite.org/2026/sqlite-amalgamation-3540100.zip",
+      "archive_bytes": 2990966,
+      "archive_sha256": "0a9c8e34352dad46006aa82836d5383bff9dc6bc9ce5a60553c05aa30e6ad1f9",
+      "archive_contents": [
+        "sqlite-amalgamation-3540100/sqlite3.c (9582521 bytes)",
+        "sqlite-amalgamation-3540100/sqlite3.h (695729 bytes)",
+        "sqlite-amalgamation-3540100/sqlite3ext.h (39547 bytes)",
+        "sqlite-amalgamation-3540100/shell.c (1270623 bytes)"
+      ],
+      "verified": true,
+      "notes": "Vendor the amalgamation so the build needs no system package. The version string above was read out of the downloaded sqlite3.h, not from the download page."
+    },
+    "civetweb": {
+      "consumer_card": "S1-05",
+      "purpose": "HTTPS/WebSocket server, REST adapter and TLS termination.",
+      "upstream": "https://github.com/civetweb/civetweb",
+      "license_expected": "MIT",
+      "license_verified": true,
+      "license": "MIT (plus an MIT-licensed Lua 5.3 component section)",
+      "license_evidence": "deployment/host/licenses/civetweb-LICENSE.md",
+      "tag": "v1.16",
+      "tag_published_at": "2023-04-10T18:30:52Z",
+      "commit": "d7ba35bbb649209c66e582d5a0244ba988a15159",
+      "archive_url": "https://codeload.github.com/civetweb/civetweb/tar.gz/refs/tags/v1.16",
+      "archive_bytes": 12094780,
+      "archive_sha256": "f0e471c1bf4e7804a6cfb41ea9d13e7d623b2bcc7bc1e2a4dd54951a24d60285",
+      "verified": true,
+      "notes": "docs/项目计划.md:110 and docs/architecture/reviews/architecture-expert.md:137 already assume CivetWeb. TLS must stay enabled; disabling certificate verification is forbidden. GitHub license API reports NOASSERTION for this file because it bundles several sections, so the SPDX value was read from LICENSE.md itself (first section is MIT)."
+    },
+    "cjson": {
+      "consumer_card": "S1-02",
+      "consumer_cards": ["S1-02", "S1-05"],
+      "purpose": "Bounded JSON parsing/serialisation for REST and IPC payloads.",
+      "upstream": "https://github.com/DaveGamble/cJSON",
+      "license_expected": "MIT",
+      "license_verified": true,
+      "license": "MIT",
+      "license_evidence": "deployment/host/licenses/cjson-LICENSE.txt",
+      "tag": "v1.7.19",
+      "tag_published_at": "2025-09-09T13:58:05Z",
+      "commit": "c859b25da02955fef659d658b8f324b5cde87be3",
+      "archive_url": "https://codeload.github.com/DaveGamble/cJSON/tar.gz/refs/tags/v1.7.19",
+      "archive_bytes": 356247,
+      "archive_sha256": "7fa616e3046edfa7a28a32d5f9eacfd23f92900fe1f8ccd988c1662f30454562",
+      "verified": true,
+      "notes": "Parsing must respect LOCKER_HTTP_BODY_MAX / LOCKER_LOCAL_REQUEST_MAX instead of relying on the library defaults."
+    },
+    "libsodium": {
+      "consumer_card": "S1-05",
+      "purpose": "Argon2id password hashing and constant-time comparison.",
+      "upstream": "https://github.com/jedisct1/libsodium",
+      "license_expected": "ISC",
+      "license_verified": true,
+      "license": "ISC",
+      "license_evidence": "deployment/host/licenses/libsodium-LICENSE.txt",
+      "tag": "1.0.22-RELEASE",
+      "tag_published_at": "2026-04-09T23:30:13Z",
+      "tag_object": "bc5892beb87c388e123baa7c8f4862f30d9206a7",
+      "commit": "77e1ce5d6dee871c49ef211222ba18ef0c486bda",
+      "archive_url": "https://codeload.github.com/jedisct1/libsodium/tar.gz/refs/tags/1.0.22-RELEASE",
+      "archive_bytes": 2269468,
+      "archive_sha256": "5838bb0c3da6148c24ebe531d1ed1297de9a87aea77d426bcd99f289e681631c",
+      "verified": true,
+      "notes": "The release tag is an annotated tag, so both the tag object SHA and the dereferenced commit are recorded. docs/stages/stage-00-architecture.md:142 requires Argon2id storage; do not substitute a hand-written KDF."
+    },
+    "tls_library": {
+      "consumer_card": "S1-05",
+      "purpose": "TLS backend behind CivetWeb.",
+      "upstream": "https://github.com/openssl/openssl",
+      "license_expected": "Apache-2.0",
+      "license_verified": true,
+      "license": "Apache-2.0",
+      "license_evidence": "deployment/host/licenses/openssl-LICENSE.txt",
+      "tag": "openssl-4.0.3",
+      "tag_published_at": "2026-09-29T13:53:57Z",
+      "commit": "af1775b60dfa141a4ad762585052cabeb9f37e9e",
+      "archive_url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz",
+      "archive_bytes": 55235667,
+      "archive_sha256": "325b5c806167c13b40b1ffeadfe0248197c00eccc4cf123ec1e28d2d2fd216d9",
+      "verified": true,
+      "verified_scope": "metadata only",
+      "notes": "Candidate, not a decision. The stage documents name no TLS implementation, so S1-05 owns the choice; S1-01 only pins the most recent upstream release it could verify so the option is ready. Alternative candidates (mbedTLS, wolfSSL) are not pinned here. verified=true means the release metadata and license text were checked, NOT that OpenSSL was built or linked. OpenSSL 4.0.3 requires CMake plus Perl to build, so S1-05 must re-check the toolchain requirement before adopting it."
+    }
+  },
+  "base_library": {
+    "note": "host/common (S1-01) has no third-party dependency at all: C11, POSIX threads, clock_gettime, getrandom. The offline Linux build therefore needs only cmake/gcc/make; CTest needs nothing extra.",
+    "dependencies": []
+  },
+  "vendored": {
+    "note": "Trees that a consuming card has actually copied into the repository. Each entry records the vendoring card, the archive it came from, the archive digest the vendoring card re-verified, and the SHA-256 of every file as it now sits in the repository. Files are byte-identical to the archive members; nothing in a vendored tree may be edited in place.",
+    "trees": [
+      {
+        "dependency": "sqlite",
+        "consumer_card": "S1-02",
+        "vendored_path": "host/storage/third_party/sqlite/",
+        "archive_url": "https://www.sqlite.org/2026/sqlite-amalgamation-3540100.zip",
+        "archive_sha256_expected": "0a9c8e34352dad46006aa82836d5383bff9dc6bc9ce5a60553c05aa30e6ad1f9",
+        "archive_sha256_observed": "0a9c8e34352dad46006aa82836d5383bff9dc6bc9ce5a60553c05aa30e6ad1f9",
+        "archive_match": true,
+        "members_byte_identical": true,
+        "files": [
+          {
+            "path": "host/storage/third_party/sqlite/sqlite3.c",
+            "bytes": 9582521,
+            "sha256": "0c657666d819f261cc4007526ad57e1669de9949df7a8ea847aa284a2bf0ee52"
+          },
+          {
+            "path": "host/storage/third_party/sqlite/sqlite3.h",
+            "bytes": 695729,
+            "sha256": "d6c84557261893439b341d2e6c35187ae3ea24fbfd843ad94616f72d89242b8c"
+          },
+          {
+            "path": "host/storage/third_party/sqlite/sqlite3ext.h",
+            "bytes": 39547,
+            "sha256": "48963abfefb41ac329ef9d706acb5eadba952a99a748285c9ded6b5e0942721b"
+          }
+        ],
+        "not_vendored": [
+          "shell.c - the amalgamation's command-line shell is not needed by the service and is not copied."
+        ],
+        "compile_definitions": [
+          "SQLITE_THREADSAFE=1",
+          "SQLITE_OMIT_LOAD_EXTENSION=1",
+          "SQLITE_DEFAULT_MEMSTATUS=0",
+          "SQLITE_DQS=0",
+          "SQLITE_USE_URI=1"
+        ],
+        "build_target": "locker_storage_thirdparty (host/storage/CMakeLists.txt)",
+        "warning_gate": "deliberately excluded from locker_apply_warnings(): third-party code is not edited here and must not fail the project -Werror."
+      },
+      {
+        "dependency": "cjson",
+        "consumer_card": "S1-02",
+        "vendored_path": "host/storage/third_party/cjson/",
+        "archive_url": "https://codeload.github.com/DaveGamble/cJSON/tar.gz/refs/tags/v1.7.19",
+        "archive_sha256_expected": "7fa616e3046edfa7a28a32d5f9eacfd23f92900fe1f8ccd988c1662f30454562",
+        "archive_sha256_observed": "7fa616e3046edfa7a28a32d5f9eacfd23f92900fe1f8ccd988c1662f30454562",
+        "archive_match": true,
+        "members_byte_identical": true,
+        "files": [
+          {
+            "path": "host/storage/third_party/cjson/cJSON.c",
+            "bytes": 80399,
+            "sha256": "298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d"
+          },
+          {
+            "path": "host/storage/third_party/cjson/cJSON.h",
+            "bytes": 16394,
+            "sha256": "25b0145150d500498e4d209cec69c18c42cf818bffcc54690be3b895a2a16dee"
+          },
+          {
+            "path": "host/storage/third_party/cjson/LICENSE",
+            "bytes": 1084,
+            "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c"
+          }
+        ],
+        "build_target": "locker_storage_thirdparty (host/storage/CMakeLists.txt)",
+        "warning_gate": "deliberately excluded from locker_apply_warnings(), same reason as SQLite."
+      }
+    ],
+    "still_not_vendored": [
+      "civetweb, libsodium and the TLS backend stay unvendored; S1-05 owns that vendor step."
+    ]
+  },
+  "verification_log": {
+    "commands": [
+      "GET https://api.github.com/repos/civetweb/civetweb/releases/latest",
+      "GET https://api.github.com/repos/civetweb/civetweb/git/refs/tags/v1.16",
+      "GET https://api.github.com/repos/DaveGamble/cJSON/releases/latest",
+      "GET https://api.github.com/repos/DaveGamble/cJSON/git/refs/tags/v1.7.19",
+      "GET https://api.github.com/repos/jedisct1/libsodium/releases/latest",
+      "GET https://api.github.com/repos/jedisct1/libsodium/git/refs/tags/1.0.22-RELEASE (annotated tag object, then dereferenced)",
+      "GET https://api.github.com/repos/openssl/openssl/releases/latest",
+      "GET https://www.sqlite.org/download.html (amalgamation link), then GET the zip",
+      "GET https://www.sqlite.org/copyright.html"
+    ],
+    "digest_method": "SHA-256 of the exact downloaded archive bytes; the archives themselves were NOT added to the repository.",
+    "failed_attempts": [
+      "Invoke-WebRequest on the openssl-4.0.3.tar.gz release asset failed twice with 'unexpected EOF or 0 bytes'; the same URL succeeded through curl.exe with the proxy environment set. Recorded so the retry method is reproducible."
+    ]
+  },
+  "unresolved": [
+    "SQLite and cJSON are now vendored (see 'vendored'); CivetWeb, libsodium and the TLS backend are still not vendored and S1-05 must add them, each confirming the recorded archive_sha256.",
+    "The TLS library choice is still S1-05's; OpenSSL 4.0.3 is pinned as a verified candidate only.",
+    "No consumer card may link a dependency while verified is false; that is a hard stop, not a warning.",
+    "S1-01 itself compiled and linked nothing; the first real third-party build is S1-02's locker_storage_thirdparty target, and its result is reported in docs/evidence/stage-01/S1-02/summary.md rather than here."
+  ]
+}

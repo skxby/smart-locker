@@ -1,0 +1,17 @@
+GATE_OK configure CONFIGURE_EXIT=0
+GATE_OK build BUILD_EXIT=0
+GATE_OK ctest CTEST_EXIT=0
+GATE_OK asan-configure ASAN_CONFIGURE_EXIT=0
+GATE_OK asan-build ASAN_BUILD_EXIT=0
+GATE_OK asan-ctest ASAN_CTEST_EXIT=0
+GATE_OK asan-reports ASAN_REPORTS=0
+GATE_OK tsan-configure TSAN_CONFIGURE_EXIT=0
+GATE_OK tsan-build TSAN_BUILD_EXIT=0
+GATE_OK tsan-ctest TSAN_CTEST_EXIT=0
+GATE_OK tsan-hits TSAN_HITS=0
+GATE_OK daemon-smoke DAEMON_SMOKE_EXIT=0
+GATE_OK daemon-failures DAEMON_FAILURES=0
+GATE_OK manifest SHACHECK_EXIT=0
+GATE_OK stray-artifacts SRC_STRAY_ARTIFACTS=0
+GATE_OK live-tree-unchanged live_tree_unchanged=yes
+GATE_OK design-checks nonzero_exits=0

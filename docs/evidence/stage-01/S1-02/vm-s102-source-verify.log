@@ -1,0 +1,38 @@
+CMakeLists.txt: OK
+host/storage/CMakeLists.txt: OK
+host/storage/README.md: OK
+host/storage/cmake/embed_file.cmake: OK
+host/storage/include/locker/storage/embedded.h: OK
+host/storage/include/locker/storage/event_key.h: OK
+host/storage/include/locker/storage/regex.h: OK
+host/storage/include/locker/storage/schema.h: OK
+host/storage/include/locker/storage/u64.h: OK
+host/storage/schema-v1.sql: OK
+host/storage/src/event_key.c: OK
+host/storage/src/regex.c: OK
+host/storage/src/repository.c: OK
+host/storage/src/repository_internal.h: OK
+host/storage/src/schema.c: OK
+host/storage/src/schema_embedded.c: OK
+host/storage/src/schema_internal.h: OK
+host/storage/src/schema_records.json: OK
+host/storage/src/u64.c: OK
+host/storage/tools/extract_schema.py: OK
+tests/unit/storage/CMakeLists.txt: OK
+tests/unit/storage/test_event_key.c: OK
+tests/unit/storage/test_regex.c: OK
+tests/unit/storage/test_repository.c: OK
+tests/unit/storage/test_schema.c: OK
+tests/unit/storage/test_u64.c: OK
+host/storage/third_party/cjson/LICENSE: OK
+host/storage/third_party/cjson/cJSON.c: OK
+host/storage/third_party/cjson/cJSON.h: OK
+host/storage/third_party/sqlite/sqlite3.c: OK
+host/storage/third_party/sqlite/sqlite3.h: OK
+host/storage/third_party/sqlite/sqlite3ext.h: OK
+MANIFEST_LINES=32
+SHACHECK_OK=32
+SHACHECK_FAILED=0
+SHACHECK_EXIT=0
+SRC_STRAY_ARTIFACTS=0
+SRC_FILES=1016

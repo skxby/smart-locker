@@ -1,0 +1,48 @@
+﻿线号,起点,终点,线材或限制
+S01,P1-25 · PB13 / SPI2_SCK,RC522 · SCK,黄 · 母对母
+S02,P1-28 · PB14 / SPI2_MISO,RC522 · MISO,绿 · 母对母
+S03,P1-27 · PB15 / SPI2_MOSI,RC522 · MOSI,蓝 · 母对母
+S04,P1-26 · PB12 / GPIO CS,RC522 · SDA / SS / NSS,白 · 母对母
+S05,P2-12 · PE3 / GPIO,RC522 · RST,紫 · 母对母
+S06,P1-38 · 3V3 分配点,RC522 · 3.3V,红 · 仅3.3V
+S07,MCU GND 分配点,RC522 · GND,黑
+S08,P2-19 · PE0 / EXTI0,门磁 · 带线触点任一端,信号 + 地成对
+S09,MCU GND 分配点,门磁 · 触点另一端,无极性
+S10,P2-18 · PE1 / EXTI1,微动 · NO（两线款任一端）,信号 + 地成对
+S11,MCU GND 分配点,微动 · COM（另一端）,无极性
+S12,P2-13 · PE2 / GPIO,蜂鸣器模块 · IN / S,高有效待测
+S13,3V3 分配点（先核模块规格）,蜂鸣器模块 · VCC / +,候选3.3V
+S14,MCU GND 分配点,蜂鸣器模块 · GND / −,黑
+P01,适配器正极 / DC母头实测+,保险座一端,22AWG红
+P02,保险座另一端,MOS DC+ / 输入电容+ / 100k上端,22AWG红
+P03,适配器负极 / DC母头实测−,MOS DC− / 输入电容−,22AWG黑
+P04,MOS OUT+,锁正 / 二极管K,22AWG红
+P05,MOS OUT−,锁负 / 二极管A,22AWG黑
+P06,12V−入口单点,MCU GND / 分压地,独立支路
+P07,P2-23 PB6,MOS PWM,信号线
+P08,MCU GND,MOS GND,信号回路
+A01,100k下端 / 22k上端 / 滤波104一端,P2-14 PC0,短信号线
+A02,22k下端 / 滤波104另一端,MCU GND,短地线
+R01,3V3,10k上拉1 → PE0,焊接
+R02,3V3,10k上拉2 → PE1,焊接
+R03,PWM,10k下拉 → MOS信号GND,焊接
+I01,P2-29 PD5,ADuM芯片3 VIB,先追溯模块排针
+I02,P2-28 PD6,ADuM芯片2 VOA,先追溯模块排针
+I03,MCU 3V3,ADuM芯片1 VDD1,低电流
+I04,MCU GND,ADuM芯片4 GND1,低电流
+I05,RK UART_RX 待定位,ADuM芯片6 VOB,RK针号未核
+I06,RK UART_TX 待定位,ADuM芯片7 VIA,RK针号未核
+I07,RK 匹配IO电源待定位,ADuM芯片8 VDD2,仅3.3V候选
+I08,RK GND待定位,ADuM芯片5 GND2,不跨接GND1
+D01,H1-03,ST-LINK SWCLK,信号线
+D02,H1-05,ST-LINK SWDIO,信号线
+D03,H1-04/06,ST-LINK GND,地线
+D04,H1-09,ST-LINK NRST若有,可选
+L01,H1-10 PA9 TX,CH340 RXD,3.3V TTL
+L02,H1-04/06,CH340 GND,地线
+L03,H1-08 PA10 RX,CH340 TXD,可选先测3.3V
+U01,USB充电头5V,F407 Type-C,USB-A转C成品线
+U02,RK USB HOST,C01相机,随附USB线
+U03,独立5V USB口,C02补光,随附开关线
+U04,RK原配电源,RK原配电源口,待型号核口
+N01,RK网口,路由器LAN,Cat5e成品网线

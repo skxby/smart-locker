@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>逐件断电与电压验证</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">07  逐件断电与电压验证</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">工具：万用表（通断 / 电阻 / 二极管 / 直流电压）、螺丝刀、放大镜；以下按顺序操作。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">07 / 14</text>
+<rect x="65" y="155" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="179" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">01 板卡和每个端子</text>
+<text x="320" y="179" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">断开全部电源与USB，目检丝印</text>
+<text x="320" y="205" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">核对 STM32F407VGT6 / PRO；P1/P2/H1 的1脚标记</text>
+<text x="1000" y="204" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">版本不符停；不以图片朝向猜孔位</text>
+<rect x="65" y="221" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="245" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">02 电阻与焊接</text>
+<text x="320" y="245" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">电阻档，器件焊前各量两端</text>
+<text x="320" y="271" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">100k / 22k / 10k 在标称容差内；每线两端通断</text>
+<text x="1000" y="270" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">在电路内读值受并联影响，必要时抬起一端</text>
+<rect x="65" y="287" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="311" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">03 二极管</text>
+<text x="320" y="311" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">二极管档，红笔 A、黑笔 K 有环端</text>
+<text x="320" y="337" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">1N4007 正向通常约0.5–0.8V；反向 OL</text>
+<text x="1000" y="336" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">断电、脱离线圈测；双向近0停</text>
+<rect x="65" y="353" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="377" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">04 门磁 B04</text>
+<text x="320" y="377" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">通断档，两表笔接两根线</text>
+<text x="320" y="403" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">磁铁靠近应闭合，移远应断开；记录动作距离</text>
+<text x="1000" y="402" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">与MCU分离测；磁铁件没有导线</text>
+<rect x="65" y="419" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="443" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">05 微动 B05</text>
+<text x="320" y="443" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">通断档，两表笔接两线 / COM与NO</text>
+<text x="320" y="469" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">松开断；按下通；三脚款另找 COM/NC</text>
+<text x="1000" y="468" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">线色不能识别 NO/NC；避免压到底损坏</text>
+<rect x="65" y="485" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="509" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">06 MOS 断电</text>
+<text x="320" y="509" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">端子到芯片/铜箔的通断与目检</text>
+<text x="320" y="535" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">逐个辨 DC±、OUT±、PWM/GND；记录两地是否通</text>
+<text x="1000" y="534" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">OUT−与DC−不通可能正常；不能据此补短接</text>
+<rect x="65" y="551" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="575" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">07 12V适配器</text>
+<text x="320" y="575" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">DC V档，红笔中心、黑笔外圈</text>
+<text x="320" y="601" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">读正值约12V才定义中心为正；记录空载电压</text>
+<text x="1000" y="600" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">负读数说明极性相反；先不接核心板</text>
+<rect x="65" y="617" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="641" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">08 核心板电源</text>
+<text x="320" y="641" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">只接Type-C；黑笔H1-04，红笔H1-02</text>
+<text x="320" y="667" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">约3.3V；H1-07对同地约5V；不发烫</text>
+<text x="1000" y="666" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">不向3V3送5V；12V不接任何MCU引脚</text>
+<rect x="65" y="683" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="707" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">09 分压板脱离ADC</text>
+<text x="320" y="707" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">供12V；黑笔分压地，红笔ADC节点</text>
+<text x="320" y="733" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">约2.164V；实际输入×22/122，误差看阻值</text>
+<text x="1000" y="732" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">先量节点再接PC0；必须低于实测VREF+</text>
+<rect x="65" y="749" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="773" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">10 输入电平</text>
+<text x="320" y="773" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">上拉就位；黑笔GND，红笔PE0/PE1</text>
+<text x="320" y="799" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">开路约3.3V，闭合约0V；记录门关/有物极性</text>
+<text x="1000" y="798" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">输入不得悬空；读值异常先断开触点查上拉</text>
+<rect x="65" y="815" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="839" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">11 RC522 / 蜂鸣器</text>
+<text x="320" y="839" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">黑笔模块GND，红笔VCC / 3.3V脚</text>
+<text x="320" y="865" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">模块处约3.3V；IRQ悬空；蜂鸣器型号需匹配</text>
+<text x="1000" y="864" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">RC522 不试5V；蜂鸣器3.3V不兼容则停</text>
+<rect x="65" y="881" width="1470" height="62" rx="5" fill="#fafcfd" stroke="#fafcfd"/>
+<text x="78" y="905" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">12 SWD / USB-TTL</text>
+<text x="320" y="905" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">先不接目标；TTL USB供电，量TXD对GND</text>
+<text x="320" y="931" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">TXD空闲约3.3V；跳线改VCC不等于改IO电平</text>
+<text x="1000" y="930" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">约5V则不接PA10；不能只看3.3V丝印</text>
+<rect x="65" y="947" width="1470" height="62" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<text x="78" y="971" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#176da6">13 ADuM / RK</text>
+<text x="320" y="971" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#172d46">断电对模块排针逐点量到芯片1–8脚</text>
+<text x="320" y="997" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">对应05页；芯片1201，非1200；两侧不短接</text>
+<text x="1000" y="996" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#c34b35">RK板型、IO域未核，暂不接RK信号与电源</text></svg>

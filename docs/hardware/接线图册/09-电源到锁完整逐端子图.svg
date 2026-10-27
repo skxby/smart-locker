@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120"><title>电源到锁完整逐端子图</title><rect width="1600" height="1120" fill="white"/>
+<rect x="0" y="0" width="1600" height="12" rx="5" fill="#172d46" stroke="#172d46"/>
+<text x="50" y="71" font-family="Microsoft YaHei,sans-serif" font-size="36" fill="#172d46">09  电源到锁完整逐端子图</text>
+<text x="50" y="110" font-family="Microsoft YaHei,sans-serif" font-size="19" fill="#536477">图中实心圆点表示相连；只有同名网络可以连通。模块框表示端子功能，不表示内部电路。</text>
+<polyline points="50,135 1550,135" fill="none" stroke="#d6e1e9" stroke-width="2"/>
+<text x="50" y="1094" font-family="Microsoft YaHei,sans-serif" font-size="17" fill="#536477">2026-10-23 · 候选施工设计 / UNVERIFIED · 按丝印和实测确认后接线 · 未实施产品固件</text>
+<text x="1370" y="1095" font-family="Microsoft YaHei,sans-serif" font-size="18" fill="#172d46">09 / 14</text>
+<rect x="65" y="170" width="295" height="170" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="170" width="5" height="170" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="85" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">12V适配器 / 母头</text>
+<text x="85" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">先量极性再贴标签</text>
+<text x="85" y="274" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">22AWG红：实测正</text>
+<text x="85" y="302" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">22AWG黑：实测负</text>
+<rect x="675" y="170" width="330" height="550" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="675" y="170" width="5" height="550" rx="5" fill="#237c6a" stroke="#237c6a"/>
+<text x="695" y="207" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#237c6a">YYNMOS-1</text>
+<text x="695" y="246" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">按实物背面丝印接线</text>
+<circle cx="675" cy="280" r="7" fill="#c34b35"/>
+<text x="700" y="279" font-family="Microsoft YaHei,sans-serif" font-size="27" fill="#c34b35">DC+</text>
+<circle cx="675" cy="540" r="7" fill="#536477"/>
+<text x="700" y="539" font-family="Microsoft YaHei,sans-serif" font-size="27" fill="#536477">DC−</text>
+<circle cx="1005" cy="360" r="7" fill="#c34b35"/>
+<text x="872" y="359" font-family="Microsoft YaHei,sans-serif" font-size="27" fill="#c34b35">OUT+</text>
+<circle cx="1005" cy="470" r="7" fill="#536477"/>
+<text x="872" y="469" font-family="Microsoft YaHei,sans-serif" font-size="27" fill="#536477">OUT−</text>
+<polyline points="360,270 420,270" fill="none" stroke="#c34b35" stroke-width="5"/>
+<rect x="420" y="248" width="140" height="44" rx="5" fill="#fff0db" stroke="#a16716"/>
+<text x="432" y="274" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#172d46">保险座+管</text>
+<polyline points="560,270 615,270 615,280 675,280" fill="none" stroke="#c34b35" stroke-width="5"/>
+<circle cx="615" cy="280" r="7" fill="#c34b35"/>
+<text x="405" y="218" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#c34b35">保险后12V+</text>
+<polyline points="360,315 385,315 385,540 675,540" fill="none" stroke="#536477" stroke-width="5"/>
+<circle cx="435" cy="540" r="7" fill="#536477"/>
+<text x="80" y="571" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">入口负极单点</text>
+<polyline points="435,540 435,590 100,590" fill="none" stroke="#536477" stroke-width="3"/>
+<text x="100" y="615" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#536477">支路 → MCU GND</text>
+<polyline points="1005,360 1445,360 1445,400" fill="none" stroke="#c34b35" stroke-width="5"/>
+<polyline points="1005,470 1445,470 1445,440" fill="none" stroke="#536477" stroke-width="5"/>
+<rect x="1375" y="400" width="145" height="40" rx="5" fill="#eee0c3" stroke="#a16716"/>
+<text x="1385" y="427" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">锁线圈</text>
+<text x="1310" y="341" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#c34b35">锁正 LOCK+</text>
+<text x="1285" y="511" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#536477">锁负 LOCK−</text>
+<polyline points="1175,360 1175,390" fill="none" stroke="#c34b35" stroke-width="4"/>
+<rect x="1156" y="390" width="38" height="55" rx="5" fill="#292f35" stroke="#292f35"/>
+<rect x="1156" y="394" width="38" height="8" rx="5" fill="#d1d9df" stroke="#d1d9df"/>
+<polyline points="1175,445 1175,470" fill="none" stroke="#536477" stroke-width="4"/>
+<circle cx="1175" cy="360" r="7" fill="#c34b35"/>
+<circle cx="1175" cy="470" r="7" fill="#536477"/>
+<text x="1050" y="283" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">1N4007 跨接在锁两端</text>
+<text x="1068" y="326" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#c34b35">K 有环端 → 上方红线</text>
+<text x="1040" y="566" font-family="Microsoft YaHei,sans-serif" font-size="21" fill="#536477">A 无环端 → 下方锁负线</text>
+<rect x="1045" y="610" width="490" height="155" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="1045" y="610" width="5" height="155" rx="5" fill="#c34b35" stroke="#c34b35"/>
+<text x="1065" y="647" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#c34b35">此处没有接地线</text>
+<text x="1065" y="686" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">OUT−只到锁负与二极管A。</text>
+<text x="1065" y="714" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">不能额外接DC−、MCU GND。</text>
+<text x="1065" y="742" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">否则可能绕过MOS，锁持续通电。</text>
+<polyline points="615,280 615,380 470,380" fill="none" stroke="#c34b35" stroke-width="4"/>
+<polyline points="470,380 470,400" fill="none" stroke="#c34b35" stroke-width="3"/>
+<polyline points="470,400 470,444" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="442,444 498,444" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="442,462 498,462" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="470,462 470,515" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="510" y="450" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">C1</text>
+<polyline points="470,515 470,540" fill="none" stroke="#536477" stroke-width="3"/>
+<circle cx="470" cy="540" r="7" fill="#536477"/>
+<circle cx="590" cy="380" r="7" fill="#c34b35"/>
+<polyline points="590,380 590,400" fill="none" stroke="#c34b35" stroke-width="3"/>
+<polyline points="590,400 590,444" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="562,444 618,444" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="562,462 618,462" fill="none" stroke="#176da6" stroke-width="4"/>
+<polyline points="590,462 590,515" fill="none" stroke="#176da6" stroke-width="4"/>
+<text x="630" y="450" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#172d46">C2</text>
+<polyline points="590,515 590,540" fill="none" stroke="#536477" stroke-width="3"/>
+<circle cx="590" cy="540" r="7" fill="#536477"/>
+<text x="420" y="416" font-family="Microsoft YaHei,sans-serif" font-size="26" fill="#c34b35">+</text>
+<text x="420" y="513" font-family="Microsoft YaHei,sans-serif" font-size="26" fill="#536477">−</text>
+<rect x="65" y="620" width="550" height="145" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
+<rect x="65" y="620" width="5" height="145" rx="5" fill="#176da6" stroke="#176da6"/>
+<text x="85" y="657" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">C1=470µF/25V；C2=100nF/104</text>
+<text x="85" y="696" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">C1正脚、C2任一脚 → 保险后12V+。</text>
+<text x="85" y="724" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">C1负脚、C2另一脚 → 入口负极。</text>
+<text x="85" y="752" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">C1有极性，C2无极性；不接OUT−。</text>
+<text x="700" y="647" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#176da6">PWM ← P2-23 / PB6</text>
+<text x="700" y="686" font-family="Microsoft YaHei,sans-serif" font-size="22" fill="#536477">GND ← MCU GND</text>
+<text x="65" y="838" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">电源回路：适配器+ → 保险 → DC+；适配器− → DC−；OUT± → 锁的两根线。</text>
+<text x="65" y="880" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">信号回路：PB6 → PWM，MCU GND → 模块信号GND。确认高有效后再接10k下拉。</text>
+<text x="65" y="922" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">入口负极另引支路到MCU GND，锁功率回流不经过MCU地线；分压板两地关系见第10页。</text>
+<text x="65" y="964" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">有环端是二极管阴极K，不是电解的负极标识；两种条纹含义不同，详见第12页。</text>
+<text x="65" y="1006" font-family="Microsoft YaHei,sans-serif" font-size="23" fill="#172d46">保险管额定、锁脉宽与二极管电流能力仍需实测与器件规格核对。</text></svg>

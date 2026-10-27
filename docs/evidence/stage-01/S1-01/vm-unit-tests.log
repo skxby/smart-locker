@@ -1,0 +1,14 @@
+# S1-01 clean-Linux per-test detail (VMware guest)
+# date: 2026-10-23T20:19:53+08:00
+PASS common.bounded_queue (97 checks)
+PER_TEST_EXIT test_bounded_queue=0
+PASS common.build_info (5 checks)
+PER_TEST_EXIT test_build_info=0
+PASS common.clock (53 checks)
+PER_TEST_EXIT test_clock=0
+PASS common.log (94 checks)
+PER_TEST_EXIT test_log=0
+PASS common.numeric (133 checks)
+PER_TEST_EXIT test_numeric=0
+PASS common.uuid (53 checks)
+PER_TEST_EXIT test_uuid=0

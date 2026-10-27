@@ -1,0 +1,9 @@
+EXTRACT_EXIT=0
+batch=/home/%USER%/locker-workspace/S1-03/batches/20261026-095548
+extract_target=/home/%USER%/locker-workspace/S1-03/batches/20261026-095548/src
+live_tree=/home/%USER%/locker-workspace/S1-03/src
+live_tree_files_before=1159
+live_tree_fingerprint_before=9638dec8117214532e316760a50c6291378bb56445b46ec9402bb9c29ace9aeb
+live_tree_files_after=1159
+live_tree_fingerprint_after=9638dec8117214532e316760a50c6291378bb56445b46ec9402bb9c29ace9aeb
+live_tree_unchanged=yes

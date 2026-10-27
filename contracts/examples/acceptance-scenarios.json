@@ -1,0 +1,98 @@
+[
+  {
+    "id": "C01",
+    "given": "无有效操作且闭门/物品在位/READY",
+    "when": "两个用户并发申请BORROW",
+    "then": "恰有一个REQUESTED，另一SLOT_BUSY；无EXECUTE"
+  },
+  {
+    "id": "C02",
+    "given": "申请已提交但HTTP响应丢失",
+    "when": "同键同正文重试",
+    "then": "同operation_id；无额外开锁意图"
+  },
+  {
+    "id": "C03",
+    "given": "同幂等键已经绑定请求",
+    "when": "改正文重试",
+    "then": "IDEMPOTENCY_CONFLICT；旧结果不改"
+  },
+  {
+    "id": "C04",
+    "given": "WAIT_CONFIRM且完整事件和当前物理状态符合",
+    "when": "本人确认",
+    "then": "一事务完成操作与借用；返回COMPLETED"
+  },
+  {
+    "id": "C05",
+    "given": "MCU意图提交成功但ACK丢失",
+    "when": "RK超时",
+    "then": "只QUERY_COMMAND，不重发EXECUTE"
+  },
+  {
+    "id": "C06",
+    "given": "动作日志已经提交、脉冲前MCU重启",
+    "when": "建立新session",
+    "then": "REVIEW_REQUIRED，旧command不驱动"
+  },
+  {
+    "id": "C07",
+    "given": "历史CARD_OBSERVED补传",
+    "when": "用户当前有REQUESTED",
+    "then": "只补记录；无presence、无EXECUTE"
+  },
+  {
+    "id": "C08",
+    "given": "日志序号连续但dropped_events>0/continuity失效",
+    "when": "请求RESUME_READY",
+    "then": "拒绝READY；不能据连续seq宣称完整"
+  },
+  {
+    "id": "C09",
+    "given": "意图写入等待中",
+    "when": "物理版本改变或准备超过2000ms",
+    "then": "不驱动；消耗水位，不重用command"
+  },
+  {
+    "id": "C10",
+    "given": "已取物未确认",
+    "when": "取消或超时",
+    "then": "REVIEW_REQUIRED且保持占位，不变AVAILABLE"
+  },
+  {
+    "id": "C11",
+    "given": "快照已取且补齐边界",
+    "when": "ARM前物理版本改变",
+    "then": "CAS拒绝，重新核对"
+  },
+  {
+    "id": "C12",
+    "given": "事件到达但RK事务失败",
+    "when": "准备确认MCU游标",
+    "then": "不ACK；可重复补取且不重复推进账本"
+  },
+  {
+    "id": "C13",
+    "given": "普通用户或网络客户端",
+    "when": "尝试local presence、模拟输入、直接unlock",
+    "then": "公开路由不存在/权限拒绝；无动作"
+  },
+  {
+    "id": "C14",
+    "given": "锁脉冲正在进行",
+    "when": "存储任务阻塞/调度延迟",
+    "then": "硬件截止仍关断；真实证据阶段2验证"
+  },
+  {
+    "id": "C15",
+    "given": "服务重启前有未完成操作",
+    "when": "恢复SQLite与MCU日志",
+    "then": "核对，不发送旧outbox；有不确定则待核验"
+  },
+  {
+    "id": "C16",
+    "given": "WS提示丢失或队列溢出",
+    "when": "客户端重连/定时刷新",
+    "then": "GET snapshot恢复显示；不把WS当可靠账本"
+  }
+]
