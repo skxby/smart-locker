@@ -227,10 +227,18 @@ static void test_parse_escapes(void)
     TEST_CHECK(locker_domain_json_text(&holder.doc, root, text, sizeof(text), &length));
     TEST_CHECK_STRING("A~", text);
 
-    /* 非 ASCII 的 \u 转义在解码阶段被拒（原文应走 UTF-8）。 */
+    /* 标准 Unicode 转义与代理对解码为同一 UTF-8 值。 */
     TEST_CHECK(jt_parse(&holder, "\"\\u00e9\""));
     root = locker_domain_json_root(&holder.doc);
-    TEST_CHECK(!locker_domain_json_text(&holder.doc, root, text, sizeof(text), &length));
+    TEST_CHECK(locker_domain_json_text(&holder.doc, root, text, sizeof(text), &length));
+    TEST_CHECK_STRING("é",text);
+    TEST_CHECK(jt_parse(&holder,"\"\\u4e2d\\u6587\\ud83d\\ude00\""));
+    root=locker_domain_json_root(&holder.doc);
+    TEST_CHECK(locker_domain_json_text(&holder.doc,root,text,sizeof(text),&length));
+    TEST_CHECK_STRING("中文😀",text);
+    TEST_CHECK(jt_parse(&holder,"\"\\ud83d\""));
+    root=locker_domain_json_root(&holder.doc);
+    TEST_CHECK(!locker_domain_json_text(&holder.doc,root,text,sizeof(text),&length));
 
     /* \u0000 解码会截断字符串，必须拒绝。 */
     TEST_CHECK(jt_parse(&holder, "\"a\\u0000b\""));

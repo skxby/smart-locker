@@ -3,7 +3,7 @@
   "contract_version": "0.2.1",
   "activity": "IMPLEMENTATION",
   "active_task": null,
-  "recommended_next": "S1-05",
+  "recommended_next": "S1-06",
   "execution_policy": "ONE_CARD_AT_A_TIME",
   "stages": [
     {
@@ -192,8 +192,8 @@
         "host/ipc/"
       ],
       "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
-      "status": "NOT_STARTED",
-      "report": null
+      "status": "DONE",
+      "report": "docs/evidence/stage-01/S1-05/summary.md"
     },
     {
       "id": "S1-06",

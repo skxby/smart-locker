@@ -23,7 +23,7 @@
 不做（越界）：
 
 - 不含 SQLite、CivetWeb、cJSON、HAL 头，也不认识它们的实现类型；仓储与设备都按契约端口借用。
-- 不实现 Argon2id：`locker_core_authenticate` 一律返回 `NOT_READY`，留给 S1-05。
+- 启用 `LOCKER_BUILD_NETWORK` 时，S1-05 的登录和令牌认证在 Core 线程执行，使用 libsodium Argon2id 验证口令、SHA-256 摘要比对随机会话令牌；未启用时认证返回 `NOT_READY`。当前尚未接入 HTTP/IPC。
 - 不实现 supervisor 健康端口：`locker_core_apply_supervisor_health` 一律返回 `NOT_READY`，归 S4-04；本卡不提供空实现冒充。
 - 不接视觉：`vision_policy` 只接受 `DISABLED_FOR_FOUNDATION`，其余返回 `NOT_READY`，归后续视觉卡。
 - 不自动重放任何可能已发送的动作；结果未知只查询、不补发。
@@ -120,7 +120,7 @@ ctest --test-dir "$build" --output-on-failure
 | 项 | 状态 | 说明 |
 |---|---|---|
 | 真实 MCU / 串口 / GPIO | **NOT_RUN** | 阶段 1 只用 `locker-device-sim` 的 AF_UNIX 通道；锁脉冲硬截止属阶段 2 |
-| 真实身份校验（Argon2id） | **NOT_IMPLEMENTED** | `locker_core_authenticate` 恒返回 `NOT_READY`，S1-05 负责 |
+| 真实身份校验（Argon2id） | **IMPLEMENTED** | S1-05 提供登录、token哈希、角色/启用复检、原会话撤销及用户/卡管理；最终整卡验证见S1-05报告 |
 | supervisor 健康端口 | **NOT_IMPLEMENTED** | 恒返回 `NOT_READY`，S4-04 负责；不用空实现冒充 |
 | 视觉融合 | **NOT_IMPLEMENTED** | 只接受 `DISABLED_FOR_FOUNDATION`，其余 `NOT_READY` |
 | 多柜格并发操作 | **NOT_IMPLEMENTED** | `slot_guards` 只有 key `"1"`，本阶段单柜格 |
@@ -136,3 +136,7 @@ ctest --test-dir "$build" --output-on-failure
 - 发送与重连屏障规则：`docs/architecture/internal-interfaces.md:114`、`:201-205`
 - 模块边界：`docs/architecture/module-ownership.md:23`、`:49-53`
 - 契约真源与生成物：`contracts/contract-source.json`、`contracts/include/locker_contracts.h`
+
+S1-05 操作适配需要区分幂等冲突与版本冲突：Core 在幂等键异意图时保留 CONFLICT 状态，并在结果 JSON 返回契约错误信封 IDEMPOTENCY_CONFLICT 和本次 request_id；不会写仓储或创建新操作。成功重放仍返回原响应。
+
+S1-05 的用户/卡管理、审计和幂等结果由Core同事务写入；账号停用或角色变化撤销原会话，重新启用不恢复旧token。最后启用管理员受保护。用户上限100、每账号会话上限16，过期或撤销记录在该账号下次登录时清理。loans 查询返回持久化历史并按借用者过滤，events 从设备事实与人工审计投影；分页与当前快照版本绑定。HTTP/IPC只消费公开端口，命令字段在Core再次校验。

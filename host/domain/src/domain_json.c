@@ -723,6 +723,27 @@ static int hex_digit(char byte)
     return -1;
 }
 
+static bool unicode_escape(const char *text,uint32_t length,uint32_t at,char out[4],size_t *bytes,uint32_t *consumed)
+{
+    if (at+5u>=length || text[at]!='\\' || text[at+1]!='u') return false;
+    unsigned code=0;
+    for (unsigned i=0;i<4;++i) { int digit=hex_digit(text[at+2+i]); if (digit<0) return false; code=(code<<4)|(unsigned)digit; }
+    *consumed=6;
+    if (code>=0xd800 && code<=0xdbff) {
+        if (at+11u>=length || text[at+6]!='\\' || text[at+7]!='u') return false;
+        unsigned low=0;
+        for (unsigned i=0;i<4;++i) { int digit=hex_digit(text[at+8+i]); if (digit<0) return false; low=(low<<4)|(unsigned)digit; }
+        if (low<0xdc00 || low>0xdfff) return false;
+        code=0x10000+((code-0xd800)<<10)+(low-0xdc00); *consumed=12;
+    } else if (code>=0xdc00 && code<=0xdfff) return false;
+    if (!code) return false;
+    if (code<0x80) { out[0]=(char)code; *bytes=1; }
+    else if (code<0x800) { out[0]=(char)(0xc0|(code>>6)); out[1]=(char)(0x80|(code&63)); *bytes=2; }
+    else if (code<0x10000) { out[0]=(char)(0xe0|(code>>12)); out[1]=(char)(0x80|((code>>6)&63)); out[2]=(char)(0x80|(code&63)); *bytes=3; }
+    else { out[0]=(char)(0xf0|(code>>18)); out[1]=(char)(0x80|((code>>12)&63)); out[2]=(char)(0x80|((code>>6)&63)); out[3]=(char)(0x80|(code&63)); *bytes=4; }
+    return true;
+}
+
 bool locker_domain_json_text(const locker_json_document_t *doc, const locker_json_node_t *node,
                              char *out, size_t out_size, size_t *out_length)
 {
@@ -768,24 +789,10 @@ bool locker_domain_json_text(const locker_json_document_t *doc, const locker_jso
                 decoded = '\t';
                 break;
             case 'u': {
-                if (i + 4u >= node->text_length) {
-                    return false;
-                }
-                int high = hex_digit(text[i + 1u]);
-                int mid = hex_digit(text[i + 2u]);
-                int low_a = hex_digit(text[i + 3u]);
-                int low_b = hex_digit(text[i + 4u]);
-                if (high < 0 || mid < 0 || low_a < 0 || low_b < 0) {
-                    return false;
-                }
-                unsigned code = (unsigned)((high << 12) | (mid << 8) | (low_a << 4) | low_b);
-                if (code == 0u || code > 0x7fu) {
-                    /* 只接受 ASCII 转义：非 ASCII 一律按 UTF-8 原文传输。 */
-                    return false;
-                }
-                decoded = (char)code;
-                i += 4u;
-                break;
+                char utf8[4]; size_t bytes=0; uint32_t consumed=0;
+                if (!unicode_escape(text,node->text_length,i-1,utf8,&bytes,&consumed) || written+bytes>=out_size) return false;
+                memcpy(out+written,utf8,bytes); written+=bytes; i+=consumed-2;
+                continue;
             }
             default:
                 return false;
@@ -834,7 +841,7 @@ bool locker_domain_json_boolean(const locker_json_document_t *doc, const locker_
  * render 的用途是「幂等重放同一份响应体」与「投影比较」（domain_json.h 的往返要求），
  * 所以必须产出规范化文本：直接抄原文会把 \u0041 与 A 当成两个不同响应体，
  * 让同一请求的两次重放看起来不一致。解码规则与 locker_domain_json_text 完全一致：
- * 只接受 ASCII 可见范围的 \u 转义，\u0000 与非 ASCII 一律拒绝（原文应走 UTF-8）。
+ * 接受 UTF-8 原文、Unicode BMP 与合法 UTF-16 代理对；拒绝嵌入 NUL 与孤立代理项。
  */
 static bool render_string_token(const locker_json_document_t *doc, uint32_t offset, uint32_t length,
                                 locker_json_writer_t *writer)
@@ -881,23 +888,10 @@ static bool render_string_token(const locker_json_document_t *doc, uint32_t offs
             decoded = '\t';
             break;
         case 'u': {
-            if (i + 5u >= length) {
-                return false;
-            }
-            int high = hex_digit(text[i + 2u]);
-            int mid = hex_digit(text[i + 3u]);
-            int low_a = hex_digit(text[i + 4u]);
-            int low_b = hex_digit(text[i + 5u]);
-            if (high < 0 || mid < 0 || low_a < 0 || low_b < 0) {
-                return false;
-            }
-            unsigned code = (unsigned)((high << 12) | (mid << 8) | (low_a << 4) | low_b);
-            if (code == 0u || code > 0x7fu) {
-                return false;
-            }
-            decoded = (char)code;
-            consumed = 6u;
-            break;
+            char utf8[4]; size_t bytes=0; uint32_t unicode_consumed=0;
+            if (!unicode_escape(text,length,i,utf8,&bytes,&unicode_consumed)) return false;
+            writer_escaped_body(writer,utf8,bytes); i+=unicode_consumed-1; start=i+1;
+            continue;
         }
         default:
             return false;
@@ -989,4 +983,75 @@ bool locker_domain_json_render(const locker_json_document_t *doc, const locker_j
         *out_length = writer.length;
     }
     return true;
+}
+
+/* Shared bounded validation for public mutation DTOs, used before queue admission
+ * by both transports and again by Core. Unknown kinds are not accepted here. */
+static bool command_string(const locker_json_document_t *d,const locker_json_node_t *o,
+                           const char *key,char *out,size_t capacity,size_t minimum,size_t maximum)
+{
+    size_t bytes=0,chars=0;
+    if (!locker_domain_json_text(d,locker_domain_json_get(d,o,key),out,capacity,&bytes)) return false;
+    for (size_t i=0;i<bytes;++i) if (((unsigned char)out[i]&0xc0)!=0x80) ++chars;
+    return chars>=minimum && chars<=maximum;
+}
+static bool command_revision(const locker_json_document_t *d,const locker_json_node_t *o,const char *key)
+{
+    char text[21];
+    if (!command_string(d,o,key,text,sizeof(text),1,20) || (text[0]=='0' && text[1])) return false;
+    uint64_t value=0;
+    for (size_t i=0;text[i];++i) {
+        if (text[i]<'0' || text[i]>'9' || value>(UINT64_MAX-(unsigned)(text[i]-'0'))/10) return false;
+        value=value*10+(unsigned)(text[i]-'0');
+    }
+    return true;
+}
+static bool command_id(const locker_json_document_t *d,const locker_json_node_t *o,const char *key)
+{
+    char text[37];
+    if (!command_string(d,o,key,text,sizeof(text),36,36)) return false;
+    for (size_t i=0;i<36;++i) {
+        if (i==8 || i==13 || i==18 || i==23) { if (text[i]!='-') return false; }
+        else if (!((text[i]>='0' && text[i]<='9') || (text[i]>='a' && text[i]<='f'))) return false;
+    }
+    return true;
+}
+bool locker_domain_json_validate_command(const char *body,const char *kind)
+{
+    if (!body || !kind) return false;
+    size_t body_length=strnlen(body,4097);
+    if (body_length>4096) return false;
+    locker_json_node_t nodes[32]; locker_json_member_t members[32]; locker_json_document_t d={0};
+    d.nodes=nodes; d.node_capacity=32; d.members=members; d.member_capacity=32;
+    if (!locker_domain_json_parse(&d,body,body_length)) return false;
+    const locker_json_node_t *o=locker_domain_json_root(&d);
+    if (!o || o->type!=LOCKER_JSON_OBJECT) return false;
+    char text[1025];
+    if (!strcmp(kind,LOCKER_CORE_OPERATION_CREATE)) {
+        return o->count==3 && command_id(&d,o,"tool_id") && command_revision(&d,o,"tool_revision") &&
+            command_string(&d,o,"kind",text,sizeof(text),1,16) && (!strcmp(text,"BORROW") || !strcmp(text,"RETURN"));
+    }
+    if (!strcmp(kind,LOCKER_CORE_OPERATION_CONFIRM)) return o->count==1 && command_revision(&d,o,"operation_revision");
+    if (!strcmp(kind,LOCKER_CORE_OPERATION_CANCEL)) return o->count==2 && command_revision(&d,o,"operation_revision") && command_string(&d,o,"reason",text,sizeof(text),1,256);
+    if (!strcmp(kind,LOCKER_CORE_OPERATION_RESOLVE)) return o->count==4 && command_revision(&d,o,"operation_revision") &&
+        command_revision(&d,o,"physical_revision") && command_string(&d,o,"reason",text,sizeof(text),5,256) &&
+        command_string(&d,o,"resolution",text,sizeof(text),1,32) && (!strcmp(text,"COMPLETE_BORROW") || !strcmp(text,"COMPLETE_RETURN") || !strcmp(text,"NO_CHANGE"));
+    if (!strcmp(kind,LOCKER_CORE_CARD_BIND)) return o->count==2 && command_revision(&d,o,"user_revision") && command_id(&d,o,"observation_id");
+    if (!strcmp(kind,LOCKER_CORE_CARD_UNBIND)) return o->count==1 && command_revision(&d,o,"user_revision");
+    if (!strcmp(kind,LOCKER_CORE_USER_CREATE)) {
+        if (o->count!=4 || !command_string(&d,o,"username",text,sizeof(text),3,32)) return false;
+        for (size_t i=0;text[i];++i) if (!((text[i]>='a' && text[i]<='z') || (text[i]>='A' && text[i]<='Z') ||
+            (text[i]>='0' && text[i]<='9') || text[i]=='_' || text[i]=='.' || text[i]=='-')) return false;
+        return command_string(&d,o,"display_name",text,sizeof(text),1,64) && command_string(&d,o,"password",text,sizeof(text),12,128) &&
+            command_string(&d,o,"role",text,sizeof(text),1,16) && (!strcmp(text,"ADMIN") || !strcmp(text,"USER"));
+    }
+    if (!strcmp(kind,LOCKER_CORE_USER_UPDATE)) {
+        if (o->count<2 || o->count>4 || !command_revision(&d,o,"user_revision")) return false;
+        unsigned fields=1;
+        if (locker_domain_json_get(&d,o,"display_name")) { ++fields; if (!command_string(&d,o,"display_name",text,sizeof(text),1,64)) return false; }
+        if (locker_domain_json_get(&d,o,"role")) { ++fields; if (!command_string(&d,o,"role",text,sizeof(text),1,16) || (strcmp(text,"ADMIN") && strcmp(text,"USER"))) return false; }
+        if (locker_domain_json_get(&d,o,"enabled")) { bool value; ++fields; if (!locker_domain_json_boolean(&d,locker_domain_json_get(&d,o,"enabled"),&value)) return false; }
+        return fields==o->count;
+    }
+    return false;
 }

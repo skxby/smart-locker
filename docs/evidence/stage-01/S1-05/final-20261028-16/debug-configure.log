@@ -1,0 +1,18 @@
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Found Perl: /usr/bin/perl (found version "5.40.1")
+{"status": "PASS", "network_source_files": 3811, "downloaded_at_configure": false}
+-- storage tests: contract-drift gate enabled (/usr/bin/python3)
+-- device contract tests: daemon smoke enabled (/usr/bin/python3)
+-- Configuring done (3.2s)
+-- Generating done (0.3s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-debug

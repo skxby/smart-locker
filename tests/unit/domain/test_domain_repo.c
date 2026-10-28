@@ -449,15 +449,16 @@ static void test_completion_wait(void)
 
     /* principal 存取。 */
     principal = dt_principal(LOCKER_ROLE_ADMIN, 0x50u);
-    domain_completion_set_principal(fixture.core, slot, &principal);
-    TEST_CHECK(domain_completion_take_principal(fixture.core, slot, &taken));
+    domain_completion_set_principal(fixture.core, slot, &token, &principal);
+    TEST_CHECK(domain_completion_take_principal(fixture.core, slot, &token, &taken));
     TEST_CHECK(locker_uuid_equal(&taken.user_id, &principal.user_id));
     TEST_CHECK(taken.role == LOCKER_ROLE_ADMIN);
 
+    TEST_CHECK(!domain_completion_take_principal(fixture.core, slot, &principal.user_id, &taken));
     /* 未设置的槽取不到 principal。 */
     locker_uuid_t other_token;
     uint32_t other = domain_completion_acquire(fixture.core, &other_token);
-    TEST_CHECK(!domain_completion_take_principal(fixture.core, other, &taken));
+    TEST_CHECK(!domain_completion_take_principal(fixture.core, other, &other_token, &taken));
     domain_completion_release(fixture.core, other);
 
     /* find 对未知 token 返回 UINT32_MAX。 */

@@ -5,10 +5,10 @@
   "contract_version": "0.2.1",
   "description": "Host (Linux x86_64) dependency lock for the locker service. S1-01 established the lock shape, upstream sources, pinned commits and license obligations without downloading, vendoring or building any third-party source. S1-02 (integration owner) later vendored two of the pinned dependencies (SQLite amalgamation and cJSON) under host/storage/third_party/; that vendor step is recorded in the 'vendored' section below and does not change any pinned version, commit or archive digest.",
   "maintained_by": {
-    "owner": "integration owner (root build entry + deployment/host)",
-    "last_updated_by_card": "S1-02",
-    "last_updated_at_local": "2026-10-24",
-    "reason": "N4 of the S1-02 audit: the lock still claimed that no dependency was vendored and listed cJSON as S1-05-only after S1-02 had already vendored SQLite and cJSON."
+    "owner": "integration owner",
+    "last_updated_by_card": "S1-05",
+    "last_updated_at_local": "2026-10-28",
+    "reason": "Vendor verified network source inputs; select maintained OpenSSL 3.5 LTS instead of the previous optional 4.0 candidate."
   },
   "policy": {
     "source_of_truth": "docs/stages/stage-01-task-cards.md:17",
@@ -69,7 +69,10 @@
     },
     "cjson": {
       "consumer_card": "S1-02",
-      "consumer_cards": ["S1-02", "S1-05"],
+      "consumer_cards": [
+        "S1-02",
+        "S1-05"
+      ],
       "purpose": "Bounded JSON parsing/serialisation for REST and IPC payloads.",
       "upstream": "https://github.com/DaveGamble/cJSON",
       "license_expected": "MIT",
@@ -111,15 +114,15 @@
       "license_verified": true,
       "license": "Apache-2.0",
       "license_evidence": "deployment/host/licenses/openssl-LICENSE.txt",
-      "tag": "openssl-4.0.3",
-      "tag_published_at": "2026-09-29T13:53:57Z",
-      "commit": "af1775b60dfa141a4ad762585052cabeb9f37e9e",
-      "archive_url": "https://github.com/openssl/openssl/releases/download/openssl-4.0.3/openssl-4.0.3.tar.gz",
-      "archive_bytes": 55235667,
-      "archive_sha256": "325b5c806167c13b40b1ffeadfe0248197c00eccc4cf123ec1e28d2d2fd216d9",
+      "tag": "openssl-3.5.9",
+      "tag_published_at": "2026-09-29",
+      "commit": "45e844fa2a14ec92d146bd8f5778ac130b6625fb",
+      "archive_url": "https://github.com/openssl/openssl/releases/download/openssl-3.5.9/openssl-3.5.9.tar.gz",
+      "archive_bytes": 53279637,
+      "archive_sha256": "603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a",
       "verified": true,
-      "verified_scope": "metadata only",
-      "notes": "Candidate, not a decision. The stage documents name no TLS implementation, so S1-05 owns the choice; S1-01 only pins the most recent upstream release it could verify so the option is ready. Alternative candidates (mbedTLS, wolfSSL) are not pinned here. verified=true means the release metadata and license text were checked, NOT that OpenSSL was built or linked. OpenSSL 4.0.3 requires CMake plus Perl to build, so S1-05 must re-check the toolchain requirement before adopting it."
+      "verified_scope": "archive and vendored source SHA-256",
+      "notes": "Selected OpenSSL 3.5.9 LTS for S1-05; immutable source build outside src, no configure-time downloads. Build/runtime verification is recorded separately."
     }
   },
   "base_library": {
@@ -220,9 +223,6 @@
     ]
   },
   "unresolved": [
-    "SQLite and cJSON are now vendored (see 'vendored'); CivetWeb, libsodium and the TLS backend are still not vendored and S1-05 must add them, each confirming the recorded archive_sha256.",
-    "The TLS library choice is still S1-05's; OpenSSL 4.0.3 is pinned as a verified candidate only.",
-    "No consumer card may link a dependency while verified is false; that is a hard stop, not a warning.",
-    "S1-01 itself compiled and linked nothing; the first real third-party build is S1-02's locker_storage_thirdparty target, and its result is reported in docs/evidence/stage-01/S1-02/summary.md rather than here."
+    "S1-05 implementation and runtime acceptance remain IN_PROGRESS; source verification is not HTTPS/IPC completion."
   ]
 }

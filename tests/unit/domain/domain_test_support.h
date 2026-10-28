@@ -287,7 +287,7 @@ LOCKER_TEST_HELPER static locker_status_t dt_repo_render_page(struct locker_repo
     }
     locker_domain_json_literal(&writer, ",\"documents\":[");
 
-    cursor[0] = '\0';
+    memcpy(cursor, query->after_key, strlen(query->after_key) + 1u);
     next_key[0] = '\0';
     if (query->key[0] != '\0') {
         dt_doc_t *doc = dt_repo_find(repo, query->collection, query->key);

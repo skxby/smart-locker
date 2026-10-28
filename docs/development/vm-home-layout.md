@@ -40,3 +40,7 @@ VM用户为china。主目录 /home/%USER% 根下不保存散落脚本、日志�
 - /home/%USER%/kernel-driver-workspace/docs/import-manifest.json：最初复制归档的历史来源表，不表示旧路径仍存在。
 
 所有移动均为同一文件系统内的重命名，未永久删除文件。旧脚本可能引用原HOME路径，归档是保留证据，不能直接当作新的构建入口执行。
+
+## 构建空间与归档
+
+旧批次的src和日志保留，已清理的build目录只保留诊断，不再作为可直接运行的缓存；复验创建新build目录。源码归档可以保存为.tar.gz，解压后的原始.tar字节须与历史SHA256一致；映射见[磁盘清理记录](../evidence/environment-disk-cleanup-2026-10-28/summary.md)。当前S1-05验证脚本直接创建压缩包，并按逐文件manifest验证输入，不压缩或移动活跃源码。

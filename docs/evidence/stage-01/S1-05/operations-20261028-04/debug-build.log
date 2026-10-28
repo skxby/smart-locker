@@ -1,0 +1,173 @@
+[  1%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/sqlite/sqlite3.c.o
+[  2%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[  2%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[  3%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[  4%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[  5%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[  6%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[  6%] Linking C static library liblocker_common.a
+[  6%] Built target locker_common
+[  7%] Embedding host/storage/schema-v1.sql
+[  8%] Embedding host/storage/src/schema_records.json
+[  8%] Built target locker_storage_generated
+[  9%] Building C object host/device/CMakeFiles/locker_device.dir/src/codec.c.o
+[ 10%] Building C object host/device/CMakeFiles/locker_device.dir/src/port.c.o
+[ 11%] Building C object host/device/CMakeFiles/locker_device.dir/src/transport.c.o
+[ 12%] Building C object host/device/CMakeFiles/locker_device.dir/src/wire.c.o
+[ 12%] Linking C static library liblocker_device.a
+[ 12%] Built target locker_device
+[ 13%] Creating directories for 'locker_openssl_build'
+[ 13%] No download step for 'locker_openssl_build'
+[ 14%] No update step for 'locker_openssl_build'
+[ 15%] No patch step for 'locker_openssl_build'
+[ 16%] Performing configure step for 'locker_openssl_build'
+[ 16%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/cjson/cJSON.c.o
+[ 17%] Linking C static library liblocker_storage_thirdparty.a
+[ 17%] Built target locker_storage_thirdparty
+[ 18%] Creating directories for 'locker_sodium_build'
+[ 18%] No download step for 'locker_sodium_build'
+[ 19%] No update step for 'locker_sodium_build'
+[ 20%] No patch step for 'locker_sodium_build'
+[ 21%] Performing configure step for 'locker_sodium_build'
+-- locker_openssl_build configure command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_openssl_build-prefix/src/locker_openssl_build-stamp/locker_openssl_build-configure-*.log
+[ 22%] Performing build step for 'locker_openssl_build'
+-- locker_sodium_build configure command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_sodium_build-prefix/src/locker_sodium_build-stamp/locker_sodium_build-configure-*.log
+[ 23%] Performing build step for 'locker_sodium_build'
+-- locker_sodium_build build command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_sodium_build-prefix/src/locker_sodium_build-stamp/locker_sodium_build-build-*.log
+[ 24%] Performing install step for 'locker_sodium_build'
+-- locker_sodium_build install command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_sodium_build-prefix/src/locker_sodium_build-stamp/locker_sodium_build-install-*.log
+[ 25%] Completed 'locker_sodium_build'
+[ 25%] Built target locker_sodium_build
+[ 26%] Building C object host/http/CMakeFiles/locker_events.dir/events.c.o
+[ 27%] Linking C static library liblocker_events.a
+[ 27%] Built target locker_events
+[ 28%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_change.c.o
+[ 29%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_commands.c.o
+[ 30%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_core.c.o
+[ 31%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_auth.c.o
+[ 31%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_device.c.o
+[ 32%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_docs.c.o
+[ 33%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_import.c.o
+[ 34%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_json.c.o
+[ 35%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_loan.c.o
+[ 35%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_operation.c.o
+[ 36%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_repo.c.o
+[ 37%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_sha256.c.o
+[ 38%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_state.c.o
+[ 39%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_text.c.o
+[ 39%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time.c.o
+[ 40%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time_anchor.c.o
+[ 41%] Linking C static library liblocker_domain.a
+[ 41%] Built target locker_domain
+[ 42%] Building C object tests/unit/common/CMakeFiles/test_bounded_queue.dir/test_bounded_queue.c.o
+[ 42%] Linking C executable test_bounded_queue
+[ 42%] Built target test_bounded_queue
+[ 43%] Building C object tests/unit/common/CMakeFiles/test_build_info.dir/test_build_info.c.o
+[ 44%] Linking C executable test_build_info
+[ 44%] Built target test_build_info
+[ 45%] Building C object tests/unit/common/CMakeFiles/test_clock.dir/test_clock.c.o
+[ 46%] Linking C executable test_clock
+[ 46%] Built target test_clock
+[ 47%] Building C object tests/unit/common/CMakeFiles/test_log.dir/test_log.c.o
+[ 47%] Linking C executable test_log
+[ 47%] Built target test_log
+[ 48%] Building C object tests/unit/common/CMakeFiles/test_numeric.dir/test_numeric.c.o
+[ 49%] Linking C executable test_numeric
+[ 49%] Built target test_numeric
+[ 50%] Building C object tests/unit/common/CMakeFiles/test_uuid.dir/test_uuid.c.o
+[ 51%] Linking C executable test_uuid
+[ 51%] Built target test_uuid
+[ 52%] Building C object tests/unit/domain/CMakeFiles/test_domain_text.dir/test_domain_text.c.o
+[ 53%] Linking C executable test_domain_text
+[ 53%] Built target test_domain_text
+[ 54%] Building C object tests/unit/domain/CMakeFiles/test_domain_json.dir/test_domain_json.c.o
+[ 55%] Linking C executable test_domain_json
+[ 55%] Built target test_domain_json
+[ 56%] Building C object tests/unit/domain/CMakeFiles/test_domain_repo.dir/test_domain_repo.c.o
+[ 56%] Linking C executable test_domain_repo
+[ 56%] Built target test_domain_repo
+[ 57%] Building C object tests/unit/domain/CMakeFiles/test_domain_state.dir/test_domain_state.c.o
+[ 58%] Linking C executable test_domain_state
+[ 58%] Built target test_domain_state
+[ 58%] Building C object tests/unit/domain/CMakeFiles/test_domain_device.dir/test_domain_device.c.o
+[ 59%] Linking C executable test_domain_device
+[ 59%] Built target test_domain_device
+[ 60%] Building C object tests/unit/domain/CMakeFiles/test_domain_commands.dir/test_domain_commands.c.o
+[ 61%] Linking C executable test_domain_commands
+[ 61%] Built target test_domain_commands
+[ 62%] Building C object tests/unit/domain/CMakeFiles/test_domain_core.dir/test_domain_core.c.o
+[ 63%] Linking C executable test_domain_core
+[ 63%] Built target test_domain_core
+[ 63%] Building C object tests/contract/network/CMakeFiles/test_network_events.dir/test_events.c.o
+[ 64%] Linking C executable test_network_events
+[ 64%] Built target test_network_events
+[ 65%] Building C object tests/contract/network/CMakeFiles/test_network_core_auth.dir/test_core_auth.c.o
+[ 66%] Linking C executable test_network_core_auth
+[ 66%] Built target test_network_core_auth
+[ 66%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/event_key.c.o
+[ 67%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/regex.c.o
+[ 68%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/repository.c.o
+[ 69%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema.c.o
+[ 70%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema_embedded.c.o
+[ 70%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/u64.c.o
+[ 71%] Linking C static library liblocker_storage.a
+[ 71%] Built target locker_storage
+[ 71%] Building C object host/simulator/CMakeFiles/locker_simulator.dir/src/sim.c.o
+[ 72%] Linking C static library liblocker_simulator.a
+[ 72%] Built target locker_simulator
+[ 72%] Building C object tests/unit/storage/CMakeFiles/test_event_key.dir/test_event_key.c.o
+[ 73%] Linking C executable test_event_key
+[ 73%] Built target test_event_key
+[ 74%] Building C object tests/unit/storage/CMakeFiles/test_regex.dir/test_regex.c.o
+[ 74%] Linking C executable test_regex
+[ 74%] Built target test_regex
+[ 75%] Building C object tests/unit/storage/CMakeFiles/test_u64.dir/test_u64.c.o
+[ 75%] Linking C executable test_u64
+[ 75%] Built target test_u64
+[ 76%] Building C object tests/unit/storage/CMakeFiles/test_schema.dir/test_schema.c.o
+[ 77%] Linking C executable test_schema
+[ 77%] Built target test_schema
+[ 78%] Building C object tests/unit/storage/CMakeFiles/test_repository.dir/test_repository.c.o
+[ 79%] Linking C executable test_repository
+[ 79%] Built target test_repository
+[ 79%] Building C object tests/unit/device/CMakeFiles/test_codec.dir/test_codec.c.o
+[ 80%] Linking C executable test_codec
+[ 80%] Built target test_codec
+[ 81%] Building C object tests/unit/device/CMakeFiles/test_wire.dir/test_wire.c.o
+[ 82%] Linking C executable test_wire
+[ 82%] Built target test_wire
+[ 82%] Building C object tests/unit/device/CMakeFiles/test_sim_journal.dir/test_sim_journal.c.o
+[ 83%] Linking C executable test_sim_journal
+[ 83%] Built target test_sim_journal
+[ 84%] Building C object tests/unit/device/CMakeFiles/test_sim_protocol.dir/test_sim_protocol.c.o
+[ 85%] Linking C executable test_sim_protocol
+[ 85%] Built target test_sim_protocol
+[ 86%] Building C object tests/contract/device/CMakeFiles/test_golden_frames.dir/test_golden_frames.c.o
+[ 87%] Linking C executable test_golden_frames
+[ 87%] Built target test_golden_frames
+[ 88%] Building C object tests/contract/device/CMakeFiles/test_device_port.dir/test_device_port.c.o
+[ 88%] Linking C executable test_device_port
+[ 88%] Built target test_device_port
+[ 89%] Building C object tests/integration/CMakeFiles/test_core_interrupt_matrix.dir/test_core_interrupt_matrix.c.o
+[ 90%] Linking C executable test_core_interrupt_matrix
+[ 90%] Built target test_core_interrupt_matrix
+[ 90%] Building C object host/simulator/CMakeFiles/locker-device-sim.dir/src/sim_main.c.o
+[ 91%] Linking C executable locker-device-sim
+[ 91%] Built target locker-device-sim
+-- locker_openssl_build build command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_openssl_build-prefix/src/locker_openssl_build-stamp/locker_openssl_build-build-*.log
+[ 92%] Performing install step for 'locker_openssl_build'
+-- locker_openssl_build install command succeeded.  See also /home/%USER%/locker-workspace/S1-05/batches/operations-20261028-04/build-debug/host/http/third_party/locker_openssl_build-prefix/src/locker_openssl_build-stamp/locker_openssl_build-install-*.log
+[ 93%] Completed 'locker_openssl_build'
+[ 93%] Built target locker_openssl_build
+[ 94%] Building C object host/http/third_party/CMakeFiles/locker_civetweb.dir/civetweb/src/civetweb.c.o
+[ 95%] Linking C static library liblocker_civetweb.a
+[ 95%] Built target locker_civetweb
+[ 95%] Building C object host/http/CMakeFiles/locker_http.dir/http.c.o
+[ 96%] Building C object tests/contract/network/CMakeFiles/test_network_dependencies.dir/test_network_dependencies.c.o
+[ 97%] Linking C executable test_network_dependencies
+[ 98%] Linking C static library liblocker_http.a
+[ 98%] Built target locker_http
+[ 99%] Building C object tests/contract/network/CMakeFiles/test_auth_repository.dir/test_auth_repository.c.o
+[100%] Linking C executable test_auth_repository
+[100%] Built target test_network_dependencies
+[100%] Built target test_auth_repository

@@ -534,11 +534,17 @@ static void test_create_idempotency(void)
     {
         locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, other_args, 0x36u, 0x32u);
         TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &conflict));
+        TEST_CHECK(strstr(conflict.json, "\"code\":\"IDEMPOTENCY_CONFLICT\"") != NULL);
+        char request_id[37]; dt_uuid_text(&command.request_id, request_id, sizeof(request_id));
+        TEST_CHECK(strstr(conflict.json, request_id) != NULL);
     }
     /* 同一幂等键、不同用户 -> CONFLICT。 */
     {
         locker_command_t command = dc_command(&other, LOCKER_CORE_OPERATION_CREATE, args, 0x37u, 0x32u);
         TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &conflict));
+        TEST_CHECK(strstr(conflict.json, "\"code\":\"IDEMPOTENCY_CONFLICT\"") != NULL);
+        char request_id[37]; dt_uuid_text(&command.request_id, request_id, sizeof(request_id));
+        TEST_CHECK(strstr(conflict.json, request_id) != NULL);
     }
     TEST_CHECK_U64(commit_before, (uint64_t)fixture.repo->commit_calls);
 
@@ -1111,6 +1117,9 @@ static void test_action_idempotency(void)
                                               "{\"operation_revision\":\"9\"}", 0x44u, 0x42u);
         command.resource_id = id;
         TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &conflict));
+        TEST_CHECK(strstr(conflict.json, "\"code\":\"IDEMPOTENCY_CONFLICT\"") != NULL);
+        char request_id[37]; dt_uuid_text(&command.request_id, request_id, sizeof(request_id));
+        TEST_CHECK(strstr(conflict.json, request_id) != NULL);
     }
     dt_fixture_free(&fixture);
 
@@ -1873,7 +1882,8 @@ static void test_query_dispatch(void)
     /* OPERATION_GET 命中与未命中。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_OPERATION_GET);
     query.resource_id = id;
-    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, dc_run_query(&fixture, &query, &result));
+    /* Missing and inaccessible public resources use the same query status. */
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_query(&fixture, &query, &result));
     TEST_CHECK(dt_seed_operation(&fixture, &id, &tool, &principal.user_id, LOCKER_OPERATION_KIND_BORROW,
                                  LOCKER_OPERATION_STATE_REQUESTED, 2u, "2025-10-21T00:00:00Z"));
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
@@ -1946,14 +1956,21 @@ static void test_query_dispatch(void)
     fixture.core->loan_borrow_operation_id = id;
     (void)snprintf(fixture.core->loan_opened_at, sizeof(fixture.core->loan_opened_at), "%s",
                    "2025-10-21T00:00:00Z");
+    char loan_json[2048], loan_key[37]; locker_json_writer_t loan_writer;
+    locker_domain_json_writer_init(&loan_writer,loan_json,sizeof(loan_json));
+    domain_write_loan(&loan_writer,&tool,&tool,&principal.user_id,&id,NULL,false,fixture.core->loan_opened_at,NULL,false);
+    dt_uuid_text(&tool,loan_key,sizeof(loan_key)); TEST_CHECK(dt_repo_put(fixture.repo,"loans",loan_key,loan_json));
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
     TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"return_operation_id\":null"));
     TEST_CHECK(test_text_contains(result.json, "\"closed_at\":null"));
 
-    /* 归 S1-05/S2 的命令不空实现冒充。 */
+    /* 当前会话只能投影本人公开用户字段。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_SESSION_CURRENT);
-    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
+    TEST_CHECK(test_text_contains(result.json, "\"username\":\"tester\""));
+    TEST_CHECK(!test_text_contains(result.json, "password_hash"));
 
     dt_fixture_free(&fixture);
 }
@@ -1976,7 +1993,7 @@ static void test_job_dispatch(void)
     admin = dt_principal(LOCKER_ROLE_ADMIN, 0x80u);
     TEST_CHECK(dt_seed_principal(&fixture, &admin));
 
-    /* 认证端口在 S1-04 只是占位：明确 NOT_READY，不伪造成功。 */
+    /* 非真实 token 在启用认证时拒绝；无网络依赖的基础构建保持 NOT_READY。 */
     slot = domain_completion_acquire(fixture.core, &token);
     TEST_CHECK(slot != UINT32_MAX);
     memset(&job, 0, sizeof(job));
@@ -1993,7 +2010,11 @@ static void test_job_dispatch(void)
         memset(&result, 0, sizeof(result));
         TEST_CHECK_STATUS(LOCKER_STATUS_OK,
                           domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
+#ifdef LOCKER_TEST_NETWORK_AUTH
+        TEST_CHECK(result.status == LOCKER_STATUS_INVALID);
+#else
         TEST_CHECK(result.status == LOCKER_STATUS_NOT_READY);
+#endif
     }
     domain_completion_release(fixture.core, slot);
 
@@ -2061,8 +2082,43 @@ static void test_job_dispatch(void)
     dt_fixture_free(&fixture);
 }
 
+static void test_card_binding(void)
+{
+    dt_fixture_t fixture; TEST_CHECK(dt_fixture_init(&fixture, false)); dt_core_ready(&fixture);
+    locker_principal_t admin=dt_principal(LOCKER_ROLE_ADMIN,0x71u);
+    TEST_CHECK(dt_seed_principal(&fixture,&admin));
+    fixture.core->last_card.valid=true; fixture.core->last_card.mono_ms=fixture.clock.monotonic_ms;
+    fixture.core->last_card.uid_len=4;
+    memcpy(fixture.core->last_card.uid,"ABCD",4);
+    dt_uuid_fill(&fixture.core->last_card.id,0x44u);
+    char observation[37], args[256]; dt_uuid_text(&fixture.core->last_card.id,observation,sizeof(observation));
+    snprintf(args,sizeof(args),"{\"user_revision\":\"1\",\"observation_id\":\"%s\"}",observation);
+    locker_command_t c=dc_command(&admin,LOCKER_CORE_CARD_BIND,args,0x22u,0x23u); c.resource_id=admin.user_id;
+    locker_query_result_t result, replay;
+    fixture.repo->commit_status=LOCKER_STATUS_IO_ERROR;
+    TEST_CHECK_STATUS(LOCKER_STATUS_IO_ERROR,dc_run_command(&fixture,&c,&result));
+    TEST_CHECK(!fixture.core->last_card.consumed);
+    TEST_CHECK_U64(0u,fixture.core->revision);
+    fixture.repo->commit_status=LOCKER_STATUS_OK;
+    fixture.core->last_card.mono_ms=0;
+    domain_now_advance(fixture.core,LOCKER_CARD_OBSERVATION_MS+1);
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID,dc_run_command(&fixture,&c,&result));
+    fixture.core->last_card.mono_ms=domain_now(fixture.core);
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,dc_run_command(&fixture,&c,&result));
+    TEST_CHECK(strstr(result.json,"\"bound\":true")!=NULL);
+    TEST_CHECK(strstr(result.json,"****4344")!=NULL);
+    TEST_CHECK(fixture.core->last_card.consumed);
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,dc_run_command(&fixture,&c,&replay));
+    TEST_CHECK_STRING(result.json,replay.json);
+    c=dc_command(&admin,LOCKER_CORE_CARD_UNBIND,"{\"user_revision\":\"2\"}",0x24u,0x25u); c.resource_id=admin.user_id;
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,dc_run_command(&fixture,&c,&result));
+    TEST_CHECK(strstr(result.json,"\"bound\":false")!=NULL);
+    dt_fixture_free(&fixture);
+}
+
 int main(void)
 {
+    test_card_binding();
     test_create_guards();
     test_create_success();
     test_create_idempotency();

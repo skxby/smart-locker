@@ -2,7 +2,7 @@
 
 视觉新增端口的参数/DTO、sink、装配/退出及持久化见[视觉接口](vision-interfaces.md)。下文无视觉的装配用于DISABLED_FOR_FOUNDATION；REQUIRED在Core启动前绑定视觉适配器。NPU不进入Core线程，视觉协议不复用UI方法表。
 
-当前跨端契约版本0.2.1：70个原生C端口、28个业务/监督RPC方法。按[接口实施归属](traceability.md)逐卡实现；下列声明不代表已有代码。
+当前跨端契约版本0.2.1：82个原生C端口、28个业务/监督RPC方法。按[接口实施归属](traceability.md)逐卡实现；下列声明不代表已有代码。
 
 状态：阶段 0 设计声明，无业务实现。上位决策见 `docs/stages/stage-00-architecture.md`；字节字段以 `contracts/uart-layouts.json` 为真源，枚举和 C 声明由根合同统一生成。本文件定义逻辑端口及所有权，不允许实现 AI 通过另加直连路径绕过它们。
 
@@ -218,3 +218,11 @@ RECOVER返回已提交epoch/boot、动作水位、首尾/ACK游标、活动意�
 FINALIZE仅持久化该活动command已明确未驱动/完成等终结状态，不能反悔已接纳水位；无法确认则UNKNOWN_RESULT。RELEASE只在Control已验证闭门/无脉冲/原guard与关联后提交清空活动检查点，保留水位和日志。管理回执control_result(token,status,state)仅借用state，复制入Control队列再调用on_journal_result；普通committed回执的state参数传NULL。失败不发成功响应/不清活动状态。token在全部回执收敛前不重用，不按单个全局变量关联。
 
 S2-04实现这四操作与断电/失败测试，S2-05绑定sink与Control处理，S2-08验证恢复元数据、屏障和持久释放后才响应。Journal/Control/Communication上下文存活到任务全部停止，不靠将同名JSON/结构裸发串口实现。
+
+## S1-05 本机请求完成语义
+
+`locker_presence_t` 与 `locker_maintenance_t` 包含 request_id/idempotency_key。两个 locker_local_* 端口接受可选 locker_receipt_t 输出：传入输出时，返回 QUEUED 及服务进程内部 submission_token，由 locker_core_wait_result 取得真实完成结果；不向客户端暴露该令牌。receipt=NULL 保留进程内异步投递用途，其 OK 只表示入队，不用于 IPC 业务成功响应。
+
+Core 对关联的到柜证明先核对 peer、当前用户和操作 owner；证明与幂等接受响应同一事务持久化，成功后才尝试武装。维护请求核对 ADMIN peer/会话、当前 epoch/boot/版本、稳定门/物品与账本、无活动操作及健康连续日志；审计原因与幂等响应同事务持久化，之后才发送带版本守卫的 RESUME_READY。接受响应不是开门或恢复就绪完成。
+
+实时卡观察只接受当前会话、未被已应用游标覆盖的事件，并用有效 MCU 时间锚核对来源年龄；没有时间锚时不把到达时间当作新鲜观察。绑定窗口30秒，到柜证明窗口15秒。卡证明限定观察当时的 pending operation；设备上下文释放尚未完成时，可在原窗口内等待同一操作，不能用于后建操作或历史重放。账号启用状态与 UID 绑定在使用时复核。

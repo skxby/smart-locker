@@ -19,6 +19,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#ifdef LOCKER_NETWORK_AUTH
+#include <sodium.h>
+#endif
 
 #include "locker/common/log.h"
 /* 幂等记录的有效期（契约 LOCKER_IDEMPOTENCY_DAYS 天）。 */
@@ -88,7 +91,7 @@ static locker_status_t manual_audit_append(locker_core_t *core, domain_change_t 
    （审计 round-5：理由长度校验不符合字符数契约）。 */
 static size_t audit_char_count(const char *text, size_t length);
 static size_t audit_prefix_bytes(const char *text, size_t length, size_t max_chars);
-static locker_status_t idempotency_append(locker_core_t *core, domain_change_t *change,
+locker_status_t domain_idempotency_append(locker_core_t *core, domain_change_t *change,
                                           const locker_command_t *command, const char *request_hash,
                                           const char *response_json);
 static void build_operation_response(locker_core_t *core, locker_json_writer_t *writer,
@@ -220,6 +223,17 @@ static void response_finish_json(locker_core_t *core, uint32_t slot, locker_stat
                              core->revision);
 }
 
+static void response_idempotency_conflict(locker_core_t *core,uint32_t slot,const locker_uuid_t *request_id)
+{
+        char id[37]; domain_uuid_to_text(request_id, id, sizeof(id));
+        int length = snprintf(core->response_buffer, sizeof(core->response_buffer),
+            "{\"error\":{\"code\":\"IDEMPOTENCY_CONFLICT\",\"message\":\"Idempotency key conflicts\","
+            "\"retryable\":false,\"operation_id\":null},\"request_id\":\"%s\"}", id);
+        domain_completion_accept(core, slot, &core->job_token, LOCKER_STATUS_CONFLICT, NULL, false);
+        domain_completion_finish(core, slot, &core->job_token, LOCKER_STATUS_CONFLICT,
+            core->response_buffer, (size_t)length, core->revision);
+}
+
 /* ---------- 占位与生命周期 ---------- */
 
 /* 终结操作：释放占位、清活动副本、发布变化。
@@ -292,7 +306,7 @@ static locker_status_t finish_operation(locker_core_t *core, domain_operation_t 
         }
     }
     if (has_idempotency) {
-        status = idempotency_append(core, &change, extras->command, extras->request_hash, response->buffer);
+        status = domain_idempotency_append(core, &change, extras->command, extras->request_hash, response->buffer);
         if (status != LOCKER_STATUS_OK) {
             return status;
         }
@@ -449,7 +463,21 @@ static bool hash_arguments(locker_core_t *core, const locker_command_t *command,
     char value_text[4097];
     for (uint32_t i = 0u; i < count; ++i) {
         size_t rendered = 0u;
-        if (!locker_domain_json_render(&doc, entries[i].node, value_text, sizeof(value_text), &rendered) ||
+        if (!strcmp(command->kind,LOCKER_CORE_USER_CREATE) && !strcmp(entries[i].key,"password")) {
+#ifdef LOCKER_NETWORK_AUTH
+            char password[513]; unsigned char derived[32]; size_t password_length=0;
+            if (locker_uuid_is_nil(&command->idempotency_key) || sodium_init()<0 ||
+                !locker_domain_json_text(&doc,entries[i].node,password,sizeof(password),&password_length)) return false;
+            int status=crypto_pwhash(derived,sizeof(derived),password,password_length,command->idempotency_key.bytes,
+                crypto_pwhash_OPSLIMIT_INTERACTIVE,crypto_pwhash_MEMLIMIT_INTERACTIVE,crypto_pwhash_ALG_ARGON2ID13);
+            sodium_memzero(password,sizeof(password));
+            if (status) { sodium_memzero(derived,sizeof(derived)); return false; }
+            sodium_bin2hex(value_text,sizeof(value_text),derived,sizeof(derived)); rendered=64;
+            sodium_memzero(derived,sizeof(derived));
+#else
+            return false;
+#endif
+        } else if (!locker_domain_json_render(&doc, entries[i].node, value_text, sizeof(value_text), &rendered) ||
             rendered == 0u || rendered >= sizeof(value_text)) {
             return false;
         }
@@ -480,6 +508,8 @@ static bool build_request_hash(locker_core_t *core, const locker_command_t *comm
     locker_domain_sha256_update(&hash, "\0", 1u);
     /* 语义规范化失败时退回原文（见 hash_arguments 的注释）。 */
     if (!hash_arguments(core, command, &hash)) {
+        /* A credential-bearing request must never fall back to a fast verifier. */
+        if (!strcmp(command->kind,LOCKER_CORE_USER_CREATE)) return false;
         locker_domain_sha256_update(&hash, command->arguments_json,
                                     domain_strnlen(command->arguments_json, sizeof(command->arguments_json)));
     }
@@ -509,7 +539,7 @@ static bool build_request_hash(locker_core_t *core, const locker_command_t *comm
 
    响应体按「提交后的版本」写：change 提交成功会让 core->revision 加一，所以
    调用方要按 core->revision + 1u 渲染这份 JSON。 */
-static locker_status_t idempotency_append(locker_core_t *core, domain_change_t *change,
+locker_status_t domain_idempotency_append(locker_core_t *core, domain_change_t *change,
                                           const locker_command_t *command, const char *request_hash,
                                           const char *response_json)
 {
@@ -648,7 +678,7 @@ static locker_status_t parse_create_request(locker_core_t *core, const locker_co
         return LOCKER_STATUS_INVALID;
     }
     const locker_json_node_t *root = locker_domain_json_root(&doc);
-    if (root == NULL || root->type != LOCKER_JSON_OBJECT) {
+    if (root == NULL || root->type != LOCKER_JSON_OBJECT || root->count!=3) {
         return LOCKER_STATUS_INVALID;
     }
     if (!domain_json_read_uuid(&doc, domain_json_member(&doc, root, "tool_id"), out_tool_id)) {
@@ -851,7 +881,7 @@ static bool parse_revision_request(locker_core_t *core, const locker_command_t *
         return false;
     }
     const locker_json_node_t *root = locker_domain_json_root(&doc);
-    if (root == NULL || root->type != LOCKER_JSON_OBJECT) {
+    if (root == NULL || root->type != LOCKER_JSON_OBJECT || root->count!=(require_reason ? 2u : 1u)) {
         return false;
     }
     if (!domain_json_read_u64(&doc, domain_json_member(&doc, root, "operation_revision"), out_revision)) {
@@ -1043,7 +1073,7 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
     uint64_t physical_revision = 0u;
     uint8_t resolution = 0u;
     char reason[257];
-    if (root == NULL || !domain_json_read_u64(&doc, domain_json_member(&doc, root, "operation_revision"), &revision) ||
+    if (root == NULL || root->type!=LOCKER_JSON_OBJECT || root->count!=4 || !domain_json_read_u64(&doc, domain_json_member(&doc, root, "operation_revision"), &revision) ||
         !domain_json_read_u64(&doc, domain_json_member(&doc, root, "physical_revision"), &physical_revision) ||
         !domain_json_read_text(&doc, domain_json_member(&doc, root, "resolution"), reason, sizeof(reason))) {
         response_finish(core, slot, LOCKER_STATUS_INVALID, false, NULL);
@@ -1058,7 +1088,7 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
     }
     char note[4097];
     if (!domain_json_read_text(&doc, domain_json_member(&doc, root, "reason"), note, sizeof(note)) ||
-        audit_char_count(note, strlen(note)) < 5u) {
+        audit_char_count(note, strlen(note)) < 5u || audit_char_count(note, strlen(note)) > 256u) {
         response_finish(core, slot, LOCKER_STATUS_INVALID, false, NULL);
         return LOCKER_STATUS_INVALID;
     }
@@ -1679,23 +1709,70 @@ void domain_timeouts(locker_core_t *core)
 
 /* ---------- 设备事件 / 响应 ---------- */
 
+static void card_presence_pump(locker_core_t *core)
+{
+    if (core->last_card.valid && locker_uuid_equal(&core->last_card.pending_operation_id,&core->active.id) &&
+        core->last_card.key.boot_id==core->session.boot_id && locker_uuid_equal(&core->last_card.key.journal_epoch,&core->session.journal_epoch) && core->active.used && core->active.state==LOCKER_OPERATION_STATE_REQUESTED && !core->last_card.consumed &&
+        domain_now(core)-core->last_card.mono_ms<=LOCKER_PRESENCE_TTL_MS) {
+        char uid[21], user_id[37]; static const char hex[]="0123456789abcdef";
+        for (size_t i=0;i<core->last_card.uid_len;++i) { uid[i*2]=hex[core->last_card.uid[i]>>4]; uid[i*2+1]=hex[core->last_card.uid[i]&15]; }
+        uid[core->last_card.uid_len*2]=0;
+        domain_doc_t index;
+        locker_uuid_t owner;
+        if (domain_repo_doc(core,0,"card_uid_index",uid,&index)==LOCKER_STATUS_OK && index.found &&
+            domain_json_read_uuid(&index.doc,domain_json_member(&index.doc,index.value,"resource_id"),&owner) &&
+            locker_uuid_equal(&owner,&core->active.actor_id) && domain_uuid_to_text(&owner,user_id,sizeof(user_id))) {
+            domain_doc_t user;
+            if (domain_repo_doc(core,0,"users",user_id,&user)==LOCKER_STATUS_OK && user.found) {
+                const locker_json_node_t *u=domain_json_member(&user.doc,user.value,"user"); bool enabled=false;
+                if (domain_json_read_bool(&user.doc,domain_json_member(&user.doc,u,"enabled"),&enabled) && enabled) {
+                    locker_presence_t presence={0}; presence.principal.user_id=owner;
+                    presence.operation_id=core->active.id; presence.operation_revision=core->last_card.pending_operation_revision;
+                    if (presence_apply(core,&presence,1u)==LOCKER_STATUS_OK) {
+                        core->active.proof_ms=core->last_card.mono_ms;
+                        core->last_card.consumed=true; core->last_card.user_resolved=true; core->last_card.user_id=owner;
+                        if (operation_arm(core)==LOCKER_STATUS_OK) domain_outbox_pump(core);
+                    }
+                }
+            }
+        }
+    }
+}
+
 void domain_handle_device_event(locker_core_t *core, const locker_device_event_t *event, uint32_t completion)
 {
+    bool new_card=false;
+    uint64_t card_low=0,card_high=0;
     if (atomic_exchange(&core->event_overflow_flag, false)) {
         core->event_overflow = true;
         core->fetch_gap = true;
         core->cursor.continuity_ok = false;
     }
     if (event->event_type == LOCKER_DEVICE_EVENT_CARD_OBSERVED && event->live_transport &&
-        event->card_uid_len != 0u && event->card_uid_len <= sizeof(core->last_card.uid)) {
+        (event->card_uid_len == 4 || event->card_uid_len == 7 || event->card_uid_len == 10) &&
+        core->session.valid && event->key.boot_id == core->session.boot_id &&
+        locker_uuid_equal(&event->key.journal_epoch, &core->session.journal_epoch) &&
+        (!core->cursor.valid || core->cursor.through.boot_id!=event->key.boot_id || event->key.event_seq>core->cursor.through.event_seq) &&
+        domain_anchor_mcu_now(core,&card_low,&card_high)==LOCKER_STATUS_OK && event->mono_ms<=card_high &&
+        card_high-event->mono_ms<=LOCKER_CARD_OBSERVATION_MS && domain_now(core)>=card_high-event->mono_ms &&
+        (!core->last_card.valid || !locker_uuid_equal(&event->key.journal_epoch, &core->last_card.key.journal_epoch) ||
+         event->key.boot_id != core->last_card.key.boot_id || event->key.event_seq > core->last_card.key.event_seq) &&
+        locker_clock_port_new_uuid(&core->clock, &core->last_card.id) == LOCKER_STATUS_OK) {
         /* 历史补传（live_transport == false）只补记录，绝不产生柜前证明。 */
+        new_card=true;
         core->last_card.valid = true;
-        core->last_card.mono_ms = domain_now(core);
+        core->last_card.consumed = false; core->last_card.key = event->key;
+        memset(&core->last_card.pending_operation_id,0,sizeof(core->last_card.pending_operation_id));
+        if (core->active.used && core->active.state==LOCKER_OPERATION_STATE_REQUESTED) {
+            core->last_card.pending_operation_id=core->active.id; core->last_card.pending_operation_revision=core->active.revision;
+        }
+        core->last_card.mono_ms = domain_now(core)-(card_high-event->mono_ms);
         core->last_card.uid_len = event->card_uid_len;
         memcpy(core->last_card.uid, event->card_uid, event->card_uid_len);
         core->last_card.user_resolved = false;
     }
     domain_event_apply(core, event);
+    if (new_card) card_presence_pump(core);
     if (completion != UINT32_MAX) {
         domain_completion_fail(core, completion, LOCKER_STATUS_OK);
     }
@@ -1715,25 +1792,15 @@ void domain_handle_device_reply(locker_core_t *core, const locker_device_reply_t
 
 /* ---------- 认证 ---------- */
 
-void domain_handle_auth(locker_core_t *core, const domain_job_t *job)
-{
-    (void)core;
-    (void)job;
-    /* 真实凭据校验归 S1-05；见 locker_core_authenticate 的说明。 */
-    if (job->completion != UINT32_MAX) {
-        domain_completion_accept(core, job->completion, &job->completion_token, LOCKER_STATUS_NOT_READY, NULL,
-                                 false);
-        domain_completion_finish(core, job->completion, &job->completion_token, LOCKER_STATUS_NOT_READY, NULL, 0u,
-                                 core->revision);
-    }
-}
-
 /* ---------- 查询 ---------- */
 
 static locker_status_t query_operation_get(locker_core_t *core, const locker_query_t *query, uint32_t slot)
 {
     domain_operation_t operation;
     locker_status_t status = domain_operation_load(core, &query->resource_id, 0, &operation);
+    /* The loader uses NOT_READY for an absent record. Public lookup must not
+     * distinguish absence from an operation owned by another user. */
+    if (status == LOCKER_STATUS_NOT_READY) status = LOCKER_STATUS_INVALID;
     if (status != LOCKER_STATUS_OK) {
         response_finish(core, slot, status, false, NULL);
         return status;
@@ -1806,7 +1873,7 @@ static void scan_operations(locker_core_t *core, locker_json_writer_t *writer, u
     }
 }
 
-static locker_status_t query_list(locker_core_t *core, const locker_query_t *query, uint32_t slot, bool reviews)
+static locker_status_t query_reviews(locker_core_t *core, const locker_query_t *query, uint32_t slot)
 {
     locker_json_writer_t writer;
     domain_response_begin(&writer, core->response_buffer, sizeof(core->response_buffer));
@@ -1817,36 +1884,8 @@ static locker_status_t query_list(locker_core_t *core, const locker_query_t *que
     locker_domain_json_key(&writer, "items");
     locker_domain_json_literal(&writer, "[");
     uint32_t written = 0u;
-    if (reviews) {
-        scan_operations(core, &writer, &written, true);
-    }
+    scan_operations(core, &writer, &written, true);
     locker_domain_json_literal(&writer, "]");
-    if (!reviews) {
-        /* loans / events 分页游标：首版一次返回全部，未读完由后续卡接续。 */
-        locker_domain_json_literal(&writer, ",\"next_cursor\":");
-        locker_domain_json_null(&writer);
-    }
-    /* 不在这里补 `}`：data 对象的关闭由 domain_response_end 负责。 */
-    domain_response_end(&writer, core->revision, &query->request_id);
-    response_finish_json(core, slot, LOCKER_STATUS_OK, false, NULL, &writer);
-    return LOCKER_STATUS_OK;
-}
-
-static locker_status_t query_loans(locker_core_t *core, const locker_query_t *query, uint32_t slot)
-{
-    locker_json_writer_t writer;
-    domain_response_begin(&writer, core->response_buffer, sizeof(core->response_buffer));
-    if (!domain_response_data_object(&writer)) {
-        response_finish(core, slot, LOCKER_STATUS_NO_SPACE, false, NULL);
-        return LOCKER_STATUS_NO_SPACE;
-    }
-    locker_domain_json_key(&writer, "items");
-    locker_domain_json_literal(&writer, "[");
-    if (core->loan_open) {
-        write_loan_object(&writer, core);
-    }
-    locker_domain_json_literal(&writer, "],\"next_cursor\":");
-    locker_domain_json_null(&writer);
     /* 不在这里补 `}`：data 对象的关闭由 domain_response_end 负责。 */
     domain_response_end(&writer, core->revision, &query->request_id);
     response_finish_json(core, slot, LOCKER_STATUS_OK, false, NULL, &writer);
@@ -1914,11 +1953,11 @@ static locker_status_t query_snapshot(locker_core_t *core, const locker_query_t 
         write_tool_object(&writer, core);
     }
     locker_domain_json_literal(&writer, "],\"active_operations\":[");
-    if (core->active.used && !domain_terminal_state(core->active.state)) {
+    if (core->active.used && !domain_terminal_state(core->active.state) && (query->principal.role==LOCKER_ROLE_ADMIN || locker_uuid_equal(&core->active.actor_id,&query->principal.user_id))) {
         domain_write_operation_projection(&writer, core, &core->active);
     }
     locker_domain_json_literal(&writer, "],\"loans\":[");
-    if (core->loan_open) {
+    if (core->loan_open && (query->principal.role==LOCKER_ROLE_ADMIN || locker_uuid_equal(&core->loan_borrower_id,&query->principal.user_id))) {
         write_loan_object(&writer, core);
     }
     /* 不在这里补 `}`：data 对象的关闭由 domain_response_end 负责。 */
@@ -1930,6 +1969,7 @@ static locker_status_t query_snapshot(locker_core_t *core, const locker_query_t 
 
 void domain_handle_query(locker_core_t *core, const domain_job_t *job)
 {
+    if (domain_handle_session_query(core, job) || domain_handle_user_query(core, job) || domain_handle_history_query(core, job)) return;
     const locker_query_t *query = &job->body.query;
     uint32_t slot = job->completion;
     locker_status_t status = domain_principal_check(core, &query->principal);
@@ -1947,8 +1987,7 @@ void domain_handle_query(locker_core_t *core, const domain_job_t *job)
         query_tools(core, query, slot, true);
     } else if (strcmp(query->kind, LOCKER_CORE_OPERATION_GET) == 0) {
         query_operation_get(core, query, slot);
-    } else if (strcmp(query->kind, LOCKER_CORE_LOANS_LIST) == 0) {
-        query_loans(core, query, slot);
+
     } else if (strcmp(query->kind, LOCKER_CORE_REVIEWS_LIST) == 0) {
         /* 核验队列是管理员视图（contract-source.json:1484-1487）：普通用户拿到它
            等于能看到别人所有待核验的操作和原因码（审计 R1-B-13）。 */
@@ -1956,11 +1995,7 @@ void domain_handle_query(locker_core_t *core, const domain_job_t *job)
             response_finish(core, slot, LOCKER_STATUS_INVALID, false, NULL);
             return;
         }
-        query_list(core, query, slot, true);
-    } else if (strcmp(query->kind, LOCKER_CORE_EVENTS_LIST) == 0) {
-        /* 阶段 1 的 18 个仓储集合里没有 events：公开事件流由审计/设备事件派生，
-           归 S1-05 适配层；这里返回空页而不是伪造历史。 */
-        query_list(core, query, slot, false);
+        query_reviews(core, query, slot);
     } else {
         /* SESSION、USERS、CARD、VISION 四类命令归 S1-05 / S2：不空实现冒充。 */
         response_finish(core, slot, LOCKER_STATUS_NOT_READY, false, NULL);
@@ -1971,6 +2006,7 @@ void domain_handle_query(locker_core_t *core, const domain_job_t *job)
 
 void domain_handle_command(locker_core_t *core, const domain_job_t *job)
 {
+    if (domain_handle_session_command(core, job)) return;
     const locker_command_t *command = &job->body.command;
     uint32_t slot = job->completion;
     locker_status_t status = domain_principal_check(core, &command->principal);
@@ -1978,9 +2014,11 @@ void domain_handle_command(locker_core_t *core, const domain_job_t *job)
         response_finish(core, slot, status, false, NULL);
         return;
     }
-    if (core->phase != DOMAIN_PHASE_READY) {
-        response_finish(core, slot, LOCKER_STATUS_NOT_READY, false, NULL);
-        return;
+    if ((!strncmp(command->kind,"USER_",5) || !strncmp(command->kind,"CARD_",5) || !strcmp(command->kind,LOCKER_CORE_OPERATION_RESOLVE)) &&
+        command->principal.role!=LOCKER_ROLE_ADMIN) { response_finish(core,slot,LOCKER_STATUS_INVALID,false,NULL); return; }
+    bool public_mutation=!strncmp(command->kind,"OPERATION_",10) || !strncmp(command->kind,"USER_",5) || !strncmp(command->kind,"CARD_",5);
+    if (public_mutation && !locker_domain_json_validate_command(command->arguments_json,command->kind)) {
+        response_finish(core,slot,LOCKER_STATUS_INVALID,false,NULL); return;
     }
     /* 幂等：同一 key + 同一哈希返回原响应，不产生新 operation。 */
     char request_hash[65];
@@ -1996,11 +2034,15 @@ void domain_handle_command(locker_core_t *core, const domain_job_t *job)
     locker_domain_json_writer_init(&replay, core->response_buffer, sizeof(core->response_buffer));
     domain_idempotency_result_t idem = idempotency_lookup(core, command, request_hash, &replay, NULL);
     if (idem == DOMAIN_IDEMPOTENCY_CONFLICT) {
-        response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
-        return;
+        response_idempotency_conflict(core,slot,&command->request_id); return;
     }
     if (idem == DOMAIN_IDEMPOTENCY_REPLAY) {
         response_finish_json(core, slot, LOCKER_STATUS_OK, false, NULL, &replay);
+        return;
+    }
+    if (domain_handle_user_command(core, job, request_hash) || domain_handle_card_command(core, job, request_hash)) return;
+    if (core->phase != DOMAIN_PHASE_READY) {
+        response_finish(core, slot, LOCKER_STATUS_NOT_READY, false, NULL);
         return;
     }
     if (strcmp(command->kind, LOCKER_CORE_OPERATION_CREATE) == 0) {
@@ -2016,8 +2058,85 @@ void domain_handle_command(locker_core_t *core, const domain_job_t *job)
     }
 }
 
+/* Correlated local requests persist their idempotent acknowledgement before
+ * any later arming/resume work. Legacy in-process fire-and-forget callers use
+ * completion==UINT32_MAX and keep the asynchronous port semantics. */
+static void local_request(locker_core_t *core, const domain_job_t *job, bool maintenance)
+{
+    const locker_presence_t *presence=&job->body.presence.presence;
+    const locker_maintenance_t *request=&job->body.maintenance.maintenance;
+    locker_command_t c={0};
+    if (maintenance) {
+        c.principal=request->principal; c.request_id=request->request_id; c.idempotency_key=request->idempotency_key;
+        strcpy(c.kind,"MAINTENANCE_RECONCILE");
+        char epoch[37]; domain_uuid_to_text(&request->journal_epoch,epoch,sizeof(epoch));
+        locker_json_writer_t args; locker_domain_json_writer_init(&args,c.arguments_json,sizeof(c.arguments_json));
+        locker_domain_json_literal(&args,"{\"epoch\":"); locker_domain_json_string(&args,epoch);
+        char numbers[256]; snprintf(numbers,sizeof(numbers),",\"boot\":\"%llu\",\"physical\":\"%llu\",\"snapshot\":\"%llu\",\"reason\":",
+            (unsigned long long)request->expected_boot_id,(unsigned long long)request->physical_revision,(unsigned long long)request->snapshot_revision);
+        locker_domain_json_literal(&args,numbers); locker_domain_json_string(&args,request->reason); locker_domain_json_literal(&args,"}");
+    } else {
+        c.principal=presence->principal; c.request_id=presence->request_id; c.idempotency_key=presence->idempotency_key; c.resource_id=presence->operation_id;
+        strcpy(c.kind,"PRESENCE_SUBMIT");
+        snprintf(c.arguments_json,sizeof(c.arguments_json),"{\"operation_revision\":\"%llu\"}",(unsigned long long)presence->operation_revision);
+    }
+    locker_status_t status=domain_principal_check(core,&c.principal);
+    char hash[65];
+    if (status!=LOCKER_STATUS_OK || !build_request_hash(core,&c,hash,sizeof(hash))) { response_finish(core,job->completion,LOCKER_STATUS_INVALID,false,NULL); return; }
+    locker_json_writer_t replay; locker_domain_json_writer_init(&replay,core->response_buffer,sizeof(core->response_buffer));
+    domain_idempotency_result_t idem=idempotency_lookup(core,&c,hash,&replay,NULL);
+    if (idem==DOMAIN_IDEMPOTENCY_REPLAY) { response_finish_json(core,job->completion,LOCKER_STATUS_OK,false,NULL,&replay); return; }
+    if (idem==DOMAIN_IDEMPOTENCY_CONFLICT) { response_idempotency_conflict(core,job->completion,&c.request_id); return; }
+    domain_operation_t before=core->active;
+    if (maintenance) {
+        size_t reason_length=domain_strnlen(request->reason,sizeof(request->reason));
+        if (c.principal.role!=LOCKER_ROLE_ADMIN || !job->body.maintenance.peer.verified_admin_peer ||
+            reason_length==sizeof(request->reason) || audit_char_count(request->reason,reason_length)<5 ||
+            audit_char_count(request->reason,reason_length)>256) status=LOCKER_STATUS_INVALID;
+        else if (core->active.used && !domain_terminal_state(core->active.state)) status=LOCKER_STATUS_CONFLICT;
+        else if (!physical_evidence_fresh(core,domain_now(core)) || core->physical.door!=LOCKER_DOOR_STATE_CLOSED ||
+            core->physical.item!=(core->loan_open ? LOCKER_ITEM_STATE_ABSENT : LOCKER_ITEM_STATE_PRESENT) ||
+            core->session.journal_state!=LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY || !core->cursor.continuity_ok) status=LOCKER_STATUS_NOT_READY;
+        else if (!locker_uuid_equal(&request->journal_epoch,&core->session.journal_epoch) || request->expected_boot_id!=core->session.boot_id ||
+            request->physical_revision!=core->physical.physical_revision || request->snapshot_revision!=core->revision) status=LOCKER_STATUS_CONFLICT;
+    } else {
+        if (!job->body.presence.peer.verified_ui_peer && !job->body.presence.peer.verified_admin_peer) status=LOCKER_STATUS_INVALID;
+        else status=presence_apply(core,presence,2u);
+    }
+    if (status!=LOCKER_STATUS_OK) { response_finish(core,job->completion,status,false,NULL); return; }
+    domain_change_t change; domain_change_init(core,&change,core->revision,core->revision+1);
+    locker_json_writer_t response;
+    if (maintenance) {
+        locker_uuid_t audit; char key[37], stamp[32]; uint64_t wall=0;
+        if (locker_clock_port_new_uuid(&core->clock,&audit)!=LOCKER_STATUS_OK ||
+            !domain_uuid_to_text(&audit,key,sizeof(key)) || locker_clock_port_wall_utc_ms(&core->clock,&wall)!=LOCKER_STATUS_OK ||
+            !locker_domain_time_format_utc(wall,stamp,sizeof(stamp))) status=LOCKER_STATUS_NOT_READY;
+        else {
+            domain_change_put_begin(&change,"audits",key);
+            domain_write_audit(&change.writer,&audit,&c.principal.user_id,NULL,"MAINTENANCE_RECONCILE",request->reason,stamp,true,NULL,LOCKER_TIME_QUALITY_HOST_SYNCED);
+            domain_change_put_end(&change);
+        }
+        domain_response_begin(&response,core->response_buffer,sizeof(core->response_buffer));
+        domain_write_device_projection(&response,core); domain_response_end_value(&response,core->revision+1,&c.request_id);
+    } else {
+        status=domain_operation_persist(core,&change,&core->active);
+        build_operation_response(core,&response,&core->active,core->revision+1,&c.request_id);
+    }
+    if (status==LOCKER_STATUS_OK && !locker_domain_json_writer_ok(&response)) status=LOCKER_STATUS_NO_SPACE;
+    if (status==LOCKER_STATUS_OK) status=domain_idempotency_append(core,&change,&c,hash,core->response_buffer);
+    if (status==LOCKER_STATUS_OK) status=domain_change_commit(core,&change);
+    if (status!=LOCKER_STATUS_OK) { core->active=before; response_finish(core,job->completion,status,false,NULL); return; }
+    response_finish_json(core,job->completion,LOCKER_STATUS_OK,!maintenance,maintenance ? NULL : &presence->operation_id,&response);
+    if (maintenance) {
+        locker_ready_guard_t guard={0}; guard.session_id=core->session.session_id; guard.journal_epoch=core->session.journal_epoch;
+        guard.expected_boot_id=core->session.boot_id; guard.expected_physical_revision=core->physical.physical_revision; guard.persisted_through=core->import_cursor;
+        (void)locker_device_resume_ready(core->device,&guard);
+    } else if (operation_arm(core)==LOCKER_STATUS_OK) domain_outbox_pump(core);
+}
+
 void domain_handle_presence(locker_core_t *core, const domain_job_t *job)
 {
+    if (job->completion!=UINT32_MAX) { local_request(core,job,false); return; }
     const locker_presence_t *presence = &job->body.presence.presence;
     locker_status_t status = domain_principal_check(core, &presence->principal);
     if (status != LOCKER_STATUS_OK) {
@@ -2036,6 +2155,7 @@ void domain_handle_presence(locker_core_t *core, const domain_job_t *job)
 
 void domain_handle_maintenance(locker_core_t *core, const domain_job_t *job)
 {
+    if (job->completion!=UINT32_MAX) { local_request(core,job,true); return; }
     const locker_maintenance_t *request = &job->body.maintenance.maintenance;
     locker_status_t status = domain_principal_check(core, &request->principal);
     if (status != LOCKER_STATUS_OK) {
@@ -2088,6 +2208,7 @@ void domain_handle_tick(locker_core_t *core, uint64_t tick_ms)
         }
         domain_outbox_pump(core);
     }
+    card_presence_pump(core);
     domain_device_pump(core);
     domain_anchor_request(core);
     domain_progress_publish(core);

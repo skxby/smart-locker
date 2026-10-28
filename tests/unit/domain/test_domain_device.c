@@ -685,8 +685,11 @@ static void test_event_card_history(void)
     domain_handle_device_event(fixture.core, &event, UINT32_MAX);
     TEST_CHECK(!fixture.core->last_card.valid);
 
-    /* live 读卡：写 last_card，但 user_resolved 仍是 false（解析归 S1-05）。 */
+    fixture.core->anchor_valid=true; fixture.core->anchor_sampled_ms=fixture.core->now_ms;
+    fixture.core->anchor_offset_low_ms=0; fixture.core->anchor_offset_high_ms=0;
+    /* 当前会话、未处理序号及新鲜时间锚共同允许 live 观察。 */
     event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_CARD_OBSERVED, 2u, true);
+    event.mono_ms=fixture.core->now_ms;
     event.card_uid_len = 4u;
     memset(event.card_uid, 0xab, sizeof(event.card_uid));
     domain_handle_device_event(fixture.core, &event, UINT32_MAX);
@@ -696,6 +699,15 @@ static void test_event_card_history(void)
     TEST_CHECK(!fixture.core->last_card.user_resolved);
     TEST_CHECK_U64(fixture.core->now_ms, fixture.core->last_card.mono_ms);
 
+    /* 已由历史/实时游标覆盖的帧不能重新产生新观察。 */
+    fixture.core->last_card.valid=false;
+    domain_handle_device_event(fixture.core,&event,UINT32_MAX);
+    TEST_CHECK(!fixture.core->last_card.valid);
+    /* 没有可信时间锚时拒绝把到达时间冒充观察时间。 */
+    fixture.core->anchor_valid=false;
+    event=dv_event(fixture.core,LOCKER_DEVICE_EVENT_CARD_OBSERVED,3u,true); event.card_uid_len=4;
+    domain_handle_device_event(fixture.core,&event,UINT32_MAX);
+    TEST_CHECK(!fixture.core->last_card.valid);
     /* uid 长度越界（0 或 >10）不写。 */
     fixture.core->last_card.valid = false;
     event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_CARD_OBSERVED, 3u, true);

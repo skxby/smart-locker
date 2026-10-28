@@ -1,0 +1,226 @@
+Test project /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan
+      Start  1: common.test_bounded_queue
+ 1/33 Test  #1: common.test_bounded_queue ................   Passed    0.05 sec
+      Start  2: common.test_build_info
+ 2/33 Test  #2: common.test_build_info ...................   Passed    0.01 sec
+      Start  3: common.test_clock
+ 3/33 Test  #3: common.test_clock ........................   Passed    0.03 sec
+      Start  4: common.test_log
+ 4/33 Test  #4: common.test_log ..........................   Passed    0.01 sec
+      Start  5: common.test_numeric
+ 5/33 Test  #5: common.test_numeric ......................   Passed    0.01 sec
+      Start  6: common.test_uuid
+ 6/33 Test  #6: common.test_uuid .........................   Passed    0.01 sec
+      Start  7: storage.test_event_key
+ 7/33 Test  #7: storage.test_event_key ...................   Passed    0.01 sec
+      Start  8: storage.test_regex
+ 8/33 Test  #8: storage.test_regex .......................   Passed    0.02 sec
+      Start  9: storage.test_u64
+ 9/33 Test  #9: storage.test_u64 .........................   Passed    0.01 sec
+      Start 10: storage.test_schema
+10/33 Test #10: storage.test_schema ......................   Passed    0.03 sec
+      Start 11: storage.test_repository
+11/33 Test #11: storage.test_repository ..................   Passed    1.28 sec
+      Start 12: storage.schema_source_drift
+12/33 Test #12: storage.schema_source_drift ..............   Passed    0.05 sec
+      Start 13: device.test_codec
+13/33 Test #13: device.test_codec ........................   Passed    0.02 sec
+      Start 14: device.test_wire
+14/33 Test #14: device.test_wire .........................   Passed    0.01 sec
+      Start 15: device.test_sim_journal
+15/33 Test #15: device.test_sim_journal ..................   Passed    0.32 sec
+      Start 16: device.test_sim_protocol
+16/33 Test #16: device.test_sim_protocol .................   Passed    0.27 sec
+      Start 17: domain.test_domain_text
+17/33 Test #17: domain.test_domain_text ..................   Passed    0.01 sec
+      Start 18: domain.test_domain_json
+18/33 Test #18: domain.test_domain_json ..................   Passed    0.01 sec
+      Start 19: domain.test_domain_repo
+19/33 Test #19: domain.test_domain_repo ..................   Passed    0.03 sec
+      Start 20: domain.test_domain_state
+20/33 Test #20: domain.test_domain_state .................   Passed    0.03 sec
+      Start 21: domain.test_domain_device
+21/33 Test #21: domain.test_domain_device ................   Passed    0.07 sec
+      Start 22: domain.test_domain_commands
+22/33 Test #22: domain.test_domain_commands ..............   Passed    0.12 sec
+      Start 23: domain.test_domain_core
+23/33 Test #23: domain.test_domain_core ..................   Passed    0.08 sec
+      Start 24: contract.device.test_golden_frames
+24/33 Test #24: contract.device.test_golden_frames .......   Passed    0.03 sec
+      Start 25: contract.device.test_device_port
+25/33 Test #25: contract.device.test_device_port .........   Passed    7.24 sec
+      Start 26: contract.device.daemon_smoke
+26/33 Test #26: contract.device.daemon_smoke .............   Passed    4.04 sec
+      Start 27: integration.test_core_interrupt_matrix
+27/33 Test #27: integration.test_core_interrupt_matrix ...   Passed   10.77 sec
+      Start 28: network.pinned_dependencies
+28/33 Test #28: network.pinned_dependencies ..............   Passed    0.16 sec
+      Start 29: network.events
+29/33 Test #29: network.events ...........................   Passed    0.01 sec
+      Start 30: network.core_auth
+30/33 Test #30: network.core_auth ........................   Passed    0.15 sec
+      Start 31: network.auth_repository
+31/33 Test #31: network.auth_repository ..................   Passed    0.15 sec
+      Start 32: network.https_sessions
+32/33 Test #32: network.https_sessions ...................***Failed    6.31 sec
+==================
+WARNING: ThreadSanitizer: data race (pid=855279)
+  Write of size 4 at 0x7f2953357028 by thread T7:
+    #0 mg_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 (test_auth_repository+0x313782) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #1 stop_http /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:319 (test_auth_repository+0x13c21b) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Previous read of size 4 at 0x7f2953357028 by thread T2 (mutexes: write M0):
+    #0 consume_socket /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19634 (test_auth_repository+0x311993) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #1 worker_thread_run /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19776 (test_auth_repository+0x312737) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 worker_thread /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19949 (test_auth_repository+0x312956) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Location is heap block of size 165320 at 0x7f2953357000 allocated by main thread:
+    #0 calloc ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:692 (libtsan.so.2+0x8c9af) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_calloc /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:1482 (test_auth_repository+0x2ea675) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20506 (test_auth_repository+0x313b5a) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #5 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Mutex M0 (0x7f2953357030) created at:
+    #0 pthread_mutex_init ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1398 (libtsan.so.2+0x5b908) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20536 (test_auth_repository+0x313d17) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Thread T7 (tid=855287, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 locker_http_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:327 (test_auth_repository+0x13c2c4) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:69 (test_auth_repository+0xaa23b) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Thread T2 'civetweb-worker' (tid=855282, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start_thread_with_id /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:5746 (test_auth_repository+0x2f299f) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21149 (test_auth_repository+0x315929) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #5 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+SUMMARY: ThreadSanitizer: data race /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 in mg_stop
+==================
+ThreadSanitizer: reported 1 warnings
+==================
+WARNING: ThreadSanitizer: data race (pid=855271)
+  Write of size 4 at 0x7fa04e309028 by thread T7:
+    #0 mg_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 (test_auth_repository+0x313782) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #1 stop_http /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:319 (test_auth_repository+0x13c21b) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Previous read of size 4 at 0x7fa04e309028 by thread T2 (mutexes: write M0):
+    #0 consume_socket /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19634 (test_auth_repository+0x311993) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #1 worker_thread_run /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19776 (test_auth_repository+0x312737) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 worker_thread /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19949 (test_auth_repository+0x312956) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Location is heap block of size 165320 at 0x7fa04e309000 allocated by main thread:
+    #0 calloc ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:692 (libtsan.so.2+0x8c9af) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_calloc /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:1482 (test_auth_repository+0x2ea675) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20506 (test_auth_repository+0x313b5a) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #5 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Mutex M0 (0x7fa04e309030) created at:
+    #0 pthread_mutex_init ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1398 (libtsan.so.2+0x5b908) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20536 (test_auth_repository+0x313d17) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Thread T7 (tid=855288, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 locker_http_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:327 (test_auth_repository+0x13c2c4) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:69 (test_auth_repository+0xaa23b) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+  Thread T2 'civetweb-worker' (tid=855274, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start_thread_with_id /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:5746 (test_auth_repository+0x2f299f) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21149 (test_auth_repository+0x315929) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_auth_repository+0x315c15) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_auth_repository+0x13c047) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+    #5 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_auth_repository.c:52 (test_auth_repository+0xa9e26) (BuildId: 81ab95d97c0996ed0e7cf0bc072f6a8ce73de550)
+
+SUMMARY: ThreadSanitizer: data race /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 in mg_stop
+==================
+ThreadSanitizer: reported 1 warnings
+Traceback (most recent call last):
+  File "/home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_https.py", line 115, in <module>
+    denied.stdin.write('\n'); denied.stdin.flush(); assert denied.wait(timeout=15)==0
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_https.py", line 229, in <module>
+    assert server.wait(timeout=15) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+      Start 33: network.https_flow
+33/33 Test #33: network.https_flow .......................***Failed    7.86 sec
+==================
+WARNING: ThreadSanitizer: data race (pid=855291)
+  Write of size 4 at 0x7fcb4a413028 by thread T12:
+    #0 mg_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 (test_https_flow_fixture+0x174bb9) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #1 stop_http /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:319 (test_https_flow_fixture+0xb82f6) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+  Previous read of size 4 at 0x7fcb4a413028 by thread T6 (mutexes: write M0):
+    #0 consume_socket /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19634 (test_https_flow_fixture+0x172dca) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #1 worker_thread_run /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19776 (test_https_flow_fixture+0x173b6e) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #2 worker_thread /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:19949 (test_https_flow_fixture+0x173d8d) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+  Location is heap block of size 165320 at 0x7fcb4a413000 allocated by main thread:
+    #0 calloc ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:692 (libtsan.so.2+0x8c9af) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_calloc /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:1482 (test_https_flow_fixture+0x14baac) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20506 (test_https_flow_fixture+0x174f91) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_https_flow_fixture+0x17704c) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_https_flow_fixture+0xb8122) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #5 serve_flow /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1738 (test_https_flow_fixture+0xb4a08) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #6 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1762 (test_https_flow_fixture+0xb4d4d) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+  Mutex M0 (0x7fcb4a413030) created at:
+    #0 pthread_mutex_init ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1398 (libtsan.so.2+0x5b908) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20536 (test_https_flow_fixture+0x17514e) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #2 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_https_flow_fixture+0x17704c) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #3 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_https_flow_fixture+0xb8122) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #4 serve_flow /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1738 (test_https_flow_fixture+0xb4a08) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #5 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1762 (test_https_flow_fixture+0xb4d4d) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+  Thread T12 (tid=855304, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 locker_http_stop /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:327 (test_https_flow_fixture+0xb839f) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #2 serve_flow /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1755 (test_https_flow_fixture+0xb4c62) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #3 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1762 (test_https_flow_fixture+0xb4d4d) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+  Thread T6 'civetweb-worker' (tid=855298, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1078 (libtsan.so.2+0x5cb02) (BuildId: 66d37dc704b813df6c813b77217284deb43a0042)
+    #1 mg_start_thread_with_id /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:5746 (test_https_flow_fixture+0x153dd6) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #2 mg_start2 /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21149 (test_https_flow_fixture+0x176d60) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #3 mg_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:21215 (test_https_flow_fixture+0x17704c) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #4 locker_http_start /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/host/http/http.c:308 (test_https_flow_fixture+0xb8122) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #5 serve_flow /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1738 (test_https_flow_fixture+0xb4a08) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+    #6 main /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/integration/test_core_interrupt_matrix.c:1762 (test_https_flow_fixture+0xb4d4d) (BuildId: d21a09a28f99528eb016936b077c318679c3b210)
+
+SUMMARY: ThreadSanitizer: data race /home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/build-tsan/host/http/third_party/civetweb-bounded.c:20364 in mg_stop
+==================
+ThreadSanitizer: reported 1 warnings
+Traceback (most recent call last):
+  File "/home/%USER%/locker-workspace/S1-05/batches/final-20261028-16/src/tests/contract/network/test_https_flow.py", line 200, in <module>
+    assert server.wait(timeout=15) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+94% tests passed, 2 tests failed out of 33
+
+Total Test time (real) =  39.27 sec
+
+The following tests FAILED:
+	 32 - network.https_sessions (Failed)
+	 33 - network.https_flow (Failed)
+Errors while running CTest

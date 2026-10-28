@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETE",
+  "binary_bytes_removed": 8931040930,
+  "archives_saved_bytes": 2955090145,
+  "compressed_archives": 41,
+  "free_bytes_after": 13526618112,
+  "free_gib_after": 12.6,
+  "used_percent_after": 78,
+  "initial_s105_binary_bytes_removed": 1535751982
+}

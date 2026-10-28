@@ -349,6 +349,11 @@ typedef enum domain_phase {
 } domain_phase_t;
 
 typedef struct domain_card_observation {
+    locker_uuid_t id;
+    locker_event_key_t key;
+    locker_uuid_t pending_operation_id;
+    uint64_t pending_operation_revision;
+    bool consumed;
     bool valid;
     uint64_t mono_ms;
     uint8_t uid_len;
@@ -523,6 +528,12 @@ struct locker_core {
     locker_json_member_t doc_members[2][LOCKER_DOMAIN_DOC_MEMBERS];
     char change_buffer[LOCKER_DOMAIN_PAGE_BYTES];
     char response_buffer[LOCKER_DOMAIN_PAGE_BYTES];
+    uint64_t login_not_before_ms; /* Core-thread owned global password-work bound. */
+    struct {
+        char username[33];
+        uint64_t expires_ms;
+        uint8_t failures;
+    } login_limits[64]; /* No eviction of live entries to bypass throttling. */
 };
 
 /* ---------- 文本与枚举工具 ---------- */
@@ -632,6 +643,8 @@ void domain_handle_job(locker_core_t *core, const domain_job_t *job);
 void domain_handle_command(locker_core_t *core, const domain_job_t *job);
 void domain_handle_query(locker_core_t *core, const domain_job_t *job);
 void domain_handle_auth(locker_core_t *core, const domain_job_t *job);
+bool domain_handle_session_command(locker_core_t *core, const domain_job_t *job);
+bool domain_handle_session_query(locker_core_t *core, const domain_job_t *job);
 void domain_handle_presence(locker_core_t *core, const domain_job_t *job);
 void domain_handle_maintenance(locker_core_t *core, const domain_job_t *job);
 void domain_handle_device_event(locker_core_t *core, const locker_device_event_t *event, uint32_t completion);
@@ -676,13 +689,13 @@ locker_status_t domain_completion_wait_accept(locker_core_t *core, uint32_t slot
 locker_status_t domain_completion_wait_final(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
                                              uint32_t timeout_ms, locker_query_result_t *out_result);
 /* 取 AUTH 终态的 principal；没有则返回 false。 */
-bool domain_completion_take_principal(locker_core_t *core, uint32_t slot, locker_principal_t *out);
+bool domain_completion_take_principal(locker_core_t *core, uint32_t slot, const locker_uuid_t *token, locker_principal_t *out);
 bool domain_completion_take_json(locker_core_t *core, uint32_t slot, char *out, size_t out_size,
                                  size_t *out_length, uint64_t *out_revision);
 /* 按 submission_token 找完成槽；找不到返回 UINT32_MAX。 */
 uint32_t domain_completion_find(locker_core_t *core, const locker_uuid_t *token);
 /* AUTH 作业回传 principal（只在认证成功时调用）。 */
-void domain_completion_set_principal(locker_core_t *core, uint32_t slot, const locker_principal_t *principal);
+void domain_completion_set_principal(locker_core_t *core, uint32_t slot, const locker_uuid_t *token, const locker_principal_t *principal);
 /* 回收超过保留期的完成槽（Core 线程定期调用）。 */
 void domain_completion_reap(locker_core_t *core, uint64_t now_ms);
 
@@ -838,4 +851,13 @@ void domain_response_end(locker_json_writer_t *writer, uint64_t revision,
 void domain_publish(locker_core_t *core, const locker_uuid_t *operation_id, const char *resource,
                     uint64_t revision);
 
+bool domain_handle_card_command(locker_core_t *core, const domain_job_t *job, const char *hash);
+bool domain_handle_history_query(locker_core_t *core, const domain_job_t *job);
+#define LOCKER_DOMAIN_MAX_USER_SESSIONS 16u
+locker_status_t domain_user_sessions(locker_core_t *core,const char *user_id,bool stale_only,
+    char keys[LOCKER_DOMAIN_MAX_USER_SESSIONS][37],size_t *count,size_t *active);
+bool domain_handle_user_query(locker_core_t *core, const domain_job_t *job);
+bool domain_handle_user_command(locker_core_t *core, const domain_job_t *job, const char *hash);
+locker_status_t domain_idempotency_append(locker_core_t *core, domain_change_t *change,
+    const locker_command_t *command, const char *hash, const char *response);
 #endif /* LOCKER_DOMAIN_INTERNAL_H */

@@ -127,8 +127,8 @@ typedef struct { locker_uuid_t supervisor_instance_id; uint64_t sampled_mono_ms;
 typedef struct { locker_uuid_t request_id, incident_id; char reason[257]; } locker_restart_request_t;
 typedef struct { char id[65]; uint64_t snapshot_revision; char resource[16]; } locker_resource_change_t;
 typedef struct { uint32_t uid, gid, pid; bool verified_ui_peer, verified_admin_peer; } locker_peer_t;
-typedef struct { locker_principal_t principal; locker_uuid_t operation_id; uint64_t operation_revision; } locker_presence_t;
-typedef struct { locker_principal_t principal; locker_uuid_t journal_epoch; uint64_t expected_boot_id, physical_revision, snapshot_revision; char reason[1025]; } locker_maintenance_t;
+typedef struct { locker_principal_t principal; locker_uuid_t request_id, idempotency_key, operation_id; uint64_t operation_revision; } locker_presence_t;
+typedef struct { locker_principal_t principal; locker_uuid_t request_id, idempotency_key, journal_epoch; uint64_t expected_boot_id, physical_revision, snapshot_revision; char reason[1025]; } locker_maintenance_t;
 typedef struct { bool configured; uint8_t port_index; uint16_t pin_mask; uint8_t alternate_function; } locker_gpio_descriptor_t;
 typedef struct { bool verified; locker_gpio_descriptor_t door, item, lock_output, alarm, rc522_cs, rc522_reset, supply_adc, uart_link_tx, uart_link_rx, uart_console_tx, uart_console_rx, flash_cs; uint8_t door_closed_level, item_present_level, lock_active_level, alarm_active_level; uint16_t debounce_ms, pulse_ms; uint8_t uart_link_instance, uart_console_instance, flash_spi_instance, rc522_spi_instance, adc_instance, adc_channel, lock_timer_instance, lock_timer_channel, hal_tick_timer_instance; uint32_t rk_uart_io_mv, host_input_mv, divider_upper_ohms, divider_lower_ohms, adc_reference_mv; } mcu_board_profile_t;
 typedef struct { void *user; uint64_t (*monotonic_ms)(void *user); bool (*wall_utc_ms)(void *user, uint64_t *out); locker_status_t (*new_uuid)(void *user, locker_uuid_t *out); } locker_clock_port_t;
@@ -234,7 +234,7 @@ locker_status_t locker_device_send_health(locker_device_t *device, const locker_
 /* RK Events: 有界非阻塞；满则客户端重新同步。 */
 locker_status_t locker_events_try_publish(locker_publisher_t *publisher, const locker_resource_change_t *change);
 /* RK Local IPC: 私有SO_PEERCRED+登录会话+owner+revision；不能从HTTP调用。 */
-locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer, const locker_presence_t *presence);
+locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer, const locker_presence_t *presence, locker_receipt_t *receipt);
 /* Supervisor: 只接受service/UI可信peer的真实循环进度。 */
 locker_status_t locker_supervisor_report_progress(locker_supervisor_t *supervisor, const locker_progress_t *progress);
 /* Supervisor: 固定UI目标，限次冷却，无shell与锁动作。 */
@@ -328,7 +328,7 @@ locker_status_t mcu_board_apply_profile(const mcu_board_profile_t *profile);
 /* MCU HAL BSP: Nonblocking LED/buzzer pattern through verified HAL pins; does not drive lock or mutate custody. */
 locker_status_t mcu_board_set_alarm(locker_alarm_pattern_t pattern);
 /* RK Local Admin: Trusted local admin CLI and current admin session; compare snapshot/epoch/boot/physical revision and ledger; clear only authorized hold, never pulse or hide gaps. */
-locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer, const locker_maintenance_t *request);
+locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer, const locker_maintenance_t *request, locker_receipt_t *receipt);
 /* Supervisor: Read immutable local supervision snapshot; no process action. Restricted health.get RPC exposes this only to the registered service peer. */
 locker_status_t locker_supervisor_get_health(locker_supervisor_t *supervisor, locker_supervisor_health_t *result);
 /* RK Core: Copy observation into Core queue; only Core updates public projection; stale cache never refreshes sample time. */

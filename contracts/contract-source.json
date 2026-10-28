@@ -1727,7 +1727,7 @@
     {
       "name": "locker_local_presence_submit",
       "owner": "RK Local IPC",
-      "prototype": "locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer, const locker_presence_t *presence);",
+      "prototype": "locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer, const locker_presence_t *presence, locker_receipt_t *receipt);",
       "semantics": "私有SO_PEERCRED+登录会话+owner+revision；不能从HTTP调用。"
     },
     {
@@ -2009,7 +2009,7 @@
     {
       "name": "locker_local_maintenance_reconcile",
       "owner": "RK Local Admin",
-      "prototype": "locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer, const locker_maintenance_t *request);",
+      "prototype": "locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer, const locker_maintenance_t *request, locker_receipt_t *receipt);",
       "semantics": "Trusted local admin CLI and current admin session; compare snapshot/epoch/boot/physical revision and ledger; clear only authorized hold, never pulse or hide gaps."
     },
     {

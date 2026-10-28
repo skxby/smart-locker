@@ -43,6 +43,9 @@
 #include "locker/device/wire.h"
 #include "locker/simulator/sim.h"
 #include "test_support.h"
+#ifdef LOCKER_HTTP_FLOW_FIXTURE
+#include <sodium.h>
+#endif
 
 #define IT_WAIT_MS 8000u
 #define IT_SILENCE_MS 300u
@@ -533,6 +536,7 @@ typedef struct it_env {
  * 只计数并记录最后一次变更，绝不假装投递成功。
  * 这条「events 模块未实现」已记入 S1-04 handoff 的未实现项。
  */
+#ifndef LOCKER_HTTP_FLOW_FIXTURE
 struct locker_publisher {
     unsigned publish_calls;
     locker_resource_change_t last;
@@ -552,6 +556,8 @@ locker_status_t locker_events_try_publish(locker_publisher_t *publisher,
     snprintf(publisher->last_resource, sizeof(publisher->last_resource), "%s", change->resource);
     return LOCKER_STATUS_OK;
 }
+
+#endif
 
 static void it_sleep_ms(unsigned milliseconds)
 {
@@ -655,11 +661,18 @@ static locker_status_t it_seed_user(locker_repo_t *repo, uint64_t *revision, con
     char session[1024];
     locker_status_t status;
 
+    const char *password_hash="$argon2id$v=19$m=65536,t=3,p=1$c2FsdA$aGFzaA";
+#ifdef LOCKER_HTTP_FLOW_FIXTURE
+    char secure_hash[crypto_pwhash_STRBYTES];
+    if (sodium_init()<0 || crypto_pwhash_str_alg(secure_hash,"network-flow-password",21,
+        crypto_pwhash_OPSLIMIT_INTERACTIVE,crypto_pwhash_MEMLIMIT_INTERACTIVE,crypto_pwhash_ALG_ARGON2ID13)) return LOCKER_STATUS_IO_ERROR;
+    password_hash=secure_hash;
+#endif
     snprintf(user, sizeof(user),
              "{\"user\":{\"id\":\"%s\",\"username\":\"%s\","
              "\"display_name\":\"Tester\",\"role\":\"%s\",\"enabled\":true,"
-             "\"user_revision\":\"1\"},\"password_hash\":\"$argon2id$v=19$m=65536,t=3,p=1$c2FsdA$aGFzaA\"}",
-             user_id, username, role);
+             "\"user_revision\":\"1\"},\"password_hash\":\"%s\"}",
+             user_id, username, role,password_hash);
     snprintf(session, sizeof(session),
              "{\"id\":\"%s\",\"user_id\":\"%s\","
              "\"token_hash\":\"" IT_TOKEN_HASH "\",\"expires_at\":\"" IT_SESSION_EXPIRES "\","
@@ -1014,7 +1027,7 @@ static bool it_reconcile_once(it_env_t *env)
     request.physical_revision = strtoull(marker, NULL, 10);
     request.snapshot_revision = result.snapshot_revision;
     snprintf(request.reason, sizeof(request.reason), "integration reconcile");
-    return locker_local_maintenance_reconcile(env->core, &peer, &request) == LOCKER_STATUS_OK;
+    return locker_local_maintenance_reconcile(env->core, &peer, &request, NULL) == LOCKER_STATUS_OK;
 }
 
 static bool it_wait_device_ready(it_env_t *env, unsigned timeout_ms)
@@ -1115,7 +1128,7 @@ static locker_status_t it_presence(it_env_t *env, const locker_uuid_t *operation
     presence.principal = it_principal(LOCKER_ROLE_USER);
     presence.operation_id = *operation_id;
     presence.operation_revision = it_operation_revision(env, operation_id);
-    return locker_local_presence_submit(env->core, &peer, &presence);
+    return locker_local_presence_submit(env->core, &peer, &presence, NULL);
 }
 
 /* 把 Core 的时钟快进 delta 毫秒（累计），驱动超时分支而不用真的等几十秒。
@@ -1336,7 +1349,8 @@ static void test_borrow_flow(void)
         TEST_CHECK_STATUS(LOCKER_STATUS_OK, result.status);
         TEST_CHECK(it_wait_operation(&env, &operation_id, "COMPLETED", "CONFIRMED", IT_WAIT_MS));
         TEST_CHECK_STATUS(LOCKER_STATUS_OK, it_query(&env, LOCKER_CORE_LOANS_LIST, NULL, &result));
-        TEST_CHECK(it_json_has(&result, "\"items\":[]"));
+        TEST_CHECK(!it_json_has(&result, "\"items\":[]"));
+        TEST_CHECK(!it_json_has(&result, "\"closed_at\":null"));
         TEST_CHECK_U64(2u, it_counter(&env.server, &env.server.execute_requests));
         TEST_CHECK(it_counter(&env.server, &env.server.release_requests) >= 1u);
         /* Stop the sole writer before inspecting the persistent ledger. */
@@ -1710,8 +1724,45 @@ static void test_core_progress_under_device_backpressure(void)
     it_env_stop(&env);
 }
 
-int main(void)
+#ifdef LOCKER_HTTP_FLOW_FIXTURE
+static int serve_flow(int argc,char **argv)
 {
+    if (argc!=5) return 2;
+    it_env_t env;
+    if (!it_bring_up(&env,"https-flow")) return 1;
+    locker_publisher_t *publisher=NULL; locker_http_t *http=NULL; locker_ipc_t *ipc=NULL;
+    locker_http_config_t hc={0}; strcpy(hc.bind_address,"127.0.0.1"); hc.port=(uint16_t)atoi(argv[3]); hc.worker_count=4;
+    snprintf(hc.certificate_path,sizeof(hc.certificate_path),"%s",argv[1]); snprintf(hc.private_key_path,sizeof(hc.private_key_path),"%s",argv[2]);
+    locker_ipc_config_t ic={0}; ic.allowed_ui_uid=(uint32_t)getuid(); ic.allowed_admin_uid=(uint32_t)getuid(); ic.file_mode=0600;
+    snprintf(ic.socket_path,sizeof(ic.socket_path),"%s",argv[4]);
+    if (locker_events_create(&publisher)!=LOCKER_STATUS_OK || locker_http_start(&hc,env.core,publisher,&http)!=LOCKER_STATUS_OK ||
+        locker_ipc_start(&ic,env.core,&ipc)!=LOCKER_STATUS_OK) return 1;
+    puts("FLOW_READY"); fflush(stdout);
+    int input;
+    while ((input=getchar())!=EOF && input!='\n') {
+        if (input=='T' || input=='R') {
+            it_set_door(&env.server,LOCKER_WIRE_DOOR_STATE_OPEN); it_sleep_ms(120);
+            it_set_item(&env.server,input=='T' ? LOCKER_WIRE_ITEM_STATE_ABSENT : LOCKER_WIRE_ITEM_STATE_PRESENT); it_sleep_ms(120);
+            it_set_door(&env.server,LOCKER_WIRE_DOOR_STATE_CLOSED); puts("SCENE_DONE"); fflush(stdout);
+        }
+        if (input=='C') {
+            const uint8_t uid[4]={0x11,0x22,0x33,0x44};
+            pthread_mutex_lock(&env.server.lock); locker_sim_control_card(env.server.sim,uid,sizeof(uid)); pthread_mutex_unlock(&env.server.lock);
+            puts("CARD_DONE"); fflush(stdout);
+        }
+        if (input=='P') { printf("PULSES:%llu\n",(unsigned long long)it_sim_pulses(&env.server)); fflush(stdout); }
+    }
+    locker_http_stop(http,5000); locker_http_destroy(http); locker_ipc_stop(ipc,5000); locker_ipc_destroy(ipc); locker_events_destroy(publisher);
+    it_env_stop(&env); return 0;
+}
+#endif
+int main(int argc,char **argv)
+{
+#ifdef LOCKER_HTTP_FLOW_FIXTURE
+    if (argc==5) return serve_flow(argc,argv);
+#else
+    (void)argc; (void)argv;
+#endif
     test_core_progress_under_device_backpressure();
     test_boot_and_session();
     test_borrow_flow();

@@ -8,6 +8,9 @@ add_library(locker_domain STATIC
     src/domain_change.c
     src/domain_commands.c
     src/domain_core.c
+    src/domain_auth.c
+    src/domain_users.c
+    src/domain_history.c
     src/domain_device.c
     src/domain_docs.c
     src/domain_import.c
@@ -38,3 +41,7 @@ target_link_libraries(locker_domain
 set_target_properties(locker_domain PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 locker_apply_warnings(locker_domain)
+if(LOCKER_BUILD_NETWORK)
+    target_compile_definitions(locker_domain PRIVATE LOCKER_NETWORK_AUTH=1)
+    target_link_libraries(locker_domain PRIVATE locker_sodium)
+endif()

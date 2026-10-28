@@ -31,6 +31,12 @@
 
 /* ---------- 队列 ---------- */
 
+static void clear_job(domain_job_t *job)
+{
+    volatile unsigned char *bytes=(volatile unsigned char *)job;
+    for (size_t i=0;i<sizeof(*job);++i) bytes[i]=0;
+}
+
 static locker_status_t job_enqueue(locker_core_t *core, const domain_job_t *job)
 {
     if (core == NULL || job == NULL) {
@@ -53,6 +59,8 @@ static void drain_queue(locker_core_t *core)
     domain_job_t job;
     while (locker_bounded_queue_try_pop(&core->queue, &job) == LOCKER_STATUS_OK) {
         domain_handle_job(core, &job);
+        clear_job(&job);
+        memset(core->response_buffer,0,sizeof(core->response_buffer));
     }
 }
 
@@ -512,6 +520,8 @@ static void core_run_once(locker_core_t *core)
             return;
         }
         domain_handle_job(core, &job);
+        clear_job(&job);
+        memset(core->response_buffer,0,sizeof(core->response_buffer));
     }
     /* 设备环：事件与响应都按值复制进来，只在这里出队应用。 */
     domain_event_slot_t event;
@@ -590,7 +600,7 @@ static void core_free(locker_core_t *core)
         free(core->reply_storage);
     }
     for (uint32_t i = 0u; i < LOCKER_DOMAIN_COMPLETION_SLOTS; ++i) {
-        free(core->completions[i].json);
+        domain_completion_release(core,i);
     }
     pthread_cond_destroy(&core->completion_cond);
     pthread_mutex_destroy(&core->completion_mutex);
@@ -782,6 +792,7 @@ locker_status_t locker_core_submit(locker_core_t *core, const locker_command_t *
     job.completion_token = token;
     job.body.command = *command;
     locker_status_t status = job_enqueue(core, &job);
+    clear_job(&job);
     if (status != LOCKER_STATUS_OK) {
         domain_completion_release_owned(core, slot, &token);
         return status;
@@ -898,17 +909,34 @@ locker_status_t locker_core_authenticate(locker_core_t *core, const locker_auth_
         return LOCKER_STATUS_INVALID;
     }
     memset(result, 0, sizeof(*result));
-    /*
-     * 真实凭据校验（Argon2id 口令 + 会话 token 哈希）归 S1-05：本卡不引入
-     * libsodium（deployment/host/dependencies.lock.json:17 规定未 vendor 的链接
-     * 依赖必须在配置期 fail closed），因此这里绝不假装校验通过。
-     * 传进来的任何 token 一律 NOT_READY，由 S1-05 的适配器在调用前完成校验并
-     * 构造 principal；本卡的 principal 复检（domain_principal_check）照常执行。
-     */
     if (request->token_length == 0u || request->token_length >= sizeof(request->token)) {
         return LOCKER_STATUS_INVALID;
     }
-    return LOCKER_STATUS_NOT_READY;
+    if (!core->thread_running) return LOCKER_STATUS_NOT_READY;
+    locker_uuid_t token;
+    uint32_t slot = domain_completion_acquire(core, &token);
+    if (slot == UINT32_MAX) return LOCKER_STATUS_BUSY;
+    domain_job_t job;
+    memset(&job, 0, sizeof(job));
+    job.kind = DOMAIN_JOB_AUTH;
+    job.completion = slot;
+    job.completion_token = token;
+    job.body.auth = *request;
+    locker_status_t status = job_enqueue(core, &job);
+    clear_job(&job);
+    if (status == LOCKER_STATUS_OK) {
+        locker_query_result_t reply;
+        memset(&reply, 0, sizeof(reply));
+        status = domain_completion_wait_final(core, slot, &token, LOCKER_CORE_RESULT_WAIT_MS, &reply);
+        if (status == LOCKER_STATUS_OK) {
+            status = reply.status;
+            if (status == LOCKER_STATUS_OK &&
+                !domain_completion_take_principal(core, slot, &token, result))
+                status = LOCKER_STATUS_NOT_READY;
+        }
+    }
+    domain_completion_release_owned(core, slot, &token);
+    return status;
 }
 
 locker_status_t locker_core_get_progress(locker_core_t *core, locker_progress_t *result)
@@ -933,7 +961,7 @@ locker_status_t locker_core_get_progress(locker_core_t *core, locker_progress_t 
 /* ---------- 本机私有入口 ---------- */
 
 locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_peer_t *peer,
-                                             const locker_presence_t *presence)
+                                             const locker_presence_t *presence, locker_receipt_t *receipt)
 {
     if (core == NULL || peer == NULL || presence == NULL) {
         return LOCKER_STATUS_INVALID;
@@ -951,16 +979,28 @@ locker_status_t locker_local_presence_submit(locker_core_t *core, const locker_p
     job.completion = UINT32_MAX;
     job.body.presence.peer = *peer;
     job.body.presence.presence = *presence;
+    if (receipt) {
+        memset(receipt, 0, sizeof(*receipt));
+        if (locker_uuid_is_nil(&presence->request_id) || locker_uuid_is_nil(&presence->idempotency_key)) return LOCKER_STATUS_INVALID;
+        job.completion = domain_completion_acquire(core, &job.completion_token);
+        if (job.completion == UINT32_MAX) return LOCKER_STATUS_BUSY;
+        locker_status_t status = job_enqueue(core, &job);
+        if (status != LOCKER_STATUS_OK) { domain_completion_release_owned(core, job.completion, &job.completion_token); return status; }
+        receipt->submission_token = job.completion_token;
+        receipt->status=LOCKER_STATUS_QUEUED;
+        receipt->request_id=presence->request_id;
+        return LOCKER_STATUS_QUEUED;
+    }
     return job_enqueue(core, &job);
 }
 
 locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const locker_peer_t *peer,
-                                                   const locker_maintenance_t *request)
+                                                   const locker_maintenance_t *request, locker_receipt_t *receipt)
 {
     if (core == NULL || peer == NULL || request == NULL) {
         return LOCKER_STATUS_INVALID;
     }
-    if (!peer->verified_admin_peer) {
+    if (!peer->verified_admin_peer || !memchr(request->reason,0,sizeof(request->reason))) {
         return LOCKER_STATUS_INVALID;
     }
     if (!core->thread_running) {
@@ -972,6 +1012,17 @@ locker_status_t locker_local_maintenance_reconcile(locker_core_t *core, const lo
     job.completion = UINT32_MAX;
     job.body.maintenance.peer = *peer;
     job.body.maintenance.maintenance = *request;
+    if (receipt) {
+        memset(receipt, 0, sizeof(*receipt));
+        if (locker_uuid_is_nil(&request->request_id) || locker_uuid_is_nil(&request->idempotency_key)) return LOCKER_STATUS_INVALID;
+        job.completion = domain_completion_acquire(core, &job.completion_token);
+        if (job.completion == UINT32_MAX) return LOCKER_STATUS_BUSY;
+        locker_status_t status = job_enqueue(core, &job);
+        if (status != LOCKER_STATUS_OK) { domain_completion_release_owned(core, job.completion, &job.completion_token); return status; }
+        receipt->submission_token = job.completion_token;
+        receipt->status=LOCKER_STATUS_QUEUED; receipt->request_id=request->request_id;
+        return LOCKER_STATUS_QUEUED;
+    }
     return job_enqueue(core, &job);
 }
 

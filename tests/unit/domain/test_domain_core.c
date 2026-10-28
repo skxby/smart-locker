@@ -383,21 +383,21 @@ static void test_private_entries(void)
     memset(&presence, 0, sizeof(presence));
     memset(&maintenance, 0, sizeof(maintenance));
 
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(NULL, &peer, &presence));
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, NULL, &presence));
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, &peer, NULL));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(NULL, &peer, &presence, NULL));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, NULL, &presence, NULL));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, &peer, NULL, NULL));
     /* 未验证的本机 peer 不能提交到柜证明。 */
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, &peer, &presence));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_presence_submit(fixture.core, &peer, &presence, NULL));
     peer.verified_ui_peer = true;
-    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, locker_local_presence_submit(fixture.core, &peer, &presence));
+    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, locker_local_presence_submit(fixture.core, &peer, &presence, NULL));
 
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_maintenance_reconcile(NULL, &peer, &maintenance));
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_maintenance_reconcile(fixture.core, NULL, &maintenance));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_maintenance_reconcile(NULL, &peer, &maintenance, NULL));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_local_maintenance_reconcile(fixture.core, NULL, &maintenance, NULL));
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID,
-                      locker_local_maintenance_reconcile(fixture.core, &peer, &maintenance));
+                      locker_local_maintenance_reconcile(fixture.core, &peer, &maintenance, NULL));
     peer.verified_admin_peer = true;
     TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
-                      locker_local_maintenance_reconcile(fixture.core, &peer, &maintenance));
+                      locker_local_maintenance_reconcile(fixture.core, &peer, &maintenance, NULL));
 
     /* S4-04 拥有的端口：本卡绝不假装接受。 */
     locker_supervisor_health_t health;

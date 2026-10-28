@@ -7,6 +7,15 @@
 
 /* 仓储访问：全部在 Core 线程上同步调用（module-ownership.md:49）。 */
 
+static void clear_json(char *json)
+{
+    if (!json) return;
+    volatile unsigned char *bytes=(volatile unsigned char *)json;
+    size_t n=strlen(json);
+    for (size_t i=0;i<n;++i) bytes[i]=0;
+    free(json);
+}
+
 static locker_status_t doc_query(locker_core_t *core, int slot, const char *collection, const char *key,
                                  uint16_t limit, const char *after_key, locker_repo_result_t *result)
 {
@@ -234,7 +243,7 @@ void domain_completion_release(locker_core_t *core, uint32_t slot)
     }
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    free(completion->json);
+    clear_json(completion->json);
     memset(completion, 0, sizeof(*completion));
     pthread_mutex_unlock(&core->completion_mutex);
 }
@@ -249,7 +258,7 @@ void domain_completion_release_owned(locker_core_t *core, uint32_t slot, const l
     /* 槽在等待期间可能已经被回收、又被下一个请求占用。此时按下标释放会
        抹掉别人的在途结果——只有令牌仍然对得上才清槽（审计 R3-B-14）。 */
     if (completion->used && locker_uuid_equal(&completion->token, token)) {
-        free(completion->json);
+        clear_json(completion->json);
         memset(completion, 0, sizeof(*completion));
     }
     pthread_mutex_unlock(&core->completion_mutex);
@@ -312,7 +321,7 @@ void domain_completion_finish(locker_core_t *core, uint32_t slot, const locker_u
     domain_completion_t *completion = &core->completions[slot];
     /* 同上：核对与写入同一把锁，避免把结果写进已被别人复用的槽。 */
     if (completion->used && (token == NULL || locker_uuid_equal(&completion->token, token))) {
-        free(completion->json);
+        clear_json(completion->json);
         completion->json = copy;
         completion->length = (copy != NULL) ? length : 0u;
         completion->final_status = status;
@@ -337,7 +346,7 @@ void domain_completion_fail(locker_core_t *core, uint32_t slot, locker_status_t 
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
     if (completion->used) {
-        free(completion->json);
+        clear_json(completion->json);
         completion->json = NULL;
         completion->length = 0u;
         completion->final_status = status;
@@ -452,29 +461,29 @@ uint32_t domain_completion_find(locker_core_t *core, const locker_uuid_t *token)
     return found;
 }
 
-void domain_completion_set_principal(locker_core_t *core, uint32_t slot, const locker_principal_t *principal)
+void domain_completion_set_principal(locker_core_t *core, uint32_t slot, const locker_uuid_t *token, const locker_principal_t *principal)
 {
-    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || principal == NULL) {
+    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || token == NULL || principal == NULL) {
         return;
     }
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    if (completion->used) {
+    if (completion->used && locker_uuid_equal(&completion->token, token)) {
         completion->principal = *principal;
         completion->has_principal = true;
     }
     pthread_mutex_unlock(&core->completion_mutex);
 }
 
-bool domain_completion_take_principal(locker_core_t *core, uint32_t slot, locker_principal_t *out)
+bool domain_completion_take_principal(locker_core_t *core, uint32_t slot, const locker_uuid_t *token, locker_principal_t *out)
 {
-    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || out == NULL) {
+    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || token == NULL || out == NULL) {
         return false;
     }
     bool ok = false;
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    if (completion->used && completion->has_principal) {
+    if (completion->used && locker_uuid_equal(&completion->token, token) && completion->has_principal) {
         *out = completion->principal;
         ok = true;
     }
@@ -496,7 +505,7 @@ void domain_completion_reap(locker_core_t *core, uint64_t now_ms)
         /* 只回收已经交付过终态的槽：未取走的终态保留到保留期结束，避免调用方
            永远等不到结果；保留期由 core->completion_retention_ms 决定。 */
         if (completion->expires_ms != 0u && now_ms >= completion->expires_ms) {
-            free(completion->json);
+            clear_json(completion->json);
             memset(completion, 0, sizeof(*completion));
         }
     }

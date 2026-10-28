@@ -105,4 +105,5 @@ bool locker_domain_json_boolean(const locker_json_document_t *doc, const locker_
 bool locker_domain_json_render(const locker_json_document_t *doc, const locker_json_node_t *node,
                                char *out, size_t out_size, size_t *out_length);
 
+bool locker_domain_json_validate_command(const char *body,const char *kind);
 #endif /* LOCKER_DOMAIN_JSON_H */

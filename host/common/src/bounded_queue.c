@@ -71,6 +71,7 @@ locker_status_t locker_bounded_queue_try_pop(locker_bounded_queue_t *queue, void
         status = LOCKER_STATUS_NOT_READY;
     } else {
         memcpy(out_element, slot_at(queue, queue->head), queue->element_size);
+        memset(slot_at(queue, queue->head), 0, queue->element_size);
         queue->head = (queue->head + 1u) % queue->capacity;
         queue->count -= 1u;
         queue->popped_total += 1u;

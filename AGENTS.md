@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03、S1-04 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md），当前 active_task=null，recommended_next=S1-05，其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
+本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03、S1-04、S1-05 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md、docs/evidence/stage-01/S1-04/summary.md、docs/evidence/stage-01/S1-05/summary.md），当前 active_task=null，recommended_next=S1-06，其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 
@@ -11,7 +11,7 @@
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。
 4. `docs/architecture/internal-interfaces.md`、`docs/architecture/uart-v1.md`：内置接口、线程/任务与线协议语义。
-5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03、S1-04 已 DONE，当前active_task=null，下一卡S1-05，以机器索引为准。
+5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03、S1-04、S1-05 已 DONE，当前active_task=null，下一卡S1-06，以机器索引为准。
 
 `docs/architecture/reviews/` 是专家评审输入和审计记录，不是第二套执行规格。建议冲突以阶段 0 决策为准；发现真源冲突先修正文档和契约，不能各端自行选一种解释。
 
@@ -50,7 +50,7 @@
 
 ## 版本控制（用户已授权）
 
-- 仓库已初始化（基线提交 `cd4505e`，`main` 分支，`core.autocrlf=false` 因为全部源文件是 LF）。**每完成一张卡做一个本地提交，不 push**；提交信息写清卡号、改动范围、检查命令与结果。
+- 仓库已初始化（基线提交 `cd4505e`，`main` 分支，`core.autocrlf=false`；基线部分文件为 CRLF，本卡保留已跟踪格式，新增源码使用 LF）。**每完成一张卡做一个本地提交，不 push**；提交信息写清卡号、改动范围、检查命令与结果。
 - 验证以本卡git diff、新增正式测试和验收清单为依据，不在提示词中复制源码。
 - 整改回滚用 `git checkout`/`git reset`，不再依赖脚本式的锚点回退（S1-04 的 `.s104-stage/revert.py` 属于一次性手段，不要固化成流程）。
 - `build/`、`.s104-stage/`、`STM32F4xx_HAL_Code/`、`STM32F4xx_HAL_Code.zip`、模型产物已在 `.gitignore` 排除；这些东西不能进提交。
