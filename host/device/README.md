@@ -38,7 +38,7 @@ host/device/
     wire.c                             CRC-16 逐位算法、encode_frame、stream_feed
     codec.c                            11 类请求/响应/DEVICE_EVENT 的编解码与校验
     transport.c                        connect/write/read/shutdown
-    port.c                             DevicePort 实现：pending 表、reader 线程、镜像状态
+    port.c                             DevicePort 实现：pending 表、reader/writer线程、有界发送队列、镜像状态
 ```
 
 对外只有 `contracts/include/locker_contracts.h` 里的 DevicePort 原型与 DTO；
@@ -70,14 +70,14 @@ host/device/
 
 ## 5. 线程与生命周期
 
-- `locker_device_create` 只分配与初始化两个 mutex、transport 与 stream，不建线程。
+- `locker_device_create` 分配并初始化两个mutex、一个条件变量、transport与stream，不建线程。
 - `locker_device_bind_sink` 必须在 `open` 之前调用；适配器复制回调表，`sink.user` 借用到 `close` 成功返回。回调里的 DTO 指针只在本次回调有效，需要保留时复制。回调在 reader 线程执行；回调内 `close` 停收停发并返回 `BUSY`，`destroy` 不释放正在执行的对象，外部线程须再次关闭并销毁。
-- `locker_device_open` 成功时：connect（10 ms 重试，总超时 5000 ms；每次尝试都是非阻塞 `connect` + `poll` 到同一单调截止，accept 队列满也不会卡在阻塞 `connect`）→ 生成 `new_session_id` → 起**一个** reader 线程 → 发 HELLO（type 1）。`opened` 之后再次 `open` 返回 `CONFLICT`。
-- reader 线程独占 `read`；写、shutdown 和最终 close 使用同一 `write_lock`，join 期间释放此锁供 reader 收尾。写使用非阻塞 send + poll，总上限 1000 ms 实际单调时间；失败锁存需要核对并 shutdown。read 超时 200 ms，EOF 或错误使会话不可用。connected 使用 C11 原子。
-- `locker_device_close`：`opened=false` → 置 `reader_stop` → 清 pending → `shutdown(fd, SHUT_RDWR)` 打断阻塞 read → `pthread_join` → 关 fd → reset stream。不重放任何已发 EXECUTE。
+- `locker_device_open` 成功时：connect（10 ms 重试，总超时 5000 ms；每次尝试都是非阻塞 `connect` + `poll` 到同一单调截止，accept 队列满也不会卡在阻塞 `connect`）→ 生成 `new_session_id` → 起reader和writer两个线程 → 排入HELLO（type 1）。`opened` 之后再次 `open` 返回 `CONFLICT`。
+- reader独占read，writer独占write。所有请求端口只在短锁内编码并按值复制完整帧进16项FIFO，返回OK只代表本地接纳；pending同样最多16项，满则BUSY。Core不等待socket可写。writer在锁外使用send/poll，单帧写入总上限1000ms；超时或部分写失败锁存需要重新核对，停止双方线程并丢弃未发送队列，不重放动作。read超时200ms，EOF或sink拒绝同样唤醒writer并停发。connected为C11原子，fd在两线程退出前保持不变。
+- `locker_device_close`：opened=false → 停止两线程、清pending/队列并通知条件变量 → shutdown唤醒read/send → 在生命周期锁外join双方 → 关闭fd并重置stream。worker不在持有设备状态锁时做IO；close返回后不再有sink回调，队列不带到下一会话。
 - `locker_device_destroy` 在 `close` 成功后销毁 mutex 并释放对象；回调线程不能销毁自身执行上下文。
 - 上限为 16 个在途请求；同锁内检查任意类型的请求号唯一并占位，重复号或满表返回 `BUSY`。内部号大于所有此前分配的号。到 `UINT32_MAX` 后必须 close/open 建新会话，拒绝回绕。
-- pending 按注入的 `config.clock` 单调时间 5000 ms 有界回收（生产注入真实时钟，测试注入替身时钟；见 `port.c:112`/`:171`）；超时不伪造回复、不判定未执行、不重发 EXECUTE。到期号及更低的号在本会话中禁止重用，防止迟到响应命中新请求；仍可用新号 QUERY / FETCH 核对。应用自己的请求超时仍表示结果未知。
+- pending按接纳时的注入config.clock单调时间5000ms有界回收；尚未发送即过期的帧直接丢弃，发送前更新关联的host_tx时间以免把排队时延当作线上RTT。已发送超时仍是结果未知，不能补发。pending按注入的config.clock单调时间5000ms有界回收（生产注入真实时钟，测试注入替身时钟；见 `port.c:112`/`:171`）；超时不伪造回复、不判定未执行、不重发 EXECUTE。到期号及更低的号在本会话中禁止重用，防止迟到响应命中新请求；仍可用新号 QUERY / FETCH 核对。应用自己的请求超时仍表示结果未知。
 - sink 返回 `BUSY`、`NO_SPACE` 或其他拒绝时，锁存需要重新核对、停止 reader 并 shutdown。此后所有请求（包括动作和健康）返回 `NOT_READY`。适配器不替 Core ACK 未交付事实；明确 close/open 后通过 FETCH / QUERY 恢复，并重新完成持久化、健康和 RESUME 屏障。尚未处理的流字节不视为已交付事实。
 
 ## 6. 已知边界（不伪造）
@@ -96,3 +96,7 @@ host/device/
 - 契约测试：`tests/contract/device/{test_golden_frames,test_device_port}.c`（黄金帧逐字节、真 socket 端到端）
 - 实施报告：`docs/evidence/stage-01/S1-03/summary.md`；交接说明：`docs/evidence/stage-01/S1-03/handoff.md`；源码清单：`source-manifest.txt`；变异日志：`mutation.log`。
 - 独立审计：`docs/evidence/stage-01/S1-03/audit.md`（round-1，FAIL）与其后的整改记录。当前调用行为以生成头、本 README 和源码为准。
+
+## 发送背压回归
+
+S1-04接手回修CR-S104-2：tests/contract/device/test_device_port.c使用真实非读取socket及缩小内核发送缓冲，检查提交小于200ms、饱和BUSY、写超时后NOT_READY、close小于500ms；tests/integration/test_core_interrupt_matrix.c检查相同背压下Core快照查询小于250ms、真实循环进度继续增长且不产生锁脉冲。阈值是回归护栏，不是硬实时承诺。固定源码VM结果见docs/evidence/stage-01/S1-04/summary.md。

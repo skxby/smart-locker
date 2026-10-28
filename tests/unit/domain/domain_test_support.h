@@ -599,6 +599,9 @@ struct locker_device {
     locker_status_t query_command_status;
     locker_status_t time_anchor_status;
     locker_status_t bind_status;
+    /* 释放端口要能返回 CONFLICT：CAS 失败是「设备侧到底还持不持有上下文」
+       的唯一来源，Core 必须转成「只查询」而不是假设已释放（审计 R3-B-2）。 */
+    locker_status_t release_status;
 };
 
 locker_status_t locker_device_bind_sink(locker_device_t *device,
@@ -680,7 +683,7 @@ locker_status_t locker_device_release_context(
     if (guard != NULL) {
         device->last_release = *guard;
     }
-    return LOCKER_STATUS_OK;
+    return device->release_status;
 }
 
 locker_status_t locker_device_send_health(locker_device_t *device,
@@ -846,9 +849,25 @@ LOCKER_TEST_HELPER static void dt_core_ready(dt_fixture_t *fixture)
     core->now_ms = fixture->clock.monotonic_ms;
     core->next_action_no = 1u;
     core->action_watermark = 0u;
-    core->tool_valid = false;
+    /* 单柜格模型里工具是设备配置的一部分，真实恢复路径由 recover_tools 从
+       tools 集合填好。create 现在要求工具可知且版本匹配（审计 R1-B-9），
+       所以夹具也要给出这一份投影，否则每个申请都会卡在 NOT_READY。
+       需要验证「工具不可知」的用例自行把它改回 false。 */
+    dt_uuid_fill(&core->tool_id, 0x22u);
+    core->tool_revision = 1u;
+    domain_text_copy(core->tool_name, sizeof(core->tool_name), "柜内工具");
+    core->tool_availability = LOCKER_TOOL_AVAILABILITY_AVAILABLE;
+    core->tool_valid = true;
     core->loan_open = false;
     core->active.used = false;
+    /* 时钟换算样本：真实路径由 domain_anchor_request 周期性采集，单测不跑
+       设备环，所以要给一份等价样本。偏移取 0，于是 MCU 时钟与主机单调时钟
+       同值，测试里比较 not_after_mcu_ms 时不用再算一遍换算。
+       验证「锚点缺失一律拒发」的用例自行清 anchor_valid。 */
+    core->anchor_valid = true;
+    core->anchor_offset_low_ms = 0;
+    core->anchor_offset_high_ms = 0;
+    core->anchor_sampled_ms = fixture->clock.monotonic_ms;
 }
 
 LOCKER_TEST_HELPER static void dt_core_device_ready(dt_fixture_t *fixture, uint64_t boot_id,

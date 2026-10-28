@@ -416,14 +416,14 @@ static void test_completion_wait(void)
 
     /* 还没终态时 wait_final 立刻返回 NOT_READY（超时不取消，domain_repo.c:299）。 */
     TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
-                      domain_completion_wait_final(fixture.core, slot, 0u, &result));
+                      domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
     TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
                       domain_completion_wait_accept(fixture.core, slot, 0u, &accept_status, &operation,
                                                     &has_operation));
 
     /* accept 只带 status/operation，不带 JSON。 */
     dt_uuid_fill(&operation, 0x33u);
-    domain_completion_accept(fixture.core, slot, LOCKER_STATUS_ACCEPTED, &operation, true);
+    domain_completion_accept(fixture.core, slot, &token, LOCKER_STATUS_ACCEPTED, &operation, true);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK,
                       domain_completion_wait_accept(fixture.core, slot, 0u, &accept_status, &operation,
                                                     &has_operation));
@@ -432,9 +432,9 @@ static void test_completion_wait(void)
     TEST_CHECK_U64(0x33u, (uint64_t)operation.bytes[0]);
 
     /* finish 带终态与 JSON；take_json 取到同一份。 */
-    domain_completion_finish(fixture.core, slot, LOCKER_STATUS_OK, "{\"ok\":true}", 11u, 7u);
+    domain_completion_finish(fixture.core, slot, &token, LOCKER_STATUS_OK, "{\"ok\":true}", 11u, 7u);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK,
-                      domain_completion_wait_final(fixture.core, slot, 0u, &result));
+                      domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, result.status);
     TEST_CHECK_U64(7u, result.snapshot_revision);
     TEST_CHECK_U64(11u, (uint64_t)result.length);
@@ -467,17 +467,19 @@ static void test_completion_wait(void)
 
     /* 槽越界/空指针的等待一律 INVALID。 */
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID,
-                      domain_completion_wait_final(fixture.core, LOCKER_DOMAIN_COMPLETION_SLOTS, 0u,
+                      domain_completion_wait_final(fixture.core, LOCKER_DOMAIN_COMPLETION_SLOTS, &token, 0u,
                                                    &result));
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID,
                       domain_completion_wait_accept(fixture.core, slot, 0u, NULL, NULL, NULL));
-    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, domain_completion_wait_final(NULL, 0u, 0u, &result));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, domain_completion_wait_final(NULL, 0u, &token, 0u, &result));
+    /* token 为空同样 INVALID：槽号不是身份，没有 token 就没法确认拿到的是谁的结果。 */
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, domain_completion_wait_final(fixture.core, slot, NULL, 0u, &result));
 
     /* 空 JSON 的终态：take_json 失败但 wait_final 成功。 */
     uint32_t empty = domain_completion_acquire(fixture.core, &other_token);
-    domain_completion_finish(fixture.core, empty, LOCKER_STATUS_INVALID, NULL, 0u, 9u);
+    domain_completion_finish(fixture.core, empty, &other_token, LOCKER_STATUS_INVALID, NULL, 0u, 9u);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK,
-                      domain_completion_wait_final(fixture.core, empty, 0u, &result));
+                      domain_completion_wait_final(fixture.core, empty, &other_token, 0u, &result));
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, result.status);
     TEST_CHECK_U64(9u, result.snapshot_revision);
     TEST_CHECK(!domain_completion_take_json(fixture.core, empty, json, sizeof(json), &length,
@@ -499,14 +501,14 @@ static void test_completion_reap(void)
     dt_core_ready(&fixture);
 
     slot = domain_completion_acquire(fixture.core, &token);
-    domain_completion_finish(fixture.core, slot, LOCKER_STATUS_OK, "{}", 2u, 1u);
+    domain_completion_finish(fixture.core, slot, &token, LOCKER_STATUS_OK, "{}", 2u, 1u);
     /* expires_ms = domain_now(1000) + completion_retention_ms(60000) = 61000。 */
     domain_completion_reap(fixture.core, 60999u);
     TEST_CHECK_U64(slot, (uint64_t)domain_completion_find(fixture.core, &token));
     domain_completion_reap(fixture.core, 61000u);
     TEST_CHECK_U64(UINT32_MAX, (uint64_t)domain_completion_find(fixture.core, &token));
     TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
-                      domain_completion_wait_final(fixture.core, slot, 0u, &result));
+                      domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
 
     /* 未到终态的槽不被回收（不能把在途请求的槽收走）。 */
     locker_uuid_t pending_token;
@@ -516,6 +518,143 @@ static void test_completion_reap(void)
     domain_completion_release(fixture.core, pending);
     domain_completion_reap(NULL, 0u);
 
+    dt_fixture_free(&fixture);
+}
+
+static void test_completion_slot_reuse(void)
+{
+    /* 审计 R3-B-14：槽号会在保留期结束后被回收、再被别的请求复用。
+       只用槽号等待，就会把别人的结果当成自己的交出去（探针实测返回
+       OK / OTHER_USER_B）。wait_final 必须核对 submission_token。 */
+    dt_fixture_t fixture;
+    locker_uuid_t token_a;
+    locker_uuid_t token_b;
+    locker_query_result_t result;
+
+    TEST_CHECK(dt_fixture_init(&fixture, false));
+    dt_core_ready(&fixture);
+
+    uint32_t slot_a = domain_completion_acquire(fixture.core, &token_a);
+    TEST_CHECK(slot_a != UINT32_MAX);
+    domain_completion_finish(fixture.core, slot_a, &token_a, LOCKER_STATUS_OK, "{\"who\":\"A\"}", 12u, 1u);
+    /* 保留期到点后被回收：槽回到空闲池。 */
+    domain_completion_reap(fixture.core, 61000u);
+    TEST_CHECK_U64(UINT32_MAX, (uint64_t)domain_completion_find(fixture.core, &token_a));
+
+    /* 下一个请求复用同一个槽号，但 token 不同、结果体也不同。 */
+    uint32_t slot_b = domain_completion_acquire(fixture.core, &token_b);
+    TEST_CHECK_U64(slot_a, slot_b);
+    TEST_CHECK(!locker_uuid_equal(&token_a, &token_b));
+    domain_completion_finish(fixture.core, slot_b, &token_b, LOCKER_STATUS_OK, "{\"who\":\"B\"}", 12u, 2u);
+
+    /* 拿旧 token 等旧槽：必须 NOT_READY，绝不能交出 B 的响应体。 */
+    memset(&result, 0, sizeof(result));
+    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
+                      domain_completion_wait_final(fixture.core, slot_a, &token_a, 0u, &result));
+    TEST_CHECK(result.length == 0u);
+    TEST_CHECK_STRING("", result.json);
+
+    /* 新 token 仍然拿得到自己的结果。 */
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,
+                      domain_completion_wait_final(fixture.core, slot_b, &token_b, 0u, &result));
+    TEST_CHECK_U64(2u, result.snapshot_revision);
+    TEST_CHECK_STRING("{\"who\":\"B\"}", result.json);
+
+    domain_completion_release(fixture.core, slot_b);
+    dt_fixture_free(&fixture);
+}
+
+/* 释放也必须按令牌，不能按裸下标：等待方超时后槽可能已被下一个请求复用，
+   按下标释放会直接抹掉别人的在途结果（审计 R3-B-14 的后半）。
+   同时验证 Core 线程写结果前的归属核对 domain_completion_token_matches。 */
+static void test_completion_release_owned(void)
+{
+    dt_fixture_t fixture;
+    locker_uuid_t token_a;
+    locker_uuid_t token_b;
+    locker_uuid_t stranger;
+
+    TEST_CHECK(dt_fixture_init(&fixture, false));
+    dt_core_ready(&fixture);
+
+    uint32_t slot_a = domain_completion_acquire(fixture.core, &token_a);
+    TEST_CHECK(slot_a != UINT32_MAX);
+    TEST_CHECK(domain_completion_token_matches(fixture.core, slot_a, &token_a));
+
+    /* 拿错令牌：既不能判定归属，也不能释放。 */
+    dt_uuid_fill(&stranger, 0xEEu);
+    TEST_CHECK(!domain_completion_token_matches(fixture.core, slot_a, &stranger));
+    domain_completion_release_owned(fixture.core, slot_a, &stranger);
+    TEST_CHECK_U64(slot_a, (uint64_t)domain_completion_find(fixture.core, &token_a));
+
+    /* 等待方超时：按令牌释放，槽回到空闲池。 */
+    domain_completion_release_owned(fixture.core, slot_a, &token_a);
+    TEST_CHECK_U64(UINT32_MAX, (uint64_t)domain_completion_find(fixture.core, &token_a));
+
+    /* 槽被下一个请求复用：此时旧令牌的 release_owned 必须什么也不做。 */
+    uint32_t slot_b = domain_completion_acquire(fixture.core, &token_b);
+    TEST_CHECK_U64(slot_a, slot_b);
+    TEST_CHECK(domain_completion_token_matches(fixture.core, slot_b, &token_b));
+    domain_completion_release_owned(fixture.core, slot_b, &token_a);
+    TEST_CHECK_U64(slot_b, (uint64_t)domain_completion_find(fixture.core, &token_b));
+
+    /* 参数守卫：空令牌 / 越界槽号一律不生效。 */
+    domain_completion_release_owned(fixture.core, slot_b, NULL);
+    domain_completion_release_owned(fixture.core, LOCKER_DOMAIN_COMPLETION_SLOTS, &token_b);
+    domain_completion_release_owned(NULL, 0u, &token_b);
+    TEST_CHECK(!domain_completion_token_matches(fixture.core, LOCKER_DOMAIN_COMPLETION_SLOTS, &token_b));
+    TEST_CHECK(!domain_completion_token_matches(fixture.core, slot_b, NULL));
+    TEST_CHECK(!domain_completion_token_matches(NULL, 0u, &token_b));
+    TEST_CHECK_U64(slot_b, (uint64_t)domain_completion_find(fixture.core, &token_b));
+
+    domain_completion_release_owned(fixture.core, slot_b, &token_b);
+    dt_fixture_free(&fixture);
+}
+
+/* 写结果的两个入口（accept / finish）必须在**同一把锁内**核对令牌再写：
+   以前是先锁外 token_matches、再锁内写，两次取锁之间槽可能被回收并复用，
+   核对就白做了（审计 round-5：完成槽检查与写入不原子）。这里用错令牌调用，
+   槽里的内容必须一个字节都不变。 */
+static void test_completion_write_requires_token(void)
+{
+    dt_fixture_t fixture;
+    locker_uuid_t token;
+    locker_uuid_t stranger;
+    locker_status_t accept_status = LOCKER_STATUS_OK;
+    locker_uuid_t operation;
+    bool has_operation = false;
+    locker_query_result_t result;
+    char json[64];
+    size_t length = 0u;
+    uint64_t revision = 0u;
+
+    TEST_CHECK(dt_fixture_init(&fixture, false));
+    dt_core_ready(&fixture);
+
+    uint32_t slot = domain_completion_acquire(fixture.core, &token);
+    TEST_CHECK(slot != UINT32_MAX);
+    dt_uuid_fill(&stranger, 0xEFu);
+
+    /* 错令牌的 accept 与 finish 都必须被锁内的身份核对挡下。 */
+    dt_uuid_fill(&operation, 0x44u);
+    domain_completion_accept(fixture.core, slot, &stranger, LOCKER_STATUS_ACCEPTED, &operation, true);
+    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
+                      domain_completion_wait_accept(fixture.core, slot, 0u, &accept_status, &operation,
+                                                    &has_operation));
+    domain_completion_finish(fixture.core, slot, &stranger, LOCKER_STATUS_OK, "{\"who\":\"X\"}", 12u, 5u);
+    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
+                      domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
+
+    /* 正确令牌仍然写得进去，说明上面挡的是「身份不符」而不是把槽弄坏了。 */
+    domain_completion_accept(fixture.core, slot, &token, LOCKER_STATUS_ACCEPTED, &operation, true);
+    domain_completion_finish(fixture.core, slot, &token, LOCKER_STATUS_OK, "{\"who\":\"Y\"}", 12u, 6u);
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,
+                      domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
+    TEST_CHECK_U64(6u, result.snapshot_revision);
+    TEST_CHECK(domain_completion_take_json(fixture.core, slot, json, sizeof(json), &length, &revision));
+    TEST_CHECK_STRING("{\"who\":\"Y\"}", json);
+
+    domain_completion_release_owned(fixture.core, slot, &token);
     dt_fixture_free(&fixture);
 }
 
@@ -531,5 +670,8 @@ int main(void)
     test_completion_slots();
     test_completion_wait();
     test_completion_reap();
+    test_completion_slot_reuse();
+    test_completion_release_owned();
+    test_completion_write_requires_token();
     TEST_REPORT("domain.test_domain_repo");
 }

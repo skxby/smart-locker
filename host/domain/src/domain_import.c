@@ -145,6 +145,37 @@ locker_status_t domain_import_page(locker_core_t *core, const locker_wire_fetch_
     } else if (page->gap_before_page != 0u) {
         core->import_continuity = false;
     }
+    /* 补取页面里只要有一条事件带 HISTORY_INCOMPLETE，本页整体就不能算连续：
+       序号连续不代表没丢（uart-v1.md:50/:105）。gap_before_page 只说「本页与
+       上一页之间有没有缺口」，管不到页内事件自己报的丢失，两者必须分开判
+       （审计 R4-B-2 探针 B：连续页 + record.flags 含 0x0004，导入后仍 continuity=true）。 */
+    bool page_incomplete = false;
+    for (uint8_t index = 0u; index < page->event_count; ++index) {
+        if ((page->events[index].flags & DOMAIN_OBSERVATION_FLAG_HISTORY_INCOMPLETE) != 0u) {
+            page_incomplete = true;
+            break;
+        }
+    }
+    if (page_incomplete) {
+        core->import_continuity = false;
+    }
+    /* 流连续性派生：仓储判定的「连续历史」是唯一能证明没丢事件的依据
+       （uart-v1.md:370）。没有这一步，实时首启路径上的
+       core->cursor.continuity_ok 永远是 calloc 的 false，于是
+       domain_commands.c:physical_ready_for_action 恒假、OPERATION_CREATE
+       恒返回 NOT_READY，业务永远起步不了（集成测试实测 got 5）。
+       反向必须锁存：HISTORY_INCOMPLETE 一旦成立就不能靠后续连续页洗白
+       （uart-v1.md:50「RESUME_READY 不能清该锁存」），所以只有
+       「仓储认定连续」且「本会话没有已锁存缺口」才置真，否则一律锁死。 */
+    bool continuous = !core->fetch_gap && core->import_continuity;
+    core->cursor.continuity_ok = continuous;
+    if (core->physical.valid) {
+        /* device_state.physical 与动作准入读同一事实，不能一边真一边假。 */
+        core->physical.continuity_ok = continuous;
+        if (continuous) {
+            core->physical.durable_cursor = core->import_cursor;
+        }
+    }
     domain_ack_refresh(core);
     return LOCKER_STATUS_OK;
 }
@@ -196,7 +227,8 @@ locker_status_t domain_persist_device_state(locker_core_t *core)
      * S1-06 Runtime 装配时必须回填真实值（见 docs/evidence/stage-01/S1-04/handoff.md）。
      */
     domain_write_device_state(&change.writer, core->cabinet_name, LOCKER_CONTRACT_VERSION, false, mode,
-                              &core->physical, core->revision + 1u, active_command, active_command != NULL);
+                              &core->physical, core->revision + 1u, active_command, active_command != NULL,
+                              domain_now(core));
     domain_change_put_end(&change);
     locker_status_t status = domain_change_commit(core, &change);
     if (status != LOCKER_STATUS_OK) {

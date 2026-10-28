@@ -45,5 +45,7 @@ foreach(test_name IN LISTS LOCKER_INTEGRATION_TESTS)
 
     add_test(NAME integration.${test_name} COMMAND ${test_name})
     # 真实 socket + 真实 SQLite + 真实线程；超时只用来兜住挂死，不代表慢是正常。
-    set_tests_properties(integration.${test_name} PROPERTIES TIMEOUT 180)
+    # 8 个用例每个都要建/拆一次完整环境（含 WAL 落库与握手），实测单个用例在 5 秒量级，
+    # 留足余量避免把「慢」误报成挂死。
+    set_tests_properties(integration.${test_name} PROPERTIES TIMEOUT 600)
 endforeach()

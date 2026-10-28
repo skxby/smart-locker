@@ -1,0 +1,59 @@
+[ 10%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/sqlite/sqlite3.c.o
+[ 10%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[ 15%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[ 21%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[ 26%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[ 31%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[ 36%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[ 42%] Linking C static library liblocker_common.a
+[ 42%] Built target locker_common
+[ 47%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/cjson/cJSON.c.o
+[ 52%] Building C object host/device/CMakeFiles/locker_device.dir/src/codec.c.o
+[ 57%] Building C object host/device/CMakeFiles/locker_device.dir/src/port.c.o
+[ 63%] Building C object host/device/CMakeFiles/locker_device.dir/src/transport.c.o
+[ 68%] Building C object host/device/CMakeFiles/locker_device.dir/src/wire.c.o
+[ 73%] Linking C static library liblocker_device.a
+[ 73%] Built target locker_device
+[ 78%] Linking C static library liblocker_storage_thirdparty.a
+[ 78%] Built target locker_storage_thirdparty
+[ 84%] Building C object host/simulator/CMakeFiles/locker_simulator.dir/src/sim.c.o
+[ 89%] Linking C static library liblocker_simulator.a
+[ 89%] Built target locker_simulator
+[ 94%] Building C object tests/contract/device/CMakeFiles/test_device_port.dir/test_device_port.c.o
+[100%] Linking C executable test_device_port
+[100%] Built target test_device_port
+[ 20%] Built target locker_common
+[ 22%] Built target locker_storage_thirdparty
+[ 25%] Embedding host/storage/schema-v1.sql
+[ 36%] Built target locker_device
+[ 38%] Embedding host/storage/src/schema_records.json
+[ 40%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_change.c.o
+[ 43%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_commands.c.o
+[ 43%] Built target locker_storage_generated
+[ 47%] Built target locker_simulator
+[ 50%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_core.c.o
+[ 52%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/event_key.c.o
+[ 54%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_device.c.o
+[ 56%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/regex.c.o
+[ 59%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/repository.c.o
+[ 61%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_docs.c.o
+[ 63%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_import.c.o
+[ 65%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_json.c.o
+[ 68%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema.c.o
+[ 70%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_loan.c.o
+[ 72%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema_embedded.c.o
+[ 75%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_operation.c.o
+[ 77%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/u64.c.o
+[ 79%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_repo.c.o
+[ 81%] Linking C static library liblocker_storage.a
+[ 84%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_sha256.c.o
+[ 84%] Built target locker_storage
+[ 86%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_state.c.o
+[ 88%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_text.c.o
+[ 90%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time.c.o
+[ 93%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time_anchor.c.o
+[ 95%] Linking C static library liblocker_domain.a
+[ 95%] Built target locker_domain
+[ 97%] Building C object tests/integration/CMakeFiles/test_core_interrupt_matrix.dir/test_core_interrupt_matrix.c.o
+[100%] Linking C executable test_core_interrupt_matrix
+[100%] Built target test_core_interrupt_matrix

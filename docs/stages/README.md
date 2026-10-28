@@ -1,6 +1,8 @@
 # 分阶段开发入口
 
-阶段0为设计基线；S1-01、S1-02、S1-03 已完成（DONE），当前 active_task=S1-04（业务核心，IN_PROGRESS），其余进度以机器索引与真实报告为准。阶段号表示依赖，文档存在不代表功能完成。主机端默认用户已有VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
+当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](../development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
+
+阶段0为设计基线；S1-01、S1-02、S1-03、S1-04 已完成（DONE），当前 active_task=null，recommended_next=S1-05，其余进度以机器索引与真实报告为准。阶段号表示依赖，文档存在不代表功能完成。主机端默认用户已有VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
 
 ## 1. 固定路线
 
@@ -14,7 +16,7 @@
 | 4 | 容量/供电/真实进度/IWDG/固定UI恢复 | [8张卡](stage-04-monitoring-task-cards.md) | S4-08故障与恢复实测 |
 | 5 | 固定部署/备份/更新/维护/现场交付 | [7张卡](stage-05-delivery-task-cards.md) | S5-07交付证据完整 |
 
-仍为5个开发阶段，阶段2拆成2A/2B两个阅读单元；原37卡ID保留，新增8卡后共45卡，S3-01依赖S2-16。用户已长期授权「两条开发线 + 一个统一集成负责人 + 独立审计」的并发方式：开发A=主开发会话，开发B固定为 DSH 本项目工作区下新开的那一个会话，集成负责人由开发A分时担任（唯一写stage-plan/根CMake/契约/生成物），审计只写audit*.md。可并行窗口、写权限与交接流程见[全项目并发调度方案](parallel-execution-plan.md)；只有该表列出的窗口才并行，表外卡仍按依赖串行，并行前须两支前置DONE、目录不重叠、共享写者唯一，汇合卡必须两支都通过才发。
+仍为5个开发阶段，阶段2拆成2A/2B；共45卡，S3-01依赖S2-16。当前单会话开发与验证，不启用旧并发调度。
 
 机器索引[stage-plan.json](../../config/development/stage-plan.json)记录卡ID/依赖/目录/规格/真实实施状态；[调用链追踪表](../architecture/traceability.md)记录接口何时实现和验收。不另建一份覆盖这些入口的TODO。
 
@@ -44,6 +46,6 @@
 
 用户操作见[完整执行手册](../AI开发执行手册.md)，全部45卡的180份现成指令见[索引](../ai-prompts/README.md)；每卡均含开发/审计/整改/交接，直接复制对应段落即可。
 
-使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。S1-01、S1-02、S1-03 均已收尾 DONE（[S1-01 报告](../evidence/stage-01/S1-01/summary.md)、[S1-01 交接](../evidence/stage-01/S1-01/handoff.md)、[S1-02 报告](../evidence/stage-01/S1-02/summary.md)、[S1-02 交接](../evidence/stage-01/S1-02/handoff.md)、[S1-03 报告](../evidence/stage-01/S1-03/summary.md)、[S1-03 交接](../evidence/stage-01/S1-03/handoff.md)），当前 `active_task=S1-04`（业务核心，IN_PROGRESS）；阶段1 其余卡未开始，实际下一卡以机器索引为准。
+使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。S1-01、S1-02、S1-03、S1-04 均已收尾 DONE（[S1-01 报告](../evidence/stage-01/S1-01/summary.md)、[S1-01 交接](../evidence/stage-01/S1-01/handoff.md)、[S1-02 报告](../evidence/stage-01/S1-02/summary.md)、[S1-02 交接](../evidence/stage-01/S1-02/handoff.md)、[S1-03 报告](../evidence/stage-01/S1-03/summary.md)、[S1-03 交接](../evidence/stage-01/S1-03/handoff.md)），当前active_task=null，recommended_next=S1-05；阶段1 其余卡未开始，实际下一卡以机器索引为准。
 
 重新打开对话，从active_task和最近报告恢复。状态与文件冲突先核对事实；不重复已发生的物理动作。

@@ -10,9 +10,10 @@
  * backend is deliberately not implemented here; locker_device_open() reports
  * NOT_READY for config->simulated == false instead of pretending to drive a port.
  *
- * Threading: one reader thread owns read(); writers (the port's public API
- * calls) serialise on their own mutex, so write() is not called concurrently.
- * The transport itself holds no lock.
+ * Threading: one reader owns read(), one writer owns write(). Public port
+ * calls only admit copied frames to a bounded FIFO. shutdown() may run during
+ * either IO call to wake it; close() follows both joins. The fd is immutable
+ * between connect and those joins; connected is atomic.
  */
 
 #include <stdbool.h>
@@ -45,7 +46,8 @@ void locker_device_transport_close(locker_device_transport_t *transport);
 bool locker_device_transport_connected(const locker_device_transport_t *transport);
 
 /* Writes all bytes within 1000 ms of real monotonic time, or fails. The
- * caller serializes write/shutdown/close; close follows reader join. */
+ * sole writer owns this call; concurrent shutdown wakes it, and close follows
+ * both IO-thread joins. Never call this function from the Core loop. */
 locker_status_t locker_device_transport_write(locker_device_transport_t *transport,
                                               const uint8_t *data, size_t length);
 /* Blocking read with a receive timeout. Returns the byte count, 0 on timeout and

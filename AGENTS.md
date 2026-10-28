@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md），当前 active_task=S1-04（业务核心，IN_PROGRESS），其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
+本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03、S1-04 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md），当前 active_task=null，recommended_next=S1-05，其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 
@@ -11,7 +11,7 @@
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。
 4. `docs/architecture/internal-interfaces.md`、`docs/architecture/uart-v1.md`：内置接口、线程/任务与线协议语义。
-5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03 已 DONE，当前为 S1-04（IN_PROGRESS），以机器索引为准。
+5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03、S1-04 已 DONE，当前active_task=null，下一卡S1-05，以机器索引为准。
 
 `docs/architecture/reviews/` 是专家评审输入和审计记录，不是第二套执行规格。建议冲突以阶段 0 决策为准；发现真源冲突先修正文档和契约，不能各端自行选一种解释。
 
@@ -25,7 +25,7 @@
 
 - 新项目或较大变更先调查 GitHub/官方资料，评估复用、许可、维护、风险和适配成本；明确小改可豁免。
 - 一次执行一张卡。用户授权连续完成一个阶段时可依赖序继续该阶段；否则卡完成后交接，不自动跨卡/跨阶段。前置未通过不开始依赖功能，缺条件如实BLOCKED，不用mock替代实物门禁。
-- **并发授权（用户长期指示）**：本项目采用「两条开发线 + 一个统一集成负责人 + 独立审计」，调度表与角色分工见 [并发调度方案](docs/stages/parallel-execution-plan.md)。开发A=主开发会话；开发B固定为 DSH 中本项目工作区下新开的那个会话，后续不更换；集成负责人由开发A分时担任，是 `config/development/stage-plan.json`、根 `CMakeLists.txt`、`contracts/` 与生成物的唯一写者；审计只写 audit*.md。只有调度表列出的窗口才并行（S2-03/S2-04、S3-02→04 与 S3-05），其余卡仍按依赖串行；并行前须两支前置 DONE、目录不重叠、共享写者唯一；汇合卡必须两支都通过才发。并发不放宽任何证据门禁。
+- **执行方式**：当前会话独立完成开发、验证、整改和集成，不启动开发B或独立审计AI。详见[执行规则](docs/development/execution-policy.md)；功能依赖、实物门禁及唯一共享写者约束继续有效。
 - 功能卡只改其分配目录与相关正式测试/文档。共享接口变更由契约负责人统一更新真源/生成物/调用方；不自行放宽验收或新建同义API。卡状态与真实报告同步，DONE和阶段PASS均需证据。
 - RK 业务核心是借还账本唯一写者；MCU 控制任务是锁驱动唯一入口。客户端、HTTP 工作线程和 UI 不直接写账本或 GPIO。
 - v11为MobileNetV3-Large七分类，E:/equipment-vision原项目只读；相机接口已定USB UVC定焦候选（未购/页面报价未结算/未接板，见docs/hardware/相机选型与成本.md），不以已有模型代替RKNN/相机验证。Core负责融合，locker-vision不接UART、不改item_state、不授权开锁。
@@ -41,17 +41,28 @@
 - STM32固定HAL路线，默认复用本地HAL V1.8.5，不修改用户原库、不另用SPL或业务层寄存器驱动。USE_RTOS在本地HAL中必须保持0，FreeRTOS另行集成。
 - 不通过普通 HTTPS 暴露直接开锁、模拟传感器、任意进程命令或数据覆盖接口。不能用关闭证书校验来实现手机连接。
 
-## 长期规则：全自动开发-审计循环（用户长期指示，必须遵守）
+## 长期规则：单会话开发与验证
 
-- **每张卡必须走完整四段**：开发（`docs/ai-prompts/<卡>.md` 开发段）→ 独立审计（同文件审计段）→ 整改（同文件整改段）→ 交接（同文件交接段）。审计由 **codex CLI** 担任独立审计会话，不使用本会话自审冒充独立审计。
-- **全自动执行，不需要逐轮人工确认**：开发段完成后立即把审计段提示词交给 codex；codex 报 FAIL 就把整改段提示词连同 `audit*.md` 交给开发侧整改，再交回审计段复验；循环到审计 **PASS** 后执行交接段，再进入下一张卡。只有缺环境/缺实物/需用户决策时才停下来问。
-- **审计固定用 codex `gpt-6.1-sol`（high 推理档）**，并**允许审计使用工作区**（`-s danger-full-access` 或等价），让审计过程可视化、可留痕，不允许只在暗处执行不给证据。
-- **不设「联合修复」**：用户已明确废除开发AI与审计AI共同修复的超轮机制（耗 codex 额度）。取而代之的是**审计一次给全、开发一次改透**：审计必须逐项给出文件/行号、触发路径、复现方式、影响与阻塞级别，不许只给结论；开发必须一次性修完本轮全部阻塞项并补正式回归，不许挤牙膏式小改。
-- **每轮审计必须归档四件**到本卡证据目录：`audit-roundN-prompt.txt`、`audit-roundN-runner.ps1`、`audit-roundN-run.log`（含 EXIT/START/END）、`audit-roundN-codex-output.txt`（原始转录）。审计报告本身只写 `audit*.md`，不改业务代码、契约、验收或 stage-plan。
-- **启动器注意**：`codex.ps1` 的版本横幅走 stderr，PowerShell 会当 `NativeCommandError` 抛出，因此 runner 必须用 `$ErrorActionPreference='Continue'`（不能用 `Stop`）；脚本文件必须存为 **UTF-8 BOM**，否则中文路径按 ANSI 解码；调用形如 `Get-Content -Raw -Encoding UTF8 $in | codex exec --skip-git-repo-check -s danger-full-access - *> $out`。
-- **禁用 WSL**：本项目所有 Linux 证据只来自 VMware Ubuntu 干净 guest（`ssh locker-vm`），不得使用 WSL2 产物，也不得把 WSL 结果改名成 VM 结果。
-- **进度报告**：长任务期间每小时向用户报告一次当前进度（卡号、已完成、阻塞、下一步）。
-- **收尾产物**：S1 阶段完成后，把上述「全自动开发AI」「独立审计AI」「卡交接」流程分别固化为可复用的 skills，供后续阶段直接调用。
+- 当前会话完成实现→开发者验证→必要整改→交接，按[执行规则](docs/development/execution-policy.md)执行，不再启动独立审计AI或开发B。
+- 不以缺少设计预审、审计PASS、审计四件套或审计流程skills阻断交付。历史审计指出的产品缺陷仍须通过实际代码与回归关闭，保留历史证据。
+- 用户要求推进阶段二；按真实功能依赖补齐阶段一必要能力后进入阶段二，接线核对和环境准备可先行。不得伪造DONE/PASS或降低实物验收。
+- Linux证据仅来自VMware Ubuntu（ssh locker-vm），禁用WSL。缺实物/环境/用户决策时明确记录，不能拿mock替代。
+
+## 版本控制（用户已授权）
+
+- 仓库已初始化（基线提交 `cd4505e`，`main` 分支，`core.autocrlf=false` 因为全部源文件是 LF）。**每完成一张卡做一个本地提交，不 push**；提交信息写清卡号、改动范围、检查命令与结果。
+- 验证以本卡git diff、新增正式测试和验收清单为依据，不在提示词中复制源码。
+- 整改回滚用 `git checkout`/`git reset`，不再依赖脚本式的锚点回退（S1-04 的 `.s104-stage/revert.py` 属于一次性手段，不要固化成流程）。
+- `build/`、`.s104-stage/`、`STM32F4xx_HAL_Code/`、`STM32F4xx_HAL_Code.zip`、模型产物已在 `.gitignore` 排除；这些东西不能进提交。
+
+## 开发提速规则（P1–P5，用户已授权，不放宽任何验收门禁）
+
+- **P1 聚焦差异**：围绕本卡diff、验收项和相关契约核查，报告具体文件位置、触发、影响及验证结果。
+- **P2 sanitizer 每卡只跑一次**：在收尾轮跑 ASan/UBSan（必跑）；TSan 仅当本卡改动涉及线程、共享状态或锁时才跑。中间整改轮只跑普通 Debug 构建 + 全量 CTest。
+- **P3 证据模板化并设上限**：`handoff.md` ≤ 8 KB、`summary.md` ≤ 10 KB，用固定表格填字段（卡号/契约版本/入口与命令/退出码/失败路径/未实现项/改动文件清单/下一卡），不写成长篇叙述。`audit*.md` 只列问题条目，不复制转录。
+- **P4 开发前核对**：当前会话核对卡正文、相关契约和设计，处理阻塞项，不启动审计模型。
+- **P5 阻塞项才阻断**：只有阻塞级问题阻断通过并触发整改回合；非阻塞项列入本卡 `debt.md` 随卡交接，不反复扩展整改范围。
+- **度量留痕**：每卡交接时在 `handoff.md` 记录本卡实际耗时与开发者验证轮数，用于判断提速是否真的生效。
 
 ## 本阶段检查
 

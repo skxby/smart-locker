@@ -23,6 +23,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
@@ -60,6 +61,9 @@ typedef struct port_server {
     unsigned frames;
     unsigned writes;
     bool hold_responses;
+    bool pause_reads;
+    bool reads_paused;
+    bool stopping;
     unsigned hello_fault;
     uint32_t last_request_no;
     uint8_t held_reply[LOCKER_WIRE_MAX_FRAME];
@@ -237,15 +241,30 @@ static void *port_server_main(void *argument)
         pthread_mutex_unlock(&server->lock);
         return NULL;
     }
+    {
+        struct timeval timeout = {0, 50000};
+        (void)setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    }
     for (;;) {
         ssize_t received;
-
+        bool pause, stop;
+        pthread_mutex_lock(&server->lock);
+        pause = server->pause_reads;
+        stop = server->stopping;
+        server->reads_paused = pause;
+        pthread_mutex_unlock(&server->lock);
+        if (stop) break;
+        if (pause) {
+            struct timespec delay = {0, 1000000L};
+            (void)nanosleep(&delay, NULL);
+            continue;
+        }
         if (used == PORT_SERVER_BUFFER) {
             break; /* unframed peer: drop the link instead of growing */
         }
         received = recv(client, buffer + used, PORT_SERVER_BUFFER - used, 0);
         if (received < 0) {
-            if (errno == EINTR) {
+            if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) {
                 continue;
             }
             break;
@@ -370,6 +389,7 @@ static void port_server_stop(port_server_t *server)
     int client;
 
     pthread_mutex_lock(&server->lock);
+    server->stopping = true;
     client = server->client_fd;
     pthread_mutex_unlock(&server->lock);
     if (server->listen_fd >= 0) {
@@ -1799,6 +1819,86 @@ static void test_transport_bounded_write_and_disconnect(void)
  * "connects for at most timeout_ms of real time" contract would then be a lie.
  * The attempt therefore has to be non-blocking and deadline-bounded.
  */
+/* Find the real adapter socket by its peer address, without exposing a test
+ * fd/API in production. A small kernel send buffer makes a non-reading peer
+ * apply real backpressure within the port's 16 pending-request bound. */
+static bool port_shrink_adapter_buffer(const char *path)
+{
+    int fd;
+    for (fd = 3; fd < 1024; ++fd) {
+        struct sockaddr_un peer;
+        socklen_t length = sizeof(peer);
+        int bytes = 1024;
+        memset(&peer, 0, sizeof(peer));
+        if (getpeername(fd, (struct sockaddr *)&peer, &length) == 0 &&
+            peer.sun_family == AF_UNIX && strcmp(peer.sun_path, path) == 0) {
+            return setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &bytes, sizeof(bytes)) == 0;
+        }
+    }
+    return false;
+}
+
+static void test_async_send_under_socket_backpressure(void)
+{
+    unsigned pass;
+    for (pass = 0u; pass < 2u; ++pass) {
+        port_env_t env;
+        uint64_t deadline, longest = 0u, started;
+        unsigned accepted = 0u, busy = 0u, number;
+        bool paused = false;
+        port_env_init(&env);
+        env.real_clock = true;
+        TEST_CHECK(port_env_open_ready(&env, "asyncpressure"));
+        TEST_CHECK(port_shrink_adapter_buffer(env.server.socket_path));
+        pthread_mutex_lock(&env.server.lock);
+        env.server.pause_reads = true;
+        pthread_mutex_unlock(&env.server.lock);
+        deadline = port_real_now_ms() + 1000u;
+        do {
+            struct timespec delay = {0, 1000000L};
+            pthread_mutex_lock(&env.server.lock);
+            paused = env.server.reads_paused;
+            pthread_mutex_unlock(&env.server.lock);
+            if (!paused) (void)nanosleep(&delay, NULL);
+        } while (!paused && port_real_now_ms() < deadline);
+        TEST_CHECK(paused);
+        for (number = 1000u; number < 1040u; ++number) {
+            locker_status_t status;
+            uint64_t elapsed;
+            started = port_real_now_ms();
+            status = locker_device_get_snapshot(env.device, number);
+            elapsed = port_real_now_ms() - started;
+            if (elapsed > longest) longest = elapsed;
+            if (status == LOCKER_STATUS_OK) ++accepted;
+            else if (status == LOCKER_STATUS_BUSY) ++busy;
+            else TEST_CHECK(false);
+        }
+        TEST_CHECK(accepted > 0u && accepted <= 16u && busy > 0u);
+        TEST_CHECK(longest < 200u);
+        if (pass == 0u) {
+            /* Let the writer reach poll, then close must wake it rather than
+             * waiting out the one-second IO budget or draining queued frames. */
+            struct timespec delay = {0, 100000000L};
+            (void)nanosleep(&delay, NULL);
+        } else {
+            locker_status_t status;
+            deadline = port_real_now_ms() + 2500u;
+            do {
+                struct timespec delay = {0, 10000000L};
+                (void)nanosleep(&delay, NULL);
+                status = locker_device_get_snapshot(env.device, 2000u);
+            } while (status == LOCKER_STATUS_BUSY && port_real_now_ms() < deadline);
+            TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, status);
+        }
+        started = port_real_now_ms();
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_close(env.device));
+        TEST_CHECK(port_real_now_ms() - started < 500u);
+        TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY,
+                          locker_device_get_snapshot(env.device, 3000u));
+        port_env_finish(&env);
+    }
+}
+
 static void test_connect_deadline_when_accept_queue_full(void)
 {
     locker_device_transport_t transport;
@@ -2044,6 +2144,7 @@ static void test_pending_entry_matches_response_type(void)
 
 int main(void)
 {
+    test_async_send_under_socket_backpressure();
     test_old_intent_after_close_open_rejected_without_write();
     test_historical_query_does_not_replace_current_mirror();
     test_transport_bounded_write_and_disconnect();

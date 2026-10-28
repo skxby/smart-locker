@@ -83,6 +83,15 @@
 /* 单页设备事件上限：uart-layouts.json 的 max_event_count。 */
 #define LOCKER_DOMAIN_EVENT_PAGE_MAX 4u
 
+/* observation_flags 位表（docs/architecture/uart-v1.md:50）：
+   bit0 SUPPLY_VALID、bit1 PHYSICAL_STABLE、bit2 HISTORY_INCOMPLETE、
+   bit3 JOURNAL_DEGRADED、bit4 PULSE_ACTIVE。 */
+#define DOMAIN_OBSERVATION_FLAG_SUPPLY_VALID 0x0001u
+#define DOMAIN_OBSERVATION_FLAG_PHYSICAL_STABLE 0x0002u
+#define DOMAIN_OBSERVATION_FLAG_HISTORY_INCOMPLETE 0x0004u
+#define DOMAIN_OBSERVATION_FLAG_JOURNAL_DEGRADED 0x0008u
+#define DOMAIN_OBSERVATION_FLAG_PULSE_ACTIVE 0x0010u
+
 /* 在途设备请求：Core 发出的请求号 -> 用途，回复按 request_no 匹配。 */
 #define LOCKER_DOMAIN_PENDING_SLOTS 8u
 /* 完成槽：HTTP/IPC 用 submission_token 取结果，最长保留 completion_retention_ms。 */
@@ -166,6 +175,29 @@ typedef struct domain_operation {
     uint64_t door_opened_ms;
     uint64_t wait_confirm_deadline_ms;
 
+    /* 进入 WAIT_CONFIRM 时冻结的物理依据（审计 R1-B-4）。
+       待确认期间只要出现新的物理事实（门又开、物品离开期望值、物理版本推进、
+       物品未知），这一份依据就作废，操作必须立刻进核验——否则「开一次门又
+       关回去」就能把已知的物理冲突洗掉，用户照旧确认完成。
+       `wait_confirm_basis_valid` 为假表示该操作不是从证据路径进 WAIT_CONFIRM
+       （例如恢复出来的），此时按保守规则处理。 */
+    bool wait_confirm_basis_valid;
+    uint64_t wait_confirm_physical_revision;
+    uint8_t wait_confirm_item;
+    uint8_t wait_confirm_door;
+    /* 冻结依据必须绑定完整代际：physical_revision 只在同一次 boot 内单调
+       （internal-interfaces.md:12），换 boot 之后 revision 会从头计数，只比
+       revision 大小会把「设备重启后的旧事实」当成「更早的陈旧事实」放过
+       （审计 R3-B-3 探针 A：冻结 boot=1/rev=9，送来 boot=2/rev=1 的成功快照
+       仍保持 WAIT_CONFIRM）。journal_epoch 同理：换日志世代说明事件流已断开。 */
+    uint64_t wait_confirm_boot_id;
+    locker_uuid_t wait_confirm_journal_epoch;
+    /* 已判定冲突但把「转核验」写进仓储失败时的闭锁标志。
+       内存此时仍是 WAIT_CONFIRM，若只看状态就允许 confirm，存储一恢复就能
+       直接把一次已知冲突的操作确认完成（审计 R3-B-3 探针 B）。这个标志不落库：
+       重启后 WAIT_CONFIRM 一律转核验（domain_recover），不存在窗口。 */
+    bool wait_confirm_blocked;
+
     bool outbox_present;
     locker_uuid_t outbox_id;
     uint64_t action_no;
@@ -219,6 +251,11 @@ typedef enum domain_job_kind {
 typedef struct domain_job {
     uint8_t kind;
     uint32_t completion; /* 完成槽下标；UINT32_MAX 表示无 */
+    /* 完成槽的令牌。槽号会被回收复用，只有令牌能证明「这个结果属于当初那个
+       请求」——等待方超时释放后，同一槽号可能已经被下一个请求占用，作业若还
+       按槽号写结果，就会把 A 的应答交到 B 手里（审计 R3-B-14 探针：A 超时释放、
+       B 复用同一槽，B 的 wait token 合法，读到的却是 A 的结果）。 */
+    locker_uuid_t completion_token;
     union {
         locker_command_t command;
         locker_query_t query;
@@ -401,6 +438,10 @@ struct locker_core {
     bool fetch_in_flight;
     bool snapshot_in_flight;
     bool ack_in_flight;
+    /* 当前正在执行的作业所持有的完成槽令牌（Core 线程私有）。
+       响应写回前用它核对槽的归属：等待方超时释放后槽可能已被复用，
+       裸下标写回会把 A 的结果塞进 B 的槽（审计 R3-B-14）。 */
+    locker_uuid_t job_token;
     locker_event_key_t ack_cursor;
     bool ack_cursor_valid;
     /* 仓储已提交的连续水位：补取与 ACK 都只能用它，不能用内存里的
@@ -417,6 +458,26 @@ struct locker_core {
     int64_t anchor_offset_high_ms; /* mcu - host 的上界 */
     uint64_t anchor_sampled_ms;    /* 采样时刻（宿主单调毫秒） */
     uint64_t last_anchor_ms;       /* 上次发出 TIME_ANCHOR 的宿主单调毫秒 */
+
+    /* 设备侧动作上下文的释放（RELEASE_CONTEXT）。终端状态落库后必须通知
+       MCU 放掉 has_active，否则下一次 EXECUTE 永远 BUSY、柜子只能用一次
+       （审计 R1-B-3）。释放失败只重发/重核，绝不重放旧开锁动作。 */
+    bool release_pending; /* 有待释放的上下文 */
+    bool release_sent;    /* 已发出请求，等响应 */
+    /* CONFLICT（CAS 失败）后不能凭「物理版本变了」就宣布设备侧已放手：
+       uart-v1.md:402 要求先重新查询，再用回执里的活动上下文判定。
+       置位后释放泵只等新快照、不重发，避免拿旧版本无限重试。 */
+    bool release_recheck;
+    uint64_t release_ms;  /* 首次登记的宿主单调毫秒 */
+    locker_uuid_t release_operation_id;
+    locker_uuid_t release_command_id;
+    /* 设备侧当前持有的动作上下文（GET_SNAPSHOT 回执）。用途有二：
+       ① 释放 CONFLICT 后核对「设备是不是已经放手」；
+       ② 重启后内存里的释放登记已经丢失，只能靠它发现设备还挂着上一次
+          动作的 has_active，并据此补登记一次释放（审计 R3-B-2 第三段）。 */
+    locker_uuid_t device_active_operation_id;
+    locker_uuid_t device_active_command_id;
+    bool device_active_valid;
 
     /* ---- 设备泵与投影（Core 线程私有） ---- */
     uint64_t snapshot_requested_ms;
@@ -515,11 +576,11 @@ locker_status_t domain_change_commit(locker_core_t *core, domain_change_t *chang
 
 /* ---------- 文档构造（写入仓储的 value） ---------- */
 
-void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t *physical);
-void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_t *operation);
-void domain_write_operation(locker_json_writer_t *writer, const domain_operation_t *operation);
+void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t *physical, uint64_t now_ms);
+void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_t *operation, uint64_t now_ms);
+void domain_write_operation(locker_json_writer_t *writer, const domain_operation_t *operation, uint64_t now_ms);
 void domain_write_operation_record(locker_json_writer_t *writer, const domain_operation_t *operation,
-                                  const locker_uuid_t *host_instance_id);
+                                  const locker_uuid_t *host_instance_id, uint64_t now_ms);
 void domain_write_outbox(locker_json_writer_t *writer, const domain_operation_t *operation,
                          const char *state, const char *attempted_at);
 void domain_write_audit(locker_json_writer_t *writer, const locker_uuid_t *id, const locker_uuid_t *actor,
@@ -533,7 +594,8 @@ void domain_write_import_cursor(locker_json_writer_t *writer, const locker_uuid_
 void domain_write_device_state(locker_json_writer_t *writer, const char *cabinet_name,
                                const char *contract_version, bool simulated, uint8_t mode,
                                const domain_physical_t *physical, uint64_t snapshot_revision,
-                               const locker_uuid_t *active_command, bool has_active_command);
+                               const locker_uuid_t *active_command, bool has_active_command,
+                               uint64_t now_ms);
 void domain_write_loan(locker_json_writer_t *writer, const locker_uuid_t *id, const locker_uuid_t *tool_id,
                        const locker_uuid_t *borrower_id, const locker_uuid_t *borrow_operation,
                        const locker_uuid_t *return_operation, bool has_return, const char *opened_at,
@@ -577,21 +639,42 @@ void domain_handle_device_reply(locker_core_t *core, const locker_device_reply_t
 void domain_handle_tick(locker_core_t *core, uint64_t tick_ms);
 locker_status_t domain_recover(locker_core_t *core);
 void domain_outbox_pump(locker_core_t *core);
+/* 终端状态落库后通知 MCU 释放动作上下文（RELEASE_CONTEXT）；不发则下一次
+   EXECUTE 永远 BUSY（审计 R1-B-3）。 */
+void domain_release_pump(locker_core_t *core);
 void domain_timeouts(locker_core_t *core);
 void domain_fetch_pump(locker_core_t *core);
 
 /* 完成槽（线程安全） */
 uint32_t domain_completion_acquire(locker_core_t *core, locker_uuid_t *out_token);
 void domain_completion_release(locker_core_t *core, uint32_t slot);
-void domain_completion_accept(locker_core_t *core, uint32_t slot, locker_status_t status,
-                              const locker_uuid_t *operation_id, bool has_operation);
-void domain_completion_finish(locker_core_t *core, uint32_t slot, locker_status_t status,
-                              const char *json, size_t length, uint64_t revision);
+/* 按令牌释放：只有槽里装的仍是这个令牌时才清槽。等待方超时后调用它，
+   绝不能用裸下标——那时槽可能已经被下一个请求复用，按下标释放会直接
+   抹掉别人的在途结果（审计 R3-B-14）。 */
+void domain_completion_release_owned(locker_core_t *core, uint32_t slot, const locker_uuid_t *token);
+/* 槽当前是否仍由这个令牌代表。Core 线程在派发作业前记下作业的令牌，
+   写结果前再核对一次：期间等待方可能已经超时释放、槽被别的请求复用，
+   此时这次写入属于「上一个请求」，必须丢弃而不是塞给新请求。 */
+bool domain_completion_token_matches(locker_core_t *core, uint32_t slot, const locker_uuid_t *token);
+/* 写结果的两个入口都带令牌，**在锁内**完成「核对身份 + 写入」：
+   以前是先在锁外 token_matches 再在锁内 accept/finish，两次取锁之间槽可能被
+   回收并被下一个请求复用，核对就白做了（审计 round-5：完成槽检查与写入不原子）。
+   token 为 NULL 表示调用方没有身份可核（设备环的收尾路径，槽号本来就是
+   UINT32_MAX 之外的占位），此时只按 used 判断。 */
+void domain_completion_accept(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                              locker_status_t status, const locker_uuid_t *operation_id, bool has_operation);
+void domain_completion_finish(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                              locker_status_t status, const char *json, size_t length, uint64_t revision);
 locker_status_t domain_completion_wait_accept(locker_core_t *core, uint32_t slot, uint32_t timeout_ms,
                                               locker_status_t *out_status, locker_uuid_t *out_operation,
                                               bool *out_has_operation);
-locker_status_t domain_completion_wait_final(locker_core_t *core, uint32_t slot, uint32_t timeout_ms,
-                                             locker_query_result_t *out_result);
+/* 等待终态时**必须**带上 submission_token**：槽号会在保留期结束后被回收、
+   再被别的请求复用，只用槽号等待会把别人的结果当成自己的交出去
+   （审计 R3-B-14：find 与 wait 之间旧槽被 reap、新请求复用同一槽，
+   等待旧槽却拿到 OK / OTHER_USER_B）。token 在锁内逐次核对，槽一换人立刻返回
+   NOT_READY，让调用方按契约用幂等键重查。 */
+locker_status_t domain_completion_wait_final(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                                             uint32_t timeout_ms, locker_query_result_t *out_result);
 /* 取 AUTH 终态的 principal；没有则返回 false。 */
 bool domain_completion_take_principal(locker_core_t *core, uint32_t slot, locker_principal_t *out);
 bool domain_completion_take_json(locker_core_t *core, uint32_t slot, char *out, size_t out_size,
@@ -622,9 +705,26 @@ bool domain_json_read_enum_device_mode(const locker_json_document_t *doc, const 
 /* 读取 operations/<id> 并反序列化成工作副本（含 evidence/baseline/loan 关联）。 */
 locker_status_t domain_operation_load(locker_core_t *core, const locker_uuid_t *id, int slot,
                                       domain_operation_t *out);
+/* 把「墙钟 UTC 起点 + 时长」的期限换算到单调时间域（domain_core.c）。
+   起点是库里的 OperationRecord.updated_at（Unix epoch 毫秒，量级 1e12），
+   而 Core 全部计时比较都在单调毫秒（量级 1e6）上做。直接把两者相加得到的
+   截止点永远大于 now，重启/重载后挂着的申请与待确认操作就再也不会超时
+   （审计 R1-B-5、R3-B-13）。换算规则：
+   - 墙钟不可用或起点为 0：无法判断是否过期，按「立即到期」处理（保守）；
+   - 已经超过期限：剩余按 0，立即到期；
+   - 起点在未来（墙钟回拨过）：按完整时长算，不放大成更长的等待。 */
+uint64_t domain_deadline_in_monotonic(uint64_t wall_start_ms, uint64_t duration_ms, bool wall_ok,
+                                      uint64_t now_wall_ms, uint64_t now_mono_ms);
 /* 单文档提交：把 operation 写回仓储并推进 revision。 */
 locker_status_t domain_persist_operation(locker_core_t *core, domain_operation_t *operation);
-
+/* 把操作推进到 REVIEW_REQUIRED 并持久化原因（保留占位，x-rules 6）。
+   提交失败时内存保持原状态，调用方下次仍可重试。设备证据路径也要用，
+   所以不能只留在 domain_commands.c 里。 */
+locker_status_t domain_require_review(locker_core_t *core, domain_operation_t *operation,
+                                      const char *reason_code);
+/* WAIT_CONFIRM 的冻结依据是否已经失效（门/物品/版本/代际任一处变化）。
+   设备侧收到新事实时与 confirm 决策点共用同一份判定，避免两处各写一份漂移。 */
+bool domain_wait_confirm_basis_conflicted(const locker_core_t *core, const domain_operation_t *operation);
 /* 公开投影（openapi.json 的 Operation / Loan / Tool / Device 组件）。 */
 void domain_write_operation_projection(locker_json_writer_t *writer, locker_core_t *core,
                                        const domain_operation_t *operation);
@@ -662,8 +762,21 @@ locker_status_t domain_anchor_mcu_now(const locker_core_t *core, uint64_t *out_l
 
 /* 终结前把 loan_id 挂到操作上：借出新建，归还复用当前有效借用的 id。 */
 locker_status_t domain_loan_prepare(locker_core_t *core, domain_operation_t *operation);
-/* 终结之后写账本：借出新建 Loan，归还关闭原记录（借用者与 tool 保持原值）。 */
-locker_status_t domain_loan_apply(locker_core_t *core, domain_operation_t *operation);
+/* 第一阶段：把账本条件（ABSENT/EXISTS）写进调用方的事务缓冲。**必须在任何
+   put/delete 之前**调用——RepositoryChange 的 checks 段要在 mutations 之前
+   一次性写完，晚写会把 checks 混进 mutations 得到非法 JSON。 */
+locker_status_t domain_loan_check(locker_core_t *core, const domain_operation_t *operation,
+                                  domain_change_t *change);
+/* 第二阶段：把账本变更写进同一事务缓冲（借出新建 Loan，归还关闭原记录，
+   借用者与 tool 保持原值）。**不提交**——调用方把它和操作终结放进同一个
+   change 里提交，否则「操作已 COMPLETED 但账本没动」这种半截状态会在中途
+   失败时留下。写出的时间戳经 out_stamp 回传，供提交成功后更新内存副本，
+   保证 loans 文档里的 opened_at/closed_at 与 core->loan_opened_at 不分叉。 */
+locker_status_t domain_loan_apply(locker_core_t *core, const domain_operation_t *operation,
+                                  domain_change_t *change, char *out_stamp, size_t stamp_size);
+/* 账本事务提交成功后的内存副本更新（借出建、归还清）。 */
+void domain_loan_commit_in_memory(locker_core_t *core, const domain_operation_t *operation,
+                                  const char *timestamp_text);
 
 /* 进度源样本发布（非阻塞、只增）。 */
 void domain_progress_publish(locker_core_t *core);
@@ -713,6 +826,11 @@ void domain_learn_device_uid(locker_core_t *core, const uint8_t uid[12]);
 /* 响应构造（Core 线程） */
 void domain_response_begin(locker_json_writer_t *writer, char *buffer, size_t capacity);
 bool domain_response_data_object(locker_json_writer_t *writer);
+/* 收尾「调用方已写出完整 JSON 值」的信封：不补 data 对象的 `}`。
+   投影写手（operation/device/tool 对象）自带 `{…}`，必须用这个而不是
+   domain_response_end，否则会多一层大括号写成非法 JSON。 */
+void domain_response_end_value(locker_json_writer_t *writer, uint64_t revision,
+                               const locker_uuid_t *request_id);
 void domain_response_end(locker_json_writer_t *writer, uint64_t revision,
                          const locker_uuid_t *request_id);
 

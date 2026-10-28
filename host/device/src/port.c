@@ -46,6 +46,12 @@ typedef struct pending_request {
     uint64_t started_host_mono_ms;
 } pending_request_t;
 
+typedef struct transmit_frame {
+    uint8_t bytes[LOCKER_WIRE_MAX_FRAME];
+    size_t length;
+    uint32_t request_no;
+} transmit_frame_t;
+
 struct locker_device {
     bool created;
     bool opened;
@@ -61,7 +67,14 @@ struct locker_device {
     bool reader_stop;
 
     pthread_mutex_t lock;
-    pthread_mutex_t write_lock;
+    pthread_mutex_t write_lock; /* lifecycle/shutdown only; never held during IO */
+    pthread_cond_t writer_ready;
+    pthread_t writer_thread;
+    bool writer_started;
+    bool writer_stop;
+    transmit_frame_t transmit[LOCKER_DEVICE_PENDING_MAX];
+    size_t transmit_head;
+    size_t transmit_count;
 
     pending_request_t pending[LOCKER_DEVICE_PENDING_MAX];
     uint32_t next_request_no;
@@ -206,7 +219,11 @@ static locker_status_t device_sink_result(locker_device_t *device, locker_status
         pthread_mutex_lock(&device->lock);
         device->reconcile_required = true;
         device->reader_stop = true;
+        device->writer_stop = true;
+        device->hello_complete = false;
+        device->transmit_count = 0u;
         pending_clear(device);
+        pthread_cond_signal(&device->writer_ready);
         pthread_mutex_unlock(&device->lock);
         locker_device_transport_shutdown(&device->transport);
         pthread_mutex_unlock(&device->write_lock);
@@ -455,11 +472,7 @@ static void *device_reader_main(void *argument)
         received = locker_device_transport_read(&device->transport, buffer, sizeof(buffer),
                                                LOCKER_DEVICE_READ_TIMEOUT_MS);
         if (received < 0) {
-            pthread_mutex_lock(&device->lock);
-            device->hello_complete = false;
-            device->reconcile_required = true;
-            pending_clear(device);
-            pthread_mutex_unlock(&device->lock);
+            (void)device_sink_result(device, LOCKER_STATUS_IO_ERROR);
             break;
         }
         if (received == 0) {
@@ -476,41 +489,81 @@ static void *device_reader_main(void *argument)
     return NULL;
 }
 
+/* Only this worker writes bytes. Public submissions copy a complete frame into
+ * a bounded FIFO and never wait for socket readiness. Shutdown wakes a blocked
+ * write; uncertain or partially written frames are never retried/replayed. */
+static void *device_writer_main(void *argument)
+{
+    locker_device_t *device = (locker_device_t *)argument;
+    for (;;) {
+        transmit_frame_t frame;
+        bool pending = false;
+        size_t index;
+        pthread_mutex_lock(&device->lock);
+        while (!device->writer_stop && device->transmit_count == 0u) {
+            pthread_cond_wait(&device->writer_ready, &device->lock);
+        }
+        if (device->writer_stop) {
+            pthread_mutex_unlock(&device->lock);
+            break;
+        }
+        frame = device->transmit[device->transmit_head];
+        device->transmit_head = (device->transmit_head + 1u) % LOCKER_DEVICE_PENDING_MAX;
+        --device->transmit_count;
+        pending_expire(device);
+        for (index = 0u; index < LOCKER_DEVICE_PENDING_MAX; ++index) {
+            if (device->pending[index].used &&
+                device->pending[index].request_no == frame.request_no) {
+                device->pending[index].started_host_mono_ms = device_now_ms(device);
+                pending = true;
+                break;
+            }
+        }
+        pthread_mutex_unlock(&device->lock);
+        if (!pending) {
+            continue; /* expired before any byte was sent; never replay it */
+        }
+        if (locker_device_transport_write(&device->transport,
+                                           frame.bytes, frame.length) != LOCKER_STATUS_OK) {
+            (void)device_sink_result(device, LOCKER_STATUS_IO_ERROR);
+            break;
+        }
+    }
+    return NULL;
+}
+
 static locker_status_t device_send_request(locker_device_t *device, uint8_t type,
                                            uint32_t request_no,
                                            const locker_wire_request_union_t *request)
 {
-    uint8_t frame[LOCKER_WIRE_MAX_FRAME];
-    size_t frame_length = 0u;
+    transmit_frame_t frame;
     locker_status_t status;
-    uint64_t started_ms;
-
     const locker_uuid_t *session = type == 1u ? &request->hello.new_session_id :
                                                    &request->hello.session_id;
-    started_ms = device_now_ms(device);
-    pthread_mutex_lock(&device->write_lock);
+    memset(&frame, 0, sizeof(frame));
     pthread_mutex_lock(&device->lock);
-    if (!device->opened || device->reconcile_required ||
+    if (!device->opened || device->writer_stop || device->reconcile_required ||
         (type != 1u && (!device->hello_complete ||
          !locker_uuid_equal(session, &device->session_id)))) {
         pthread_mutex_unlock(&device->lock);
-        pthread_mutex_unlock(&device->write_lock);
         return LOCKER_STATUS_NOT_READY;
+    }
+    if (device->transmit_count == LOCKER_DEVICE_PENDING_MAX) {
+        pthread_mutex_unlock(&device->lock);
+        return LOCKER_STATUS_BUSY;
     }
     if (request_no == 0u) {
         request_no = pending_next_request_no(device);
     }
     if (request_no == 0u || device->request_numbers_exhausted) {
         pthread_mutex_unlock(&device->lock);
-        pthread_mutex_unlock(&device->write_lock);
         return LOCKER_STATUS_NOT_READY;
     }
-    status = locker_wire_encode_request(type, request_no, request, frame, sizeof(frame),
-                                        &frame_length);
+    status = locker_wire_encode_request(type, request_no, request, frame.bytes,
+                                        sizeof(frame.bytes), &frame.length);
     if (status != LOCKER_STATUS_OK ||
-        !pending_add(device, request_no, type, session, started_ms)) {
+        !pending_add(device, request_no, type, session, device_now_ms(device))) {
         pthread_mutex_unlock(&device->lock);
-        pthread_mutex_unlock(&device->write_lock);
         return status == LOCKER_STATUS_OK ? LOCKER_STATUS_BUSY : LOCKER_STATUS_INVALID;
     }
     if (request_no > device->next_request_no) {
@@ -519,21 +572,13 @@ static locker_status_t device_send_request(locker_device_t *device, uint8_t type
     if (request_no == UINT32_MAX) {
         device->request_numbers_exhausted = true;
     }
+    frame.request_no = request_no;
+    device->transmit[(device->transmit_head + device->transmit_count) %
+                     LOCKER_DEVICE_PENDING_MAX] = frame;
+    ++device->transmit_count;
+    pthread_cond_signal(&device->writer_ready);
     pthread_mutex_unlock(&device->lock);
-    status = locker_device_transport_write(&device->transport, frame, frame_length);
-    if (status != LOCKER_STATUS_OK) {
-        pthread_mutex_lock(&device->lock);
-        device->reconcile_required = true;
-        device->hello_complete = false;
-        pending_clear(device);
-        pthread_mutex_unlock(&device->lock);
-        locker_device_transport_shutdown(&device->transport);
-    }
-    pthread_mutex_unlock(&device->write_lock);
-    if (status != LOCKER_STATUS_OK) {
-        return LOCKER_STATUS_IO_ERROR;
-    }
-    return LOCKER_STATUS_OK;
+    return LOCKER_STATUS_OK; /* admitted locally, not an MCU acknowledgement */
 }
 
 /* Caller must have validated that the adapter is open and HELLO completed. */
@@ -560,6 +605,12 @@ locker_status_t locker_device_create(locker_device_t **out)
         return LOCKER_STATUS_IO_ERROR;
     }
     if (pthread_mutex_init(&device->write_lock, NULL) != 0) {
+        pthread_mutex_destroy(&device->lock);
+        free(device);
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    if (pthread_cond_init(&device->writer_ready, NULL) != 0) {
+        pthread_mutex_destroy(&device->write_lock);
         pthread_mutex_destroy(&device->lock);
         free(device);
         return LOCKER_STATUS_IO_ERROR;
@@ -628,6 +679,9 @@ locker_status_t locker_device_open(locker_device_t *device, const locker_device_
     device->hello_complete = false;
     device->device_mode = (uint8_t)LOCKER_DEVICE_MODE_RECONCILING;
     device->reader_stop = false;
+    device->writer_stop = false;
+    device->transmit_head = 0u;
+    device->transmit_count = 0u;
     pthread_mutex_unlock(&device->lock);
 
     if (locker_clock_port_new_uuid(&config->clock, &device->pending_session_id) !=
@@ -641,7 +695,6 @@ locker_status_t locker_device_open(locker_device_t *device, const locker_device_
     }
     copy_uuid(&device->host_instance_id, &config->host_instance_id);
 
-    device->reader_stop = false;
     if (pthread_create(&device->reader_thread, NULL, device_reader_main, device) != 0) {
         locker_device_transport_close(&device->transport);
         return LOCKER_STATUS_IO_ERROR;
@@ -651,6 +704,11 @@ locker_status_t locker_device_open(locker_device_t *device, const locker_device_
     pthread_mutex_lock(&device->lock);
     device->opened = true;
     pthread_mutex_unlock(&device->lock);
+    if (pthread_create(&device->writer_thread, NULL, device_writer_main, device) != 0) {
+        (void)locker_device_close(device);
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    device->writer_started = true;
 
     /* HELLO starts a new session and revokes the old one (uart-v1.md:360). It is
      * the one request sent before a session exists, so it allocates its own
@@ -958,19 +1016,28 @@ locker_status_t locker_device_close(locker_device_t *device)
     pthread_mutex_lock(&device->lock);
     device->opened = false;
     device->reader_stop = true;
+    device->writer_stop = true;
     device->hello_complete = false;
+    device->transmit_count = 0u;
     pending_clear(device);
+    pthread_cond_signal(&device->writer_ready);
     pthread_mutex_unlock(&device->lock);
 
     pthread_mutex_lock(&device->write_lock);
+    /* fd remains stable until both IO owners have exited. shutdown may race
+     * with read/send, but close never does. Do not hold write_lock while joining
+     * a worker that may be propagating a failure through device_sink_result. */
+    locker_device_transport_shutdown(&device->transport);
+    pthread_mutex_unlock(&device->write_lock);
+    if (device->writer_started) {
+        (void)pthread_join(device->writer_thread, NULL);
+        device->writer_started = false;
+    }
     if (device->reader_started) {
-        /* shutdown() wakes the blocking read so the join cannot hang. */
-        locker_device_transport_shutdown(&device->transport);
-        pthread_mutex_unlock(&device->write_lock);
         (void)pthread_join(device->reader_thread, NULL);
         device->reader_started = false;
-        pthread_mutex_lock(&device->write_lock);
     }
+    pthread_mutex_lock(&device->write_lock);
     locker_device_transport_close(&device->transport);
     pthread_mutex_unlock(&device->write_lock);
     locker_wire_stream_reset(&device->stream);
@@ -986,6 +1053,7 @@ void locker_device_destroy(locker_device_t *device)
     if (locker_device_close(device) != LOCKER_STATUS_OK) {
         return; /* A callback cannot free its own executing reader context. */
     }
+    pthread_cond_destroy(&device->writer_ready);
     pthread_mutex_destroy(&device->write_lock);
     pthread_mutex_destroy(&device->lock);
     free(device);

@@ -490,11 +490,23 @@ locker_status_t domain_operation_load(locker_core_t *core, const locker_uuid_t *
     if (!parse_operation_record(&doc.doc, doc.value, out)) {
         return LOCKER_STATUS_IO_ERROR;
     }
-    /* 运行时计时字段不在文档里：用最近一次更新时间重建保守截止点。 */
+    /* 运行时计时字段不在文档里：用最近一次更新时间重建保守截止点。
+       注意这里必须做**墙钟 -> 单调**换算：updated_ms 来自 OperationRecord 的
+       RFC3339 文本（Unix epoch 毫秒，量级 1e12），而所有超时比较都在
+       core->now_ms（进程单调毫秒，量级 1e6）上做。直接相加会得到 1.7e12 的
+       截止点，永远追不上 now——取消失败一次，这条申请就再也不会到期
+       （审计 R3-B-13：探针实测 mono=1000、active.deadline=1761004920000，
+       恢复仓储后推进 130 s 仍是 REQUESTED、used=1）。换算规则与恢复路径
+       共用 domain_deadline_in_monotonic，两条入口不能各写一套。 */
+    const uint64_t now_mono = domain_now(core);
+    uint64_t now_wall = 0u;
+    const bool wall_ok = locker_clock_port_wall_utc_ms(&core->clock, &now_wall) == LOCKER_STATUS_OK;
     if (out->state == LOCKER_OPERATION_STATE_REQUESTED) {
-        out->requested_deadline_ms = out->updated_ms + LOCKER_REQUEST_TTL_MS;
+        out->requested_deadline_ms =
+            domain_deadline_in_monotonic(out->updated_ms, LOCKER_REQUEST_TTL_MS, wall_ok, now_wall, now_mono);
     } else if (out->state == LOCKER_OPERATION_STATE_WAIT_CONFIRM) {
-        out->wait_confirm_deadline_ms = out->updated_ms + LOCKER_WAIT_CONFIRM_MS;
+        out->wait_confirm_deadline_ms = domain_deadline_in_monotonic(
+            out->updated_ms, LOCKER_WAIT_CONFIRM_MS, wall_ok, now_wall, now_mono);
     }
     return LOCKER_STATUS_OK;
 }
@@ -634,8 +646,9 @@ locker_status_t domain_principal_check(locker_core_t *core, const locker_princip
 void domain_write_operation_projection(locker_json_writer_t *writer, locker_core_t *core,
                                        const domain_operation_t *operation)
 {
-    (void)core;
-    domain_write_operation(writer, operation);
+    /* core 只用于算 observed_age_ms：投影里的物理快照龄期必须按当前单调时钟重算，
+       不能沿用落库那一刻的数字，否则读得越晚看起来越新鲜。 */
+    domain_write_operation(writer, operation, domain_now(core));
 }
 
 /* 工具可用性是派生投影，不由客户端断言：只有 READY、无占用、无有效借用时
@@ -712,7 +725,7 @@ void domain_write_device_projection(locker_json_writer_t *writer, locker_core_t 
     locker_domain_json_literal(writer, ",\"health_reasons\":[]");
     locker_domain_json_literal(writer, ",\"ui_restart_count\":null,\"physical\":");
     if (physical != NULL) {
-        domain_write_physical(writer, physical);
+        domain_write_physical(writer, physical, domain_now(core));
     } else {
         locker_domain_json_null(writer);
     }
@@ -736,14 +749,12 @@ bool domain_response_data_object(locker_json_writer_t *writer)
     return true;
 }
 
-void domain_response_end(locker_json_writer_t *writer, uint64_t revision, const locker_uuid_t *request_id)
+static void domain_response_tail(locker_json_writer_t *writer, uint64_t revision,
+                                 const locker_uuid_t *request_id)
 {
     char text[LOCKER_DOMAIN_U64_TEXT];
     char uuid_text[LOCKER_DOMAIN_UUID_TEXT];
-    if (writer == NULL || !locker_domain_json_writer_ok(writer)) {
-        return;
-    }
-    locker_domain_json_literal(writer, "},\"snapshot_revision\":");
+    locker_domain_json_literal(writer, ",\"snapshot_revision\":");
     if (locker_u64_format_decimal(revision, text, sizeof(text)) == LOCKER_STATUS_OK) {
         locker_domain_json_string(writer, text);
     } else {
@@ -756,6 +767,32 @@ void domain_response_end(locker_json_writer_t *writer, uint64_t revision, const 
         locker_domain_json_string(writer, "00000000-0000-0000-0000-000000000000");
     }
     locker_domain_json_literal(writer, "}");
+}
+
+void domain_response_end(locker_json_writer_t *writer, uint64_t revision, const locker_uuid_t *request_id)
+{
+    if (writer == NULL || !locker_domain_json_writer_ok(writer)) {
+        return;
+    }
+    /* 用于「data 对象由 domain_response_data_object 打开、调用方只写成员」的形态：
+       这里先补一个 `}` 关闭 data 对象，再追加信封其余成员。调用方此时**不能**
+       自己再写一个 `}` 来关 data 对象，否则会得到
+       `{"data":{"items":[]}},"snapshot_revision":…`（集成测试实测的非法 JSON）。 */
+    locker_domain_json_literal(writer, "}");
+    domain_response_tail(writer, revision, request_id);
+}
+
+void domain_response_end_value(locker_json_writer_t *writer, uint64_t revision,
+                               const locker_uuid_t *request_id)
+{
+    if (writer == NULL || !locker_domain_json_writer_ok(writer)) {
+        return;
+    }
+    /* 用于「调用方已经写出一个完整 JSON 值」的形态：投影写手
+       domain_write_operation_projection / domain_write_device_projection /
+       write_tool_object 自己就写出 `{…}` 或 null。这里不能再补 `}`，
+       也不能再调 domain_response_data_object（会得到 `{"data":{{"id":…`）。 */
+    domain_response_tail(writer, revision, request_id);
 }
 
 /* ---------- 事件发布 ---------- */

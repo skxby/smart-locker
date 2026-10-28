@@ -38,6 +38,12 @@ locker_status_t domain_anchor_request(locker_core_t *core)
         return LOCKER_STATUS_NOT_READY;
     }
     uint64_t now = domain_now(core);
+    /* 采集要按周期做，不是每轮循环都发：Core 的 tick 是百毫秒级，逐轮回请
+       会把 UART 带宽吃光，也让在途槽一直占着（审计 R1-B-6 的「按规定周期
+       请求而非每轮请求」）。只有样本缺失或已过期才提前重采。 */
+    if (now >= core->last_anchor_ms && now - core->last_anchor_ms < LOCKER_TIME_ANCHOR_PERIOD_MS) {
+        return LOCKER_STATUS_BUSY;
+    }
     /* 同一时刻只允许一个在途锚：多余请求只会浪费 UART 带宽。 */
     for (uint32_t index = 0u; index < LOCKER_DOMAIN_PENDING_SLOTS; index += 1u) {
         if (core->pending[index].used && core->pending[index].purpose == DOMAIN_PURPOSE_ANCHOR) {

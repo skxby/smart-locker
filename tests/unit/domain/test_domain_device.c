@@ -332,11 +332,70 @@ static void test_snapshot_apply(void)
     TEST_CHECK(!fixture.core->snapshot_in_flight);
     TEST_CHECK_U64(revision_before, fixture.core->physical.physical_revision);
 
-    /* 首次拿到快照时用 boot_id/epoch 初始化游标（event_seq 从 0 起）。 */
+    /* 晚到的旧快照不许回退物理事实。GET_SNAPSHOT 是异步应答：请求发出与应答
+       到达之间可能已经应用了更新的 DEVICE_EVENT，一个采样更早的快照如果照样
+       覆盖，门/物品会回到旧值，WAIT_CONFIRM 的冻结依据也跟着被误判成
+       PHYSICAL_CHANGED（r203200 的 TSan 轮偶发失败即此）。 */
+    {
+        locker_device_reply_t fresh_reply;
+        memset(&fresh_reply, 0, sizeof(fresh_reply));
+        fresh_reply.message_type = (uint8_t)(2u | 0x80u);
+        fresh_reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+        fresh_reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+        fresh_reply.body.get_snapshot.boot_id = fixture.core->physical.boot_id;
+        fresh_reply.body.get_snapshot.physical_revision = fixture.core->physical.physical_revision + 5u;
+        fresh_reply.body.get_snapshot.door = LOCKER_DOOR_STATE_OPEN;
+        fresh_reply.body.get_snapshot.item = LOCKER_ITEM_STATE_PRESENT;
+        fresh_reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+        fresh_reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+        fixture.core->snapshot_in_flight = true;
+        domain_reply_apply(fixture.core, &fresh_reply);
+        uint64_t accepted = fixture.core->physical.physical_revision;
+        TEST_CHECK_U64(revision_before + 5u, accepted);
+        TEST_CHECK_U64(LOCKER_DOOR_STATE_OPEN, fixture.core->physical.door);
+
+        /* 同一 boot 下版本更小的快照：整体丢弃，门/物品/版本都不动。 */
+        memset(&fresh_reply, 0, sizeof(fresh_reply));
+        fresh_reply.message_type = (uint8_t)(2u | 0x80u);
+        fresh_reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+        fresh_reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+        fresh_reply.body.get_snapshot.boot_id = fixture.core->physical.boot_id;
+        fresh_reply.body.get_snapshot.physical_revision = accepted - 3u;
+        fresh_reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+        fresh_reply.body.get_snapshot.item = LOCKER_ITEM_STATE_ABSENT;
+        fresh_reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+        fresh_reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+        fixture.core->snapshot_in_flight = true;
+        domain_reply_apply(fixture.core, &fresh_reply);
+        TEST_CHECK_U64(accepted, fixture.core->physical.physical_revision);
+        TEST_CHECK_U64(LOCKER_DOOR_STATE_OPEN, fixture.core->physical.door);
+        TEST_CHECK_U64(LOCKER_ITEM_STATE_PRESENT, fixture.core->physical.item);
+
+        /* 换 boot 说明设备重启过：新事实优先，即使版本号更小。 */
+        memset(&fresh_reply, 0, sizeof(fresh_reply));
+        fresh_reply.message_type = (uint8_t)(2u | 0x80u);
+        fresh_reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+        fresh_reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+        fresh_reply.body.get_snapshot.boot_id = fixture.core->physical.boot_id + 1u;
+        fresh_reply.body.get_snapshot.physical_revision = 1u;
+        fresh_reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+        fresh_reply.body.get_snapshot.item = LOCKER_ITEM_STATE_ABSENT;
+        fresh_reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+        fresh_reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+        fixture.core->snapshot_in_flight = true;
+        domain_reply_apply(fixture.core, &fresh_reply);
+        TEST_CHECK_U64(1u, fixture.core->physical.physical_revision);
+        TEST_CHECK_U64(LOCKER_DOOR_STATE_CLOSED, fixture.core->physical.door);
+    }
+
+    /* 首次拿到快照只记 epoch，游标水位保持「全零原点」。 */
     dt_fixture_t fresh;
     TEST_CHECK(dt_fixture_init(&fresh, true));
     dt_core_ready(&fresh);
     fresh.core->cursor.valid = false;
+    /* 真实时序里 HELLO 回复先于快照回复到达；设备身份由 HELLO 学得，
+       与快照游标无关——这里显式学一次，确保后续断言不会因为身份缺失而误判。 */
+    domain_learn_device_id(fresh.core, DT_DEVICE_ID);
     memset(&reply, 0, sizeof(reply));
     reply.message_type = (uint8_t)(2u | 0x80u);
     dt_uuid_fill(&reply.body.get_snapshot.journal_epoch, 0x20u);
@@ -347,10 +406,21 @@ static void test_snapshot_apply(void)
     reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
     domain_reply_apply(fresh.core, &reply);
     TEST_CHECK(fresh.core->cursor.valid);
-    TEST_CHECK_U64(7u, fresh.core->cursor.through.boot_id);
-    TEST_CHECK_U64(0u, fresh.core->cursor.through.event_seq);
     TEST_CHECK(locker_uuid_equal(&fresh.core->cursor.journal_epoch,
                                 &reply.body.get_snapshot.journal_epoch));
+    /* uart-v1.md:38 只有 (0,0) 是合法原点，(boot,0) 半零游标会被设备端口
+       device_cursor_matches 直接判非法。快照不能把 boot_id 写进水位，否则第一次
+       FETCH 恒 CONFLICT → import_cursor 不推进 → ACK 不产生 → 设备停在
+       RECONCILING（集成测试暴露过）。 */
+    TEST_CHECK_U64(0u, fresh.core->cursor.through.boot_id);
+    TEST_CHECK_U64(0u, fresh.core->cursor.through.event_seq);
+    /* 但 EventKey 的 device_id/journal_epoch 是必填项（internal-data.schema.json
+       的 EventKey 要求 ^[0-9a-f]{24}$ 与合法 UUID）：durable_cursor 会被写进
+       device_state，身份为空会让落库校验失败。所以身份与 epoch 要补上。 */
+    TEST_CHECK_STRING(DT_DEVICE_ID, fresh.core->cursor.through.device_id);
+    TEST_CHECK(locker_uuid_equal(&fresh.core->cursor.through.journal_epoch,
+                                &reply.body.get_snapshot.journal_epoch));
+    TEST_CHECK_STRING(DT_DEVICE_ID, fresh.core->physical.device_id);
     /* RECONCILING 是 wire 0 → 契约 1。 */
     TEST_CHECK_U64(LOCKER_DEVICE_MODE_RECONCILING, fresh.core->session.device_mode);
     dt_fixture_free(&fresh);
@@ -1092,6 +1162,16 @@ static void test_execute_guards(void)
     dt_uuid_fill(&operation.command_id, 0x90u);
     operation.has_command = true;
     operation.action_no = 5u;
+    /* 真实的发送路径只可能来自 operation_arm：那时冻结的 guard 与 MCU 时钟域
+       的期限已经随事务落库，发送必须原样透传它们（审计 R3-B-1）。夹具在这里
+       把同一组字段补齐，才能验证「透传」而不是「重采」。 */
+    dt_uuid_fill(&operation.outbox_id, 0x91u);
+    operation.outbox_present = true;
+    operation.outbox_session_id = fixture.core->session.session_id;
+    operation.outbox_journal_epoch = fixture.core->session.journal_epoch;
+    operation.outbox_boot_id = fixture.core->session.boot_id;
+    operation.outbox_physical_revision = fixture.core->physical.physical_revision;
+    operation.outbox_not_after_ms = fixture.core->now_ms + LOCKER_PREPARE_DEADLINE_MS;
 
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_execute_intent(fixture.core, &operation));
     TEST_CHECK_U64(1u, fixture.device->execute_calls);
@@ -1099,11 +1179,11 @@ static void test_execute_guards(void)
     TEST_CHECK_U64(5u, fixture.device->last_intent.action_no);
     TEST_CHECK_U64(1u, fixture.device->last_intent.slot_id);
     TEST_CHECK_U64(LOCKER_OPERATION_KIND_BORROW, fixture.device->last_intent.kind);
-    /* 期望物理版本来自当前快照；期限是 now + 1000 ms（脉冲硬上限）。 */
-    TEST_CHECK_U64(fixture.core->physical.physical_revision,
+    /* 期望物理版本与期限都来自冻结的 outbox 意图，而不是发送瞬间重新采样。 */
+    TEST_CHECK_U64(operation.outbox_physical_revision,
                    fixture.device->last_intent.expected_physical_revision);
-    TEST_CHECK_U64(fixture.core->now_ms + LOCKER_LOCK_PULSE_MAX_MS,
-                   fixture.device->last_intent.not_after_mcu_ms);
+    TEST_CHECK_U64(operation.outbox_not_after_ms, fixture.device->last_intent.not_after_mcu_ms);
+    TEST_CHECK(locker_uuid_equal(&operation.outbox_session_id, &fixture.device->last_intent.session_id));
     TEST_CHECK(fixture.core->execute_in_flight);
     TEST_CHECK(fixture.core->pending_command_valid);
     TEST_CHECK_U64(0x90u, fixture.core->pending_command_id.bytes[0]);
@@ -1157,24 +1237,31 @@ static void test_fetch_pump(void)
     dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
     fixture.core->fetch_in_flight = false;
 
+    /* 无仓储水位：after 用全零（首次补取从日志头开始）。 */
     domain_fetch_pump(fixture.core);
     TEST_CHECK_U64(1u, fixture.device->fetch_calls);
-    /* after 用当前水位，不是全零。 */
     TEST_CHECK(fixture.device->has_after);
-    TEST_CHECK_U64(fixture.core->cursor.through.event_seq, fixture.device->last_after.event_seq);
+    TEST_CHECK_U64(0u, fixture.device->last_after.boot_id);
+    TEST_CHECK_U64(0u, fixture.device->last_after.event_seq);
+
+    /* after 用仓储已提交水位（import_cursor），不是视图游标：live 事件只推进
+       视图游标、不落仓储，用 cursor.through 会跳过仓储还没见过的 seq，
+       sim 返回的页与仓储水位不相邻，导入必然 CONFLICT（集成实测 status=6）。 */
+    fixture.core->fetch_in_flight = false;
+    fixture.core->import_cursor_valid = true;
+    memcpy(fixture.core->import_cursor.device_id, DT_DEVICE_ID, sizeof(DT_DEVICE_ID));
+    fixture.core->import_cursor.journal_epoch = fixture.core->session.journal_epoch;
+    fixture.core->import_cursor.boot_id = 1u;
+    fixture.core->import_cursor.event_seq = 12u;
+    domain_fetch_pump(fixture.core);
+    TEST_CHECK_U64(2u, fixture.device->fetch_calls);
+    TEST_CHECK(fixture.device->has_after);
+    TEST_CHECK_U64(12u, fixture.device->last_after.event_seq);
     TEST_CHECK_STRING(DT_DEVICE_ID, fixture.device->last_after.device_id);
 
     /* 在途不重发。 */
     domain_fetch_pump(fixture.core);
-    TEST_CHECK_U64(1u, fixture.device->fetch_calls);
-
-    /* 游标无效时 after 用全零（首次补取从日志头开始）。 */
-    fixture.core->fetch_in_flight = false;
-    fixture.core->cursor.valid = false;
-    domain_fetch_pump(fixture.core);
     TEST_CHECK_U64(2u, fixture.device->fetch_calls);
-    TEST_CHECK_U64(0u, fixture.device->last_after.boot_id);
-    TEST_CHECK_U64(0u, fixture.device->last_after.event_seq);
 
     /* 端口失败不置在途标志。 */
     fixture.core->fetch_in_flight = false;
@@ -1245,6 +1332,499 @@ static void test_session_bootstrap(void)
     dt_fixture_free(&fixture);
 }
 
+/* WAIT_CONFIRM 的冻结依据必须被**快照**作废。设备重启或补取之后，先到的
+   往往是快照而不是事件；只在事件路径查冲突，会让「用户看到的柜内状态」与
+   「用户将要确认的那次动作」脱钩而无人发现（审计 R3-B-3：探针冻结
+   revision=7，收到 revision=8 的成功快照后仍停在 WAIT_CONFIRM 并可正常完成）。 */
+static void test_snapshot_confirm_conflict(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+    locker_device_reply_t reply;
+    domain_operation_t loaded;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_ABSENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_WAIT_CONFIRM, fixture.core->active.state);
+    TEST_CHECK(fixture.core->active.wait_confirm_basis_valid);
+    /* dv_event 的 physical_revision = 7 + seq，seq=2 → 冻结在 9。 */
+    TEST_CHECK_U64(9u, fixture.core->active.wait_confirm_physical_revision);
+
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.request_no = 1u;
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 1u;
+    reply.body.get_snapshot.physical_revision = 12u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_OPEN;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_PRESENT;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    domain_reply_apply(fixture.core, &reply);
+
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("PHYSICAL_CHANGED", fixture.core->active.reason_code);
+    /* 结论必须落库：只改内存会让重启后回到 WAIT_CONFIRM 再被确认完成。 */
+    memset(&loaded, 0, sizeof(loaded));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK,
+                      domain_operation_load(fixture.core, &fixture.core->active.id, 1, &loaded));
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, loaded.state);
+    TEST_CHECK_STRING("PHYSICAL_CHANGED", loaded.reason_code);
+
+    dt_fixture_free(&fixture);
+}
+
+/* 传感器读不出物品、或当前物品既不等于期望终态也不等于原基线时，都不能
+   替用户宣布「什么都没变」：NO_CHANGE 的语义是「回到原基线、账本不变」。
+   审计 R3-B-11 探针①：ACCESS_ACTIVE 见开门关门、item=UNKNOWN → 直接
+   NO_CHANGE 并释放占位。 */
+static void test_event_item_unknown_and_mismatch(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+
+    /* ① 物品 UNKNOWN → PHYSICAL_UNKNOWN（不是 NO_CHANGE）。 */
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_UNKNOWN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("PHYSICAL_UNKNOWN", fixture.core->active.reason_code);
+    TEST_CHECK(fixture.core->active.used);
+    dt_fixture_free(&fixture);
+
+    /* ② 原基线不可知（UNKNOWN）→ 也不能宣布 NO_CHANGE。 */
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x60u);
+    fixture.core->active.baseline.item = LOCKER_ITEM_STATE_UNKNOWN;
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_PRESENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("PHYSICAL_MISMATCH", fixture.core->active.reason_code);
+    dt_fixture_free(&fixture);
+}
+
+/* 同 boot 内事件序号必须逐条 +1。跳号到达（1、3、4）意味着丢掉的那一条
+   可能就是「物品离位」，此时既不能声称历史完整，也不能直接进确认
+   （审计 R3-B-12：探针实测 continuity=1、fetch_gap=0、history_complete=1）。 */
+static void test_event_sequence_gap(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+    TEST_CHECK(fixture.core->cursor.continuity_ok);
+    TEST_CHECK(fixture.core->active.history_complete);
+
+    /* seq=1 是首条（水位还是 0）：正常应用，不判缺口。 */
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK(fixture.core->cursor.continuity_ok);
+    TEST_CHECK(!fixture.core->fetch_gap);
+    TEST_CHECK_U64(1u, fixture.core->cursor.through.event_seq);
+
+    /* 跳到 3：中间那条 2 永远补不回来。 */
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_ITEM_REMOVED, 3u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    event.item = LOCKER_ITEM_STATE_ABSENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK(!fixture.core->cursor.continuity_ok);
+    TEST_CHECK(fixture.core->fetch_gap);
+    TEST_CHECK(!fixture.core->active.history_complete);
+    TEST_CHECK_U64(3u, fixture.core->cursor.through.event_seq);
+
+    dt_fixture_free(&fixture);
+}
+
+/* 设备路径的状态推进也必须是「候选副本 + 一次提交」：提交失败时内存不能
+   已经跳到核验，否则 domain_require_review 遇到「内存已是 REVIEW_REQUIRED」
+   会短路返回 OK，核验结论永远补不进仓储
+   （审计 R3-B-7：探针注入 commit_status=IO_ERROR 后 active=REVIEW_REQUIRED、
+   stored=ACCESS_PENDING、publish_calls=1）。 */
+static void test_reply_commit_failure(void)
+{
+    dt_fixture_t fixture;
+    locker_device_reply_t reply;
+    domain_operation_t loaded;
+    locker_uuid_t id;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_PENDING, 0x50u);
+    id = fixture.core->active.id;
+    dt_uuid_fill(&fixture.core->active.command_id, 0x90u);
+    fixture.core->active.has_command = true;
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_persist_operation(fixture.core, &fixture.core->active));
+    fixture.core->pending_command_valid = true;
+    fixture.core->pending_command_id = fixture.core->active.command_id;
+    fixture.core->execute_in_flight = true;
+
+    /* 折叠成 18 字节前缀的失败应答（body 全零），落 BAD_PRECONDITION。 */
+    fixture.repo->commit_status = LOCKER_STATUS_IO_ERROR;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(7u | 0x80u);
+    reply.body.execute_unlock.result = LOCKER_WIRE_RESULT_BAD_PRECONDITION;
+    domain_reply_apply(fixture.core, &reply);
+
+    /* 内存与库都停在 ACCESS_PENDING：这次核验没能落库，下一帧还能再推一次。 */
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_ACCESS_PENDING, fixture.core->active.state);
+    memset(&loaded, 0, sizeof(loaded));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 1, &loaded));
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_ACCESS_PENDING, loaded.state);
+
+    /* 提交恢复后同样的应答能把结论写进去（证明只是「这次失败」，不是永久拒绝）。 */
+    fixture.repo->commit_status = LOCKER_STATUS_OK;
+    fixture.core->pending_command_valid = true;
+    fixture.core->pending_command_id = fixture.core->active.command_id;
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    memset(&loaded, 0, sizeof(loaded));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 1, &loaded));
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, loaded.state);
+    TEST_CHECK_STRING("COMMAND_REJECTED", loaded.reason_code);
+
+    dt_fixture_free(&fixture);
+}
+
+/* NO_CHANGE 也是终态：设备侧那次动作上下文必须释放，否则下一次 EXECUTE
+   永远 BUSY，柜子只能用一次（审计 R3-B-2 探针：NO_CHANGE 之后
+   release_pending=0、release_calls=0）。释放以快照里的 active_operation_id
+   为准闭合，而不是凭物理版本变了就宣布设备已放手（uart-v1.md:402）。 */
+static void test_release_after_no_change(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+    locker_device_reply_t reply;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+    dt_uuid_fill(&fixture.core->active.command_id, 0x90u);
+    fixture.core->active.has_command = true;
+    TEST_CHECK(!fixture.core->release_pending);
+
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_PRESENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_NO_CHANGE, fixture.core->active.state);
+
+    /* NO_CHANGE 之后必须登记释放。 */
+    TEST_CHECK(fixture.core->release_pending);
+    TEST_CHECK(!fixture.core->release_sent);
+    TEST_CHECK_U64(0x50u, fixture.core->release_operation_id.bytes[0]);
+    TEST_CHECK_U64(0x90u, fixture.core->release_command_id.bytes[0]);
+
+    /* 泵把释放发出去，guard 带的是被释放那条动作的身份。 */
+    domain_release_pump(fixture.core);
+    TEST_CHECK_U64(1u, fixture.device->release_calls);
+    TEST_CHECK(fixture.core->release_sent);
+    TEST_CHECK_U64(0x50u, fixture.device->last_release.operation_id.bytes[0]);
+    TEST_CHECK_U64(0x90u, fixture.device->last_release.command_id.bytes[0]);
+
+    /* CAS 失败（CONFLICT）：不能凭「物理版本变了」宣布已放手，只能转查询。 */
+    fixture.device->release_status = LOCKER_STATUS_CONFLICT;
+    fixture.core->release_sent = false;
+    domain_release_pump(fixture.core);
+    TEST_CHECK(fixture.core->release_recheck);
+    TEST_CHECK(fixture.core->release_pending);
+    /* 只查询期间不再重发。 */
+    {
+        uint32_t before = fixture.device->release_calls;
+        domain_release_pump(fixture.core);
+        TEST_CHECK_U64(before, fixture.device->release_calls);
+    }
+    fixture.device->release_status = LOCKER_STATUS_OK;
+
+    /* 快照仍挂着我们要释放的那条：解除只查询、允许用新版本重发一次。 */
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 1u;
+    reply.body.get_snapshot.physical_revision = 20u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_PRESENT;
+    reply.body.get_snapshot.active_operation_id = fixture.core->release_operation_id;
+    reply.body.get_snapshot.active_command_id = fixture.core->release_command_id;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK(!fixture.core->release_recheck);
+    TEST_CHECK(!fixture.core->release_sent);
+    TEST_CHECK(fixture.core->release_pending);
+    domain_release_pump(fixture.core);
+    TEST_CHECK_U64(3u, fixture.device->release_calls);
+    TEST_CHECK_U64(20u, fixture.device->last_release.expected_physical_revision);
+
+    /* 新快照里设备已不再持有任何动作：释放目的达成，标志清空。 */
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 1u;
+    reply.body.get_snapshot.physical_revision = 21u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_PRESENT;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK(!fixture.core->release_pending);
+    TEST_CHECK(!fixture.core->release_sent);
+    TEST_CHECK(!fixture.core->release_recheck);
+    TEST_CHECK(fixture.core->device_active_valid);
+    TEST_CHECK(locker_uuid_is_nil(&fixture.core->device_active_operation_id));
+
+    dt_fixture_free(&fixture);
+}
+
+/* 确认依据必须绑定完整代际，而不只是 physical_revision。
+   physical_revision 只在同一次 boot 内单调（internal-interfaces.md:12），
+   换 boot 之后 revision 从头计数，只比大小会把「设备重启后的旧事实」当成
+   「更早的陈旧事实」放过（审计 R3-B-3 探针 A：冻结 boot=1/rev=9，
+   送来 boot=2/rev=1 的成功快照仍保持 WAIT_CONFIRM）。 */
+static void test_confirm_basis_generation(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+    locker_device_reply_t reply;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_ABSENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_WAIT_CONFIRM, fixture.core->active.state);
+    TEST_CHECK(fixture.core->active.wait_confirm_basis_valid);
+    TEST_CHECK_U64(1u, fixture.core->active.wait_confirm_boot_id);
+    TEST_CHECK(locker_uuid_equal(&fixture.core->active.wait_confirm_journal_epoch,
+                                 &fixture.core->physical.journal_epoch));
+
+    /* 设备重启过（boot 2）、revision 比冻结值小：换 boot 说明事实序列已经重来，
+       这不是「更早的陈旧事实」，必须作废确认依据。 */
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 2u;
+    reply.body.get_snapshot.physical_revision = 1u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_ABSENT;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("PHYSICAL_CHANGED", fixture.core->active.reason_code);
+
+    dt_fixture_free(&fixture);
+}
+
+/* 终结落库后崩溃：内存里的 release_pending 全丢，而 MCU 侧的 has_active 还在。
+   重启后必须从快照的 active_operation_id 重新登记释放，否则 release_calls
+   永远是 0，柜子只能用一次（审计 R3-B-2 尚存项）。 */
+static void test_release_after_restart(void)
+{
+    dt_fixture_t fixture;
+    locker_device_reply_t reply;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
+    /* 恢复后内存里没有活动操作，但设备侧还挂着上一次动作。 */
+    TEST_CHECK(!fixture.core->active.used);
+    TEST_CHECK(!fixture.core->release_pending);
+
+    /* 设备报的那条操作在账本里已经终结：这才是允许补登记释放的前提。 */
+    locker_uuid_t settled_id;
+    locker_uuid_t tool_id;
+    locker_uuid_t actor_id;
+    dt_uuid_fill(&settled_id, 0x77u);
+    dt_uuid_fill(&tool_id, 0x22u);
+    dt_uuid_fill(&actor_id, 0x51u);
+    TEST_CHECK(dt_seed_operation(&fixture, &settled_id, &tool_id, &actor_id, LOCKER_OPERATION_KIND_BORROW,
+                                 LOCKER_OPERATION_STATE_COMPLETED, 3u, "2026-10-26T00:00:00Z"));
+
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 1u;
+    reply.body.get_snapshot.physical_revision = 7u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_ABSENT;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    reply.body.get_snapshot.active_operation_id = settled_id;
+    dt_uuid_fill(&reply.body.get_snapshot.active_command_id, 0x78u);
+    domain_reply_apply(fixture.core, &reply);
+
+    TEST_CHECK(fixture.core->release_pending);
+    TEST_CHECK(!fixture.core->release_sent);
+    TEST_CHECK_U64(0x77u, fixture.core->release_operation_id.bytes[0]);
+    TEST_CHECK_U64(0x78u, fixture.core->release_command_id.bytes[0]);
+    domain_release_pump(fixture.core);
+    TEST_CHECK_U64(1u, fixture.device->release_calls);
+    TEST_CHECK_U64(0x77u, fixture.device->last_release.operation_id.bytes[0]);
+    /* 释放未完成期间不许武装新动作：那条路径由
+       test_domain_commands.c::test_presence_blocked_while_releasing 覆盖。 */
+
+    dt_fixture_free(&fixture);
+}
+
+/* 快照里挂着的操作如果还没终结（账本里查不到、或仍是非终态），
+   **不能**凭设备侧缓存就发 RELEASE_CONTEXT——那等于用一条缓存替业务收尾，
+   释放之后那条未决操作再也拿不到动作上下文（审计 round-5 第 1 项）。 */
+static void test_release_requires_settled_operation(void)
+{
+    dt_fixture_t fixture;
+    locker_device_reply_t reply;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
+    TEST_CHECK(!fixture.core->release_pending);
+
+    /* 情形一：账本里根本没有这条操作。 */
+    fixture.core->snapshot_in_flight = true;
+    memset(&reply, 0, sizeof(reply));
+    reply.message_type = (uint8_t)(2u | 0x80u);
+    reply.body.get_snapshot.result = LOCKER_WIRE_RESULT_OK;
+    reply.body.get_snapshot.session_id = fixture.core->session.session_id;
+    reply.body.get_snapshot.journal_epoch = fixture.core->session.journal_epoch;
+    reply.body.get_snapshot.boot_id = 1u;
+    reply.body.get_snapshot.physical_revision = 7u;
+    reply.body.get_snapshot.door = LOCKER_DOOR_STATE_CLOSED;
+    reply.body.get_snapshot.item = LOCKER_ITEM_STATE_ABSENT;
+    reply.body.get_snapshot.device_mode = LOCKER_WIRE_WIRE_DEVICE_MODE_READY;
+    reply.body.get_snapshot.journal_state = LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    dt_uuid_fill(&reply.body.get_snapshot.active_operation_id, 0x91u);
+    dt_uuid_fill(&reply.body.get_snapshot.active_command_id, 0x92u);
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK(!fixture.core->release_pending);
+    domain_release_pump(fixture.core);
+    TEST_CHECK_U64(0u, fixture.device->release_calls);
+
+    /* 情形二：账本里有，但仍是未决状态（ACCESS_ACTIVE）。 */
+    locker_uuid_t pending_id;
+    locker_uuid_t tool_id;
+    locker_uuid_t actor_id;
+    dt_uuid_fill(&pending_id, 0x91u);
+    dt_uuid_fill(&tool_id, 0x22u);
+    dt_uuid_fill(&actor_id, 0x52u);
+    TEST_CHECK(dt_seed_operation(&fixture, &pending_id, &tool_id, &actor_id, LOCKER_OPERATION_KIND_BORROW,
+                                 LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 4u, "2026-10-26T00:00:00Z"));
+    fixture.core->snapshot_in_flight = true;
+    domain_reply_apply(fixture.core, &reply);
+    TEST_CHECK(!fixture.core->release_pending);
+    domain_release_pump(fixture.core);
+    TEST_CHECK_U64(0u, fixture.device->release_calls);
+
+    dt_fixture_free(&fixture);
+}
+
+/* HISTORY_INCOMPLETE 是锁存：设备报「我丢过关键事件」之后，序号连续也不能
+   当成完整证据推进到确认（uart-v1.md:50、审计 R4-B-2 探针 A/B）。 */
+static void test_event_history_incomplete(void)
+{
+    dt_fixture_t fixture;
+    locker_device_event_t event;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    dv_arm_operation(fixture.core, LOCKER_OPERATION_KIND_BORROW,
+                     LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 0x50u);
+
+    /* 序号连续（1、2），但第二条自己带 HISTORY_INCOMPLETE。 */
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_OPENED, 1u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK(fixture.core->cursor.continuity_ok);
+
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_ITEM_REMOVED, 2u, true);
+    event.door = LOCKER_DOOR_STATE_OPEN;
+    event.item = LOCKER_ITEM_STATE_ABSENT;
+    event.flags = DOMAIN_OBSERVATION_FLAG_HISTORY_INCOMPLETE;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK(!fixture.core->cursor.continuity_ok);
+    TEST_CHECK(fixture.core->fetch_gap);
+    TEST_CHECK(!fixture.core->active.history_complete);
+
+    /* 之后门关、物品也符合 BORROW 的期望终态：仍然不能推进到 WAIT_CONFIRM。 */
+    event = dv_event(fixture.core, LOCKER_DEVICE_EVENT_DOOR_CLOSED, 3u, true);
+    event.door = LOCKER_DOOR_STATE_CLOSED;
+    event.item = LOCKER_ITEM_STATE_ABSENT;
+    dv_attach_active(fixture.core, &event);
+    domain_event_apply(fixture.core, &event);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("HISTORY_INCOMPLETE", fixture.core->active.reason_code);
+
+    dt_fixture_free(&fixture);
+}
+
 int main(void)
 {
     test_request_slots();
@@ -1265,5 +1845,14 @@ int main(void)
     test_sink_and_bind();
     test_execute_guards();
     test_fetch_pump();
+    test_snapshot_confirm_conflict();
+    test_event_item_unknown_and_mismatch();
+    test_event_sequence_gap();
+    test_reply_commit_failure();
+    test_release_after_no_change();
+    test_confirm_basis_generation();
+    test_release_after_restart();
+    test_release_requires_settled_operation();
+    test_event_history_incomplete();
     TEST_REPORT("domain.test_domain_device");
 }

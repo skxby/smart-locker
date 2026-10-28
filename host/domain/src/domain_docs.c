@@ -2,6 +2,7 @@
 
 #include "domain_internal.h"
 
+#include <stdint.h>
 #include <string.h>
 
 /* 文档构造：写入仓储的 value 必须逐字满足 internal-data.schema.json 的记录定义，
@@ -40,7 +41,24 @@ void domain_write_event_key(locker_json_writer_t *writer, const locker_event_key
     locker_domain_json_literal(writer, "}");
 }
 
-void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t *physical)
+/* observed_age_ms 是**公开**的新鲜度声明，必须由 Core 按自己的单调时钟算出来：
+   写死 0 会让离线很久的缓存快照在投影里看起来像刚采到的，管理员据此改账就等于
+   用过期物理事实冒充当前事实（审计 R1-B-12）。未采样（observed_mono_ms==0 或
+   now 早于采样点）时不声称新鲜，写 uint32 上限表示「未知」，与
+   ProgressReport.observed_age_ms 的既有语义一致。 */
+static uint32_t physical_observed_age_ms(const domain_physical_t *physical, uint64_t now_ms)
+{
+    if (physical->observed_mono_ms == 0u || now_ms < physical->observed_mono_ms) {
+        return UINT32_MAX;
+    }
+    uint64_t age = now_ms - physical->observed_mono_ms;
+    if (age > (uint64_t)UINT32_MAX) {
+        return UINT32_MAX;
+    }
+    return (uint32_t)age;
+}
+
+void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t *physical, uint64_t now_ms)
 {
     locker_domain_json_literal(writer, "{\"device_id\":");
     locker_domain_json_string(writer, physical->device_id);
@@ -65,7 +83,8 @@ void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t
     } else {
         locker_domain_json_null(writer);
     }
-    locker_domain_json_literal(writer, ",\"observed_age_ms\":0");
+    locker_domain_json_literal(writer, ",\"observed_age_ms\":");
+    locker_domain_json_u64(writer, physical_observed_age_ms(physical, now_ms));
     locker_domain_json_literal(writer, ",\"time_quality\":");
     locker_domain_json_string(writer, domain_time_quality_name(physical->time_quality));
     locker_domain_json_literal(writer, ",\"continuity_ok\":");
@@ -77,7 +96,7 @@ void domain_write_physical(locker_json_writer_t *writer, const domain_physical_t
     locker_domain_json_literal(writer, "}");
 }
 
-void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_t *operation)
+void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_t *operation, uint64_t now_ms)
 {
     locker_domain_json_literal(writer, "{\"history_complete\":");
     locker_domain_json_bool(writer, operation->history_complete);
@@ -87,7 +106,7 @@ void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_
     locker_domain_json_bool(writer, operation->item_transition_seen);
     locker_domain_json_literal(writer, ",\"physical\":");
     if (operation->has_physical) {
-        domain_write_physical(writer, &operation->physical);
+        domain_write_physical(writer, &operation->physical, now_ms);
     } else {
         locker_domain_json_null(writer);
     }
@@ -107,7 +126,7 @@ void domain_write_evidence(locker_json_writer_t *writer, const domain_operation_
     locker_domain_json_literal(writer, "}");
 }
 
-void domain_write_operation(locker_json_writer_t *writer, const domain_operation_t *operation)
+void domain_write_operation(locker_json_writer_t *writer, const domain_operation_t *operation, uint64_t now_ms)
 {
     char text[LOCKER_DOMAIN_UUID_TEXT];
     locker_domain_json_literal(writer, "{\"id\":");
@@ -161,19 +180,19 @@ void domain_write_operation(locker_json_writer_t *writer, const domain_operation
         locker_domain_json_string(writer, domain_action_name(actions[i]));
     }
     locker_domain_json_literal(writer, "],\"evidence\":");
-    domain_write_evidence(writer, operation);
+    domain_write_evidence(writer, operation, now_ms);
     locker_domain_json_literal(writer, "}");
 }
 
 void domain_write_operation_record(locker_json_writer_t *writer, const domain_operation_t *operation,
-                                  const locker_uuid_t *host_instance_id)
+                                  const locker_uuid_t *host_instance_id, uint64_t now_ms)
 {
     char text[LOCKER_DOMAIN_UUID_TEXT];
     locker_domain_json_literal(writer, "{\"operation\":");
-    domain_write_operation(writer, operation);
+    domain_write_operation(writer, operation, now_ms);
     locker_domain_json_literal(writer, ",\"baseline\":");
     if (operation->has_baseline) {
-        domain_write_physical(writer, &operation->baseline);
+        domain_write_physical(writer, &operation->baseline, now_ms);
     } else {
         /* schema 要求 baseline 非空；没有基线时不允许落库（调用方必须保证）。 */
         writer->failed = true;
@@ -334,7 +353,8 @@ void domain_write_import_cursor(locker_json_writer_t *writer, const locker_uuid_
 void domain_write_device_state(locker_json_writer_t *writer, const char *cabinet_name,
                                const char *contract_version, bool simulated, uint8_t mode,
                                const domain_physical_t *physical, uint64_t snapshot_revision,
-                               const locker_uuid_t *active_command, bool has_active_command)
+                               const locker_uuid_t *active_command, bool has_active_command,
+                               uint64_t now_ms)
 {
     char text[LOCKER_DOMAIN_UUID_TEXT];
     locker_domain_json_literal(writer, "{\"device\":{\"device_id\":");
@@ -354,7 +374,7 @@ void domain_write_device_state(locker_json_writer_t *writer, const char *cabinet
     locker_domain_json_literal(writer, ",\"health_reasons\":[]");
     locker_domain_json_literal(writer, ",\"ui_restart_count\":null,\"physical\":");
     if (physical != NULL && physical->valid) {
-        domain_write_physical(writer, physical);
+        domain_write_physical(writer, physical, now_ms);
     } else {
         locker_domain_json_null(writer);
     }

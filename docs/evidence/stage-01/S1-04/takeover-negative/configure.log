@@ -1,0 +1,15 @@
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- storage tests: contract-drift gate enabled (/usr/bin/python3)
+-- device contract tests: daemon smoke enabled (/usr/bin/python3)
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/build

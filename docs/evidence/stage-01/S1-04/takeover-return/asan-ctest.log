@@ -1,0 +1,7 @@
+Test project /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-return/build-asan
+    Start 27: integration.test_core_interrupt_matrix
+1/1 Test #27: integration.test_core_interrupt_matrix ...   Passed   10.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  10.00 sec

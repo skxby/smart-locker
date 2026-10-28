@@ -1,0 +1,100 @@
+Test project /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/build
+    Start 25: contract.device.test_device_port
+1/2 Test #25: contract.device.test_device_port .........***Failed    8.00 sec
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1876: accepted > 0u && accepted <= 16u && busy > 0u
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1877: longest < 200u
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1874: false
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1876: accepted > 0u && accepted <= 16u && busy > 0u
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/contract/device/test_device_port.c:1877: longest < 200u
+FAIL contract.device.test_device_port (80 of 482 checks failed)
+
+    Start 27: integration.test_core_interrupt_matrix
+2/2 Test #27: integration.test_core_interrupt_matrix ...***Failed   10.88 sec
+FAIL /home/%USER%/locker-workspace/S1-04/batches/takeover-20261028-negative/src/tests/integration/test_core_interrupt_matrix.c:1631: it_now_ms() - started < 250u
+it_create_operation: business=4 length=0 json=
+FAIL integration.test_core_interrupt_matrix (1 of 109 checks failed)
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =  18.88 sec
+
+The following tests FAILED:
+	 25 - contract.device.test_device_port (Failed)
+	 27 - integration.test_core_interrupt_matrix (Failed)
+Errors while running CTest

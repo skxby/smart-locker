@@ -239,15 +239,48 @@ void domain_completion_release(locker_core_t *core, uint32_t slot)
     pthread_mutex_unlock(&core->completion_mutex);
 }
 
-void domain_completion_accept(locker_core_t *core, uint32_t slot, locker_status_t status,
-                              const locker_uuid_t *operation_id, bool has_operation)
+void domain_completion_release_owned(locker_core_t *core, uint32_t slot, const locker_uuid_t *token)
+{
+    if (core == NULL || token == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS) {
+        return;
+    }
+    pthread_mutex_lock(&core->completion_mutex);
+    domain_completion_t *completion = &core->completions[slot];
+    /* 槽在等待期间可能已经被回收、又被下一个请求占用。此时按下标释放会
+       抹掉别人的在途结果——只有令牌仍然对得上才清槽（审计 R3-B-14）。 */
+    if (completion->used && locker_uuid_equal(&completion->token, token)) {
+        free(completion->json);
+        memset(completion, 0, sizeof(*completion));
+    }
+    pthread_mutex_unlock(&core->completion_mutex);
+}
+
+bool domain_completion_token_matches(locker_core_t *core, uint32_t slot, const locker_uuid_t *token)
+{
+    if (core == NULL || token == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS) {
+        return false;
+    }
+    bool matches = false;
+    pthread_mutex_lock(&core->completion_mutex);
+    const domain_completion_t *completion = &core->completions[slot];
+    /* 作业在 Core 线程上异步执行：等待方可能已经超时释放，槽被别的请求复用。
+       写结果前核对令牌，才能保证「谁的结果进谁的槽」（审计 R3-B-14）。 */
+    matches = completion->used && locker_uuid_equal(&completion->token, token);
+    pthread_mutex_unlock(&core->completion_mutex);
+    return matches;
+}
+
+void domain_completion_accept(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                              locker_status_t status, const locker_uuid_t *operation_id, bool has_operation)
 {
     if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS) {
         return;
     }
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    if (completion->used) {
+    /* 身份核对与写入必须在同一把锁里：分两次取锁时，中间槽可能被回收并被
+       下一个请求复用，于是这次写入落到了别人的槽上（审计 round-5）。 */
+    if (completion->used && (token == NULL || locker_uuid_equal(&completion->token, token))) {
         completion->accept_status = status;
         completion->has_operation = has_operation;
         if (has_operation && operation_id != NULL) {
@@ -259,8 +292,8 @@ void domain_completion_accept(locker_core_t *core, uint32_t slot, locker_status_
     pthread_mutex_unlock(&core->completion_mutex);
 }
 
-void domain_completion_finish(locker_core_t *core, uint32_t slot, locker_status_t status,
-                              const char *json, size_t length, uint64_t revision)
+void domain_completion_finish(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                              locker_status_t status, const char *json, size_t length, uint64_t revision)
 {
     if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS) {
         return;
@@ -277,7 +310,8 @@ void domain_completion_finish(locker_core_t *core, uint32_t slot, locker_status_
     }
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    if (completion->used) {
+    /* 同上：核对与写入同一把锁，避免把结果写进已被别人复用的槽。 */
+    if (completion->used && (token == NULL || locker_uuid_equal(&completion->token, token))) {
         free(completion->json);
         completion->json = copy;
         completion->length = (copy != NULL) ? length : 0u;
@@ -361,24 +395,28 @@ locker_status_t domain_completion_wait_accept(locker_core_t *core, uint32_t slot
     return status;
 }
 
-locker_status_t domain_completion_wait_final(locker_core_t *core, uint32_t slot, uint32_t timeout_ms,
-                                             locker_query_result_t *out_result)
+locker_status_t domain_completion_wait_final(locker_core_t *core, uint32_t slot, const locker_uuid_t *token,
+                                             uint32_t timeout_ms, locker_query_result_t *out_result)
 {
-    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || out_result == NULL) {
+    if (core == NULL || slot >= LOCKER_DOMAIN_COMPLETION_SLOTS || token == NULL || out_result == NULL) {
         return LOCKER_STATUS_INVALID;
     }
     struct timespec deadline;
     completion_deadline(timeout_ms, &deadline);
     pthread_mutex_lock(&core->completion_mutex);
     domain_completion_t *completion = &core->completions[slot];
-    while (completion->used && !completion->final_ready) {
+    /* 槽号不是身份：保留期结束后 reap 会把槽清空，下一个请求立刻复用它。
+       只用槽号等待就会把**别人的终态**当成自己的结果交付（审计 R3-B-14）。
+       这里在锁内逐轮核对 token：槽一换人立刻返回 NOT_READY，调用方按契约
+       用幂等键重查，绝不会拿到不属于自己的响应体。 */
+    while (completion->used && locker_uuid_equal(&completion->token, token) && !completion->final_ready) {
         int rc = pthread_cond_timedwait(&core->completion_cond, &core->completion_mutex, &deadline);
         if (rc != 0) {
             break;
         }
     }
     locker_status_t status = LOCKER_STATUS_NOT_READY;
-    if (completion->used && completion->final_ready) {
+    if (completion->used && locker_uuid_equal(&completion->token, token) && completion->final_ready) {
         status = LOCKER_STATUS_OK;
         out_result->status = completion->final_status;
         out_result->snapshot_revision = completion->revision;

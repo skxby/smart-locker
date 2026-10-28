@@ -116,7 +116,7 @@ locker_status_t domain_operation_persist(locker_core_t *core, domain_change_t *c
     if (!domain_change_put_begin(change, "operations", key)) {
         return LOCKER_STATUS_NO_SPACE;
     }
-    domain_write_operation_record(&change->writer, operation, &core->instance_id);
+    domain_write_operation_record(&change->writer, operation, &core->instance_id, domain_now(core));
     domain_change_put_end(change);
     if (change->broken || !locker_domain_json_writer_ok(&change->writer)) {
         return LOCKER_STATUS_NO_SPACE;

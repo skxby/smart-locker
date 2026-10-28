@@ -1,0 +1,127 @@
+[  1%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/sqlite/sqlite3.c.o
+[  2%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[  3%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[  4%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[  5%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[  6%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[  7%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[  8%] Linking C static library liblocker_common.a
+[  8%] Built target locker_common
+[  9%] Embedding host/storage/schema-v1.sql
+[ 10%] Embedding host/storage/src/schema_records.json
+[ 10%] Built target locker_storage_generated
+[ 11%] Building C object host/device/CMakeFiles/locker_device.dir/src/codec.c.o
+[ 12%] Building C object host/device/CMakeFiles/locker_device.dir/src/port.c.o
+[ 13%] Building C object host/device/CMakeFiles/locker_device.dir/src/transport.c.o
+[ 14%] Building C object host/device/CMakeFiles/locker_device.dir/src/wire.c.o
+[ 15%] Linking C static library liblocker_device.a
+[ 15%] Built target locker_device
+[ 17%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_change.c.o
+[ 18%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_commands.c.o
+[ 19%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_core.c.o
+[ 20%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_device.c.o
+[ 21%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_docs.c.o
+[ 22%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_import.c.o
+[ 23%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_json.c.o
+[ 24%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_loan.c.o
+[ 25%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_operation.c.o
+[ 26%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_repo.c.o
+[ 27%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_sha256.c.o
+[ 28%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_state.c.o
+[ 29%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_text.c.o
+[ 30%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time.c.o
+[ 31%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time_anchor.c.o
+[ 32%] Linking C static library liblocker_domain.a
+[ 32%] Built target locker_domain
+[ 34%] Building C object tests/unit/common/CMakeFiles/test_bounded_queue.dir/test_bounded_queue.c.o
+[ 35%] Linking C executable test_bounded_queue
+[ 35%] Built target test_bounded_queue
+[ 36%] Building C object tests/unit/common/CMakeFiles/test_build_info.dir/test_build_info.c.o
+[ 37%] Linking C executable test_build_info
+[ 37%] Built target test_build_info
+[ 38%] Building C object tests/unit/common/CMakeFiles/test_clock.dir/test_clock.c.o
+[ 39%] Linking C executable test_clock
+[ 39%] Built target test_clock
+[ 40%] Building C object tests/unit/common/CMakeFiles/test_log.dir/test_log.c.o
+[ 41%] Linking C executable test_log
+[ 41%] Built target test_log
+[ 42%] Building C object tests/unit/common/CMakeFiles/test_numeric.dir/test_numeric.c.o
+[ 43%] Linking C executable test_numeric
+[ 43%] Built target test_numeric
+[ 44%] Building C object tests/unit/common/CMakeFiles/test_uuid.dir/test_uuid.c.o
+[ 45%] Linking C executable test_uuid
+[ 45%] Built target test_uuid
+[ 46%] Building C object tests/unit/domain/CMakeFiles/test_domain_text.dir/test_domain_text.c.o
+[ 47%] Linking C executable test_domain_text
+[ 47%] Built target test_domain_text
+[ 48%] Building C object tests/unit/domain/CMakeFiles/test_domain_json.dir/test_domain_json.c.o
+[ 50%] Linking C executable test_domain_json
+[ 50%] Built target test_domain_json
+[ 51%] Building C object tests/unit/domain/CMakeFiles/test_domain_repo.dir/test_domain_repo.c.o
+[ 52%] Linking C executable test_domain_repo
+[ 52%] Built target test_domain_repo
+[ 53%] Building C object tests/unit/domain/CMakeFiles/test_domain_state.dir/test_domain_state.c.o
+[ 54%] Linking C executable test_domain_state
+[ 54%] Built target test_domain_state
+[ 55%] Building C object tests/unit/domain/CMakeFiles/test_domain_device.dir/test_domain_device.c.o
+[ 56%] Linking C executable test_domain_device
+[ 56%] Built target test_domain_device
+[ 57%] Building C object tests/unit/domain/CMakeFiles/test_domain_commands.dir/test_domain_commands.c.o
+[ 58%] Linking C executable test_domain_commands
+[ 58%] Built target test_domain_commands
+[ 59%] Building C object tests/unit/domain/CMakeFiles/test_domain_core.dir/test_domain_core.c.o
+[ 60%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/cjson/cJSON.c.o
+[ 61%] Linking C static library liblocker_storage_thirdparty.a
+[ 62%] Linking C executable test_domain_core
+[ 62%] Built target locker_storage_thirdparty
+[ 62%] Built target test_domain_core
+[ 63%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/event_key.c.o
+[ 64%] Building C object host/simulator/CMakeFiles/locker_simulator.dir/src/sim.c.o
+[ 65%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/regex.c.o
+[ 67%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/repository.c.o
+[ 68%] Linking C static library liblocker_simulator.a
+[ 68%] Built target locker_simulator
+[ 69%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema.c.o
+[ 70%] Building C object host/simulator/CMakeFiles/locker-device-sim.dir/src/sim_main.c.o
+[ 71%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema_embedded.c.o
+[ 72%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/u64.c.o
+[ 73%] Linking C executable locker-device-sim
+[ 74%] Linking C static library liblocker_storage.a
+[ 74%] Built target locker-device-sim
+[ 74%] Built target locker_storage
+[ 75%] Building C object tests/unit/device/CMakeFiles/test_codec.dir/test_codec.c.o
+[ 76%] Building C object tests/unit/device/CMakeFiles/test_wire.dir/test_wire.c.o
+[ 77%] Linking C executable test_wire
+[ 78%] Linking C executable test_codec
+[ 78%] Built target test_wire
+[ 78%] Built target test_codec
+[ 79%] Building C object tests/unit/device/CMakeFiles/test_sim_journal.dir/test_sim_journal.c.o
+[ 80%] Building C object tests/unit/device/CMakeFiles/test_sim_protocol.dir/test_sim_protocol.c.o
+[ 81%] Linking C executable test_sim_journal
+[ 82%] Linking C executable test_sim_protocol
+[ 82%] Built target test_sim_journal
+[ 84%] Building C object tests/contract/device/CMakeFiles/test_golden_frames.dir/test_golden_frames.c.o
+[ 84%] Built target test_sim_protocol
+[ 85%] Building C object tests/contract/device/CMakeFiles/test_device_port.dir/test_device_port.c.o
+[ 86%] Linking C executable test_golden_frames
+[ 86%] Built target test_golden_frames
+[ 87%] Building C object tests/integration/CMakeFiles/test_core_interrupt_matrix.dir/test_core_interrupt_matrix.c.o
+[ 88%] Linking C executable test_device_port
+[ 89%] Linking C executable test_core_interrupt_matrix
+[ 89%] Built target test_device_port
+[ 90%] Building C object tests/unit/storage/CMakeFiles/test_event_key.dir/test_event_key.c.o
+[ 90%] Built target test_core_interrupt_matrix
+[ 91%] Building C object tests/unit/storage/CMakeFiles/test_regex.dir/test_regex.c.o
+[ 92%] Linking C executable test_event_key
+[ 93%] Linking C executable test_regex
+[ 93%] Built target test_event_key
+[ 94%] Building C object tests/unit/storage/CMakeFiles/test_u64.dir/test_u64.c.o
+[ 94%] Built target test_regex
+[ 95%] Building C object tests/unit/storage/CMakeFiles/test_schema.dir/test_schema.c.o
+[ 96%] Linking C executable test_u64
+[ 97%] Linking C executable test_schema
+[ 97%] Built target test_u64
+[ 98%] Building C object tests/unit/storage/CMakeFiles/test_repository.dir/test_repository.c.o
+[ 98%] Built target test_schema
+[100%] Linking C executable test_repository
+[100%] Built target test_repository

@@ -1,0 +1,8 @@
+EXIT=unknown
+NOTE=本文件原先误抄了 round-2 的内容（时间戳与 round-2 逐字相同）。round-3 runner 在写出报告后被杀（harness 重启丢失 job 句柄），没有留下汇总行，因此这里只记录可核验的产物事实。
+EVIDENCE_MD=audit-round3.md
+EVIDENCE_MD_BYTES=26011
+EVIDENCE_OUTPUT=audit-round3-codex-output.txt
+EVIDENCE_OUTPUT_BYTES=675139
+OUTPUT_LAST_WRITE=2026-10-28T00:06:20+08:00
+AUDIT_MD_QUESTION_MARKS=0

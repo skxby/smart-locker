@@ -1,0 +1,210 @@
+=== asan configure ===
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- locker host build: contract 0.2.1
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- storage tests: contract-drift gate enabled (/usr/bin/python3)
+-- device contract tests: daemon smoke enabled (/usr/bin/python3)
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-04/batches/r204800/build-asan
+CONFIGURE_EXIT=0
+=== asan build ===
+[  1%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[  2%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/sqlite/sqlite3.c.o
+[  3%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[  4%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[  5%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[  6%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[  7%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[  8%] Linking C static library liblocker_common.a
+[  8%] Built target locker_common
+[  9%] Embedding host/storage/schema-v1.sql
+[ 10%] Embedding host/storage/src/schema_records.json
+[ 10%] Built target locker_storage_generated
+[ 11%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/cjson/cJSON.c.o
+[ 12%] Building C object host/device/CMakeFiles/locker_device.dir/src/codec.c.o
+[ 13%] Building C object host/device/CMakeFiles/locker_device.dir/src/port.c.o
+[ 14%] Building C object host/device/CMakeFiles/locker_device.dir/src/transport.c.o
+[ 15%] Building C object host/device/CMakeFiles/locker_device.dir/src/wire.c.o
+[ 17%] Linking C static library liblocker_device.a
+[ 17%] Built target locker_device
+[ 18%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_change.c.o
+[ 19%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_commands.c.o
+[ 20%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_core.c.o
+[ 21%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_device.c.o
+[ 22%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_docs.c.o
+[ 23%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_import.c.o
+[ 24%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_json.c.o
+[ 25%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_loan.c.o
+[ 26%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_operation.c.o
+[ 27%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_repo.c.o
+[ 28%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_sha256.c.o
+[ 29%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_state.c.o
+[ 30%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_text.c.o
+[ 31%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time.c.o
+[ 32%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time_anchor.c.o
+[ 34%] Linking C static library liblocker_domain.a
+[ 34%] Built target locker_domain
+[ 35%] Building C object tests/unit/common/CMakeFiles/test_bounded_queue.dir/test_bounded_queue.c.o
+[ 36%] Linking C executable test_bounded_queue
+[ 36%] Built target test_bounded_queue
+[ 37%] Building C object tests/unit/common/CMakeFiles/test_build_info.dir/test_build_info.c.o
+[ 38%] Linking C executable test_build_info
+[ 38%] Built target test_build_info
+[ 39%] Building C object tests/unit/common/CMakeFiles/test_clock.dir/test_clock.c.o
+[ 40%] Linking C executable test_clock
+[ 40%] Built target test_clock
+[ 41%] Building C object tests/unit/common/CMakeFiles/test_log.dir/test_log.c.o
+[ 42%] Linking C executable test_log
+[ 42%] Built target test_log
+[ 43%] Building C object tests/unit/common/CMakeFiles/test_numeric.dir/test_numeric.c.o
+[ 44%] Linking C executable test_numeric
+[ 44%] Built target test_numeric
+[ 45%] Building C object tests/unit/common/CMakeFiles/test_uuid.dir/test_uuid.c.o
+[ 46%] Linking C executable test_uuid
+[ 46%] Built target test_uuid
+[ 47%] Building C object tests/unit/domain/CMakeFiles/test_domain_text.dir/test_domain_text.c.o
+[ 48%] Linking C executable test_domain_text
+[ 48%] Built target test_domain_text
+[ 50%] Building C object tests/unit/domain/CMakeFiles/test_domain_json.dir/test_domain_json.c.o
+[ 51%] Linking C executable test_domain_json
+[ 51%] Built target test_domain_json
+[ 52%] Building C object tests/unit/domain/CMakeFiles/test_domain_repo.dir/test_domain_repo.c.o
+[ 53%] Linking C executable test_domain_repo
+[ 53%] Built target test_domain_repo
+[ 54%] Building C object tests/unit/domain/CMakeFiles/test_domain_state.dir/test_domain_state.c.o
+[ 55%] Linking C executable test_domain_state
+[ 55%] Built target test_domain_state
+[ 56%] Building C object tests/unit/domain/CMakeFiles/test_domain_device.dir/test_domain_device.c.o
+[ 57%] Linking C executable test_domain_device
+[ 57%] Built target test_domain_device
+[ 58%] Building C object tests/unit/domain/CMakeFiles/test_domain_commands.dir/test_domain_commands.c.o
+[ 59%] Linking C executable test_domain_commands
+[ 59%] Built target test_domain_commands
+[ 60%] Building C object tests/unit/domain/CMakeFiles/test_domain_core.dir/test_domain_core.c.o
+[ 61%] Linking C executable test_domain_core
+[ 61%] Built target test_domain_core
+[ 62%] Linking C static library liblocker_storage_thirdparty.a
+[ 62%] Built target locker_storage_thirdparty
+[ 63%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/event_key.c.o
+[ 64%] Building C object host/simulator/CMakeFiles/locker_simulator.dir/src/sim.c.o
+[ 65%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/regex.c.o
+[ 67%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/repository.c.o
+[ 68%] Linking C static library liblocker_simulator.a
+[ 69%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema.c.o
+[ 69%] Built target locker_simulator
+[ 70%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema_embedded.c.o
+[ 71%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/u64.c.o
+[ 72%] Building C object host/simulator/CMakeFiles/locker-device-sim.dir/src/sim_main.c.o
+[ 73%] Linking C static library liblocker_storage.a
+[ 73%] Built target locker_storage
+[ 74%] Building C object tests/unit/device/CMakeFiles/test_codec.dir/test_codec.c.o
+[ 75%] Linking C executable locker-device-sim
+[ 76%] Linking C executable test_codec
+[ 76%] Built target locker-device-sim
+[ 77%] Building C object tests/unit/device/CMakeFiles/test_wire.dir/test_wire.c.o
+[ 78%] Linking C executable test_wire
+[ 78%] Built target test_codec
+[ 79%] Building C object tests/unit/device/CMakeFiles/test_sim_journal.dir/test_sim_journal.c.o
+[ 79%] Built target test_wire
+[ 80%] Building C object tests/unit/device/CMakeFiles/test_sim_protocol.dir/test_sim_protocol.c.o
+[ 81%] Linking C executable test_sim_journal
+[ 81%] Built target test_sim_journal
+[ 82%] Building C object tests/contract/device/CMakeFiles/test_golden_frames.dir/test_golden_frames.c.o
+[ 84%] Linking C executable test_sim_protocol
+[ 85%] Linking C executable test_golden_frames
+[ 85%] Built target test_sim_protocol
+[ 86%] Building C object tests/contract/device/CMakeFiles/test_device_port.dir/test_device_port.c.o
+[ 86%] Built target test_golden_frames
+[ 87%] Building C object tests/integration/CMakeFiles/test_core_interrupt_matrix.dir/test_core_interrupt_matrix.c.o
+[ 88%] Linking C executable test_core_interrupt_matrix
+[ 89%] Linking C executable test_device_port
+[ 89%] Built target test_core_interrupt_matrix
+[ 90%] Building C object tests/unit/storage/CMakeFiles/test_event_key.dir/test_event_key.c.o
+[ 91%] Linking C executable test_event_key
+[ 91%] Built target test_device_port
+[ 92%] Building C object tests/unit/storage/CMakeFiles/test_regex.dir/test_regex.c.o
+[ 92%] Built target test_event_key
+[ 93%] Building C object tests/unit/storage/CMakeFiles/test_u64.dir/test_u64.c.o
+[ 94%] Linking C executable test_regex
+[ 95%] Linking C executable test_u64
+[ 95%] Built target test_regex
+[ 96%] Building C object tests/unit/storage/CMakeFiles/test_schema.dir/test_schema.c.o
+[ 96%] Built target test_u64
+[ 97%] Building C object tests/unit/storage/CMakeFiles/test_repository.dir/test_repository.c.o
+[ 98%] Linking C executable test_schema
+[ 98%] Built target test_schema
+[100%] Linking C executable test_repository
+[100%] Built target test_repository
+BUILD_EXIT=0
+WARNINGS=0
+=== asan ctest ===
+Test project /home/%USER%/locker-workspace/S1-04/batches/r204800/build-asan
+      Start  1: common.test_bounded_queue
+ 1/27 Test  #1: common.test_bounded_queue ................   Passed    0.01 sec
+      Start  2: common.test_build_info
+ 2/27 Test  #2: common.test_build_info ...................   Passed    0.01 sec
+      Start  3: common.test_clock
+ 3/27 Test  #3: common.test_clock ........................   Passed    0.03 sec
+      Start  4: common.test_log
+ 4/27 Test  #4: common.test_log ..........................   Passed    0.01 sec
+      Start  5: common.test_numeric
+ 5/27 Test  #5: common.test_numeric ......................   Passed    0.01 sec
+      Start  6: common.test_uuid
+ 6/27 Test  #6: common.test_uuid .........................   Passed    0.01 sec
+      Start  7: storage.test_event_key
+ 7/27 Test  #7: storage.test_event_key ...................   Passed    0.01 sec
+      Start  8: storage.test_regex
+ 8/27 Test  #8: storage.test_regex .......................   Passed    0.01 sec
+      Start  9: storage.test_u64
+ 9/27 Test  #9: storage.test_u64 .........................   Passed    0.01 sec
+      Start 10: storage.test_schema
+10/27 Test #10: storage.test_schema ......................   Passed    0.02 sec
+      Start 11: storage.test_repository
+11/27 Test #11: storage.test_repository ..................   Passed    0.73 sec
+      Start 12: storage.schema_source_drift
+12/27 Test #12: storage.schema_source_drift ..............   Passed    0.05 sec
+      Start 13: device.test_codec
+13/27 Test #13: device.test_codec ........................   Passed    0.02 sec
+      Start 14: device.test_wire
+14/27 Test #14: device.test_wire .........................   Passed    0.02 sec
+      Start 15: device.test_sim_journal
+15/27 Test #15: device.test_sim_journal ..................   Passed    0.22 sec
+      Start 16: device.test_sim_protocol
+16/27 Test #16: device.test_sim_protocol .................   Passed    0.17 sec
+      Start 17: domain.test_domain_text
+17/27 Test #17: domain.test_domain_text ..................   Passed    0.01 sec
+      Start 18: domain.test_domain_json
+18/27 Test #18: domain.test_domain_json ..................   Passed    0.01 sec
+      Start 19: domain.test_domain_repo
+19/27 Test #19: domain.test_domain_repo ..................   Passed    0.02 sec
+      Start 20: domain.test_domain_state
+20/27 Test #20: domain.test_domain_state .................   Passed    0.02 sec
+      Start 21: domain.test_domain_device
+21/27 Test #21: domain.test_domain_device ................   Passed    0.02 sec
+      Start 22: domain.test_domain_commands
+22/27 Test #22: domain.test_domain_commands ..............   Passed    0.04 sec
+      Start 23: domain.test_domain_core
+23/27 Test #23: domain.test_domain_core ..................   Passed    0.05 sec
+      Start 24: contract.device.test_golden_frames
+24/27 Test #24: contract.device.test_golden_frames .......   Passed    0.03 sec
+      Start 25: contract.device.test_device_port
+25/27 Test #25: contract.device.test_device_port .........   Passed    5.94 sec
+      Start 26: contract.device.daemon_smoke
+26/27 Test #26: contract.device.daemon_smoke .............   Passed    4.41 sec
+      Start 27: integration.test_core_interrupt_matrix
+27/27 Test #27: integration.test_core_interrupt_matrix ...   Passed    8.93 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  20.85 sec
+CTEST_EXIT=0
+SANITIZER_REPORTS=0
+SUMMARY=100% tests passed, 0 tests failed out of 27

@@ -491,10 +491,12 @@ static void test_recover_empty(void)
     TEST_CHECK(!fixture.core->loan_open);
     TEST_CHECK(!fixture.core->persisted_state_valid);
     TEST_CHECK_U64(1u, fixture.core->next_action_no);
-    /* 三个集合走恢复端口（operations/loans/import_cursors），
-       device_state 走普通查询端口：一次取版本、一次取快照记录。 */
+    /* 三个集合走恢复端口（operations/loans/import_cursors）；device_state 与
+       tools 走普通查询端口：一次取版本、一次取快照记录、一次取工具投影
+       ——create 要靠它校验 tool_id/tool_revision，不恢复等于所有申请都因为
+       「工具不可知」被拒（审计 R1-B-9）。 */
     TEST_CHECK_U64(3u, (uint64_t)fixture.repo->recovery_calls);
-    TEST_CHECK_U64(2u, (uint64_t)fixture.repo->query_calls);
+    TEST_CHECK_U64(3u, (uint64_t)fixture.repo->query_calls);
     TEST_CHECK_U64(0u, fixture.core->revision);
 
     dt_fixture_free(&fixture);
@@ -523,14 +525,22 @@ static void test_recover_operations(void)
         TEST_CHECK(fixture.core->active.used);
         TEST_CHECK(locker_uuid_equal(&fixture.core->active.id, &id));
         TEST_CHECK_U64(LOCKER_OPERATION_STATE_REQUESTED, fixture.core->active.state);
-        TEST_CHECK_U64(1761004800000ull + LOCKER_REQUEST_TTL_MS, fixture.core->active.requested_deadline_ms);
+        /* 截止点必须落在**单调时间域**：记录里的 updated_at 是墙钟（1.7e12 量级），
+           不能直接加 TTL 当成 monotonic 毫秒——那样得到的 deadline 永远追不上
+           now，重启前挂着的申请就再也不会超时（审计 R1-B-5）。
+           这里 updated_at 正好等于当前墙钟，所以剩余时长就是完整 TTL，
+           单调域上的 deadline = now_mono + TTL。 */
+        TEST_CHECK_U64(fixture.core->now_ms + LOCKER_REQUEST_TTL_MS,
+                       fixture.core->active.requested_deadline_ms);
         dt_fixture_free(&fixture);
     }
 
-    /* WAIT_CONFIRM：确认截止时间同样按记录时间还原。 */
+    /* WAIT_CONFIRM：重启后一律进核验，不保留可确认状态。
+       冻结的物理依据只活在内存里，重启后无法证明「门还关着、物品仍是那一次
+       变动后的样子」，允许本人确认等于凭无法追溯的记忆改账
+       （stage-00-architecture.md:119；审计 R3-B-4）。 */
     {
         dt_fixture_t fixture;
-    dt_fixture_free(&fixture);
         TEST_CHECK(dt_fixture_init(&fixture, false));
         if (fixture.core == NULL) {
             dt_fixture_free(&fixture);
@@ -543,9 +553,10 @@ static void test_recover_operations(void)
                                      LOCKER_OPERATION_STATE_WAIT_CONFIRM, 4u, "2025-10-21T00:00:00Z"));
         TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_recover(fixture.core));
         TEST_CHECK(fixture.core->active.used);
-        TEST_CHECK_U64(LOCKER_OPERATION_STATE_WAIT_CONFIRM, fixture.core->active.state);
-        TEST_CHECK_U64(1761004800000ull + LOCKER_WAIT_CONFIRM_MS,
-                       fixture.core->active.wait_confirm_deadline_ms);
+        TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+        TEST_CHECK_STRING("RECOVERED_AFTER_RESTART", fixture.core->active.reason_code);
+        /* 确认截止点已经没有意义：状态不再是 WAIT_CONFIRM。 */
+        TEST_CHECK_U64(0u, fixture.core->active.wait_confirm_deadline_ms);
         dt_fixture_free(&fixture);
     }
 

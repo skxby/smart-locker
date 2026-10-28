@@ -1,0 +1,52 @@
+[  2%] Embedding host/storage/schema-v1.sql
+[  4%] Building C object host/common/CMakeFiles/locker_common.dir/src/bounded_queue.c.o
+[  6%] Embedding host/storage/src/schema_records.json
+[  9%] Building C object host/common/CMakeFiles/locker_common.dir/src/build_info.c.o
+[ 11%] Building C object host/common/CMakeFiles/locker_common.dir/src/clock.c.o
+[ 13%] Building C object host/common/CMakeFiles/locker_common.dir/src/log.c.o
+[ 13%] Built target locker_storage_generated
+[ 15%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/sqlite/sqlite3.c.o
+[ 18%] Building C object host/common/CMakeFiles/locker_common.dir/src/numeric.c.o
+[ 20%] Building C object host/common/CMakeFiles/locker_common.dir/src/uuid.c.o
+[ 22%] Linking C static library liblocker_common.a
+[ 22%] Built target locker_common
+[ 25%] Building C object host/device/CMakeFiles/locker_device.dir/src/codec.c.o
+[ 27%] Building C object host/device/CMakeFiles/locker_device.dir/src/port.c.o
+[ 29%] Building C object host/device/CMakeFiles/locker_device.dir/src/transport.c.o
+[ 31%] Building C object host/device/CMakeFiles/locker_device.dir/src/wire.c.o
+[ 34%] Linking C static library liblocker_device.a
+[ 34%] Built target locker_device
+[ 36%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_change.c.o
+[ 38%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_commands.c.o
+[ 40%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_core.c.o
+[ 43%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_device.c.o
+[ 45%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_docs.c.o
+[ 47%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_import.c.o
+[ 50%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_json.c.o
+[ 52%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_loan.c.o
+[ 54%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_operation.c.o
+[ 56%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_repo.c.o
+[ 59%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_sha256.c.o
+[ 61%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_state.c.o
+[ 63%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_text.c.o
+[ 65%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time.c.o
+[ 68%] Building C object host/domain/CMakeFiles/locker_domain.dir/src/domain_time_anchor.c.o
+[ 70%] Linking C static library liblocker_domain.a
+[ 70%] Built target locker_domain
+[ 72%] Building C object host/storage/CMakeFiles/locker_storage_thirdparty.dir/third_party/cjson/cJSON.c.o
+[ 75%] Linking C static library liblocker_storage_thirdparty.a
+[ 75%] Built target locker_storage_thirdparty
+[ 79%] Building C object host/simulator/CMakeFiles/locker_simulator.dir/src/sim.c.o
+[ 79%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/event_key.c.o
+[ 81%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/regex.c.o
+[ 84%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/repository.c.o
+[ 86%] Linking C static library liblocker_simulator.a
+[ 88%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema.c.o
+[ 88%] Built target locker_simulator
+[ 90%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/schema_embedded.c.o
+[ 93%] Building C object host/storage/CMakeFiles/locker_storage.dir/src/u64.c.o
+[ 95%] Linking C static library liblocker_storage.a
+[ 95%] Built target locker_storage
+[ 97%] Building C object tests/integration/CMakeFiles/test_core_interrupt_matrix.dir/test_core_interrupt_matrix.c.o
+[100%] Linking C executable test_core_interrupt_matrix
+[100%] Built target test_core_interrupt_matrix

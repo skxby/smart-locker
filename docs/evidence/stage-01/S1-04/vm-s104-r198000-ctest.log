@@ -1,0 +1,59 @@
+Test project /home/%USER%/locker-workspace/S1-04/batches/r198000/build
+      Start  1: common.test_bounded_queue
+ 1/27 Test  #1: common.test_bounded_queue ................   Passed    0.00 sec
+      Start  2: common.test_build_info
+ 2/27 Test  #2: common.test_build_info ...................   Passed    0.00 sec
+      Start  3: common.test_clock
+ 3/27 Test  #3: common.test_clock ........................   Passed    0.02 sec
+      Start  4: common.test_log
+ 4/27 Test  #4: common.test_log ..........................   Passed    0.00 sec
+      Start  5: common.test_numeric
+ 5/27 Test  #5: common.test_numeric ......................   Passed    0.00 sec
+      Start  6: common.test_uuid
+ 6/27 Test  #6: common.test_uuid .........................   Passed    0.00 sec
+      Start  7: storage.test_event_key
+ 7/27 Test  #7: storage.test_event_key ...................   Passed    0.00 sec
+      Start  8: storage.test_regex
+ 8/27 Test  #8: storage.test_regex .......................   Passed    0.00 sec
+      Start  9: storage.test_u64
+ 9/27 Test  #9: storage.test_u64 .........................   Passed    0.00 sec
+      Start 10: storage.test_schema
+10/27 Test #10: storage.test_schema ......................   Passed    0.01 sec
+      Start 11: storage.test_repository
+11/27 Test #11: storage.test_repository ..................   Passed    0.19 sec
+      Start 12: storage.schema_source_drift
+12/27 Test #12: storage.schema_source_drift ..............   Passed    0.05 sec
+      Start 13: device.test_codec
+13/27 Test #13: device.test_codec ........................   Passed    0.00 sec
+      Start 14: device.test_wire
+14/27 Test #14: device.test_wire .........................   Passed    0.00 sec
+      Start 15: device.test_sim_journal
+15/27 Test #15: device.test_sim_journal ..................   Passed    0.08 sec
+      Start 16: device.test_sim_protocol
+16/27 Test #16: device.test_sim_protocol .................   Passed    0.06 sec
+      Start 17: domain.test_domain_text
+17/27 Test #17: domain.test_domain_text ..................   Passed    0.01 sec
+      Start 18: domain.test_domain_json
+18/27 Test #18: domain.test_domain_json ..................   Passed    0.00 sec
+      Start 19: domain.test_domain_repo
+19/27 Test #19: domain.test_domain_repo ..................   Passed    0.01 sec
+      Start 20: domain.test_domain_state
+20/27 Test #20: domain.test_domain_state .................   Passed    0.01 sec
+      Start 21: domain.test_domain_device
+21/27 Test #21: domain.test_domain_device ................   Passed    0.01 sec
+      Start 22: domain.test_domain_commands
+22/27 Test #22: domain.test_domain_commands ..............   Passed    0.01 sec
+      Start 23: domain.test_domain_core
+23/27 Test #23: domain.test_domain_core ..................   Passed    0.04 sec
+      Start 24: contract.device.test_golden_frames
+24/27 Test #24: contract.device.test_golden_frames .......   Passed    0.01 sec
+      Start 25: contract.device.test_device_port
+25/27 Test #25: contract.device.test_device_port .........   Passed    5.78 sec
+      Start 26: contract.device.daemon_smoke
+26/27 Test #26: contract.device.daemon_smoke .............   Passed    3.68 sec
+      Start 27: integration.test_core_interrupt_matrix
+27/27 Test #27: integration.test_core_interrupt_matrix ...   Passed    9.39 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  19.39 sec

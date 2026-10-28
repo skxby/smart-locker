@@ -312,20 +312,35 @@ static void test_operation_load(void)
     dt_uuid_fill(&id, 0x51u);
     dt_uuid_fill(&missing, 0x61u);
 
-    /* updated_at 是 2026-10-26T00:00:00Z，REQUESTED 的截止点 = 更新时间 + 120 秒。 */
+    /* 运行时截止点不在文档里，必须用最近一次更新时间重建，并且要做**墙钟 ->
+       单调**换算：updated_at 解析出来是 Unix epoch 毫秒（量级 1e12），所有超时
+       比较都在 core->now_ms（进程单调毫秒，量级 1e6）上做。审计 R3-B-13 的探针
+       就是在这里露的：直接相加会得到 1.7e12 的截止点，永远追不上 now，一次失败
+       的取消就能让这条申请永久占着柜格。 */
+    char past_text[LOCKER_DOMAIN_TIMESTAMP_TEXT];
+    char skew_text[LOCKER_DOMAIN_TIMESTAMP_TEXT];
+    TEST_CHECK(locker_domain_time_format_utc(fixture.clock.wall_ms - 60000ull, past_text, sizeof(past_text)));
+    TEST_CHECK(locker_domain_time_format_utc(fixture.clock.wall_ms + 3600000ull, skew_text, sizeof(skew_text)));
+
+    /* 更新时间在 60 秒前：REQUESTED 的 120 秒窗口只剩 60 秒，截止点落在单调域。 */
     TEST_CHECK(dt_seed_operation(&fixture, &id, &id, &id, LOCKER_OPERATION_KIND_BORROW,
-                                 LOCKER_OPERATION_STATE_REQUESTED, 4u, "2026-10-26T00:00:00Z"));
+                                 LOCKER_OPERATION_STATE_REQUESTED, 4u, past_text));
     memset(&operation, 0, sizeof(operation));
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 0, &operation));
     TEST_CHECK_U64(4u, operation.revision);
     TEST_CHECK(operation.state == LOCKER_OPERATION_STATE_REQUESTED);
-    TEST_CHECK(operation.requested_deadline_ms != 0u);
-    {
-        uint64_t wall = 0u;
-        TEST_CHECK(locker_domain_time_parse_utc("2026-10-26T00:00:00Z", 20u, &wall));
-        TEST_CHECK_U64(wall + LOCKER_REQUEST_TTL_MS, operation.requested_deadline_ms);
-        TEST_CHECK_U64(0u, operation.wait_confirm_deadline_ms);
-    }
+    TEST_CHECK_U64(fixture.clock.monotonic_ms + LOCKER_REQUEST_TTL_MS - 60000ull,
+                   operation.requested_deadline_ms);
+    TEST_CHECK_U64(0u, operation.wait_confirm_deadline_ms);
+
+    /* 更新时间落在未来（宿主机时钟被回拨）：剩余时间不能算成负数，退化成完整窗口，
+       宁可多等一个周期，也不能因为时钟跳变就立刻把申请判超时。 */
+    TEST_CHECK(dt_seed_operation(&fixture, &id, &id, &id, LOCKER_OPERATION_KIND_BORROW,
+                                 LOCKER_OPERATION_STATE_WAIT_CONFIRM, 5u, skew_text));
+    memset(&operation, 0, sizeof(operation));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 0, &operation));
+    TEST_CHECK_U64(0u, operation.requested_deadline_ms);
+    TEST_CHECK_U64(fixture.clock.monotonic_ms + LOCKER_WAIT_CONFIRM_MS, operation.wait_confirm_deadline_ms);
 
     /* 缺记录是 NOT_READY（不是 IO_ERROR：没找到不等于读坏了）。 */
     memset(&operation, 0, sizeof(operation));
@@ -519,7 +534,9 @@ static void test_projections(void)
     TEST_CHECK(domain_tool_availability(fixture.core) == LOCKER_TOOL_AVAILABILITY_AVAILABLE);
     fixture.core->active.used = false;
 
-    /* 无工具投影时写 null（不是空对象）。 */
+    /* 无工具投影时写 null（不是空对象）。夹具默认带工具（create 需要它），
+       所以要显式清掉才测得到「不知道工具」这条分支。 */
+    fixture.core->tool_valid = false;
     writer.buffer = buffer;
     writer.capacity = sizeof(buffer);
     writer.length = 0u;
@@ -668,7 +685,7 @@ static void test_writers(void)
     TEST_CHECK(strstr(buffer, "\"event_seq\":\"12\"") != NULL);
     TEST_CHECK(strstr(buffer, "\"device_id\":\"" DT_DEVICE_ID "\"") != NULL);
 
-    /* 物理快照：supply_mv 有效时写裸数字，observed_age_ms 恒 0。 */
+    /* 物理快照：supply_mv 有效时写裸数字；observed_age_ms 按当前单调时钟算真实龄期。 */
     memset(&physical, 0, sizeof(physical));
     physical.valid = true;
     memcpy(physical.device_id, DT_DEVICE_ID, sizeof(DT_DEVICE_ID));
@@ -683,14 +700,15 @@ static void test_writers(void)
     physical.continuity_ok = false;
     physical.dropped_events = 3u;
     physical.durable_cursor = key;
+    physical.observed_mono_ms = 100u;
     locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
-    domain_write_physical(&writer, &physical);
+    domain_write_physical(&writer, &physical, 350u);
     TEST_CHECK(locker_domain_json_writer_ok(&writer));
     TEST_CHECK(st_has_pair(buffer, "physical_revision", "\"44\""));
     TEST_CHECK(st_has_pair(buffer, "door", "\"OPEN\""));
     TEST_CHECK(st_has_pair(buffer, "item", "\"ABSENT\""));
     TEST_CHECK(st_has_pair(buffer, "supply_mv", "12345"));
-    TEST_CHECK(st_has_pair(buffer, "observed_age_ms", "0"));
+    TEST_CHECK(st_has_pair(buffer, "observed_age_ms", "250"));
     TEST_CHECK(st_has_pair(buffer, "time_quality", "\"ESTIMATED\""));
     TEST_CHECK(st_has_pair(buffer, "continuity_ok", "false"));
     TEST_CHECK(st_has_pair(buffer, "dropped_events", "\"3\""));
@@ -699,9 +717,24 @@ static void test_writers(void)
     physical.supply_valid = false;
     physical.supply_mv = 0u;
     locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
-    domain_write_physical(&writer, &physical);
+    domain_write_physical(&writer, &physical, 350u);
     TEST_CHECK(locker_domain_json_writer_ok(&writer));
     TEST_CHECK(st_has_pair(buffer, "supply_mv", "null"));
+
+    /* 从未采样：龄期不能声称 0（会伪装成刚采到），写 uint32 上限表未知。 */
+    physical.observed_mono_ms = 0u;
+    locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
+    domain_write_physical(&writer, &physical, 350u);
+    TEST_CHECK(locker_domain_json_writer_ok(&writer));
+    TEST_CHECK(st_has_pair(buffer, "observed_age_ms", "4294967295"));
+
+    /* 采样点晚于当前时间（时钟回拨）：同样不得报 0。 */
+    physical.observed_mono_ms = 900u;
+    locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
+    domain_write_physical(&writer, &physical, 350u);
+    TEST_CHECK(locker_domain_json_writer_ok(&writer));
+    TEST_CHECK(st_has_pair(buffer, "observed_age_ms", "4294967295"));
+    physical.observed_mono_ms = 100u;
 
     /* OperationRecord：没有 baseline 时写手必须失败，不能产出半条记录。 */
     {
@@ -718,18 +751,18 @@ static void test_writers(void)
         memcpy(operation.updated_at, "2026-10-26T01:02:03Z", sizeof("2026-10-26T01:02:03Z"));
 
         locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
-        domain_write_operation_record(&writer, &operation, &fixture.core->instance_id);
+        domain_write_operation_record(&writer, &operation, &fixture.core->instance_id, 350u);
         TEST_CHECK(!locker_domain_json_writer_ok(&writer));
 
         /* host_instance_id 必须是有效 UUID。 */
         operation.has_baseline = true;
         operation.baseline = physical;
         locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
-        domain_write_operation_record(&writer, &operation, NULL);
+        domain_write_operation_record(&writer, &operation, NULL, 350u);
         TEST_CHECK(!locker_domain_json_writer_ok(&writer));
 
         locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
-        domain_write_operation_record(&writer, &operation, &fixture.core->instance_id);
+        domain_write_operation_record(&writer, &operation, &fixture.core->instance_id, 350u);
         TEST_CHECK(locker_domain_json_writer_ok(&writer));
         TEST_CHECK(st_has_pair(buffer, "kind", "\"RETURN\""));
         TEST_CHECK(st_has_pair(buffer, "state", "\"REQUESTED\""));
@@ -778,7 +811,7 @@ static void test_writers(void)
     /* device_state：simulated 只能是 false（契约缺口 CR-S104-1）。 */
     locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
     domain_write_device_state(&writer, "cab-1", LOCKER_CONTRACT_VERSION, false, LOCKER_DEVICE_MODE_READY,
-                              &physical, 5u, NULL, false);
+                              &physical, 5u, NULL, false, 350u);
     TEST_CHECK(locker_domain_json_writer_ok(&writer));
     TEST_CHECK(st_has_pair(buffer, "simulated", "false"));
     TEST_CHECK(st_has_pair(buffer, "last_snapshot_revision", "\"5\""));
@@ -982,6 +1015,10 @@ static void test_import_page(void)
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, domain_import_page(fixture.core, &page));
 
     /* 首帧连续：import_continuity=true，ACK 跟到仓储提交的水位。 */
+    /* 真实首启路径上这两个位是 calloc 的 false（只有恢复路径会从记录里置真），
+       所以这里显式还原该初始态，才能验证「导入连续页把流连续性派生为真」。 */
+    fixture.core->cursor.continuity_ok = false;
+    fixture.core->physical.continuity_ok = false;
     st_fill_page(&page, 3u, 10u, false);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_import_page(fixture.core, &page));
     TEST_CHECK(fixture.repo->import_calls == 1u);
@@ -994,16 +1031,24 @@ static void test_import_page(void)
     TEST_CHECK(fixture.core->ack_cursor_valid);
     TEST_CHECK_U64(12u, fixture.core->ack_cursor.event_seq);
     TEST_CHECK_STRING(DT_DEVICE_ID, fixture.core->import_cursor.device_id);
+    /* 仓储认定连续 + 本会话无锁存缺口 -> 动作准入的连续性成立。
+       缺这一步 physical_ready_for_action 恒假、OPERATION_CREATE 恒 NOT_READY。 */
+    TEST_CHECK(fixture.core->cursor.continuity_ok);
+    TEST_CHECK(fixture.core->physical.continuity_ok);
+    TEST_CHECK_U64(12u, fixture.core->physical.durable_cursor.event_seq);
 
     /* 后续页带 gap：连续性锁死为 false，之后不再回真。 */
     st_fill_page(&page, 2u, 20u, true);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_import_page(fixture.core, &page));
     TEST_CHECK(fixture.repo->last_import_gap);
     TEST_CHECK(!fixture.core->import_continuity);
+    TEST_CHECK(!fixture.core->cursor.continuity_ok);
     TEST_CHECK_U64(21u, fixture.core->ack_cursor.event_seq);
     st_fill_page(&page, 2u, 30u, false);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_import_page(fixture.core, &page));
     TEST_CHECK(!fixture.core->import_continuity);
+    /* 缺口锁存不可被后续连续页洗白（uart-v1.md:50）。 */
+    TEST_CHECK(!fixture.core->cursor.continuity_ok);
     TEST_CHECK_U64(31u, fixture.core->ack_cursor.event_seq);
 
     /* 仓储拒绝时水位不动（不能先把内存推进再说）。 */

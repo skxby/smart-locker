@@ -1,8 +1,10 @@
 # 实验室工具借还柜
 
+当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](docs/development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
+
 VM入口已建立：[VM检查与两个工作区](docs/development/vm-inspection-and-code-layout.md)。使用ssh locker-vm；桌面及文件侧栏有借还柜、当前源码和内核驱动入口。两批共800个HOME直属条目已集中归档并核验，根下不再散落脚本/日志/安装包，10个root目录也已完成迁移；[目录用途](docs/development/vm-home-layout.md)说明各类资料的位置。NAT互联网与自编译内核告警仍有待修项。
 
-当前发给开发AI：[S1-04 开发指令](docs/ai-prompts/S1-04.md)（先按 [S1-03 报告](docs/evidence/stage-01/S1-03/summary.md) 与 [交接](docs/evidence/stage-01/S1-03/handoff.md) 核对前置，S1-02/S1-01 为更前置）。S1-03 已收尾 DONE，当前 active_task=S1-04（业务核心，IN_PROGRESS）；不自动跨卡。
+S1-04业务核心已完成：[交付报告](docs/evidence/stage-01/S1-04/summary.md)、[交接](docs/evidence/stage-01/S1-04/handoff.md)。下一卡为[S1-05 HTTPS/IPC](docs/ai-prompts/S1-05.md)，开工前读取本会话开发与验证规则。
 
 主机端开发环境：[用户已有VMware Ubuntu工作流](docs/development/vm-ubuntu-workflow.md)；S1-01原成果保留，后续按[VM最终复验指令](docs/stages/S1-01-vm-final-review.md)验证整改版。Windows继续用于源文件/Keil，不要求WSL。
 
@@ -16,11 +18,11 @@ STM32开发环境入口：[firmware/README.md](firmware/README.md)和[Keil工程
 
 STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile尚未实物验证。
 
-当前状态：契约0.2.1，45张产品任务卡；S1-01、S1-02、S1-03 已完成（DONE，[S1-01 报告](docs/evidence/stage-01/S1-01/summary.md)、[S1-02 报告](docs/evidence/stage-01/S1-02/summary.md)、[S1-03 报告](docs/evidence/stage-01/S1-03/summary.md)），其余卡未开始，逐卡结果以状态索引和报告为准。STM32环境测试已构建，尚无整柜实物验收。
+当前状态：契约0.2.1，45张产品任务卡；S1-01、S1-02、S1-03、S1-04 已完成（DONE，[S1-01 报告](docs/evidence/stage-01/S1-01/summary.md)、[S1-02 报告](docs/evidence/stage-01/S1-02/summary.md)、[S1-03 报告](docs/evidence/stage-01/S1-03/summary.md)），其余卡未开始，逐卡结果以状态索引和报告为准。STM32环境测试已构建，尚无整柜实物验收。
 
-**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前 active_task=S1-04、recommended_next=S1-04，阶段1 gate 仍 NOT_RUN（门禁卡 S1-07，S1-01/S1-02/S1-03 DONE ≠ 阶段 PASS）。不得把设计产物当成功能交付。
+**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S1-05，阶段1 gate 仍 NOT_RUN（门禁卡 S1-07，S1-01至S1-04 DONE ≠ 阶段 PASS）。不得把设计产物当成功能交付。
 
-**并发方式已由用户长期授权**：两条开发线（开发A=主开发会话，开发B=DSH 本项目工作区下新开的那一个会话）+ 一个统一集成负责人（由开发A分时担任，唯一写状态/根构建/契约）+ 独立审计。可并行的窗口、角色写权限与交接流程见[全项目并发调度方案](docs/stages/parallel-execution-plan.md)；只有该表列出的窗口才并行，其余仍按依赖串行，且并发不放宽任何证据门禁。
+开发、集成与验证由当前会话统一负责，具体流程见[执行规则](docs/development/execution-policy.md)。
 
 - [项目执行计划](docs/stages/README.md)：当前阶段、45张卡、依赖门禁和单卡交接。docs/项目计划.md作为产品讨论背景保留，其旧开发顺序不作为执行依据。
 - [到货检测与确认](docs/hardware/到货检测与确认.md)：2026-10-27用户报告器件到齐，逐件型号/数量/电压/功能待验；[本批记录](docs/evidence/hardware-receipt-2026-10-27/summary.md)用于填写真实测量结果。
@@ -37,7 +39,7 @@ STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；�
 - [接口契约](contracts/README.md)：24 个公开入口、内部 C 端口、11 类串口请求、样例与检查方式。
 - [v11视觉架构](docs/architecture/vision-architecture.md)、[接口/地址](docs/architecture/vision-interfaces.md)、[AI接线说明](docs/architecture/vision-ai-handoff.md)：MobileNetV3-Large七分类，独立vision.sock，不改MCU UART。
 - [模块与 AI 所有权](docs/architecture/module-ownership.md)：后续 AI 的目录与修改边界。
-- [阶段 1 任务卡](docs/stages/stage-01-task-cards.md)：主机骨架、仓储、模拟器与验证；S1-01、S1-02、S1-03 已 DONE，S1-04 进行中（IN_PROGRESS）。
+- [阶段 1 任务卡](docs/stages/stage-01-task-cards.md)：主机骨架、仓储、模拟器与验证；S1-01至S1-04已DONE，下一卡S1-05。
 - [材料与HAL影响](docs/hardware/材料变更影响与HAL边界.md)、[本地HAL核对](docs/hardware/本地HAL库核对.md)：材料替换不翻转业务状态，HAL适配不改公开协议。
 - [阶段 2 HAL任务卡](docs/stages/stage-02-hal-hardware-task-cards.md)：后续硬件门槛，尚未执行。
 - [阶段2B视觉八卡](docs/stages/stage-02b-vision-task-cards.md)：S2-09—16接模型/相机/worker/融合；S2-08只过基础子门禁，S2-16为阶段2完整门禁。

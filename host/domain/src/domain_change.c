@@ -46,6 +46,14 @@ bool domain_change_check(domain_change_t *change, const char *collection, const 
     if (change == NULL || change->broken || collection == NULL || key == NULL || condition == NULL) {
         return false;
     }
+    if (change->mutations_started) {
+        /* checks 数组已经在第一个 mutation 写出 `],"mutations":[` 时关闭了。
+           此时再追加 {check} 会落在 mutations 数组里，变成非法 JSON——仓储
+           解析失败后统一报 INVALID(3)，调用方只看到「业务失败」而查不出根因。
+           条件检查必须在任何 put/delete 之前一次性写完，这条硬约束在这里守。 */
+        change->broken = true;
+        return false;
+    }
     if (change->checks >= LOCKER_DOMAIN_MAX_CHECKS) {
         change->broken = true;
         return false;

@@ -55,9 +55,13 @@ static locker_status_t dc_run_command(dt_fixture_t *fixture, const locker_comman
     }
     job.kind = (uint8_t)DOMAIN_JOB_COMMAND;
     job.completion = slot;
+    /* 令牌必须随作业下发：响应写回前会核对槽的归属（审计 R3-B-14）。
+       这里走 domain_handle_job 而不是直接调 domain_handle_command，
+       正是为了让「设置作业令牌」这条真实分发路径也进测试覆盖。 */
+    job.completion_token = token;
     job.body.command = *command;
-    domain_handle_command(fixture->core, &job);
-    if (domain_completion_wait_final(fixture->core, slot, 0u, result) != LOCKER_STATUS_OK) {
+    domain_handle_job(fixture->core, &job);
+    if (domain_completion_wait_final(fixture->core, slot, &token, 0u, result) != LOCKER_STATUS_OK) {
         domain_completion_release(fixture->core, slot);
         return LOCKER_STATUS_NOT_READY;
     }
@@ -81,14 +85,55 @@ static locker_status_t dc_run_query(dt_fixture_t *fixture, const locker_query_t 
     }
     job.kind = (uint8_t)DOMAIN_JOB_QUERY;
     job.completion = slot;
+    job.completion_token = token;
     job.body.query = *query;
-    domain_handle_query(fixture->core, &job);
-    if (domain_completion_wait_final(fixture->core, slot, 0u, result) != LOCKER_STATUS_OK) {
+    domain_handle_job(fixture->core, &job);
+    if (domain_completion_wait_final(fixture->core, slot, &token, 0u, result) != LOCKER_STATUS_OK) {
         domain_completion_release(fixture->core, slot);
         return LOCKER_STATUS_NOT_READY;
     }
     domain_completion_release(fixture->core, slot);
     return result->status;
+}
+
+/*
+ * 响应必须是契约里的信封：{data, snapshot_revision, request_id}——
+ * 顶层恰好三个成员，data 是一个完整的 JSON 值。
+ *
+ * 这条断言是补漏来的：以前这里只对 json 做子串匹配
+ * （test_text_contains），所以「多一层大括号」这种断头 JSON
+ * （{"data":{{"id":…）在单测里永远是绿的，直到集成测试解析响应
+ * 才炸出来。凡是拿到 result->json 的地方都应该先过这里。
+ */
+static bool dc_envelope_ok(dt_fixture_t *fixture, const locker_query_result_t *result)
+{
+    locker_json_document_t doc;
+    const locker_json_node_t *root;
+
+    memset(&doc, 0, sizeof(doc));
+    doc.text = result->json;
+    doc.length = result->length;
+    doc.nodes = fixture->core->arg_nodes;
+    doc.node_capacity = LOCKER_DOMAIN_DOC_NODES;
+    doc.members = fixture->core->arg_members;
+    doc.member_capacity = LOCKER_DOMAIN_DOC_MEMBERS;
+    TEST_CHECK(result->length > 0u);
+    if (!locker_domain_json_parse(&doc, result->json, result->length)) {
+        TEST_CHECK(false);
+        return false;
+    }
+    root = locker_domain_json_root(&doc);
+    TEST_CHECK(root != NULL && root->type == LOCKER_JSON_OBJECT);
+    if (root == NULL || root->type != LOCKER_JSON_OBJECT) {
+        return false;
+    }
+    /* 顶层恰好三个成员，且就是契约规定的三个：多一个少一个都不算信封。
+       locker_json_node_t 不带成员名，所以用「个数 + 三个必选键都在」等价判定。 */
+    TEST_CHECK_U64(3u, root->count);
+    TEST_CHECK(locker_domain_json_get(&doc, root, "data") != NULL);
+    TEST_CHECK(locker_domain_json_get(&doc, root, "snapshot_revision") != NULL);
+    TEST_CHECK(locker_domain_json_get(&doc, root, "request_id") != NULL);
+    return true;
 }
 
 /* 直接把仓储里的文档文本改一段，用来造「已满足物理证据」的夹具。 */
@@ -134,6 +179,20 @@ static bool dc_seed_active(dt_fixture_t *fixture, uint8_t kind, uint8_t state, u
         return false;
     }
     fixture->core->active = operation;
+    if (state == LOCKER_OPERATION_STATE_WAIT_CONFIRM && fixture->core->physical.valid) {
+        /* 真实链路上 WAIT_CONFIRM 只由 operation_advance_from_evidence 产出，
+           进入时会把当时的 door/item/revision/boot/epoch 冻结成确认依据
+           （审计 R3-B-3/R3-B-4）。这里直接把一条记录装进内存，必须补上同一组
+           冻结值，否则 confirm 的决策点复核会判「依据不可信」而拒绝——
+           那是恢复路径的正确行为，不是普通确认的行为。 */
+        fixture->core->active.wait_confirm_basis_valid = true;
+        fixture->core->active.wait_confirm_physical_revision = fixture->core->physical.physical_revision;
+        fixture->core->active.wait_confirm_item = fixture->core->physical.item;
+        fixture->core->active.wait_confirm_door = fixture->core->physical.door;
+        fixture->core->active.wait_confirm_boot_id = fixture->core->physical.boot_id;
+        fixture->core->active.wait_confirm_journal_epoch = fixture->core->physical.journal_epoch;
+        fixture->core->active.wait_confirm_blocked = false;
+    }
     return true;
 }
 
@@ -194,19 +253,54 @@ static void test_create_guards(void)
         TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_command(&fixture, &command, &result));
     }
 
-    /* 工具 ID 必须是本柜格那一个。 */
+    /* 工具 ID 必须是本柜格那一个；工具不可知时一律 NOT_READY（不能靠
+       「不知道就不校验」放行任意 UUID）。 */
     {
         locker_uuid_t other;
         char wrong_args[512];
         dt_uuid_fill(&other, 0x23u);
         dc_build_create_args(wrong_args, sizeof(wrong_args), &other, "BORROW", "1");
-        fixture.core->tool_valid = true;
-        fixture.core->tool_id = tool;
         {
             locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, wrong_args, 0x31u, 0x32u);
             TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_command(&fixture, &command, &result));
         }
         fixture.core->tool_valid = false;
+        {
+            locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, args, 0x31u, 0x32u);
+            TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, dc_run_command(&fixture, &command, &result));
+        }
+        fixture.core->tool_valid = true;
+        fixture.core->tool_id = tool;
+    }
+
+    /* 工具版本必须与投影**精确相等**。0 不是「未声明」的例外：真源
+       `contracts/contract-source.json` 的 `CreateOperationRequest.required`
+       明确含 `tool_revision`，类型 `U64`——0 只是合法取值，服务端照样要做
+       乐观检查（审计 R3-B-9：当前 revision=1 时提交 "0" 曾返回 OK）。 */
+    {
+        char stale[512];
+        dc_build_create_args(stale, sizeof(stale), &tool, "BORROW", "999");
+        {
+            locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, stale, 0x31u, 0x32u);
+            TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &result));
+        }
+        {
+            char zero[512];
+            dc_build_create_args(zero, sizeof(zero), &tool, "BORROW", "0");
+            locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, zero, 0x31u, 0x33u);
+            TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &result));
+        }
+        /* 投影本身就是 revision 0 时，提交 0 才通过——比较的是值不是「非零」。 */
+        fixture.core->tool_revision = 0u;
+        {
+            char zero[512];
+            dc_build_create_args(zero, sizeof(zero), &tool, "BORROW", "0");
+            locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CREATE, zero, 0x31u, 0x34u);
+            TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &result));
+        }
+        fixture.core->tool_revision = 1u;
+        fixture.core->active.used = false;
+        fixture.core->loan_open = false;
     }
 
     /* 恢复未完成时一律 NOT_READY。 */
@@ -336,6 +430,7 @@ static void test_create_success(void)
     TEST_CHECK_U64(1000u + LOCKER_REQUEST_TTL_MS, fixture.core->active.requested_deadline_ms);
     /* 提交后的响应必须带提交后的版本，不是提交前的预估版本。 */
     TEST_CHECK_U64(1u, result.snapshot_revision);
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"state\":\"REQUESTED\""));
     TEST_CHECK(test_text_contains(result.json, tool_text));
     TEST_CHECK(test_text_contains(result.json, "\"snapshot_revision\":\"1\""));
@@ -556,7 +651,7 @@ static void test_confirm(void)
         TEST_CHECK_STRING("CONFIRM_PRECONDITION", fixture.core->active.reason_code);
     }
 
-    /* 补上物理变化证据后可以确认：操作终结 + 新建 loan，两步各自一个事务。 */
+    /* 补上物理变化证据后可以确认：操作终结与账本变更必须同一事务提交。 */
     dt_fixture_free(&fixture);
     TEST_CHECK(dt_fixture_init(&fixture, true));
     dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
@@ -578,7 +673,9 @@ static void test_confirm(void)
     TEST_CHECK(fixture.core->loan_open);
     TEST_CHECK(locker_uuid_equal(&fixture.core->loan_borrower_id, &principal.user_id));
     TEST_CHECK(locker_uuid_equal(&fixture.core->loan_tool_id, &tool));
-    TEST_CHECK_U64(2u, fixture.core->revision);
+    /* 同事务：操作状态与 loans 记录一次提交完成，快照版本只前进一格。
+       分成两个事务时这里会是 2，中途失败就会留下「已 COMPLETED 但账本没动」。 */
+    TEST_CHECK_U64(1u, fixture.core->revision);
     {
         domain_operation_t loaded;
         char key[LOCKER_DOMAIN_UUID_TEXT];
@@ -595,9 +692,9 @@ static void test_confirm(void)
             TEST_CHECK(dt_repo_find(fixture.repo, "loans", loan_key) != NULL);
         }
     }
-    /* 借出确认发的是 operation 与 loan 两种资源变更。 */
-    TEST_CHECK(fixture.publisher->publish_calls >= 2u);
-    TEST_CHECK_STRING("loan", fixture.publisher->last.resource);
+    /* 借出确认只发一次 operation 变更：账本不再单独提交，所以也不单独发布。 */
+    TEST_CHECK_U64(1u, fixture.publisher->publish_calls);
+    TEST_CHECK_STRING("operation", fixture.publisher->last.resource);
 
     /* 提前确认：还在 ACCESS_ACTIVE 的一律 CONFLICT（不能跳步）。 */
     dt_fixture_free(&fixture);
@@ -668,6 +765,25 @@ static void test_cancel(void)
         TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 1, &loaded));
         TEST_CHECK(loaded.state == LOCKER_OPERATION_STATE_CANCELLED);
         TEST_CHECK_STRING("CANCELLED", loaded.reason_code);
+    }
+    /* 取消理由必须落进审计集合：CancelRequest.reason 是必填项，只解析不持久化
+       等于「有理由才能取消」这条规则根本没有留痕（审计 R3-B-6 后半）。 */
+    {
+        dt_doc_t *audit = NULL;
+        uint32_t i;
+        for (i = 0; i < DT_MAX_DOCS; i++) {
+            if (fixture.repo->docs[i].used &&
+                strcmp(fixture.repo->docs[i].collection, "audits") == 0) {
+                audit = &fixture.repo->docs[i];
+                break;
+            }
+        }
+        TEST_CHECK(audit != NULL);
+        if (audit != NULL) {
+            TEST_CHECK(test_text_contains(audit->value, "\"type\":\"OPERATION_CANCELLED\""));
+            TEST_CHECK(test_text_contains(audit->value, "changed mind"));
+            TEST_CHECK(test_text_contains(audit->value, "\"operation_id\":\""));
+        }
     }
     /* 终态再取消 -> CONFLICT。 */
     {
@@ -772,6 +888,27 @@ static void test_resolve(void)
         command.resource_id = id;
         TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &result));
     }
+    /* 核验结论必须与柜内物品现状相符：东西还在柜里就不能核验成「已借出」。
+       这条是补漏——早先只比对 operation.kind，管理员可以在物品仍在位时把
+       BORROW 结案成 COMPLETED，凭空造出一条有效借用，绕开整条物理证据链。
+       依据 interface-expert.md:55（COMPLETED = 物理证据与确认同事务核对通过，
+       或管理员**有依据**核验）与 stage-01-task-cards.md「不允许管理员无理由覆盖」。 */
+    {
+        locker_command_t command = dc_command(&admin, LOCKER_CORE_OPERATION_RESOLVE,
+                                              "{\"operation_revision\":\"6\",\"physical_revision\":\"7\","
+                                              "\"resolution\":\"COMPLETE_BORROW\",\"reason\":\"operator checked\"}",
+                                              0x31u, 0u);
+        command.resource_id = id;
+        /* 本段 fixture 的物品是 ABSENT（已离位），符合 COMPLETE_BORROW；先改成在位。 */
+        fixture.core->physical.item = LOCKER_ITEM_STATE_PRESENT;
+        TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &result));
+        /* 拒绝必须来自物品判定本身，而不是顺手把操作推走：状态与物理基线都不动。
+           这里只验「拒绝」这一次调用——拒绝路径不消耗操作，改回离位后由下一段
+           正常结案来证明通过性，不再塞第三次调用（那会拿 CONFLICT）。 */
+        TEST_CHECK(fixture.core->active.used);
+        TEST_CHECK(fixture.core->active.state == LOCKER_OPERATION_STATE_REVIEW_REQUIRED);
+        fixture.core->physical.item = LOCKER_ITEM_STATE_ABSENT;
+    }
     /* 正常核验完成借出：终结 + 新建 loan。 */
     {
         locker_command_t command = dc_command(&admin, LOCKER_CORE_OPERATION_RESOLVE,
@@ -790,6 +927,35 @@ static void test_resolve(void)
         TEST_CHECK(loaded.state == LOCKER_OPERATION_STATE_COMPLETED);
         TEST_CHECK_STRING("ADMIN_RESOLVED", loaded.reason_code);
         TEST_CHECK(loaded.manual_resolution);
+    }
+    /* 人工核验必须留下可审计的因果：谁、为什么、依据哪个物理版本。
+       以前 reason 只查长度不落库、actor 还是原申请人、reason_code 固定
+       ADMIN_RESOLVED，事后无从追责（审计 R3-B-10/B-6）。 */
+    {
+        dt_doc_t *audit = NULL;
+        uint32_t i;
+        for (i = 0; i < DT_MAX_DOCS; i++) {
+            if (fixture.repo->docs[i].used &&
+                strcmp(fixture.repo->docs[i].collection, "audits") == 0) {
+                audit = &fixture.repo->docs[i];
+                break;
+            }
+        }
+        TEST_CHECK(audit != NULL);
+        if (audit != NULL) {
+            TEST_CHECK(test_text_contains(audit->value, "\"type\":\"MANUAL_RESOLUTION\""));
+            TEST_CHECK(test_text_contains(audit->value, "operator checked"));
+            TEST_CHECK(test_text_contains(audit->value, "physical_revision=7"));
+            /* actor 必须是执行核验的管理员，不是申请人。 */
+            {
+                char actor_text[64];
+                char actor_member[96];
+                TEST_CHECK_STATUS(LOCKER_STATUS_OK,
+                                  locker_uuid_format(&admin.user_id, actor_text, sizeof(actor_text)));
+                snprintf(actor_member, sizeof(actor_member), "\"actor_id\":\"%s\"", actor_text);
+                TEST_CHECK(test_text_contains(audit->value, actor_member));
+            }
+        }
     }
 
     /* NO_CHANGE：核验为「什么都没发生」，不建 loan、不写账本。 */
@@ -815,6 +981,195 @@ static void test_resolve(void)
         TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 1, &loaded));
         TEST_CHECK(loaded.state == LOCKER_OPERATION_STATE_NO_CHANGE);
     }
+    dt_fixture_free(&fixture);
+}
+
+/* 终结与账本必须同一个事务：提交失败时两者都不能留下痕迹。
+   早先的实现是「先提交终结、再单独提交账本」，第二步失败会留下
+   COMPLETED 却没有有效借用（借出侧）或 COMPLETED 但 loan 仍 open（归还侧）。
+   本用例用 repo->commit_status 注入提交失败，断言内存与库都没有半截状态。 */
+static void test_finish_and_loan_same_transaction(void)
+{
+    dt_fixture_t fixture;
+    locker_principal_t principal;
+    locker_uuid_t id;
+    locker_uuid_t tool;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    principal = dt_principal(LOCKER_ROLE_USER, 0x70u);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    dt_uuid_fill(&id, 0x51u);
+    dt_uuid_fill(&tool, 0x22u);
+    /* 先让物理事实变成「物品已离位」，再装入 WAIT_CONFIRM 记录：真实链路上
+       operation_advance_from_evidence 是在物品变化之后才冻结确认依据的，
+       顺序颠倒会让冻结的 item 与当前 item 不符，confirm 的决策点复核会
+       正确地判成 PHYSICAL_CHANGED。 */
+    fixture.core->physical.item = LOCKER_ITEM_STATE_ABSENT;
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_WAIT_CONFIRM, 2u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+
+    /* 造一个「物品已离位 + 开门/物品变化都已看见」的 COMPLETED 场景。 */
+    fixture.core->active.item_transition_seen = true;
+    fixture.core->active.door_open_seen = true;
+    {
+        char key[LOCKER_DOMAIN_UUID_TEXT];
+        dt_uuid_text(&id, key, sizeof(key));
+        TEST_CHECK(dc_patch_doc(&fixture, "operations", key, "\"item_transition_seen\":false",
+                                "\"item_transition_seen\":true"));
+    }
+
+    uint64_t revision_before = fixture.core->revision;
+    fixture.repo->commit_status = LOCKER_STATUS_IO_ERROR;
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CONFIRM,
+                                              "{\"operation_revision\":\"2\"}", 0x41u, 0u);
+        command.resource_id = id;
+        locker_query_result_t result;
+        TEST_CHECK_STATUS(LOCKER_STATUS_IO_ERROR, dc_run_command(&fixture, &command, &result));
+    }
+    /* 提交失败：版本不前进、内存里没有凭空出现的有效借用。 */
+    TEST_CHECK_U64(revision_before, fixture.core->revision);
+    TEST_CHECK(!fixture.core->loan_open);
+
+    /* 恢复提交能力后重试必须成功，且账本与终结一起出现。 */
+    fixture.repo->commit_status = LOCKER_STATUS_OK;
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CONFIRM,
+                                              "{\"operation_revision\":\"2\"}", 0x41u, 0u);
+        command.resource_id = id;
+        locker_query_result_t result;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &result));
+    }
+    TEST_CHECK(fixture.core->loan_open);
+    TEST_CHECK(locker_uuid_equal(&fixture.core->loan_borrower_id, &principal.user_id));
+    {
+        domain_operation_t loaded;
+        memset(&loaded, 0, sizeof(loaded));
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_operation_load(fixture.core, &id, 1, &loaded));
+        TEST_CHECK(loaded.state == LOCKER_OPERATION_STATE_COMPLETED);
+        TEST_CHECK(loaded.has_loan);
+        TEST_CHECK(locker_uuid_equal(&loaded.related_loan_id, &fixture.core->loan_id));
+    }
+    dt_fixture_free(&fixture);
+}
+
+/* ---------- 动作类命令的幂等 ---------- */
+
+/* 确认/取消/核验都要按幂等键记录响应（审计 R1-B-8）。
+   以前只有 create 写幂等记录，同一个取消发两次，第二次会被状态机判成
+   CONFLICT——客户端重试反而看到「第一次成功、第二次冲突」这种自相矛盾的
+   结果，最坏的后果是操作者以为没生效而换个键再来一次。 */
+static void test_action_idempotency(void)
+{
+    dt_fixture_t fixture;
+    locker_principal_t principal;
+    locker_query_result_t first;
+    locker_query_result_t replay;
+    locker_query_result_t conflict;
+    locker_uuid_t id;
+    locker_uuid_t tool;
+    uint32_t commit_before;
+
+    /* 确认：同键重放拿到逐字节相同的响应，且不产生第二次事务。 */
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
+    principal = dt_principal(LOCKER_ROLE_USER, 0x70u);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    dt_uuid_fill(&id, 0x51u);
+    dt_uuid_fill(&tool, 0x22u);
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_WAIT_CONFIRM, 4u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+    {
+        char key[LOCKER_DOMAIN_UUID_TEXT];
+        dt_uuid_text(&id, key, sizeof(key));
+        TEST_CHECK(dc_patch_doc(&fixture, "operations", key, "\"item_transition_seen\":false",
+                                "\"item_transition_seen\":true"));
+    }
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CONFIRM,
+                                              "{\"operation_revision\":\"4\"}", 0x41u, 0x42u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &first));
+    }
+    commit_before = fixture.repo->commit_calls;
+    uint64_t revision_after = fixture.core->revision;
+    {
+        /* 换一个 request_id 重放：幂等只看幂等键与请求哈希。 */
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CONFIRM,
+                                              "{\"operation_revision\":\"4\"}", 0x43u, 0x42u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &replay));
+    }
+    TEST_CHECK_STRING(first.json, replay.json);
+    TEST_CHECK_U64(commit_before, (uint64_t)fixture.repo->commit_calls);
+    TEST_CHECK_U64(revision_after, fixture.core->revision);
+    {
+        /* 同一把幂等键换参数（比如换个 operation_revision）-> CONFLICT，
+           不能把两种意图当成一次。 */
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CONFIRM,
+                                              "{\"operation_revision\":\"9\"}", 0x44u, 0x42u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_CONFLICT, dc_run_command(&fixture, &command, &conflict));
+    }
+    dt_fixture_free(&fixture);
+
+    /* 取消：REQUESTED 直接取消，同键重放仍然 OK（状态机单独看会说「已终态」）。 */
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_REQUESTED, 2u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CANCEL,
+                                              "{\"operation_revision\":\"2\",\"reason\":\"changed mind\"}", 0x41u,
+                                              0x45u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &first));
+    }
+    commit_before = fixture.repo->commit_calls;
+    revision_after = fixture.core->revision;
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_CANCEL,
+                                              "{\"operation_revision\":\"2\",\"reason\":\"changed mind\"}", 0x46u,
+                                              0x45u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &replay));
+    }
+    TEST_CHECK_STRING(first.json, replay.json);
+    TEST_CHECK_U64(commit_before, (uint64_t)fixture.repo->commit_calls);
+    TEST_CHECK_U64(revision_after, fixture.core->revision);
+
+    /* 核验：最不能重复执行的一条。第一次成功后再发一次同键请求，必须拿到原响应
+       而不是 CONFLICT——否则管理员会以为第一次没生效，换个键再来一次。 */
+    dt_fixture_free(&fixture);
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
+    principal = dt_principal(LOCKER_ROLE_ADMIN, 0x80u);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_REVIEW_REQUIRED, 6u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_RESOLVE,
+                                              "{\"operation_revision\":\"6\",\"physical_revision\":\"7\","
+                                              "\"resolution\":\"COMPLETE_BORROW\",\"reason\":\"operator checked\"}",
+                                              0x41u, 0x47u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &first));
+    }
+    commit_before = fixture.repo->commit_calls;
+    revision_after = fixture.core->revision;
+    {
+        locker_command_t command = dc_command(&principal, LOCKER_CORE_OPERATION_RESOLVE,
+                                              "{\"operation_revision\":\"6\",\"physical_revision\":\"7\","
+                                              "\"resolution\":\"COMPLETE_BORROW\",\"reason\":\"operator checked\"}",
+                                              0x48u, 0x47u);
+        command.resource_id = id;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &replay));
+    }
+    TEST_CHECK_STRING(first.json, replay.json);
+    TEST_CHECK_U64(commit_before, (uint64_t)fixture.repo->commit_calls);
+    TEST_CHECK_U64(revision_after, fixture.core->revision);
     dt_fixture_free(&fixture);
 }
 
@@ -904,7 +1259,11 @@ static void test_presence_and_arm(void)
             TEST_CHECK(locker_uuid_equal(&fixture.device->last_intent.operation_id, &id));
             TEST_CHECK(locker_uuid_equal(&fixture.device->last_intent.command_id, &fixture.core->active.command_id));
             TEST_CHECK(fixture.device->last_intent.kind == LOCKER_OPERATION_KIND_BORROW);
-            TEST_CHECK_U64(1000u + LOCKER_LOCK_PULSE_MAX_MS, fixture.device->last_intent.not_after_mcu_ms);
+            /* 发出的期限必须与 arm 阶段落库的那一个完全相同（MCU 时钟域），
+               不能在这里用主机时钟重算——审计 R3-B-1 的探针就是靠这个差异
+               拿到 stored=503000 / sent=2000 的。 */
+            TEST_CHECK_U64(fixture.core->active.outbox_not_after_ms,
+                           fixture.device->last_intent.not_after_mcu_ms);
             TEST_CHECK_U64(1u, (uint64_t)fixture.device->last_intent.slot_id);
         }
         TEST_CHECK(fixture.core->active.send_started);
@@ -981,7 +1340,120 @@ static void test_presence_and_arm(void)
     dt_fixture_free(&fixture);
 }
 
-/* ---------- outbox 泵 ---------- */
+/* 动作期限必须同时受「柜前证明剩余有效期」约束（审计 R4-B-1）。
+   只按准备预算重新给满 2 秒，等于把一份即将失效的证明又续了 2 秒；
+   而 MCU 并不知道原证明时刻，只按收到的 not_after 放行，没法替主机修正。 */
+static void test_arm_deadline_bounded_by_proof(void)
+{
+    dt_fixture_t fixture;
+    locker_principal_t principal;
+    locker_presence_t presence;
+    locker_peer_t peer;
+    locker_uuid_t id;
+    locker_uuid_t tool;
+    domain_job_t job;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    principal = dt_principal(LOCKER_ROLE_USER, 0x70u);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    dt_uuid_fill(&id, 0x51u);
+    dt_uuid_fill(&tool, 0x22u);
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_REQUESTED, 2u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+
+    memset(&peer, 0, sizeof(peer));
+    peer.verified_ui_peer = true;
+    memset(&presence, 0, sizeof(presence));
+    presence.principal = principal;
+    presence.operation_id = id;
+    presence.operation_revision = 2u;
+
+    /* t=1000 证明被接纳，但门还开着，arm 只能停在 REQUESTED。 */
+    fixture.core->physical.door = LOCKER_DOOR_STATE_OPEN;
+    memset(&job, 0, sizeof(job));
+    job.kind = (uint8_t)DOMAIN_JOB_PRESENCE;
+    job.completion = UINT32_MAX;
+    job.body.presence.peer = peer;
+    job.body.presence.presence = presence;
+    domain_handle_presence(fixture.core, &job);
+    TEST_CHECK(fixture.core->active.proof_consumed);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REQUESTED, fixture.core->active.state);
+    TEST_CHECK_U64(0u, (uint64_t)fixture.device->execute_calls);
+
+    /* t=15000 门关好：证明只剩 1000 ms，期限必须是 1000 而不是 2000。 */
+    fixture.core->physical.door = LOCKER_DOOR_STATE_CLOSED;
+    /* 锚点样本也必须新鲜，否则 arm 会在锚点门直接 NOT_READY，测不到期限换算。 */
+    fixture.core->anchor_sampled_ms = 15000u;
+    fixture.core->anchor_offset_low_ms = 0;
+    fixture.core->anchor_offset_high_ms = 0;
+    domain_handle_tick(fixture.core, 15000u);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_ACCESS_PENDING, fixture.core->active.state);
+    TEST_CHECK_U64(15000u + (LOCKER_PRESENCE_TTL_MS - 14000u), fixture.core->active.outbox_not_after_ms);
+    /* 反向对照：期限绝不能被准备预算顶满。 */
+    TEST_CHECK(fixture.core->active.outbox_not_after_ms < 15000u + LOCKER_PREPARE_DEADLINE_MS);
+    TEST_CHECK_U64(1u, (uint64_t)fixture.device->execute_calls);
+    TEST_CHECK_U64(fixture.core->active.outbox_not_after_ms, fixture.device->last_intent.not_after_mcu_ms);
+
+    dt_fixture_free(&fixture);
+}
+
+/* 释放未完成时不许武装新动作：MCU 仍持有 has_active，新 EXECUTE 只会撞 BUSY
+   并被判成「命令被拒 → 核验」，把一次合法到柜证明白白烧掉。这是同会话
+   连续借还的前置条件（审计 R3-B-2：终结落库后、释放完成前提交的 presence
+   照样武装成功）。 */
+static void test_presence_blocked_while_releasing(void)
+{
+    dt_fixture_t fixture;
+    locker_principal_t principal;
+    locker_presence_t presence;
+    locker_peer_t peer;
+    locker_uuid_t id;
+    locker_uuid_t tool;
+    domain_job_t job;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    principal = dt_principal(LOCKER_ROLE_USER, 0x70u);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    dt_uuid_fill(&id, 0x51u);
+    dt_uuid_fill(&tool, 0x22u);
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_REQUESTED, 2u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+
+    memset(&peer, 0, sizeof(peer));
+    peer.verified_ui_peer = true;
+    memset(&presence, 0, sizeof(presence));
+    presence.principal = principal;
+    presence.operation_id = id;
+    presence.operation_revision = 2u;
+
+    fixture.core->release_pending = true;
+    memset(&job, 0, sizeof(job));
+    job.kind = (uint8_t)DOMAIN_JOB_PRESENCE;
+    job.completion = UINT32_MAX;
+    job.body.presence.peer = peer;
+    job.body.presence.presence = presence;
+    domain_handle_presence(fixture.core, &job);
+    /* 证明不得被消费，操作留在 REQUESTED，也不许发出任何动作。 */
+    TEST_CHECK(!fixture.core->active.proof_consumed);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REQUESTED, fixture.core->active.state);
+    TEST_CHECK_U64(0u, (uint64_t)fixture.device->execute_calls);
+
+    /* 释放完成之后同一份证明必须被接受（只是「等一等」，不是永久拒绝）。 */
+    fixture.core->release_pending = false;
+    memset(&job, 0, sizeof(job));
+    job.kind = (uint8_t)DOMAIN_JOB_PRESENCE;
+    job.completion = UINT32_MAX;
+    job.body.presence.peer = peer;
+    job.body.presence.presence = presence;
+    domain_handle_presence(fixture.core, &job);
+    TEST_CHECK(fixture.core->active.proof_consumed);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_ACCESS_PENDING, fixture.core->active.state);
+    TEST_CHECK_U64(1u, (uint64_t)fixture.device->execute_calls);
+
+    dt_fixture_free(&fixture);
+}
 
 /*
  * 造一条停在 ACCESS_PENDING、已冻结 outbox 但是还没真正发送的操作：
@@ -1100,7 +1572,13 @@ static void test_outbox_pump(void)
             TEST_CHECK_U64(fixture.core->active.action_no, fixture.device->last_intent.action_no);
             TEST_CHECK(locker_uuid_equal(&fixture.device->last_intent.command_id,
                                          &fixture.core->active.command_id));
-            TEST_CHECK_U64(1000u + LOCKER_LOCK_PULSE_MAX_MS, fixture.device->last_intent.not_after_mcu_ms);
+            TEST_CHECK_U64(fixture.core->active.outbox_not_after_ms,
+                           fixture.device->last_intent.not_after_mcu_ms);
+            /* 冻结的 guard 也必须原样透传，不能在发送时重新采当前值。 */
+            TEST_CHECK(locker_uuid_equal(&fixture.device->last_intent.session_id,
+                                         &fixture.core->active.outbox_session_id));
+            TEST_CHECK_U64(fixture.core->active.outbox_physical_revision,
+                           fixture.device->last_intent.expected_physical_revision);
         }
         TEST_CHECK(fixture.core->active.send_started);
         TEST_CHECK(fixture.core->active.outbox_state == 2u);
@@ -1199,6 +1677,27 @@ static void test_timeouts(void)
     TEST_CHECK(fixture.core->active.state == LOCKER_OPERATION_STATE_REVIEW_REQUIRED);
     TEST_CHECK_STRING("OPEN_TIMEOUT", fixture.core->active.reason_code);
 
+    /* ACCESS_ACTIVE 但门一直没开：脉冲事实起 30 秒必须进核验。
+       这条是补漏——早先只实现了 CLOSE_TIMEOUT（开门之后的关门超时），
+       stage-00-architecture.md:122 的前半句「从脉冲事实起 30 秒未见开门」
+       没有出口，脉冲起来门却没开（锁体卡死/门被顶住/传感器失灵）时操作
+       永久停在 ACCESS_ACTIVE 占着唯一柜格，后续申请全被 BUSY 挡回。 */
+    dt_fixture_free(&fixture);
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_ACCESS_ACTIVE, 5u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+    fixture.core->active.pulse_started_ms = 1000u;
+    fixture.core->active.door_opened_ms = 0u;
+    (void)domain_now_advance(fixture.core, 1000u + LOCKER_WAIT_OPEN_MS - 1u);
+    domain_timeouts(fixture.core);
+    TEST_CHECK(fixture.core->active.state == LOCKER_OPERATION_STATE_ACCESS_ACTIVE);
+    (void)domain_now_advance(fixture.core, 1000u + LOCKER_WAIT_OPEN_MS);
+    domain_timeouts(fixture.core);
+    TEST_CHECK(fixture.core->active.state == LOCKER_OPERATION_STATE_REVIEW_REQUIRED);
+    TEST_CHECK_STRING("OPEN_TIMEOUT", fixture.core->active.reason_code);
+
     /* ACCESS_ACTIVE 到期：关门超时进核验。 */
     dt_fixture_free(&fixture);
     TEST_CHECK(dt_fixture_init(&fixture, true));
@@ -1252,6 +1751,36 @@ static void test_timeouts(void)
     domain_timeouts(fixture.core);
     TEST_CHECK(!fixture.core->pending_command_valid);
     TEST_CHECK(!fixture.core->pending_command_queried);
+
+    /* 事件流已经把操作推到 WAIT_CONFIRM，但 EXECUTE 应答丢了：查询补救仍必须
+       发出。以前「查询」挂在 ACCESS_PENDING/ACCESS_ACTIVE 两个 case 里，事件
+       5 秒内就推进到 WAIT_CONFIRM 时永远轮不到查询，execute_in_flight 与
+       pending 双双锁死，之后任何合法新命令都发不出去
+       （审计 R3-B-8：探针推进到 7000 ms 后 query_calls=0、execute_in_flight=1）。 */
+    dt_fixture_free(&fixture);
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_device_ready(&fixture, 5u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_ABSENT);
+    TEST_CHECK(dt_seed_principal(&fixture, &principal));
+    TEST_CHECK(dc_seed_active(&fixture, LOCKER_OPERATION_KIND_BORROW, LOCKER_OPERATION_STATE_WAIT_CONFIRM, 5u,
+                              "2025-10-21T00:00:00Z", &id, &tool, &principal.user_id));
+    fixture.core->execute_in_flight = true;
+    fixture.core->pending_command_valid = true;
+    fixture.core->pending_command_ms = 1000u;
+    fixture.core->pending_command_queried = false;
+    dt_uuid_fill(&fixture.core->pending_command_id, 0x67u);
+    (void)domain_now_advance(fixture.core, 1000u + LOCKER_HOST_TIMEOUT_MS);
+    domain_timeouts(fixture.core);
+    TEST_CHECK_U64(1u, (uint64_t)fixture.device->query_calls);
+    TEST_CHECK(fixture.core->pending_command_queried);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_WAIT_CONFIRM, fixture.core->active.state);
+    /* 再超时一次：放弃等待，在途标志与 pending 都要清掉，且操作转核验而不是
+       无声无息地停在 WAIT_CONFIRM。 */
+    (void)domain_now_advance(fixture.core, 1000u + LOCKER_HOST_TIMEOUT_MS + LOCKER_HOST_TIMEOUT_MS);
+    domain_timeouts(fixture.core);
+    TEST_CHECK(!fixture.core->pending_command_valid);
+    TEST_CHECK(!fixture.core->execute_in_flight);
+    TEST_CHECK_U64(LOCKER_OPERATION_STATE_REVIEW_REQUIRED, fixture.core->active.state);
+    TEST_CHECK_STRING("QUERY_UNRESOLVED", fixture.core->active.reason_code);
 
     /* 在途请求槽超时：按用途把 in_flight 复位，避免永久卡死。 */
     {
@@ -1307,27 +1836,37 @@ static void test_query_dispatch(void)
     TEST_CHECK(test_text_contains(result.json, "\"simulated\":false"));
     TEST_CHECK(test_text_contains(result.json, "test-cabinet"));
     TEST_CHECK(test_text_contains(result.json, DT_DEVICE_ID));
+    /* 子串对不上形状：data 必须是完整对象，多一层大括号也能通过上面那些断言。 */
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
 
-    /* SNAPSHOT_GET：四个分区都在，且没有就没有伪造成空对象。 */
+    /* SNAPSHOT_GET：四个分区都在。工具分区现在是那一件已登记的工具（夹具
+       默认带上它，create 需要），活动操作/借用为空。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_SNAPSHOT_GET);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"device\":"));
-    TEST_CHECK(test_text_contains(result.json, "\"tools\":[]"));
+    TEST_CHECK(test_text_contains(result.json, "\"tools\":[{\"id\":"));
     TEST_CHECK(test_text_contains(result.json, "\"active_operations\":[]"));
     TEST_CHECK(test_text_contains(result.json, "\"loans\":[]"));
 
-    /* TOOLS_LIST 没有工具时是空数组；TOOL_GET 要匹配本柜格的工具 ID。 */
+    /* TOOLS_LIST 回那一件工具；TOOL_GET 要匹配本柜格的工具 ID。
+       工具未知时整个分区是空数组、TOOL_GET 一律 INVALID。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_TOOLS_LIST);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
-    TEST_CHECK(test_text_contains(result.json, "\"items\":[]"));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
+    TEST_CHECK(test_text_contains(result.json, "\"items\":[{\"id\":"));
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_TOOL_GET);
     query.resource_id = tool;
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    fixture.core->tool_valid = false;
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_query(&fixture, &query, &result));
     fixture.core->tool_valid = true;
     fixture.core->tool_id = tool;
     (void)snprintf(fixture.core->tool_name, sizeof(fixture.core->tool_name), "%s", "shovel");
     fixture.core->tool_revision = 3u;
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    /* TOOL_GET 的 data 直接是 Tool（openapi ToolResponse.data → Tool）。 */
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"availability\":\"AVAILABLE\""));
     TEST_CHECK(test_text_contains(result.json, "shovel"));
 
@@ -1338,12 +1877,41 @@ static void test_query_dispatch(void)
     TEST_CHECK(dt_seed_operation(&fixture, &id, &tool, &principal.user_id, LOCKER_OPERATION_KIND_BORROW,
                                  LOCKER_OPERATION_STATE_REQUESTED, 2u, "2025-10-21T00:00:00Z"));
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"state\":\"REQUESTED\""));
     TEST_CHECK(test_text_contains(result.json, "\"operation_revision\":\"2\""));
+    /* 换个普通用户来查同一条操作：他人无权，回 INVALID 而不是回正文
+       （contract-source.json:1424-1429；「不存在」与「无权」用同一个码，
+       避免拿状态码当存在性探针）。 */
+    {
+        locker_principal_t other = dt_principal(LOCKER_ROLE_USER, 0x72u);
+        TEST_CHECK(dt_seed_principal(&fixture, &other));
+        query.principal = other;
+        TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_query(&fixture, &query, &result));
+        query.principal = principal;
+    }
+    /* 管理员可以看任意操作（核验需要）。 */
+    {
+        locker_principal_t admin = dt_principal(LOCKER_ROLE_ADMIN, 0x71u);
+        TEST_CHECK(dt_seed_principal(&fixture, &admin));
+        query.principal = admin;
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+        TEST_CHECK(test_text_contains(result.json, "\"operation_revision\":\"2\""));
+        query.principal = principal;
+    }
 
-    /* REVIEWS_LIST 只回核验队列；EVENTS_LIST 阶段 1 是空页，不伪造历史。 */
+    /* REVIEWS_LIST 只回核验队列，且是**管理员视图**：核验依据里有别人的
+       申请、柜内物品和原因码，普通用户拿到它等于把整个柜格的使用情况
+       看得一清二楚（contract-source.json:1484-1487，审计 R1-B-13）。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_REVIEWS_LIST);
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, dc_run_query(&fixture, &query, &result));
+    {
+        locker_principal_t admin = dt_principal(LOCKER_ROLE_ADMIN, 0x71u);
+        TEST_CHECK(dt_seed_principal(&fixture, &admin));
+        query.principal = admin;
+    }
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"items\":[]"));
     {
         locker_uuid_t review_id;
@@ -1352,18 +1920,24 @@ static void test_query_dispatch(void)
                                      LOCKER_OPERATION_STATE_REVIEW_REQUIRED, 3u, "2025-10-21T00:00:00Z"));
     }
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"state\":\"REVIEW_REQUIRED\""));
     /* 非核验状态不进 REVIEWS_LIST。 */
     TEST_CHECK(!test_text_contains(result.json, "\"state\":\"REQUESTED\""));
 
+    /* 换回普通用户：后面的查询都按 USER 身份跑。 */
+    query.principal = principal;
+
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_EVENTS_LIST);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"items\":[]"));
     TEST_CHECK(test_text_contains(result.json, "\"next_cursor\":null"));
 
     /* LOANS_LIST：没有有效借用是空数组，有借用时回当前记录。 */
     (void)snprintf(query.kind, sizeof(query.kind), "%s", LOCKER_CORE_LOANS_LIST);
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"items\":[]"));
     fixture.core->loan_open = true;
     fixture.core->loan_id = tool;
@@ -1373,6 +1947,7 @@ static void test_query_dispatch(void)
     (void)snprintf(fixture.core->loan_opened_at, sizeof(fixture.core->loan_opened_at), "%s",
                    "2025-10-21T00:00:00Z");
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_query(&fixture, &query, &result));
+    TEST_CHECK(dc_envelope_ok(&fixture, &result));
     TEST_CHECK(test_text_contains(result.json, "\"return_operation_id\":null"));
     TEST_CHECK(test_text_contains(result.json, "\"closed_at\":null"));
 
@@ -1407,13 +1982,17 @@ static void test_job_dispatch(void)
     memset(&job, 0, sizeof(job));
     job.kind = (uint8_t)DOMAIN_JOB_AUTH;
     job.completion = slot;
+    /* 完成槽写结果要核对令牌：作业必须带上它自己那一份，否则写回会被
+       锁内的身份核对挡下（审计 round-5：检查与写入原子化后令牌成了必填）。 */
+    job.completion_token = token;
     (void)snprintf(job.body.auth.token, sizeof(job.body.auth.token), "%s", "not-a-real-token");
     job.body.auth.token_length = strlen(job.body.auth.token);
     domain_handle_auth(fixture.core, &job);
     {
         locker_query_result_t result;
         memset(&result, 0, sizeof(result));
-        TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_completion_wait_final(fixture.core, slot, 0u, &result));
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK,
+                          domain_completion_wait_final(fixture.core, slot, &token, 0u, &result));
         TEST_CHECK(result.status == LOCKER_STATUS_NOT_READY);
     }
     domain_completion_release(fixture.core, slot);
@@ -1491,7 +2070,11 @@ int main(void)
     test_confirm();
     test_cancel();
     test_resolve();
+    test_finish_and_loan_same_transaction();
+    test_action_idempotency();
     test_presence_and_arm();
+    test_arm_deadline_bounded_by_proof();
+    test_presence_blocked_while_releasing();
     test_outbox_pump();
     test_timeouts();
     test_query_dispatch();

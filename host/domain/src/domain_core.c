@@ -93,6 +93,12 @@ static locker_status_t recover_collection_page(locker_core_t *core, const char *
                                                const char *after_key, domain_doc_t *doc, bool *has_more,
                                                char *next_key, size_t next_key_size);
 
+/*
+ * 把一个「墙钟 UTC 起点 + 时长」的期限换算到单调时间域。
+ * 完整说明见 domain_internal.h 的声明处（domain_operation_load 也要用，
+ * 两条入口共用同一套规则，不能各写一份）。
+ */
+
 static locker_status_t recover_operations(locker_core_t *core)
 {
     char after[LOCKER_DOMAIN_KEY_TEXT];
@@ -139,10 +145,25 @@ static locker_status_t recover_operations(locker_core_t *core)
                 return LOCKER_STATUS_IO_ERROR;
             }
             core->active = loaded;
+            /* 恢复出的截止点必须换算到**单调时间域**再比较。
+               OperationRecord 的 created_at/updated_at 是墙钟 UTC 文本，
+               parse 出来的 updated_ms 是 Unix epoch 毫秒（量级 1.7e12），
+               而 core->now_ms 是进程单调毫秒（量级 1e6）。直接把两者相加
+               会得到 1.7e12 量级的 deadline，永远大于 now —— 重启前挂着的
+               申请/待确认操作就再也不会超时，占位一直不释放（审计 R1-B-5：
+               探针实测 mono=1000、wait_confirm_deadline_ms=1761004920000）。
+               正确做法：先按同一时刻的墙钟算出「还剩多久」，再把剩余时长
+               折算到当前单调时间。墙钟不可用或已经过期时，剩余时长按 0 处理
+               （保守：立即到期，交给超时路径重新核验），不能当作「刚创建」。 */
+            uint64_t now_wall = 0u;
+            const bool wall_ok = locker_clock_port_wall_utc_ms(&core->clock, &now_wall) == LOCKER_STATUS_OK;
+            const uint64_t now_mono = domain_now(core);
             if (loaded.state == LOCKER_OPERATION_STATE_REQUESTED) {
-                core->active.requested_deadline_ms = loaded.updated_ms + LOCKER_REQUEST_TTL_MS;
+                core->active.requested_deadline_ms =
+                    domain_deadline_in_monotonic(loaded.updated_ms, LOCKER_REQUEST_TTL_MS, wall_ok, now_wall, now_mono);
             } else if (loaded.state == LOCKER_OPERATION_STATE_WAIT_CONFIRM) {
-                core->active.wait_confirm_deadline_ms = loaded.updated_ms + LOCKER_WAIT_CONFIRM_MS;
+                core->active.wait_confirm_deadline_ms =
+                    domain_deadline_in_monotonic(loaded.updated_ms, LOCKER_WAIT_CONFIRM_MS, wall_ok, now_wall, now_mono);
             }
         }
         if (!has_more) {
@@ -151,6 +172,26 @@ static locker_status_t recover_operations(locker_core_t *core)
         memcpy(after, next, sizeof(after));
     }
     return LOCKER_STATUS_OK;
+}
+
+/*
+ * 把一个「墙钟 UTC 起点 + 时长」的期限换算到单调时间域。
+ * 完整说明见 domain_internal.h 的声明处（domain_operation_load 也用它）。
+ */
+uint64_t domain_deadline_in_monotonic(uint64_t wall_start_ms, uint64_t duration_ms, bool wall_ok,
+                                      uint64_t now_wall_ms, uint64_t now_mono_ms)
+{
+    if (!wall_ok || wall_start_ms == 0u) {
+        return now_mono_ms;
+    }
+    if (now_wall_ms >= wall_start_ms) {
+        uint64_t elapsed = now_wall_ms - wall_start_ms;
+        if (elapsed >= duration_ms) {
+            return now_mono_ms; /* 已过期：立即到期 */
+        }
+        return now_mono_ms + (duration_ms - elapsed);
+    }
+    return now_mono_ms + duration_ms;
 }
 
 static locker_status_t recover_loans(locker_core_t *core)
@@ -294,6 +335,70 @@ static locker_status_t recover_device_state(locker_core_t *core)
     return LOCKER_STATUS_OK;
 }
 
+/*
+ * 恢复本柜唯一的工具投影（tools 集合 → core->tool_*）。
+ *
+ * 以前这一步完全不存在：`core->tool_valid` 全仓只有读取、没有任何赋值，
+ * 于是生产路径上工具查询永远是空、`TOOL_GET` 永远 NOT_READY，而 create 又
+ * 因为 `if (core->tool_valid && …)` 直接跳过工具校验——两个后果都很严重：
+ * 客户端无法从查询进入申请，而直接提交 UUID 的请求却能带着不存在的工具或
+ * 陈旧版本进入账本（审计 R1-B-9）。单测里之所以没暴露，是因为夹具手动把
+ * 这些字段填好了。
+ *
+ * 一个柜格只允许一件启用的工具（x-rules：单柜单工具）；多于一件、或者
+ * enabled=false，都属于配置错误，此时保持 tool_valid=false，让申请被明确
+ * 拒绝，而不是随便挑一件。工具名沿用仓储里的值，缺失时回落成空串。
+ */
+static locker_status_t recover_tools(locker_core_t *core)
+{
+    domain_doc_t doc;
+    locker_status_t status = domain_repo_page(core, "tools", NULL, 2u, &doc);
+    if (status != LOCKER_STATUS_OK) {
+        return status;
+    }
+    const locker_json_node_t *documents =
+        domain_json_member(&doc.doc, locker_domain_json_root(&doc.doc), "documents");
+    if (documents == NULL || documents->type != LOCKER_JSON_ARRAY) {
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    core->tool_valid = false;
+    for (uint32_t i = 0u; i < documents->count; ++i) {
+        const locker_json_node_t *document = locker_domain_json_at(&doc.doc, documents, i);
+        if (document == NULL) {
+            return LOCKER_STATUS_IO_ERROR;
+        }
+        const locker_json_node_t *value = domain_json_member(&doc.doc, document, "value");
+        if (value == NULL) {
+            return LOCKER_STATUS_IO_ERROR;
+        }
+        locker_uuid_t id;
+        if (!domain_json_read_uuid(&doc.doc, domain_json_member(&doc.doc, value, "id"), &id)) {
+            return LOCKER_STATUS_IO_ERROR;
+        }
+        bool enabled = true;
+        (void)domain_json_read_bool(&doc.doc, domain_json_member(&doc.doc, value, "enabled"), &enabled);
+        if (!enabled) {
+            continue;
+        }
+        if (core->tool_valid) {
+            /* 多于一件启用工具：配置与单柜格模型冲突，宁可拒绝申请。 */
+            core->tool_valid = false;
+            return LOCKER_STATUS_OK;
+        }
+        uint64_t revision = 0u;
+        char name[65];
+        name[0] = '\0';
+        (void)domain_json_read_text(&doc.doc, domain_json_member(&doc.doc, value, "name"), name, sizeof(name));
+        (void)domain_json_read_u64(&doc.doc, domain_json_member(&doc.doc, value, "tool_revision"), &revision);
+        core->tool_id = id;
+        core->tool_revision = revision;
+        domain_text_copy(core->tool_name, sizeof(core->tool_name), name);
+        core->tool_availability = LOCKER_TOOL_AVAILABILITY_AVAILABLE;
+        core->tool_valid = true;
+    }
+    return LOCKER_STATUS_OK;
+}
+
 locker_status_t domain_recover(locker_core_t *core)
 {
     if (core == NULL || core->repo == NULL) {
@@ -312,6 +417,12 @@ locker_status_t domain_recover(locker_core_t *core)
     if (status != LOCKER_STATUS_OK) {
         return status;
     }
+    /* 工具投影必须在恢复阶段完成：create 要靠它校验 tool_id/tool_revision，
+       TOOL_GET 要靠它出内容（审计 R1-B-9）。 */
+    status = recover_tools(core);
+    if (status != LOCKER_STATUS_OK) {
+        return status;
+    }
     status = recover_import_cursor(core);
     if (status != LOCKER_STATUS_OK) {
         return status;
@@ -326,12 +437,28 @@ locker_status_t domain_recover(locker_core_t *core)
     if (core->next_action_no == 0u) {
         core->next_action_no = 1u;
     }
-    /* 恢复出来的可能已发送意图进核验，不恢复发送队列（internal-interfaces.md:114）。 */
+    /* 恢复出来的可能已发送意图进核验，不恢复发送队列（internal-interfaces.md:114）。
+       WAIT_CONFIRM 同样要进核验：stage-00-architecture.md:119 把「服务/MCU 重启」
+       与「可能已执行」并列，一律 REVIEW_REQUIRED 并保持占位。理由不是形式主义——
+       冻结的物理依据（wait_confirm_basis_valid/revision/item/door）只活在内存里，
+       重启后没有证据能证明「门仍然关着、物品仍是那一次变动后的样子」，此时允许
+       本人确认就等于凭一份无法追溯的记忆改账（审计 R3-B-4：探针实测重启后
+       basis_valid=0 仍能 confirm 成功并开出借用）。 */
     if (core->active.used && (core->active.state == LOCKER_OPERATION_STATE_ACCESS_PENDING ||
-                              core->active.state == LOCKER_OPERATION_STATE_ACCESS_ACTIVE)) {
-        if (domain_operation_set_state(core, &core->active, LOCKER_OPERATION_STATE_REVIEW_REQUIRED,
-                                       "RECOVERED_AFTER_RESTART") == LOCKER_STATUS_OK) {
-            (void)domain_persist_operation(core, &core->active);
+                              core->active.state == LOCKER_OPERATION_STATE_ACCESS_ACTIVE ||
+                              core->active.state == LOCKER_OPERATION_STATE_WAIT_CONFIRM)) {
+        /* 走 domain_require_review 而不是「先 set_state 再 persist 不管结果」：
+           后者提交失败时内存已是 REVIEW_REQUIRED、库里还是旧状态，而后续任何
+           重试都会被「已经是核验」短路成 OK，核验原因永远补不进仓储
+           （审计 R3-B-7 的同一类缺陷）。 */
+        status = domain_require_review(core, &core->active, "RECOVERED_AFTER_RESTART");
+        if (status != LOCKER_STATUS_OK) {
+            /* 恢复核验没落库就等于「恢复没完成」：此时既不能设 recovery_ready
+               （线程会据此进 READY 并接受写命令），也不能假装恢复成功。
+               直接把错误交回调用方，phase 停在 RECOVERING（审计 R3-B-7：
+               以前这里 (void) 吞掉错误、照样 recovery_ready=true 返回 OK，
+               库和内存可能都还停在 ACCESS_ACTIVE 或 WAIT_CONFIRM）。 */
+            return status;
         }
     }
     core->recovery_ready = true;
@@ -362,15 +489,13 @@ static locker_status_t recover_collection_page(locker_core_t *core, const char *
 
 static void core_tick_internal(locker_core_t *core, uint64_t monotonic_ms)
 {
-    domain_now_advance(core, monotonic_ms);
-    domain_timeouts(core);
-    if (core->phase == DOMAIN_PHASE_READY) {
-        domain_outbox_pump(core);
-    }
-    domain_device_pump(core);
-    domain_anchor_request(core);
-    domain_progress_publish(core);
-    domain_completion_reap(core, core->now_ms);
+    /* 只有一条推进顺序：线程循环和显式 tick 必须走同一段代码。
+       以前这里是 domain_handle_tick 的复制品，两边各漏一样东西——线程侧
+       没有「证明新鲜时重试 arm」，显式 tick 侧没有释放泵，于是同一份状态
+       在两条入口上会走出不同结果（审计 R3-B-2 的顺序问题就出在这里）。
+       顺序本身写在 domain_handle_tick 里：先释放上一轮动作的上下文，
+       再考虑发送新动作。 */
+    domain_handle_tick(core, monotonic_ms);
 }
 
 static void core_run_once(locker_core_t *core)
@@ -381,7 +506,8 @@ static void core_run_once(locker_core_t *core)
         drained = true;
         if (job.kind == DOMAIN_JOB_STOP) {
             if (job.completion != UINT32_MAX) {
-                domain_completion_finish(core, job.completion, LOCKER_STATUS_OK, NULL, 0u, core->revision);
+                domain_completion_finish(core, job.completion, &job.completion_token, LOCKER_STATUS_OK, NULL, 0u,
+                                         core->revision);
             }
             return;
         }
@@ -650,10 +776,14 @@ locker_status_t locker_core_submit(locker_core_t *core, const locker_command_t *
     memset(&job, 0, sizeof(job));
     job.kind = DOMAIN_JOB_COMMAND;
     job.completion = slot;
+    /* 槽号不是身份：等待方超时后会释放、槽可能被下一个请求复用。把令牌
+       随作业一起下发，Core 线程写结果前才能核对「这个槽还是不是我那一个」
+       （审计 R3-B-14）。 */
+    job.completion_token = token;
     job.body.command = *command;
     locker_status_t status = job_enqueue(core, &job);
     if (status != LOCKER_STATUS_OK) {
-        domain_completion_release(core, slot);
+        domain_completion_release_owned(core, slot, &token);
         return status;
     }
     receipt->submission_token = token;
@@ -675,7 +805,7 @@ locker_status_t locker_core_wait_result(locker_core_t *core, const locker_uuid_t
         /* 未提交过或已过保留期：调用方必须用原幂等键重查（契约 :201）。 */
         return LOCKER_STATUS_NOT_READY;
     }
-    return domain_completion_wait_final(core, slot, timeout_ms, result);
+    return domain_completion_wait_final(core, slot, submission_token, timeout_ms, result);
 }
 
 locker_status_t locker_core_apply_device_event(locker_core_t *core, const locker_device_event_t *event)
@@ -747,14 +877,17 @@ locker_status_t locker_core_query(locker_core_t *core, const locker_query_t *que
     memset(&job, 0, sizeof(job));
     job.kind = DOMAIN_JOB_QUERY;
     job.completion = slot;
+    job.completion_token = token;
     job.body.query = *query;
     locker_status_t status = job_enqueue(core, &job);
     if (status != LOCKER_STATUS_OK) {
-        domain_completion_release(core, slot);
+        domain_completion_release_owned(core, slot, &token);
         return status;
     }
-    status = domain_completion_wait_final(core, slot, LOCKER_CORE_RESULT_WAIT_MS, result);
-    domain_completion_release(core, slot);
+    status = domain_completion_wait_final(core, slot, &token, LOCKER_CORE_RESULT_WAIT_MS, result);
+    /* 超时后槽可能已经被回收并分配给下一个请求：必须按令牌释放，
+       裸下标会把别人的在途结果抹掉（审计 R3-B-14）。 */
+    domain_completion_release_owned(core, slot, &token);
     return status;
 }
 
