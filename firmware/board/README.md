@@ -1,21 +1,21 @@
-# S2-01 板级资源与安全边界
+# 板级资源与安全边界
 
-目标芯片为候选天空星 STM32F407VGT6（LQFP100、1 MiB Flash）。当前板级 profile 为 `UNVERIFIED`，BSP 拒绝所有动作；`board.c` 只提供关闭、UNKNOWN 输入和 NOT_READY 返回，不配置任何外接 GPIO 输出。它是产品安全边界的初始实现，完整S2-01证据见单卡报告。
+全局profile保持UNVERIFIED，apply_profile和start_bounded_pulse始终NOT_READY，PB6不配置为输出。S201是非执行器安全目标；S202独立启用经核对的只读外围，资格仅适用于输入映射，不使全局profile或真锁获得授权。
 
-| 资源 | 候选用途 | 占用/实测状态 |
-|---|---|---|
-| TIM6 | HAL 1 ms 时基 | HSI16、HSE8/168 产品安全目标均已上板约1000 tick/s；64位回绕注入通过 |
-| SysTick、SVC、PendSV | FreeRTOS | 环境镜像已验证；不可转给 HAL |
-| TIM4_CH1 / PB6 | 锁驱动候选 | 极性、外接下拉和硬件截止未实测，BSP 禁止输出 |
-| USART2 / PD5、PD6 | RK 隔离 UART 候选 | IO 电平、隔离板排针、DMA Stream/Channel 与通信未实测 |
-| SPI1 / PA4–PA7 | 板载 Flash 候选 | JEDEC 型号和几何未实测 |
-| SPI2 / PB12–PB15、PE3 | RC522 候选 | 接线和实物读卡未实测 |
-| PE0、PE1 | 门磁、物品输入候选 | NO/NC 与原始电平未实测 |
-| PC0 / ADC1_IN10 | 供电采样候选 | 分压、基准、保护和标定未实测 |
-| PA9/PA10 或 PB10 | 诊断串口候选 | 用户接线 PB10；USART3 配置尚未验证，不自动启用 |
+| 资源 | 用途与真实状态 |
+|---|---|
+| TIM6 | 独立HAL 1ms时基；两时钟约1000 tick/s、64位回绕已有板上证据 |
+| SysTick/SVC/PendSV | FreeRTOS专用 |
+| PB6 / TIM4_CH1候选 | PB6保持输入/低；低电流负载稳态默认关闭通过；硬截止、GPIO高电平裕量、复位瞬态和真锁留S2-05 |
+| SPI1 / PA4–PA7 | Flash Mode0、软件CS PA4；实读JEDEC EF4018，仅9F/05；几何/真实擦写与busy留S2-04 |
+| SPI2 / PB12–PB15、PE3 | RC522 Mode0、软件CS PB12、复位PE3；模块版本0x82，配置回读与两张4字节卡通过，7/10仅协议回归 |
+| PE0、PE1 | 门磁/微动，内部上拉并保留外部10k；闭门/有物实测低有效；开路两线输入不能诊断断线 |
+| PC0 / ADC1_IN10 | 分压、100nF、基准和实物标定未完成，ADC资格false；用户授权后移，基础门禁前补证 |
+| USART2 / PD5、PD6候选 | RK IO、隔离、DMA/中断及实际通信未验，S2-03尚未开始 |
+| PA9/PA10 或 PB10候选 | 用户日志线PB10，固件未启用USART3 |
 
-候选孔位和电路见[引脚接线表](../../docs/hardware/引脚确定与接线表.md)。上述资源尚未据此写入已验证 profile；DMA/中断优先级要随 S2-03 的实际通道和 FreeRTOS FromISR 约束核定。TIM4 的 HAL one-pulse API 存在不等于锁脉冲硬截止电路已通过，硬截止留 S2-05 实测。
+SPI1/2各一把互斥锁，无ISR调用；片选先预置高再改输出。HSE目标SPI1/2为656.25/328.125kHz，HSI目标均125kHz。GPIO、句柄与FreeRTOS原语止于BSP。mcu_board_read_inputs复制带时间的映射原始副本，100ms失鲜则UNKNOWN/NOT_READY；Control仍负责业务去抖与事件版本。详见[驱动说明](../drivers/README.md)。
 
-主 SRAM 为 128 KiB（0x20000000 起），CCM 为 64 KiB；当前 scatter 仅向主 SRAM 放数据，DMA 缓冲不能放入 CCM。S2-01 安全应用使用 16 KiB FreeRTOS heap（其中四个休眠任务的栈各 256 words），ARMCC 链接 map 报 HSI16 ROM 5560 B、HSE8/168 ROM 7140 B、两者 RAM 均17816 B，低于 1 MiB Flash / 128 KiB 主 SRAM。此数字不含后续 UART DMA 环、队列和日志缓存；S2-03 将 2048 B 环放入主 SRAM 并重新核算，不得放入 CCM。四个任务只占位休眠，不汇报健康进度，也不处理业务请求。
+主SRAM 128KiB，CCM 64KiB；scatter仅用主SRAM，后续DMA不得放CCM。S201 ROM HSI/HSE为5560/7140 B、RAM 17816 B，四个休眠任务栈各256words。S202 ROM为12496/13904 B、RAM 20296 B、16KiB FreeRTOS heap，四任务栈各768words；Control角色运行输入采样，Storage角色运行只读外围，Communication/Health休眠，不报告假健康。尚无UART DMA、Journal或业务Control；S2-03需重新核2048B环与队列预算。
 
-S2-01已完成：双电源低电流负载稳态默认关闭，以及板上未验证profile拒绝驱动诊断通过；s201_safety_checks=15、PB6输入/低。SWD、HSE/时基及回绕证据见[单卡报告](../../docs/evidence/stage-02/S2-01/summary.md)。profile仍UNVERIFIED，复位瞬态和硬截止波形留S2-05；本卡不授权真锁。
+[S2-01证据](../../docs/evidence/stage-02/S2-01/summary.md)、[S2-02证据](../../docs/evidence/stage-02/S2-02/summary.md)区分软件/上板/后移项目。未核对资源不能据候选表直接启用。完整硬件截止证据须来自实际波形，不能用HAL one-pulse API存在或日志时间差替代。

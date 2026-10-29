@@ -56,3 +56,9 @@ S2-01安全应用构建命令为 `python -B scripts/build_firmware.py --target s
 当前工具报告MDK-Lite，官方限制32KB程序容量；本环境小程序能构建不代表后续完整柜体固件永远能在Lite链接。超限时使用合法完整版或另配GNU Arm工具链，不缩减正式功能/保护逻辑，也不修改许可。本轮尝试访问Arm GNU下载站证书校验失败，未关闭TLS校验、未安装替代工具链；GNU构建当前不作为可运行入口。
 
 板卡型号、HSE8MHz/W25Q128来自[官方高配资源表](https://wiki.lckfb.com/zh-hans/fdb/skystar.html)与[商品型号](https://www.lcsc.com/product-detail/C32710423.html)。用户已于2026-10-27报告器件全部到货，板型/电压/连接/调度实测以[到货记录](../docs/evidence/hardware-receipt-2026-10-27/summary.md)为准，目前未登记通过证据；不将筑基底板外设/引脚误当核心板板载资源。SWD排针需焊接、Type-C不是独立调试器/VCP；SPI实例、CS引脚、锁TIM输出和供电电平仍取实物与原理图证据，硬件profile维持UNVERIFIED。
+
+## S2-02 输入与SPI目标
+
+`python -B scripts/build_firmware.py --target s202 --clock hse8_168`构建当前板上目标，HSI使用hsi16。独立Keil项目[locker_s202.uvprojx](keil/locker_s202.uvprojx)由`python -B scripts/generate_keil_s201.py --target s202`生成。S201与环境目标仍保持原有非执行器边界。S202启用PE0/PE1内部上拉、原始输入副本与去抖诊断、SPI1板载Flash只读、SPI2 RC522 UID读取；不启用UART或锁输出。主机测试与上板证据见[S2-02报告](../docs/evidence/stage-02/S2-02/summary.md)，驱动/诊断/复用依据见[drivers/README.md](drivers/README.md)。
+
+两时钟ROM 12496/13904 B、RAM 20296 B，scatter只用主SRAM。PC0未接/未标定，ADC保持关闭、供电有效性false；`--check-adc-build`仅验证ADC分支编译，输出到独立compile-only目录，不作为烧录或实物验收。完整profile仍UNVERIFIED，复位瞬态和真锁硬截止留S2-05。

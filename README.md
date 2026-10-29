@@ -18,9 +18,9 @@ STM32开发环境入口：[firmware/README.md](firmware/README.md)和[Keil工程
 
 STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile的完整实测记录尚未入库。
 
-当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE且主机模拟门禁PASS。S2-01安全应用已在板上完成SWD下载/断点、两种时钟和计数回绕验证；MCU失电、MOS供12V与10kΩ负载时PWM=0V、OUT差分=29mV，双电源上电稳态默认关闭已通过，复位瞬态留S2-05，S2-02尚未开始。逐卡结果以状态索引和报告为准。硬件profile仍为UNVERIFIED，不据此判定阶段2门禁。
+当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE、主机模拟门禁PASS。S2-01安全BSP和低电流默认关闭验收完成；S2-02输入/SPI完成，门磁/微动内部上拉及低有效映射、RC522两张4字节UID、Flash JEDEC读出和互斥测试通过。PC0接线/ADC实物标定按用户授权后移，当前供电无效；7/10字节UID仅协议回归通过，实物待补。硬件profile仍UNVERIFIED、阶段2门禁NOT_RUN。S2-03未开始。
 
-**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-02，阶段1 gate PASS。S2-01进度与待核条件见[本卡报告](docs/evidence/stage-02/S2-01/summary.md)。
+**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-03，阶段1 gate PASS。S2-02结果与后续待验见[本卡报告](docs/evidence/stage-02/S2-02/summary.md)。
 
 开发、集成与验证由当前会话统一负责，具体流程见[执行规则](docs/development/execution-policy.md)。
 

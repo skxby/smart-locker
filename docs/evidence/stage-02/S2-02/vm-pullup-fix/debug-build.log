@@ -1,0 +1,5 @@
+[ 44%] Built target test_inputs
+[ 55%] Building C object CMakeFiles/test_spi.dir/home/%USER%/locker-workspace/S2-02/src/firmware/board/peripherals.c.o
+[ 66%] Building C object CMakeFiles/test_spi.dir/test_spi.c.o
+[ 77%] Linking C executable test_spi
+[100%] Built target test_spi

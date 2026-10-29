@@ -1,0 +1,11 @@
+[ 11%] Building C object CMakeFiles/test_inputs.dir/test_inputs.c.o
+[ 22%] Building C object CMakeFiles/test_inputs.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/inputs.c.o
+[ 33%] Building C object CMakeFiles/test_inputs.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/rc522.c.o
+[ 44%] Linking C executable test_inputs
+[ 44%] Built target test_inputs
+[ 55%] Building C object CMakeFiles/test_spi.dir/test_spi.c.o
+[ 66%] Building C object CMakeFiles/test_spi.dir/home/%USER%/locker-workspace/S2-02/src/firmware/board/peripherals.c.o
+[ 77%] Building C object CMakeFiles/test_spi.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/inputs.c.o
+[ 88%] Building C object CMakeFiles/test_spi.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/rc522.c.o
+[100%] Linking C executable test_spi
+[100%] Built target test_spi

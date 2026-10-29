@@ -1,6 +1,6 @@
 # 阶段 1 任务卡：主机骨架、SQLite 与模拟设备
 
-状态：S1-01、S1-02、S1-03 已完成（DONE），下一张 S1-04 尚未开工（active_task=null）；逐卡结果以stage-plan和真实报告为准。契约0.2.1，7张卡按[单卡规则](README.md)执行，规格文档不替代验收。
+状态：S1-01至S1-07已完成（DONE），阶段一主机模拟门禁PASS；active_task=null、recommended_next=S2-03。逐卡结果以stage-plan和真实报告为准。契约0.2.1，7张卡按[单卡规则](README.md)执行，规格文档不替代验收。
 
 ## 1. 目标、输入与验收环境
 

@@ -2,7 +2,7 @@
 
 当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](../development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
 
-阶段0为设计基线；阶段一S1-01至S1-07已完成（DONE），主机模拟门禁PASS。S2-01已完成安全BSP及低电流默认关闭验收；当前active_task=null、recommended_next=S2-02，S2-02尚未开始。其余进度以机器索引与真实报告为准。阶段号表示依赖，文档存在不代表功能完成。主机端默认用户已有VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
+阶段0为设计基线；阶段一S1-01至S1-07 DONE、主机模拟门禁PASS。S2-01与S2-02已DONE；PC0/ADC实物标定按用户授权后移，供电有效性保持false，补证须在基础门禁前完成；硬件profile仍UNVERIFIED。当前active_task=null、recommended_next=S2-03，S2-03未开始。本轮停在S2-03开发之前，阶段2 gate NOT_RUN。其余状态以机器索引和真实报告为准。主机默认VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
 
 ## 1. 固定路线
 
@@ -46,6 +46,6 @@
 
 用户操作见[完整执行手册](../AI开发执行手册.md)，全部45卡的180份现成指令见[索引](../ai-prompts/README.md)；每卡均含开发/审计/整改/交接，直接复制对应段落即可。
 
-使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。阶段一7卡均DONE，报告位于`docs/evidence/stage-01/`各卡目录；[S1-07报告](../evidence/stage-01/S1-07/summary.md)记录门禁PASS证据。S2-01进度与待核条件见[本卡报告](../evidence/stage-02/S2-01/summary.md)，当前active_task=null、recommended_next=S2-02。
+使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。阶段一7卡均DONE，报告位于`docs/evidence/stage-01/`各卡目录；[S1-07报告](../evidence/stage-01/S1-07/summary.md)记录门禁PASS证据。S2-02结果与待验项见[本卡报告](../evidence/stage-02/S2-02/summary.md)，当前active_task=null、recommended_next=S2-03。
 
 重新打开对话，从active_task和最近报告恢复。状态与文件冲突先核对事实；不重复已发生的物理动作。

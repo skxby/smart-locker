@@ -1,0 +1,23 @@
+{
+  "firmware/app/main.c": "b5a349eb20ca8f6662c3befe65a53cb6852361e29a5cdce46386f9937a80046e",
+  "scripts/build_firmware.py": "09d03e1b78101bcf4523217ec3e25afc47f16ebbdb15c7566b0be09ce36ba6f2",
+  "scripts/generate_keil_s201.py": "11865b3fac6004f983bead6b7e5a3ebccc88d41094e5a2dfb5d8604cbac529ea",
+  "firmware/keil/locker_s202.uvprojx": "30e4d2fa6ec01add2912c9c2b5c22f3a4b3a36f1cb418aec67ad1604b557ecbf",
+  "firmware/board/board.c": "3640844c06620a770d15e1f3d78fe13144728c58710e12f1db2e65079024d7a0",
+  "firmware/board/input_qualification.h": "18307650332fd8130c324694d2cc0caa419233f44f0b7e2edd36167602ce2510",
+  "firmware/board/peripherals.c": "d3c9187113be1d08815aefd3d2c7c8d5d08c21d0adbeeb0a977bec62b8d2c129",
+  "firmware/board/peripherals.h": "18ae852fa2e3dc05cfa4413faac47fa5dded86fac814ef2b0e0796dc65d917b7",
+  "firmware/board/timebase.h": "60efbcd8ff476dfb46c673d9b6f8131d43dfe63139ec017ef9fee71dc8ef5c9b",
+  "firmware/drivers/inputs.c": "bf2c573b3174d97ee3cca33618d3dde23336c26e75e58a0ca50c9d92ed3de343",
+  "firmware/drivers/inputs.h": "c168191e77dff8532f84242877d088a16c5d9c399e12ff202c34e9a27da408cb",
+  "firmware/drivers/rc522.c": "f97768f08372c3a287ea4a4af868d674439666f7325f9379be73c407d9887e3d",
+  "firmware/drivers/rc522.h": "cc8ac65b429ed97628bb76149ab3414175b80f01ec1fd84e3e56b63d1964c68a",
+  "tests/firmware/inputs/CMakeLists.txt": "ba848f01806a556f28f7b5078f15239412807fefb9e223937466adc349ae1e50",
+  "tests/firmware/inputs/test_inputs.c": "9f661f99f909413b7d39f33b33cbcef4790b067aea979996515b9f91a4ed4c72",
+  "tests/firmware/inputs/test_spi.c": "0ccebe4bf09f253b901117198df7ea806f090b1570a2f87f69202a99b4865d1b",
+  "tests/firmware/inputs/hal-shim/fixture.h": "c134d0140cca0c96a77d76b1d1c0d4013c4a326e4deaf68a89c0f83b4ea30447",
+  "tests/firmware/inputs/hal-shim/FreeRTOS.h": "16f71d59cd545a42c2c2aa8201adaa686134bf93f6edd1df621c3c043eeaaed2",
+  "tests/firmware/inputs/hal-shim/semphr.h": "16f71d59cd545a42c2c2aa8201adaa686134bf93f6edd1df621c3c043eeaaed2",
+  "tests/firmware/inputs/hal-shim/stm32f4xx_hal.h": "16f71d59cd545a42c2c2aa8201adaa686134bf93f6edd1df621c3c043eeaaed2",
+  "tests/firmware/inputs/hal-shim/task.h": "16f71d59cd545a42c2c2aa8201adaa686134bf93f6edd1df621c3c043eeaaed2"
+}

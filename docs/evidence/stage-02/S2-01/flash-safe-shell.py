@@ -47,6 +47,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--program', action='store_true')
     parser.add_argument('--clock', choices=['hsi16', 'hse8_168'], default='hsi16')
+    parser.add_argument('--target', choices=['s201', 's202'], default='s201')
+    parser.add_argument('--frequency', type=int, choices=[100000, 950000], default=100000)
     parser.add_argument('--expected-image-sha256', required=True)
     parser.add_argument('--expected-current-hex', default=str(ENV_IMAGE))
     parser.add_argument('--expected-current-sha256', default=OLD_IMAGE_SHA)
@@ -55,8 +57,8 @@ def main():
     args = parser.parse_args()
     if not args.program:
         parser.error('Explicit --program required')
-    image_path = ROOT / 'build/firmware-s201' / args.clock / 'locker_s201.hex'
-    map_file = ROOT / 'build/firmware-s201' / args.clock / 'locker_s201.map'
+    image_path = ROOT / ('build/firmware-' + args.target) / args.clock / ('locker_' + args.target + '.hex')
+    map_file = image_path.with_suffix('.map')
     old_image = Path(args.expected_current_hex)
     output = args.output or Path(__file__).with_name('board-run.json' if args.clock == 'hsi16' else 'board-run-hse8_168.json')
     if output.exists():
@@ -79,7 +81,7 @@ def main():
         address = symbols(['s201_fault', 's201_safety_checks', 'SystemCoreClock', 'uwTick', 'xTickCount', 'tick_high'], map_file)
         options = {'target_override': 'stm32f407vgtx',
                    'pack': 'E:/keil5/ARM/PACK/Keil/STM32F4xx_DFP/2.13.0',
-                   'frequency': 100000, 'connect_mode': 'attach',
+                   'frequency': args.frequency, 'connect_mode': 'attach',
                    'reset_type': 'sysresetreq', 'auto_unlock': False,
                    'resume_on_disconnect': False, 'hide_programming_progress': True,
                    'pack.debug_sequences.enable': False}
@@ -116,7 +118,7 @@ def main():
             flash = target.memory_map.get_boot_memory().flash
             flash.set_flash_algo_debug(True)
             flash.init(flash.Operation.ERASE, reset=False)
-            print('START_PROGRAM: S2-01 safe shell ' + args.clock + '; sector 0 only', flush=True)
+            print('START_PROGRAM: ' + args.target + ' ' + args.clock + '; sector 0 only', flush=True)
             flash.erase_sector(0x08000000)
             flash.uninit()
             prepare()

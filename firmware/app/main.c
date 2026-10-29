@@ -3,6 +3,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "locker_contracts.h"
+#ifdef LOCKER_S202
+#include "peripherals.h"
+#endif
 
 volatile uint32_t s201_fault;
 /* Persistent startup diagnostics, readable through SWD. Bits 0..3 mean
@@ -13,6 +16,9 @@ void env_assert_failed(void)
 {
     mcu_board_force_off();
     s201_fault = 1U;
+#ifdef LOCKER_S202
+    s202_diag[31] = 1U;
+#endif
     __disable_irq();
     for (;;) { __NOP(); }
 }
@@ -81,8 +87,16 @@ int main(void)
             s201_safety_checks |= 8U;
         if (s201_safety_checks != 15U) env_assert_failed();
     }
+#ifdef LOCKER_S202
+    if (board_peripherals_init() != LOCKER_STATUS_OK) env_assert_failed();
+#endif
     for (i = 0U; i < 4U; ++i) {
+#ifdef LOCKER_S202
+        TaskFunction_t role = i == 0U ? board_input_task : i == 2U ? board_storage_task : inactive_role;
+        if (xTaskCreate(role, names[i], 768U, NULL, 1U, NULL) != pdPASS)
+#else
         if (xTaskCreate(inactive_role, names[i], 256U, NULL, 1U, NULL) != pdPASS)
+#endif
             env_assert_failed();
     }
     vTaskStartScheduler();

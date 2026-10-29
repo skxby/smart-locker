@@ -1,0 +1,85 @@
+{
+  "start": "2026-10-29T20:02:32.372519+08:00",
+  "status": "PASS",
+  "samples": [
+    {
+      "elapsed_s": 0.0,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 217,
+      "xTickCount": 213,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    },
+    {
+      "elapsed_s": 1.203,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 1422,
+      "xTickCount": 1419,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    },
+    {
+      "elapsed_s": 2.406,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 2629,
+      "xTickCount": 2625,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    },
+    {
+      "elapsed_s": 3.625,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 3836,
+      "xTickCount": 3833,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    },
+    {
+      "elapsed_s": 4.828,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 5044,
+      "xTickCount": 5041,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    },
+    {
+      "elapsed_s": 6.031,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 6251,
+      "xTickCount": 6248,
+      "tick_high": 0,
+      "gpiob_moder": 2835350144,
+      "gpiob_odr": 4096
+    }
+  ],
+  "image_sha256": "506cfb7df67fdf2e8343145746b0eb283df3dd3a6f03e66190f7634e5f71db5d",
+  "preflash_state": "exact_previous_image_and_backup_tail",
+  "readback_verified": true,
+  "pc_after_reset": "0x8001fdc",
+  "hal_ticks_per_second": 1000.4974299452828,
+  "rtos_ticks_per_second": 1000.6632399270436,
+  "end": "2026-10-29T20:03:13.743950+08:00"
+}

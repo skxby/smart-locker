@@ -22,10 +22,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--keil-root', default='E:/Keil5')
     ap.add_argument('--clock', choices=['hsi16','hse8_168'], default='hsi16')
-    ap.add_argument('--target', choices=['environment','s201'], default='environment')
+    ap.add_argument('--target', choices=['environment','s201','s202'], default='environment')
+    ap.add_argument('--check-adc-build', action='store_true', help='Compile-only S202 ADC branch in an isolated output directory')
     args = ap.parse_args()
+    if args.check_adc_build and args.target != 's202':
+        ap.error('--check-adc-build requires --target s202')
     tools = Path(args.keil_root) / 'ARM/ARMCC/bin'
-    output = ROOT / ('build/firmware-env' if args.target == 'environment' else 'build/firmware-s201') / args.clock
+    output = ROOT / ('build/firmware-env' if args.target == 'environment' else 'build/firmware-' + args.target) / args.clock
+    if args.check_adc_build: output = ROOT / 'build/firmware-s202-adc-compile-only' / args.clock
     output.mkdir(parents=True, exist_ok=True)
     log = []
 
@@ -49,8 +53,11 @@ def main():
     version = run([tools / 'armcc.exe','--vsn'])
     flags = ['--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--c99','--split_sections','--library_type=microlib','-O2','-g']
     defines = DEFINES + (['ENV_HSE8_168'] if args.clock == 'hse8_168' else [])
-    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','../contracts/include'])]
+    if args.target == 's202': defines += ['LOCKER_S202']
+    if args.check_adc_build: defines += ['BOARD_ADC_QUALIFIED=1']
+    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','drivers','../contracts/include'])]
     sources = SOURCES if args.target == 'environment' else ['app/main.c','board/board.c','hal/timebase_tim6.c', *SOURCES[2:]]
+    if args.target == 's202': sources += ['board/peripherals.c','drivers/inputs.c','drivers/rc522.c']
     objects = []
     for index, source in enumerate(sources):
         obj = output / (f'{index:02d}_' + Path(source).stem + '.o')
@@ -59,7 +66,7 @@ def main():
         objects.append(relative)
     startup = os.path.relpath(output / 'startup_stm32f407xx.o', FW)
     run([tools / 'armasm.exe','--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--pd','__MICROLIB SETA 1','third_party/stm32f4/cmsis/startup_stm32f407xx.s','-o',startup])
-    image_name = 'locker_env' if args.target == 'environment' else 'locker_s201'
+    image_name = 'locker_env' if args.target == 'environment' else 'locker_' + args.target
     axf = os.path.relpath(output / (image_name + '.axf'), FW)
     mapfile = os.path.relpath(output / (image_name + '.map'), FW)
     link_output = run([tools / 'armlink.exe','--cpu','Cortex-M4.fp','--library_type=microlib','--strict','--scatter','keil/stm32f407vg.sct','--map','--symbols','--info=sizes','--list',mapfile,'--output',axf,startup,*objects])

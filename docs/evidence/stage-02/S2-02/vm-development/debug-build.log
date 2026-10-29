@@ -1,0 +1,5 @@
+[ 25%] Building C object CMakeFiles/test_inputs.dir/test_inputs.c.o
+[ 50%] Building C object CMakeFiles/test_inputs.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/inputs.c.o
+[ 75%] Building C object CMakeFiles/test_inputs.dir/home/%USER%/locker-workspace/S2-02/src/firmware/drivers/rc522.c.o
+[100%] Linking C executable test_inputs
+[100%] Built target test_inputs
