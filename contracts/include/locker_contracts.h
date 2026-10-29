@@ -145,7 +145,7 @@ typedef struct { uint8_t schema_version; char collection[32], key[193], after_ke
 typedef struct { size_t length; char json[65536]; } locker_change_t;
 typedef struct { size_t length; char json[65536]; uint64_t snapshot_revision; } locker_repo_result_t;
 typedef struct { size_t length; char json[65536]; uint64_t snapshot_revision; } locker_recovery_t;
-typedef struct { char cabinet_name[257]; locker_uuid_t instance_id; locker_clock_port_t clock; uint32_t queue_capacity, completion_retention_ms; locker_vision_policy_t vision_policy; } locker_core_config_t;
+typedef struct { char cabinet_name[257]; locker_uuid_t instance_id; locker_clock_port_t clock; uint32_t queue_capacity, completion_retention_ms; bool runtime_health_owned, device_simulated; locker_vision_policy_t vision_policy; } locker_core_config_t;
 typedef struct { char ui_executable[256], service_socket[108], supervisor_socket[108], checkpoint_path[256]; uint32_t ui_uid, service_uid; bool recovery_enabled; } locker_supervisor_config_t;
 typedef struct { char bind_address[64], certificate_path[256], private_key_path[256]; uint16_t port, worker_count; } locker_http_config_t;
 typedef struct { char socket_path[108]; uint32_t allowed_ui_uid, allowed_admin_uid, file_mode; } locker_ipc_config_t;
@@ -275,7 +275,7 @@ locker_status_t locker_repo_open(const locker_repo_config_t *config, locker_repo
 locker_status_t locker_repo_query(locker_repo_t *repo, const locker_repo_query_t *query, locker_repo_result_t *result);
 /* RK Storage: Close after core stops; NULL-safe; no concurrent transaction. */
 void locker_repo_close(locker_repo_t *repo);
-/* RK Runtime/Core: Dependencies are borrowed; fail with NULL; complete recovery before business readiness. */
+/* RK Runtime/Core: Dependencies are borrowed; fail with NULL; complete recovery before business readiness. runtime_health_owned selects Runtime as sole HOST_HEALTH sender; false preserves standalone Core transport. device_simulated is the trusted assembly flag used in device projections. */
 locker_status_t locker_core_create(const locker_core_config_t *config, locker_repo_t *repo, locker_device_t *device, locker_publisher_t *publisher, locker_core_t **out);
 /* RK Core: Start one owner thread; remain RECONCILING until synchronized. */
 locker_status_t locker_core_start(locker_core_t *core);

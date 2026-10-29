@@ -1,0 +1,7 @@
+add_library(locker_runtime STATIC config.c health.c)
+target_include_directories(locker_runtime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(locker_runtime PUBLIC locker_common PRIVATE locker_storage_thirdparty)
+locker_apply_warnings(locker_runtime)
+add_executable(locker-service main.c)
+target_link_libraries(locker-service PRIVATE locker_runtime locker_http locker_ipc locker_domain locker_storage locker_device locker_events locker_storage_thirdparty)
+locker_apply_warnings(locker-service)

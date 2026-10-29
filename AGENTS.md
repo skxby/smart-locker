@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03、S1-04、S1-05 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md、docs/evidence/stage-01/S1-04/summary.md、docs/evidence/stage-01/S1-05/summary.md），当前 active_task=null，recommended_next=S1-06，其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
+本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01、S1-02、S1-03、S1-04、S1-05、S1-06 已完成（DONE，报告 docs/evidence/stage-01/S1-01/summary.md、docs/evidence/stage-01/S1-02/summary.md、docs/evidence/stage-01/S1-03/summary.md、docs/evidence/stage-01/S1-04/summary.md、docs/evidence/stage-01/S1-05/summary.md、docs/evidence/stage-01/S1-06/summary.md），当前 active_task=null，recommended_next=S1-07，其他状态以机器索引和实际报告为准。不能把契约、模拟器或静态检查说成硬件功能已经完成。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 
@@ -11,7 +11,7 @@
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。
 4. `docs/architecture/internal-interfaces.md`、`docs/architecture/uart-v1.md`：内置接口、线程/任务与线协议语义。
-5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03、S1-04、S1-05 已 DONE，当前active_task=null，下一卡S1-06，以机器索引为准。
+5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01、S1-02、S1-03、S1-04、S1-05、S1-06 已 DONE，当前active_task=null，下一卡S1-07，以机器索引为准。
 
 `docs/architecture/reviews/` 是专家评审输入和审计记录，不是第二套执行规格。建议冲突以阶段 0 决策为准；发现真源冲突先修正文档和契约，不能各端自行选一种解释。
 
@@ -25,7 +25,7 @@
 
 - 新项目或较大变更先调查 GitHub/官方资料，评估复用、许可、维护、风险和适配成本；明确小改可豁免。
 - 一次执行一张卡。用户授权连续完成一个阶段时可依赖序继续该阶段；否则卡完成后交接，不自动跨卡/跨阶段。前置未通过不开始依赖功能，缺条件如实BLOCKED，不用mock替代实物门禁。
-- **执行方式**：当前会话独立完成开发、验证、整改和集成，不启动开发B或独立审计AI。详见[执行规则](docs/development/execution-policy.md)；功能依赖、实物门禁及唯一共享写者约束继续有效。
+- **执行方式**：当前会话统一完成开发、验证、整改和集成，允许按明确职责使用子代理；不启动固定开发B或独立审计流程。详见[执行规则](docs/development/execution-policy.md)；功能依赖、实物门禁及唯一共享写者约束继续有效。
 - 功能卡只改其分配目录与相关正式测试/文档。共享接口变更由契约负责人统一更新真源/生成物/调用方；不自行放宽验收或新建同义API。卡状态与真实报告同步，DONE和阶段PASS均需证据。
 - RK 业务核心是借还账本唯一写者；MCU 控制任务是锁驱动唯一入口。客户端、HTTP 工作线程和 UI 不直接写账本或 GPIO。
 - v11为MobileNetV3-Large七分类，E:/equipment-vision原项目只读；相机接口已定USB UVC定焦候选（未购/页面报价未结算/未接板，见docs/hardware/相机选型与成本.md），不以已有模型代替RKNN/相机验证。Core负责融合，locker-vision不接UART、不改item_state、不授权开锁。
@@ -43,7 +43,7 @@
 
 ## 长期规则：单会话开发与验证
 
-- 当前会话完成实现→开发者验证→必要整改→交接，按[执行规则](docs/development/execution-policy.md)执行，不再启动独立审计AI或开发B。
+- 当前会话完成实现→开发者验证→必要整改→交接，按[执行规则](docs/development/execution-policy.md)执行，允许在当前会话内按明确职责使用子代理，不启动固定独立审计AI或开发B流程。
 - 不以缺少设计预审、审计PASS、审计四件套或审计流程skills阻断交付。历史审计指出的产品缺陷仍须通过实际代码与回归关闭，保留历史证据。
 - 用户要求推进阶段二；按真实功能依赖补齐阶段一必要能力后进入阶段二，接线核对和环境准备可先行。不得伪造DONE/PASS或降低实物验收。
 - Linux证据仅来自VMware Ubuntu（ssh locker-vm），禁用WSL。缺实物/环境/用户决策时明确记录，不能拿mock替代。

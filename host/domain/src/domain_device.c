@@ -276,7 +276,7 @@ void domain_device_pump(locker_core_t *core)
         request_fetch(core);
     }
     request_ack(core);
-    if (core->last_health_ms == 0u || now - core->last_health_ms >= DOMAIN_HEALTH_INTERVAL_MS) {
+    if (!core->config.runtime_health_owned && (core->last_health_ms == 0u || now - core->last_health_ms >= DOMAIN_HEALTH_INTERVAL_MS)) {
         core->last_health_ms = now;
         send_health(core);
     }

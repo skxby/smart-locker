@@ -1163,6 +1163,37 @@ static void test_persist_device_state(void)
     dt_fixture_free(&fixture);
 }
 
+/* S1-06: DB recovery cannot stand in for current device reconciliation. */
+static void test_runtime_device_projection(void)
+{
+    dt_fixture_t fixture;
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+    dt_core_ready(&fixture);
+    fixture.core->config.device_simulated = true;
+    TEST_CHECK(domain_core_device_mode(fixture.core) == LOCKER_DEVICE_MODE_RECONCILING);
+    TEST_CHECK(domain_tool_availability(fixture.core) == LOCKER_TOOL_AVAILABILITY_UNAVAILABLE);
+    dt_core_device_ready(&fixture, 1u, LOCKER_DOOR_STATE_CLOSED, LOCKER_ITEM_STATE_PRESENT);
+    TEST_CHECK(domain_core_device_mode(fixture.core) == LOCKER_DEVICE_MODE_READY);
+    fixture.core->session.device_mode = LOCKER_DEVICE_MODE_RECONCILING;
+    TEST_CHECK(domain_core_device_mode(fixture.core) == LOCKER_DEVICE_MODE_RECONCILING);
+    TEST_CHECK(domain_tool_availability(fixture.core) == LOCKER_TOOL_AVAILABILITY_UNAVAILABLE);
+    fixture.core->session.device_mode = LOCKER_DEVICE_MODE_DEGRADED;
+    TEST_CHECK(domain_core_device_mode(fixture.core) == LOCKER_DEVICE_MODE_DEGRADED);
+    fixture.core->device_snapshot_valid = false;
+    TEST_CHECK(domain_core_device_mode(fixture.core) == LOCKER_DEVICE_MODE_RECONCILING);
+    fixture.core->device_snapshot_valid = true;
+    locker_json_writer_t writer;
+    char buffer[4096];
+    locker_domain_json_writer_init(&writer, buffer, sizeof(buffer));
+    domain_write_device_projection(&writer, fixture.core);
+    TEST_CHECK(st_has_pair(buffer, "simulated", "true"));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, domain_persist_device_state(fixture.core));
+    const dt_doc_t *stored = dt_repo_find(fixture.repo, "device_state", DT_DEVICE_ID);
+    TEST_CHECK(stored != NULL);
+    if (stored != NULL) TEST_CHECK(st_has_pair(stored->value, "simulated", "true"));
+    dt_fixture_free(&fixture);
+}
+
 int main(void)
 {
     test_json_readers();
@@ -1170,6 +1201,7 @@ int main(void)
     test_operation_load();
     test_principal_check();
     test_projections();
+    test_runtime_device_projection();
     test_response_envelope();
     test_writers();
     test_operation_state_machine();

@@ -5,7 +5,7 @@
 放在一个单所有者循环里，对外只经 `contracts/include/locker_contracts.h` 的 Core 端口暴露。
 
 - 契约基线：0.2.1（`contracts/contract-source.json`），执行前核对过实际版本，未使用旧副本。
-- 状态：S1-04 **IN_PROGRESS**（等独立审计）。本模块不是阶段 1 正式门禁，门禁卡是 S1-07。
+- 状态：S1-04 **DONE**（见正式证据）。本模块不是阶段 1 正式门禁，门禁卡是 S1-07。
 - 归属：`docs/architecture/module-ownership.md:23` —— 业务核心负责人；禁止包含 CivetWeb / SQLite / HAL 头、禁止调用网络或串口阻塞 IO、禁止让客户端指定真实 actor。
 - 规格真源：`docs/stages/stage-00-architecture.md:106-128` 的状态表、`docs/architecture/internal-interfaces.md:114` 的发送/重连屏障规则；机器真源是 `contracts/contract-source.json` 与生成的 `contracts/include/locker_contracts.h`。
 
@@ -23,7 +23,7 @@
 不做（越界）：
 
 - 不含 SQLite、CivetWeb、cJSON、HAL 头，也不认识它们的实现类型；仓储与设备都按契约端口借用。
-- 启用 `LOCKER_BUILD_NETWORK` 时，S1-05 的登录和令牌认证在 Core 线程执行，使用 libsodium Argon2id 验证口令、SHA-256 摘要比对随机会话令牌；未启用时认证返回 `NOT_READY`。当前尚未接入 HTTP/IPC。
+- 启用 `LOCKER_BUILD_NETWORK` 时，S1-05 的登录和令牌认证在 Core 线程执行，使用 libsodium Argon2id 验证口令、SHA-256 摘要比对随机会话令牌；未启用时认证返回 `NOT_READY`。S1-05已接入HTTP/IPC，S1-06提供正式模拟Runtime装配。
 - 不实现 supervisor 健康端口：`locker_core_apply_supervisor_health` 一律返回 `NOT_READY`，归 S4-04；本卡不提供空实现冒充。
 - 不接视觉：`vision_policy` 只接受 `DISABLED_FOR_FOUNDATION`，其余返回 `NOT_READY`，归后续视觉卡。
 - 不自动重放任何可能已发送的动作；结果未知只查询、不补发。

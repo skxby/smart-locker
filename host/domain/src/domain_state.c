@@ -655,7 +655,7 @@ void domain_write_operation_projection(locker_json_writer_t *writer, locker_core
    才是 AVAILABLE；REVIEW_REQUIRED 期间整格进 REVIEW，任何人不得再借。 */
 static uint8_t core_tool_availability(const locker_core_t *core)
 {
-    if (core->phase != DOMAIN_PHASE_READY) {
+    if (domain_core_device_mode(core) != LOCKER_DEVICE_MODE_READY) {
         return LOCKER_TOOL_AVAILABILITY_UNAVAILABLE;
     }
     if (core->active.used) {
@@ -696,6 +696,11 @@ void domain_write_tool_projection(locker_json_writer_t *writer, locker_core_t *c
 uint8_t domain_core_device_mode(const locker_core_t *core)
 {
     if (core->phase == DOMAIN_PHASE_READY) {
+        if (core->device != NULL) {
+            if (!core->device_session_up || !core->session.valid || !core->device_snapshot_valid)
+                return LOCKER_DEVICE_MODE_RECONCILING;
+            return core->session.device_mode;
+        }
         return LOCKER_DEVICE_MODE_READY;
     }
     if (core->phase == DOMAIN_PHASE_RECOVERING) {
@@ -719,7 +724,7 @@ void domain_write_device_projection(locker_json_writer_t *writer, locker_core_t 
     locker_domain_json_literal(writer, ",\"contract_version\":");
     locker_domain_json_string(writer, LOCKER_CONTRACT_VERSION);
     locker_domain_json_literal(writer, ",\"simulated\":");
-    locker_domain_json_bool(writer, false);
+    locker_domain_json_bool(writer, core->config.device_simulated);
     locker_domain_json_literal(writer, ",\"mode\":");
     locker_domain_json_string(writer, domain_mode_name(mode));
     locker_domain_json_literal(writer, ",\"health_reasons\":[]");

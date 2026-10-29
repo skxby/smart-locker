@@ -3,7 +3,7 @@
 本模块是**阶段 1 S1-02** 的交付物，也是整个主机侧唯一的 SQLite 访问点。
 
 - 契约基线：0.2.1（`contracts/contract-source.json`），执行前核对过实际版本，未使用旧副本。
-- 状态：S1-02 **IN_PROGRESS**（等独立审计）；本模块不是阶段 1 正式门禁，阶段 1 门禁卡是 S1-07。
+- 状态：S1-02 **DONE**（见正式证据）；本模块不是阶段 1 正式门禁，阶段 1 门禁卡是 S1-07。
 - 归属：`docs/architecture/module-ownership.md:24` —— SQLite 负责人；禁止 HTTP 线程直接调用、禁止把动作发出放进 SQLite 回调。
 
 ## 1. 这个模块做什么、不做什么
@@ -74,7 +74,7 @@ cmake --build "$build" -j2
 ctest --test-dir "$build" --output-on-failure
 ```
 
-在 WSL 或任意开发机上只要满足「build 目录不在源码树内」即可（例如 `$HOME/s102_build`）；
+Linux证据仅使用VMware Ubuntu；构建需满足「build 目录不在源码树内」即可（例如 `$HOME/s102_build`）；
 VM 的 canonical 布局固定为：卡源码在 `$HOME/locker-workspace/S1-02/src`，构建在 `$HOME/locker-workspace/build/S1-02/<run>`，日志在 `$HOME/locker-workspace/logs/S1-02/<run>`，归档在 `$HOME/locker-workspace/artifacts/S1-02`（顶层 `$HOME/locker-workspace/src` 是工作区级旧快照，不含本卡的 `host/storage`）。
 
 `-DLOCKER_BUILD_TESTS=ON` 是必需的，否则 CTest 会报 `No tests were found`（根 CMake 只在打开该选项时才 `enable_testing()` 并接入测试目录）。

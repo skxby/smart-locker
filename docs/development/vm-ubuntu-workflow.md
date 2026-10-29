@@ -11,7 +11,7 @@
 | Windows Keil | 已配置STM32 HAL/FreeRTOS/littlefs环境，继续保留 |
 | RK3568 | 后续真实ABI/串口/屏幕/NPU/硬件验收，不由x86 VM结果代替 |
 
-已通过VMware Tools和严格主机密钥SSH实际确认地址192.0.2.10，可使用Windows别名locker-vm登录；旧192.0.2.11条目保留。实际guest检查/源码批次/网络待修见[工程化记录](vm-inspection-and-code-layout.md)。SSH/共享文件夹均可用于传输；编译/数据库/socket/运行状态置于VM本地Linux文件系统。共享文件夹可以交换源包和日志，不能默认它支持所需权限与socket语义。
+当前VMware Tools报告地址172.100.1.99；2026-10-29已用原192.0.2.10主机密钥严格核验为同一guest，并更新Windows别名locker-vm的HostName与HostKeyAlias，可直接ssh locker-vm。旧192.0.2.10和192.0.2.11作为历史地址保留，不关闭主机密钥检查。实际guest检查/源码批次/网络待修见[工程化记录](vm-inspection-and-code-layout.md)。SSH/共享文件夹均可用于传输；编译/数据库/socket/运行状态置于VM本地Linux文件系统。共享文件夹可以交换源包和日志，不能默认它支持所需权限与socket语义。
 
 VM统一使用独立工作区$HOME/locker-workspace，src仅放源码；build/runtime/logs/artifacts与src同级，所有新编译、数据库/socket、日志和打包产物都在src之外。不得在原共享源目录或旧练习目录堆生成文件；不移动/删除现有源码。工作区目录已实际确认存在；当前开发AI的整改源在S1-01/src，顶层src为旧快照，先按WORKSPACE-INDEX.md与host-environment.json选源，待活跃卡交接后再统一canonical路径，不能覆盖正在使用的源码。保持一处源码权威：Windows AI修改后，向VM传固定指纹快照进行构建，回传日志；不让两端同时独立修改后互相覆盖。若以后改为VM直接开发，应明确切换主副本与同步流程。
 

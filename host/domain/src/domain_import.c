@@ -221,12 +221,8 @@ locker_status_t domain_persist_device_state(locker_core_t *core)
     if (core->active.used && core->active.has_command) {
         active_command = &core->active.command_id;
     }
-    /*
-     * simulated：locker_core_config_t 没有这个字段，Core 也无法从设备端口读到
-     * 适配器的 simulated 开关，因此这里只能写 false。已登记为契约缺口 CR-S104-1，
-     * S1-06 Runtime 装配时必须回填真实值（见 docs/evidence/stage-01/S1-04/handoff.md）。
-     */
-    domain_write_device_state(&change.writer, core->cabinet_name, LOCKER_CONTRACT_VERSION, false, mode,
+    /* Simulation provenance is supplied by the trusted Runtime assembly. */
+    domain_write_device_state(&change.writer, core->cabinet_name, LOCKER_CONTRACT_VERSION, core->config.device_simulated, mode,
                               &core->physical, core->revision + 1u, active_command, active_command != NULL,
                               domain_now(core));
     domain_change_put_end(&change);

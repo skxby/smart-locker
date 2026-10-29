@@ -33,6 +33,7 @@
 装配顺序：repo_open → device_create → events_create → core_create → device_bind_sink绑定Core接收口 → core_start → device_open → http_start/ipc_start。停机先http_stop/ipc_stop并等待工作线程结束，再device_close停止回调，core_stop收敛，然后destroy HTTP/IPC/Core/device/publisher，最后repo_close。未成功停止的线程不得释放对象。构造期由初始化线程独占资源，start后仓储与领域状态交给Core线程；停止后只允许Runtime关闭，不进行新的CRUD。
 
 Runtime每次service启动生成一个非零host_instance_id，传给locker_core_config_t.instance_id与locker_device_config_t.host_instance_id；Core进度/HELLO/HOST_HEALTH/监督SERVICE绑定使用同一实例，不让各模块分别生成。首次真实Core循环前get_progress返回NOT_READY/未知，不能给0计数补一个新采样假装有进展；新进程生成新实例，旧报告不继承。
+Core配置runtime_health_owned由正式Runtime设true，关闭Core内置HOST_HEALTH发送，由Runtime每秒搬运不可变源样本；零值仅保留无Runtime库级调用方的原发送路径。device_simulated由可信装配设置，同时用于公开Device与持久device_state来源。存在设备适配器时，DB恢复完成不代表设备READY：缺当前会话/快照仍为RECONCILING，之后跟随session.device_mode，工具可用性依此门控制。
 
 `locker_device_bind_sink` 的user、reply/event回调在open前绑定；回调参数只在调用期间借用，接收者复制入Core队列。sink的Core上下文活到device_close等待所有回调结束。回调背压时不静默丢事件，不ACK未落库数据，暂停新动作和健康授权并要求重新核对，不能无限积压。
 

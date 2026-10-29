@@ -8,4 +8,4 @@
 
 服务线程单独处理有界请求，收发超时1秒。调用方串行 stop/destroy，先停适配器再停 Core。stop(timeout_ms) 超时返回 BUSY，保留存活对象；timeout_ms=0 等待结束。destroy 等待停止后仅删除本实例创建的 inode。配置与 Core/publisher 生命周期由可信装配层负责，不提供默认凭据。
 
-当前代码及新增方法仍在开发者验证中，最终结果以 docs/evidence/stage-01/S1-05/summary.md 为准；不构成硬件验收。
+S1-05已完成，正式结果以 docs/evidence/stage-01/S1-05/summary.md 为准；不构成硬件验收。

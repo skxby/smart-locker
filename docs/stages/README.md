@@ -2,7 +2,7 @@
 
 当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](../development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
 
-阶段0为设计基线；S1-01、S1-02、S1-03、S1-04、S1-05 已完成（DONE），S1-06未开始，当前 active_task=null，recommended_next=S1-06，其余进度以机器索引与真实报告为准。阶段号表示依赖，文档存在不代表功能完成。主机端默认用户已有VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
+阶段0为设计基线；S1-01、S1-02、S1-03、S1-04、S1-05、S1-06 已完成（DONE），S1-07未开始，当前 active_task=null，recommended_next=S1-07，其余进度以机器索引与真实报告为准。阶段号表示依赖，文档存在不代表功能完成。主机端默认用户已有VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
 
 ## 1. 固定路线
 
@@ -46,6 +46,6 @@
 
 用户操作见[完整执行手册](../AI开发执行手册.md)，全部45卡的180份现成指令见[索引](../ai-prompts/README.md)；每卡均含开发/审计/整改/交接，直接复制对应段落即可。
 
-使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。S1-01、S1-02、S1-03、S1-04、S1-05 均已收尾 DONE（[S1-01 报告](../evidence/stage-01/S1-01/summary.md)、[S1-01 交接](../evidence/stage-01/S1-01/handoff.md)、[S1-02 报告](../evidence/stage-01/S1-02/summary.md)、[S1-02 交接](../evidence/stage-01/S1-02/handoff.md)、[S1-03 报告](../evidence/stage-01/S1-03/summary.md)、[S1-03 交接](../evidence/stage-01/S1-03/handoff.md)），当前active_task=null，recommended_next=S1-06；[S1-05报告](../evidence/stage-01/S1-05/summary.md)已交付，阶段1 后续卡未开始，实际下一卡以机器索引为准。
+使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。S1-01、S1-02、S1-03、S1-04、S1-05、S1-06 均已收尾 DONE（[S1-01 报告](../evidence/stage-01/S1-01/summary.md)、[S1-01 交接](../evidence/stage-01/S1-01/handoff.md)、[S1-02 报告](../evidence/stage-01/S1-02/summary.md)、[S1-02 交接](../evidence/stage-01/S1-02/handoff.md)、[S1-03 报告](../evidence/stage-01/S1-03/summary.md)、[S1-03 交接](../evidence/stage-01/S1-03/handoff.md)），当前active_task=null，recommended_next=S1-07；[S1-05报告](../evidence/stage-01/S1-05/summary.md)已交付，[S1-06报告](../evidence/stage-01/S1-06/summary.md)已交付，S1-07未开始，实际下一卡以机器索引为准。
 
 重新打开对话，从active_task和最近报告恢复。状态与文件冲突先核对事实；不重复已发生的物理动作。

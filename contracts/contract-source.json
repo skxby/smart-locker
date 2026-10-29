@@ -1854,7 +1854,7 @@
       "name": "locker_core_create",
       "owner": "RK Runtime/Core",
       "prototype": "locker_status_t locker_core_create(const locker_core_config_t *config, locker_repo_t *repo, locker_device_t *device, locker_publisher_t *publisher, locker_core_t **out);",
-      "semantics": "Dependencies are borrowed; fail with NULL; complete recovery before business readiness."
+      "semantics": "Dependencies are borrowed; fail with NULL; complete recovery before business readiness. runtime_health_owned selects Runtime as sole HOST_HEALTH sender; false preserves standalone Core transport. device_simulated is the trusted assembly flag used in device projections."
     },
     {
       "name": "locker_core_start",
