@@ -22,9 +22,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--keil-root', default='E:/Keil5')
     ap.add_argument('--clock', choices=['hsi16','hse8_168'], default='hsi16')
+    ap.add_argument('--target', choices=['environment','s201'], default='environment')
     args = ap.parse_args()
     tools = Path(args.keil_root) / 'ARM/ARMCC/bin'
-    output = ROOT / 'build/firmware-env' / args.clock
+    output = ROOT / ('build/firmware-env' if args.target == 'environment' else 'build/firmware-s201') / args.clock
     output.mkdir(parents=True, exist_ok=True)
     log = []
 
@@ -48,22 +49,24 @@ def main():
     version = run([tools / 'armcc.exe','--vsn'])
     flags = ['--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--c99','--split_sections','--library_type=microlib','-O2','-g']
     defines = DEFINES + (['ENV_HSE8_168'] if args.clock == 'hse8_168' else [])
-    flags += ['-D' + item for item in defines] + ['-I' + item for item in INCLUDES]
+    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','../contracts/include'])]
+    sources = SOURCES if args.target == 'environment' else ['app/main.c','board/board.c','hal/timebase_tim6.c', *SOURCES[2:]]
     objects = []
-    for index, source in enumerate(SOURCES):
+    for index, source in enumerate(sources):
         obj = output / (f'{index:02d}_' + Path(source).stem + '.o')
         relative = os.path.relpath(obj, FW)
         run([tools / 'armcc.exe', *flags, '-c', source, '-o', relative])
         objects.append(relative)
     startup = os.path.relpath(output / 'startup_stm32f407xx.o', FW)
     run([tools / 'armasm.exe','--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--pd','__MICROLIB SETA 1','third_party/stm32f4/cmsis/startup_stm32f407xx.s','-o',startup])
-    axf = os.path.relpath(output / 'locker_env.axf', FW)
-    mapfile = os.path.relpath(output / 'locker_env.map', FW)
+    image_name = 'locker_env' if args.target == 'environment' else 'locker_s201'
+    axf = os.path.relpath(output / (image_name + '.axf'), FW)
+    mapfile = os.path.relpath(output / (image_name + '.map'), FW)
     link_output = run([tools / 'armlink.exe','--cpu','Cortex-M4.fp','--library_type=microlib','--strict','--scatter','keil/stm32f407vg.sct','--map','--symbols','--info=sizes','--list',mapfile,'--output',axf,startup,*objects])
-    run([tools / 'fromelf.exe','--i32combined','--output',os.path.relpath(output / 'locker_env.hex', FW),axf])
-    map_text = (output / 'locker_env.map').read_text(encoding='utf-8', errors='replace')
+    run([tools / 'fromelf.exe','--i32combined','--output',os.path.relpath(output / (image_name + '.hex'), FW),axf])
+    map_text = (output / (image_name + '.map')).read_text(encoding='utf-8', errors='replace')
     sizes = {label: int(match.group(1)) for label, pattern in [('rom_bytes',r'Total ROM Size.*?\s(\d+)\s*\('),('ram_bytes',r'Total RW\s+Size.*?\s(\d+)\s*\(')] if (match := re.search(pattern, map_text))}
-    summary = {'status':'PASS','target':'STM32F407VGTx','clock_profile':args.clock,'compiler':version.strip(),'translation_units':len(SOURCES)+1,'dependencies_hashed':len(lock['files']),'image_sha256':hashlib.sha256((output/'locker_env.axf').read_bytes()).hexdigest(),'compile_link_only':True,'hardware_tested':False,'cabinet_business_implemented':False,'memory':sizes,'size_output':link_output.strip()}
+    summary = {'status':'PASS','target':'STM32F407VGTx','application':args.target,'clock_profile':args.clock,'compiler':version.strip(),'translation_units':len(sources)+1,'dependencies_hashed':len(lock['files']),'image_sha256':hashlib.sha256((output/(image_name+'.axf')).read_bytes()).hexdigest(),'compile_link_only':True,'hardware_tested':False,'cabinet_business_implemented':False,'memory':sizes,'size_output':link_output.strip()}
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(summary, ensure_ascii=False))
 

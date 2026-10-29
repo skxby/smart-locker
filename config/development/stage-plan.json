@@ -3,7 +3,7 @@
   "contract_version": "0.2.1",
   "activity": "IMPLEMENTATION",
   "active_task": null,
-  "recommended_next": "S2-01",
+  "recommended_next": "S2-02",
   "execution_policy": "ONE_CARD_AT_A_TIME",
   "stages": [
     {
@@ -49,7 +49,7 @@
       ],
       "gate_task": "S2-16",
       "design_status": "DRAFT",
-      "implementation_status": "NOT_STARTED",
+      "implementation_status": "IN_PROGRESS",
       "gate_result": "NOT_RUN",
       "evidence": null,
       "task_specs": [
@@ -244,8 +244,8 @@
         "deployment/firmware/"
       ],
       "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
-      "status": "NOT_STARTED",
-      "report": null
+      "status": "DONE",
+      "report": "docs/evidence/stage-02/S2-01/summary.md"
     },
     {
       "id": "S2-02",

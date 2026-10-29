@@ -1,0 +1,85 @@
+{
+  "start": "2026-10-29T19:40:00.838034+08:00",
+  "status": "PASS",
+  "samples": [
+    {
+      "elapsed_s": 0.0,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 232,
+      "xTickCount": 231,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 1.219,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 1456,
+      "xTickCount": 1455,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 2.453,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 2679,
+      "xTickCount": 2678,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 3.672,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 3916,
+      "xTickCount": 3915,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 4.906,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 5142,
+      "xTickCount": 5141,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 6.125,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "s201_safety_checks": 15,
+      "SystemCoreClock": 168000000,
+      "uwTick": 6365,
+      "xTickCount": 6364,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    }
+  ],
+  "image_sha256": "9fbcfb510bd5f6647abc108ac279c22a1b786ab95ebae87596ef7721e6f5d1c2",
+  "preflash_state": "exact_previous_image_and_backup_tail",
+  "readback_verified": true,
+  "pc_after_reset": "0x800120c",
+  "hal_ticks_per_second": 1001.3061224489796,
+  "rtos_ticks_per_second": 1001.3061224489796,
+  "end": "2026-10-29T19:44:35.987942+08:00"
+}

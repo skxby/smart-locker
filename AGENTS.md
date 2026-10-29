@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01至S1-07已完成（DONE，报告位于docs/evidence/stage-01/各卡目录），阶段1主机模拟门禁PASS。当前active_task=null、recommended_next=S2-01，S2-01尚未开始；其他状态以机器索引和实际报告为准。不能把主机模拟结果说成阶段2硬件功能已经完成。
+本项目由用户分阶段评审和开发。当前为契约0.2.1及45张产品卡；S1-01至S1-07已完成（DONE，报告位于docs/evidence/stage-01/各卡目录），阶段1主机模拟门禁PASS。S2-01安全镜像的SWD/时钟/回绕已上板通过；MCU失电、MOS供12V与10kΩ负载时PWM=0V、OUT差分=29mV，双电源上电稳态默认关闭已通过，复位瞬态留S2-05；当前active_task=null、recommended_next=S2-02，S2-02未开始。其他状态以机器索引和实际报告为准。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 
@@ -11,7 +11,7 @@
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。
 4. `docs/architecture/internal-interfaces.md`、`docs/architecture/uart-v1.md`：内置接口、线程/任务与线协议语义。
-5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01至S1-07已DONE，当前active_task=null、recommended_next=S2-01；S2-01尚未开始，以机器索引为准。
+5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01至S1-07已DONE，S2-01为DONE，S2-02未开始；以机器索引为准。
 
 `docs/architecture/reviews/` 是专家评审输入和审计记录，不是第二套执行规格。建议冲突以阶段 0 决策为准；发现真源冲突先修正文档和契约，不能各端自行选一种解释。
 

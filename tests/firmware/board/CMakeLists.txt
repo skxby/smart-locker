@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(locker_board_safety C)
+enable_testing()
+add_executable(test_board_safety test_board_safety.c ../../../firmware/board/board.c)
+target_include_directories(test_board_safety PRIVATE ../../../contracts/include)
+target_compile_options(test_board_safety PRIVATE -Wall -Wextra -Werror -UNDEBUG)
+add_test(NAME firmware.board_safety COMMAND test_board_safety)

@@ -1,6 +1,6 @@
 # 阶段 2A：HAL 与一个基础柜格
 
-状态：基础8卡未执行，前置S1-07、契约0.2.1。显式DISABLED_FOR_FOUNDATION验收物理底座，再执行[2B视觉八卡](stage-02b-vision-task-cards.md)，S2-16才为阶段2完整门禁。本单元不开发Flutter/LVGL或自动恢复。
+状态：S2-01已完成安全BSP及低电流默认关闭验收，S2-02至S2-08未执行。前置S1-07已通过，契约0.2.1。显式DISABLED_FOR_FOUNDATION验收物理底座，再执行[2B视觉八卡](stage-02b-vision-task-cards.md)，S2-16才为阶段2完整门禁。本单元不开发Flutter/LVGL或自动恢复。
 
 ## 1. 阶段目标与接口链
 

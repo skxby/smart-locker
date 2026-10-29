@@ -1,0 +1,4 @@
+[ 33%] Building C object CMakeFiles/test_board_safety.dir/test_board_safety.c.o
+[ 66%] Building C object CMakeFiles/test_board_safety.dir/home/%USER%/locker-workspace/S2-01/src/firmware/board/board.c.o
+[100%] Linking C executable test_board_safety
+[100%] Built target test_board_safety

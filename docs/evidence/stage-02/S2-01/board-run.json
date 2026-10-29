@@ -1,0 +1,79 @@
+{
+  "start": "2026-10-29T15:17:42.918991+08:00",
+  "status": "PASS",
+  "samples": [
+    {
+      "elapsed_s": 0.0,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 246,
+      "xTickCount": 246,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 1.235,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 1482,
+      "xTickCount": 1481,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 2.469,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 2705,
+      "xTickCount": 2704,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 3.688,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 3943,
+      "xTickCount": 3942,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 4.922,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 5164,
+      "xTickCount": 5163,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    },
+    {
+      "elapsed_s": 6.172,
+      "state": "RUNNING",
+      "s201_fault": 0,
+      "SystemCoreClock": 16000000,
+      "uwTick": 6403,
+      "xTickCount": 6402,
+      "tick_high": 0,
+      "gpiob_moder": 640,
+      "gpiob_odr": 640
+    }
+  ],
+  "image_sha256": "988c4b1ef8d5e8d94a776ba04b31a592c75406488876640bc2ff9cc982477fa0",
+  "preflash_state": "exact_environment_image_and_backup_tail",
+  "readback_verified": true,
+  "pc_after_reset": "0x8000b76",
+  "hal_ticks_per_second": 997.5696694750486,
+  "rtos_ticks_per_second": 997.4076474400518,
+  "end": "2026-10-29T15:22:18.415870+08:00"
+}

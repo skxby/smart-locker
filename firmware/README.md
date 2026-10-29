@@ -45,6 +45,12 @@ third_party/stm32f4是原库源码快照；FreeRTOS/littlefs从官方固定提�
 
 复用依据：[ST HAL](https://github.com/STMicroelectronics/stm32f4xx-hal-driver)、[FreeRTOS](https://github.com/FreeRTOS/FreeRTOS-Kernel)、[littlefs](https://github.com/littlefs-project/littlefs)。FreeRTOS选已固定的V11.2.0作可复现基线，不称最新版；使用成熟移植层，未自写RTOS/文件系统。
 
+## 板上验证入口
+
+Env_hsi16已授权烧录并逐字节回读，软件复位运行约6秒内任务计数递增、env_fault=0，HAL与RTOS时基均约1000 tick/s。原程序1MB备份保留，其余Flash扇区未改变。HAL_Init前先更新SystemCoreClock，避免启动变量168MHz与实际HSI16不一致导致TIM6分频错误。见[上板验证记录](../docs/evidence/environment-board-2026-10-28/summary.md)。断电冷启动及HSE尚未实测；此记录不改变产品卡状态，硬件profile仍UNVERIFIED。
+
+S2-01安全应用构建命令为 `python -B scripts/build_firmware.py --target s201`，HSE配置追加 `--clock hse8_168`；产物在 `build/firmware-s201/<clock>/`。独立Keil项目为[locker_s201.uvprojx](keil/locker_s201.uvprojx)，由 `python -B scripts/generate_keil_s201.py` 生成。该目标创建四个休眠任务、使用TIM6时基与64位毫秒计数，并对所有未验证BSP动作返回NOT_READY；没有业务UART、传感器或锁动作。资源和内存边界见[board/README.md](board/README.md)。两个配置均已编译链接、烧录回读并在板上运行；低电流负载双电源稳态默认关闭及拒绝驱动通过；完整profile、真锁和硬截止仍待后续卡验收，见[单卡报告](../docs/evidence/stage-02/S2-01/summary.md)。
+
 ## 工具与硬件边界
 
 当前工具报告MDK-Lite，官方限制32KB程序容量；本环境小程序能构建不代表后续完整柜体固件永远能在Lite链接。超限时使用合法完整版或另配GNU Arm工具链，不缩减正式功能/保护逻辑，也不修改许可。本轮尝试访问Arm GNU下载站证书校验失败，未关闭TLS校验、未安装替代工具链；GNU构建当前不作为可运行入口。
