@@ -1,0 +1,71 @@
+{
+  "firmware-s203/hsi16": {
+    "map_sha256": "09c772b5049ed525a4227246589424254ab588210373d68c75b712db33cdf4cc",
+    "symbols_in_main_sram": {
+      "transport": {
+        "address": "0x20004ba8",
+        "bytes": 2928
+      }
+    }
+  },
+  "firmware-s203/hse8_168": {
+    "map_sha256": "6a7ec0c4d4f5dbaaacc4401108ed5cb45773aebee1fb9224b89f314cd2121788",
+    "symbols_in_main_sram": {
+      "transport": {
+        "address": "0x20004ba8",
+        "bytes": 2928
+      }
+    }
+  },
+  "firmware-s203-uart-compile-only/hsi16": {
+    "map_sha256": "024b3f487ef54bf2e1ec8c3c064e5d225a39a5d384bad6c8e4272af28496e9d7",
+    "symbols_in_main_sram": {
+      "transport": {
+        "address": "0x20004bc0",
+        "bytes": 2928
+      },
+      "rx_ring": {
+        "address": "0x20005838",
+        "bytes": 2048
+      },
+      "rx_copy": {
+        "address": "0x20006038",
+        "bytes": 2048
+      }
+    }
+  },
+  "firmware-s203-uart-compile-only/hse8_168": {
+    "map_sha256": "5c25fa80d02ac287a8d2a9419d616d170e77d9bd8a4f250b683e8ff7af29ade6",
+    "symbols_in_main_sram": {
+      "transport": {
+        "address": "0x20004bc0",
+        "bytes": 2928
+      },
+      "rx_ring": {
+        "address": "0x20005838",
+        "bytes": 2048
+      },
+      "rx_copy": {
+        "address": "0x20006038",
+        "bytes": 2048
+      }
+    }
+  },
+  "firmware-s203-enabled/hse8_168": {
+    "map_sha256": "5c25fa80d02ac287a8d2a9419d616d170e77d9bd8a4f250b683e8ff7af29ade6",
+    "symbols_in_main_sram": {
+      "transport": {
+        "address": "0x20004bc0",
+        "bytes": 2928
+      },
+      "rx_ring": {
+        "address": "0x20005838",
+        "bytes": 2048
+      },
+      "rx_copy": {
+        "address": "0x20006038",
+        "bytes": 2048
+      }
+    }
+  }
+}

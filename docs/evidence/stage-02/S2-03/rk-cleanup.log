@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# python3 -c "from pathlib import Path; Path('/tmp/locker-s2003-20261029/check.b64').unlink(); print('intermediate base64 removed; formal fixtture and result retained')"; s203_rc=$?; printf '\nS203_DONE_c5c16e71fc9e4484b93226cc3aac680ce=%s\n' "$s203_rc"
+[?2004lintermediate base64 removed; formal fixture and result retained
+
+S203_DONE_c5c16e71fc9e4484b9326cc3aac680ce=0
+[?2004hroot@RK356X:/gec_yay# 

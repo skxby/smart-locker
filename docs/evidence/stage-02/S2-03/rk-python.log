@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# python3 -c "import os,termios,select,json,struct,binascii;  print(os.uname())"; s203_rc=$?; printf '\nS203_DONE_3b1dabef3be64f4fa30f88ef38affd3d9=%s\n' "$s203_rc"
+[?2004lposix.uname_result(sysname='Linux', nodename='RK356X', release='4.19.232', version='#2 SMP Thu Jul 17 16:58:21 CST 2025', machine='aarch64')
+
+S203_DONE_3b1dabef3be64f4fa30f88ef38afd3d9=0
+[?2004hroot@RK356X:/gec_yay# 

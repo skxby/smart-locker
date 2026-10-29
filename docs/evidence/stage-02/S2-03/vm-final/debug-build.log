@@ -1,0 +1,7 @@
+[ 33%] Built target test_transport
+[ 40%] Building C object CMakeFiles/test_communication_0.dir/test_communication.c.o
+[ 46%] Building C object CMakeFiles/test_communication_1.dir/test_communication.c.o
+[ 53%] Linking C executable test_communication_0
+[ 60%] Linking C executable test_communication_1
+[ 80%] Built target test_communication_0
+[100%] Built target test_communication_1

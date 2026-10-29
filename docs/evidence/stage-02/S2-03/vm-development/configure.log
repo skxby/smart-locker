@@ -1,0 +1,32 @@
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.2s)
+CMake Error at hal-test.cmake:2 (add_executable):
+  Cannot find source file:
+
+    test_communication.c
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm
+  .ccm .cxxm .c++m .h .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90
+  .f95 .f03 .hip .ispc
+Call Stack (most recent call first):
+  CMakeLists.txt:12 (include)
+
+
+CMake Error at hal-test.cmake:2 (add_executable):
+  No SOURCES given to target: test_communication_0
+Call Stack (most recent call first):
+  CMakeLists.txt:12 (include)
+
+
+CMake Error at hal-test.cmake:2 (add_executable):
+  No SOURCES given to target: test_communication_1
+Call Stack (most recent call first):
+  CMakeLists.txt:12 (include)
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

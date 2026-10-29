@@ -1,0 +1,19 @@
+ls /sys/kernel/debug/pinctrl; grep -i -E "uart4|fe680000|piin 105 |pin 106 " /sys/kernel/debug/pinctrl/*/pinmux-pins; fuser /dev/ttyS4; pythhon3 --version; stty -F /dev/ttyS4 -a
+[?2004lpinctrl-devices  pinctrl-maps		   rk805-pinctrl-rk817-pinctrl
+pinctrl-handles  pinctrl-rockchip-pinctrl
+/sys/kernel/debug/pinctrl/pinctrl-rockchip-pinctrl/pinmux-pins:pin 105 (gpio3-9): fe680000.serial (GPIO UNCLAIMED) function uart4 group uart4m1-xfer
+/sys/kernel/debug/pinctrl/pinctrl-rockchip-pinctrl/pinmux-pins:pin 106 (gpio3-10): fe680000.serial (GPIO UNCLAIMED) function uart4 group uart4m1-xfer
+Python 3.8.6
+[  365.195978] of_dma_request_slave_channel: dma-names property of node '/serial@fe680000' missing or empty
+[  365.196080] ttyS4 - failed to request DMA, use interrupt mode
+speed 9600 baud; rows 0; columns 0; line = 0;
+intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>;
+eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R;
+werase = ^W; lnext = ^V; discard = ^O; min = 1; time = 0;
+-parenb -parodd -cmspar cs8 hupcl -cstopb cread clocal -crtscts
+-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff
+-iuclc -ixany -imaxbel -iutf8
+opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt
+echoctl echoke -flusho -extproc
+[?2004hroot@RK356X:/gec_yay# 

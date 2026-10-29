@@ -1,0 +1,5 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# python3 /tmp/locker-s203-20261029/uart_board_check.py --devvice /dev/ttyS4 > /tmp/locker-s203-20261029/result-01.json; s203_rc=$?; printf '\\nS203_DONE_34a12969d47a4889b5a6e7dd889d0e95=%s\n' "$s203_rc"
+[?2004l
+S203_DONE_34a12969d47a4889b5a6e7dd889d0e95=0
+[?2004hroot@RK356X:/gec_yay# 

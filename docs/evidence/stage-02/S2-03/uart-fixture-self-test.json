@@ -1,0 +1,13 @@
+{
+  "card": "S2-03",
+  "device": "/dev/ttyS4",
+  "baud": 115200,
+  "format": "8N1",
+  "checks": [],
+  "frames": [],
+  "raw_io": [],
+  "rx_discarded_bytes": 0,
+  "termios_restored": false,
+  "status": "PASS",
+  "scope": "pure frame self-test only; UART not opened"
+}

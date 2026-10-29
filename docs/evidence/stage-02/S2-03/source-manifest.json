@@ -1,0 +1,22 @@
+{
+  "contracts/include/locker_contracts.h": "b1b8fe4bad199ad29cecf95f63183685412cd5b5df2e898579459ae37e8be966",
+  "firmware/board/timebase.h": "60efbcd8ff476dfb46c673d9b6f8131d43dfe63139ec017ef9fee71dc8ef5c9b",
+  "firmware/tasks/communication.c": "edef9372f8b25733796090720fd5e911ed19beadf10bf49cd727dec8b86ebfb7",
+  "firmware/tasks/communication.h": "dc9d6dfb863ad54f1337d926d87156cf8ba063145e140c264eafcd0260f04611",
+  "firmware/transport/transport.c": "0774c2a92c8c2cb0b156a334f72ea2a25754752898b6918ce000ba290b0f0d14",
+  "firmware/transport/transport.h": "6d0c8353a60e65ceaad8fca1927489edc4e87e8f94790afe489e148fd7a2fb4c",
+  "host/device/include/locker/device/codec.h": "390af779943e9f86029f079b764422b57572fb7cabe7949c67f321d856c32511",
+  "host/device/include/locker/device/transport.h": "d89e3c9c1a50236a3cb23a9a0cfa109e07bd58455ced40e86cce247b5253034a",
+  "host/device/include/locker/device/wire.h": "6bb4ea57b45bdc02eeaf2bc988b30eb28191254a80a04bc2e76d44fd30043437",
+  "host/device/src/codec.c": "b8bb1650cb3e6c4ac44fbf10adb7153483fa6237e4cc56b5ded2db3eebf828c4",
+  "host/device/src/wire.c": "8c532948cca1874605bdf3db4b3ef990cd8faa64c5a88c39ad71fe0fadef7f31",
+  "tests/firmware/transport/CMakeLists.txt": "0c8e200d34bd96229f94abb3cde748e7f5d0013ecdcc218c5ff567f2f7f0d08d",
+  "tests/firmware/transport/hal-shim/FreeRTOS.h": "bc540e679f379e984b3855dcf3a0c05fa5eaee9e30ff34bef98aea983db16b55",
+  "tests/firmware/transport/hal-shim/stm32f4xx_hal.h": "8a89283cb20f01d7c87d4910664a8b33006e7a4c377c54a5f267f7fb4619929c",
+  "tests/firmware/transport/hal-shim/task.h": "d75fd77820fafdfb6cb2366c176000ecd3c73e41a9bf732e296c688bd54ad1f3",
+  "tests/firmware/transport/hal-test.cmake": "d7d0a0a80f466855f32221c1521b3f950635ddc630a089a48bb14b890b575c27",
+  "tests/firmware/transport/rk-console.ps1": "4b5e3f77d3395496a3054eeb42bbfd57ae7377ddc5686b9e0ef876052ca33836",
+  "tests/firmware/transport/test_communication.c": "e693df61b2f9c9fe528ffccf82bd68e2e9e9f9f08c5b71beb4224fa1c25d6320",
+  "tests/firmware/transport/test_transport.c": "88d3c65de2b571c2aa6b8235eaff41266f835c8729dec3fe06d591679a022de2",
+  "tests/firmware/transport/uart_board_check.py": "63d9dc875860eb6189a0e48a1b0b3875376f84c81cf09963c1336d3fa77bc89f"
+}

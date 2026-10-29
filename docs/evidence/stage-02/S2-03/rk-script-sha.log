@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# python3 -c "import pathlib,base64,zlib,hashlib; p=pathlib.PPath('/tmp/locker-s203-20261029'); b=zlib.decompress(base64.b64decode((p/'check.bb64').read_bytes())); (p/'uart_board_check.py').write_bytes(b); print(hashlib.shaa256(b).hexdigest())"; s203_rc=$?; printf '\nS203_DONE_ee71cbb55c8540869ba859ed3ee1be10c=%s\n' "$s203_rc"
+[?2004lc84e8f6a89715421e5221cb777070c980e1a5f3cabaebac500dc633fd448c347
+
+S203_DONE_ee71cbb55c8540869ba859ed3e1be10c=0
+[?2004hroot@RK356X:/gec_yay# 

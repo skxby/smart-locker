@@ -3,6 +3,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "locker_contracts.h"
+#ifdef LOCKER_S203
+#include "communication.h"
+#endif
 #ifdef LOCKER_S202
 #include "peripherals.h"
 #endif
@@ -93,7 +96,14 @@ int main(void)
     for (i = 0U; i < 4U; ++i) {
 #ifdef LOCKER_S202
         TaskFunction_t role = i == 0U ? board_input_task : i == 2U ? board_storage_task : inactive_role;
+#ifdef LOCKER_S203
+        if (i == 1U) role = communication_task;
+#endif
+#ifdef LOCKER_S203
+        if (xTaskCreate(role, names[i], i == 1U ? 1024U : 768U, NULL, i == 1U ? 2U : 1U, NULL) != pdPASS)
+#else
         if (xTaskCreate(role, names[i], 768U, NULL, 1U, NULL) != pdPASS)
+#endif
 #else
         if (xTaskCreate(inactive_role, names[i], 256U, NULL, 1U, NULL) != pdPASS)
 #endif

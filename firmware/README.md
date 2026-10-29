@@ -62,3 +62,13 @@ S2-01安全应用构建命令为 `python -B scripts/build_firmware.py --target s
 `python -B scripts/build_firmware.py --target s202 --clock hse8_168`构建当前板上目标，HSI使用hsi16。独立Keil项目[locker_s202.uvprojx](keil/locker_s202.uvprojx)由`python -B scripts/generate_keil_s201.py --target s202`生成。S201与环境目标仍保持原有非执行器边界。S202启用PE0/PE1内部上拉、原始输入副本与去抖诊断、SPI1板载Flash只读、SPI2 RC522 UID读取；不启用UART或锁输出。主机测试与上板证据见[S2-02报告](../docs/evidence/stage-02/S2-02/summary.md)，驱动/诊断/复用依据见[drivers/README.md](drivers/README.md)。
 
 两时钟ROM 12496/13904 B、RAM 20296 B，scatter只用主SRAM。PC0未接/未标定，ADC保持关闭、供电有效性false；`--check-adc-build`仅验证ADC分支编译，输出到独立compile-only目录，不作为烧录或实物验收。完整profile仍UNVERIFIED，复位瞬态和真锁硬截止留S2-05。
+
+## S2-03 通信目标
+
+`python -B scripts/build_firmware.py --target s203 --clock hse8_168`构建默认关闭UART的独立目标，HSI选择hsi16。`python -B scripts/generate_keil_s201.py --target s203`生成[Keil工程](keil/locker_s203.uvprojx)。默认`BOARD_UART_QUALIFIED=0`，PD5/PD6保持原输入状态；不会改变全局profile或锁资格。附加`--check-uart-build`只在隔离输出目录编译UART启用分支，不授权烧录，不证明接线已验证。
+
+UART分支为USART2/AF7、PD5 TX/PD6 RX、115200 8N1；RX DMA1 Stream5 Channel4循环2048B，TX Stream6 Channel4普通模式，UART/DMA逻辑中断优先级5。ISR只采样DMA位置/通知；Communication每5ms复制并核查覆盖后解析，170ms失调度、RX覆盖或硬件错误撤销session。TX四槽有界，DMA完成或成功abort前不归还缓冲。协议直接复用已有纯C wire/codec，11类请求分派与后续回调约束见[传输说明](transport/README.md)。Journal/Control未装配，诊断HELLO以外请求NOT_READY，不产生开锁动作。
+
+两时钟默认目标ROM 16540/17948 B、RAM 23320 B；UART编译检查ROM 22296/23704 B、RAM 27704 B。所有数据仅主SRAM，未使用CCM；16KiB RTOS堆，Communication 1024words/优先级2，其余任务768words/优先级1。HSE启用目标已烧录，RK UART4经ADuM双向实测通过，11,103字节完整消费、TX满10次与128请求中10个缺失响应一致，HAL错误/RX覆盖均0。默认禁用目标和HSI仍仅编译；实际栈高水位未配置。用户确认近端去耦、V1改MCU侧3V3、V2实测3.3V及UART4方向，完整profile仍UNVERIFIED，详见[本卡证据](../docs/evidence/stage-02/S2-03/summary.md)。S2-04未开始。
+
+对已核对隔离供电/方向的本板，`python -B scripts/build_firmware.py --target s203 --clock hse8_168 --enable-uart`构建上板验证镜像到`build/firmware-s203-enabled/hse8_168/`。该开关不能与`--check-uart-build`合用，不改变profile/锁资格；显式烧录使用本卡受保护工具及镜像/旧Flash守卫。板上保留的是该启用镜像，Journal/Control仍无后端且拒绝业务动作。真实测试只发送HELLO/GET_SNAPSHOT；11类分派与动作拒绝由正式C回归覆盖。RK驱动本次对ttyS4采用中断模式，MCU侧为循环DMA；未修改RK设备树或部署业务服务，后续部署仍属S2-06。

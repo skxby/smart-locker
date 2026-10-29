@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "recorded_by": "parent after stopping owned Python process 17040",
+  "phase": "load_hex preflight before ConnectHelper",
+  "reason": "IntelHex membership syntax uses unbounded sequence lookup; replaced with set(image.addresses())",
+  "flash_operation_started": false,
+  "empty_interrupted_output": "board-uart-startup.json",
+  "empty_interrupted_log": "board-uart-startup.log"
+}

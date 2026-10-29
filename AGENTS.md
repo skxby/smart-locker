@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前契约0.2.1、45张产品卡；S1-01至S1-07 DONE、阶段一主机模拟门禁PASS；S2-01与S2-02 DONE。S2-02门磁/微动低有效且启用内部上拉、RC522两张4字节卡与SPI读Flash通过；PC0/ADC实物标定按用户2026-10-29授权后移，supply_valid保持false，基础门禁前补证；7/10字节仅协议回归通过。当前active_task=null、recommended_next=S2-03，S2-03未开始，本次授权停于S2-03之前。硬件profile仍UNVERIFIED、阶段二门禁NOT_RUN；真锁与复位瞬态/硬截止仍待验。详情以机器索引和各卡报告为准。
+本项目由用户分阶段评审和开发。当前契约0.2.1、45张产品卡；S1-01至S1-07 DONE、阶段一主机模拟门禁PASS；S2-01与S2-02 DONE。S2-02门磁/微动低有效且启用内部上拉、RC522两张4字节卡与SPI读Flash通过；PC0/ADC实物标定按用户2026-10-29授权后移，supply_valid保持false，基础门禁前补证；7/10字节仅协议回归通过。当前active_task=null、recommended_next=S2-04，S2-03 UART DMA/通信任务已DONE，RK UART4经ADuM真实收发、黄金帧/回绕/背压验收通过，本次授权止于S2-04之前。硬件profile仍UNVERIFIED、阶段二门禁NOT_RUN；真锁与复位瞬态/硬截止仍待验。详情以机器索引和各卡报告为准。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 
@@ -11,7 +11,7 @@
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。
 4. `docs/architecture/internal-interfaces.md`、`docs/architecture/uart-v1.md`：内置接口、线程/任务与线协议语义。
-5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01至S1-07已DONE，S2-01与S2-02为DONE，S2-03未开始；以机器索引为准。
+5. 当前分配的一张任务卡及`docs/architecture/traceability.md`的实施归属；没有开发授权时不自动开始实现。S1-01至S1-07已DONE，S2-01与S2-02为DONE，S2-03为DONE，S2-04未开始；以机器索引为准。
 
 `docs/architecture/reviews/` 是专家评审输入和审计记录，不是第二套执行规格。建议冲突以阶段 0 决策为准；发现真源冲突先修正文档和契约，不能各端自行选一种解释。
 

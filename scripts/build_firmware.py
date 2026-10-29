@@ -22,14 +22,22 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--keil-root', default='E:/Keil5')
     ap.add_argument('--clock', choices=['hsi16','hse8_168'], default='hsi16')
-    ap.add_argument('--target', choices=['environment','s201','s202'], default='environment')
+    ap.add_argument('--target', choices=['environment','s201','s202','s203'], default='environment')
     ap.add_argument('--check-adc-build', action='store_true', help='Compile-only S202 ADC branch in an isolated output directory')
+    ap.add_argument('--check-uart-build', action='store_true', help='Compile-only S203 qualified UART branch; never implies wiring qualification')
+    ap.add_argument('--enable-uart', action='store_true', help='S203 board validation only; requires confirmed isolation wiring and supplies')
     args = ap.parse_args()
+    if args.enable_uart and (args.target != 's203' or args.check_uart_build):
+        ap.error('--enable-uart requires --target s203 and cannot combine with --check-uart-build')
+    if args.check_uart_build and args.target != 's203':
+        ap.error('--check-uart-build requires --target s203')
     if args.check_adc_build and args.target != 's202':
         ap.error('--check-adc-build requires --target s202')
     tools = Path(args.keil_root) / 'ARM/ARMCC/bin'
     output = ROOT / ('build/firmware-env' if args.target == 'environment' else 'build/firmware-' + args.target) / args.clock
     if args.check_adc_build: output = ROOT / 'build/firmware-s202-adc-compile-only' / args.clock
+    if args.check_uart_build: output = ROOT / 'build/firmware-s203-uart-compile-only' / args.clock
+    if args.enable_uart: output = ROOT / 'build/firmware-s203-enabled' / args.clock
     output.mkdir(parents=True, exist_ok=True)
     log = []
 
@@ -53,11 +61,15 @@ def main():
     version = run([tools / 'armcc.exe','--vsn'])
     flags = ['--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--c99','--split_sections','--library_type=microlib','-O2','-g']
     defines = DEFINES + (['ENV_HSE8_168'] if args.clock == 'hse8_168' else [])
-    if args.target == 's202': defines += ['LOCKER_S202']
+    if args.target in ('s202', 's203'): defines += ['LOCKER_S202']
+    if args.target == 's203': defines += ['LOCKER_S203']
+    if args.enable_uart: defines += ['BOARD_UART_QUALIFIED=1']
+    if args.check_uart_build: defines += ['BOARD_UART_QUALIFIED=1']
     if args.check_adc_build: defines += ['BOARD_ADC_QUALIFIED=1']
-    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','drivers','../contracts/include'])]
+    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','drivers','tasks','transport','../contracts/include','../host/device/include'])]
     sources = SOURCES if args.target == 'environment' else ['app/main.c','board/board.c','hal/timebase_tim6.c', *SOURCES[2:]]
-    if args.target == 's202': sources += ['board/peripherals.c','drivers/inputs.c','drivers/rc522.c']
+    if args.target in ('s202', 's203'): sources += ['board/peripherals.c','drivers/inputs.c','drivers/rc522.c']
+    if args.target == 's203': sources += ['tasks/communication.c','transport/transport.c','../host/device/src/wire.c','../host/device/src/codec.c']
     objects = []
     for index, source in enumerate(sources):
         obj = output / (f'{index:02d}_' + Path(source).stem + '.o')
@@ -74,6 +86,7 @@ def main():
     map_text = (output / (image_name + '.map')).read_text(encoding='utf-8', errors='replace')
     sizes = {label: int(match.group(1)) for label, pattern in [('rom_bytes',r'Total ROM Size.*?\s(\d+)\s*\('),('ram_bytes',r'Total RW\s+Size.*?\s(\d+)\s*\(')] if (match := re.search(pattern, map_text))}
     summary = {'status':'PASS','target':'STM32F407VGTx','application':args.target,'clock_profile':args.clock,'compiler':version.strip(),'translation_units':len(sources)+1,'dependencies_hashed':len(lock['files']),'image_sha256':hashlib.sha256((output/(image_name+'.axf')).read_bytes()).hexdigest(),'compile_link_only':True,'hardware_tested':False,'cabinet_business_implemented':False,'memory':sizes,'size_output':link_output.strip()}
+    if args.target == 's203': summary['uart_enabled'] = bool(args.enable_uart or args.check_uart_build)
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(summary, ensure_ascii=False))
 

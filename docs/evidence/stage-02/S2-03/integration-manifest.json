@@ -1,0 +1,16 @@
+{
+  "firmware/app/main.c": "ea9b0731c96b705125560c379dca299599731cd2c6b81cf6104a380accf131d7",
+  "scripts/build_firmware.py": "b1286ed28efbc29ac10c8a230f26d6ecdb973bee84bdb8266158b20148e53ffd",
+  "scripts/generate_keil_s201.py": "a62a6578d8b74c2593028ff5b0a09fd51a70fce88b9df263862af7a44a5faad7",
+  "firmware/keil/locker_s203.uvprojx": "afd77611392e52d72701e880633bd2797491df1a5885830cd6083ebd88bed65b",
+  "firmware/config/FreeRTOSConfig.h": "535ddc14c9260f81704ea9b4b3be292904d12a89f7d74fcbb6dced4e210257b7",
+  "firmware/config/stm32f4xx_hal_conf.h": "9c22ed05701ac80503a7e22dd9b2d85126d2e3f255f28ea20a903ec622be7dbc",
+  "deployment/firmware/dependencies.lock.json": "227731bbe672563d99013a4223da564bc82cf05bcd286d5d8ac9064902ddca62",
+  "firmware/board/board.c": "3640844c06620a770d15e1f3d78fe13144728c58710e12f1db2e65079024d7a0",
+  "firmware/board/peripherals.c": "d3c9187113be1d08815aefd3d2c7c8d5d08c21d0adbeeb0a977bec62b8d2c129",
+  "firmware/drivers/inputs.c": "bf2c573b3174d97ee3cca33618d3dde23336c26e75e58a0ca50c9d92ed3de343",
+  "firmware/drivers/rc522.c": "f97768f08372c3a287ea4a4af868d674439666f7325f9379be73c407d9887e3d",
+  "firmware/hal/timebase_tim6.c": "8019cad8418d72d3b0e9559f7a6b30de78eccf2554be09d6eee8d62a538492f7",
+  "docs/evidence/stage-02/S2-03/flash-and-observe.py": "8186602d1204d64e880591e9eba94ab774eb30dd9d55fe32ebc018e74848eeee",
+  "docs/evidence/stage-02/S2-03/read-uart-state.py": "51b7ee58b46fa8afb859246256b01ffd9b85a34d4c2d5d879894044066fa2067"
+}

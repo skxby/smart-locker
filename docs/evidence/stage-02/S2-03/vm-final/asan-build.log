@@ -1,0 +1,18 @@
+[  6%] Building C object CMakeFiles/test_transport.dir/test_transport.c.o
+[ 13%] Building C object CMakeFiles/test_communication_0.dir/test_communication.c.o
+[ 20%] Building C object CMakeFiles/test_communication_0.dir/home/%USER%/locker-workspace/S2-03/src/firmware/transport/transport.c.o
+[ 26%] Building C object CMakeFiles/test_transport.dir/home/%USER%/locker-workspace/S2-03/src/firmware/transport/transport.c.o
+[ 33%] Building C object CMakeFiles/test_communication_0.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/wire.c.o
+[ 40%] Building C object CMakeFiles/test_transport.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/wire.c.o
+[ 46%] Building C object CMakeFiles/test_communication_0.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/codec.c.o
+[ 53%] Building C object CMakeFiles/test_transport.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/codec.c.o
+[ 60%] Linking C executable test_communication_0
+[ 66%] Linking C executable test_transport
+[ 66%] Built target test_communication_0
+[ 73%] Building C object CMakeFiles/test_communication_1.dir/test_communication.c.o
+[ 73%] Built target test_transport
+[ 80%] Building C object CMakeFiles/test_communication_1.dir/home/%USER%/locker-workspace/S2-03/src/firmware/transport/transport.c.o
+[ 86%] Building C object CMakeFiles/test_communication_1.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/wire.c.o
+[ 93%] Building C object CMakeFiles/test_communication_1.dir/home/%USER%/locker-workspace/S2-03/src/host/device/src/codec.c.o
+[100%] Linking C executable test_communication_1
+[100%] Built target test_communication_1

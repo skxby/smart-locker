@@ -15,10 +15,11 @@ S201_SOURCES = ['app/main.c', 'board/board.c', 'hal/timebase_tim6.c', *SOURCES[2
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--target', choices=['s201', 's202'], default='s201')
+    parser.add_argument('--target', choices=['s201', 's202', 's203'], default='s201')
     args = parser.parse_args()
     project = PROJECT.with_name('locker_' + args.target + '.uvprojx')
-    sources = S201_SOURCES + (['board/peripherals.c', 'drivers/inputs.c', 'drivers/rc522.c'] if args.target == 's202' else [])
+    sources = S201_SOURCES + (['board/peripherals.c', 'drivers/inputs.c', 'drivers/rc522.c'] if args.target in ('s202','s203') else [])
+    if args.target == 's203': sources += ['tasks/communication.c','transport/transport.c','../host/device/src/wire.c','../host/device/src/codec.c']
     tree = ET.parse(ROOT / 'firmware/keil/locker_environment.uvprojx')
     targets = tree.getroot().find('Targets')
     templates = list(targets.findall('Target'))
@@ -39,13 +40,13 @@ def main():
         put(prefix + 'OutputName', 'locker_' + args.target)
         put(prefix + 'ListingPath', output)
         cbase = 'TargetOption/TargetArmAds/Cads/VariousControls/'
-        put(cbase + 'Define', ','.join(DEFINES + (['ENV_HSE8_168'] if clock == 'hse8_168' else []) + (['LOCKER_S202'] if args.target == 's202' else [])))
-        includes = INCLUDES + ['board', 'drivers', '../contracts/include']
+        put(cbase + 'Define', ','.join(DEFINES + (['ENV_HSE8_168'] if clock == 'hse8_168' else []) + (['LOCKER_S202'] if args.target in ('s202','s203') else []) + (['LOCKER_S203'] if args.target == 's203' else [])))
+        includes = INCLUDES + ['board', 'drivers', 'tasks', 'transport', '../contracts/include', '../host/device/include']
         put(cbase + 'IncludePath', ';'.join(os.path.relpath(ROOT / 'firmware' / path, project.parent).replace('/', '\\') for path in includes))
         groups = target.find('Groups')
         groups.clear()
         group = ET.SubElement(groups, 'Group')
-        ET.SubElement(group, 'GroupName').text = 'S2-02 inputs and SPI' if args.target == 's202' else 'S2-01 safe application'
+        ET.SubElement(group, 'GroupName').text = {'s201': 'S2-01 safe application', 's202': 'S2-02 inputs and SPI', 's203': 'S2-03 UART communication'}[args.target]
         files = ET.SubElement(group, 'Files')
         for source in sources + ['third_party/stm32f4/cmsis/startup_stm32f407xx.s']:
             file = ET.SubElement(files, 'File')
