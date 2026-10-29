@@ -3,7 +3,7 @@
   "contract_version": "0.2.1",
   "activity": "IMPLEMENTATION",
   "active_task": null,
-  "recommended_next": "S1-07",
+  "recommended_next": "S2-01",
   "execution_policy": "ONE_CARD_AT_A_TIME",
   "stages": [
     {
@@ -21,9 +21,9 @@
       ],
       "gate_task": "S1-07",
       "design_status": "DRAFT",
-      "implementation_status": "IN_PROGRESS",
-      "gate_result": "NOT_RUN",
-      "evidence": null
+      "implementation_status": "DONE",
+      "gate_result": "PASS",
+      "evidence": "docs/evidence/stage-01/summary.md"
     },
     {
       "id": 2,
@@ -226,8 +226,8 @@
         "tests/contract/"
       ],
       "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
-      "status": "NOT_STARTED",
-      "report": null
+      "status": "DONE",
+      "report": "docs/evidence/stage-01/S1-07/summary.md"
     },
     {
       "id": "S2-01",

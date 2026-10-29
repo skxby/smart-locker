@@ -1,0 +1,100 @@
+Test project /home/%USER%/locker-workspace/S1-07/batches/s107-fix01/build-debug
+      Start  1: common.test_bounded_queue
+ 1/36 Test  #1: common.test_bounded_queue ................   Passed    0.00 sec
+      Start  2: common.test_build_info
+ 2/36 Test  #2: common.test_build_info ...................   Passed    0.00 sec
+      Start  3: common.test_clock
+ 3/36 Test  #3: common.test_clock ........................   Passed    0.02 sec
+      Start  4: common.test_log
+ 4/36 Test  #4: common.test_log ..........................   Passed    0.00 sec
+      Start  5: common.test_numeric
+ 5/36 Test  #5: common.test_numeric ......................   Passed    0.00 sec
+      Start  6: common.test_uuid
+ 6/36 Test  #6: common.test_uuid .........................   Passed    0.00 sec
+      Start  7: storage.test_event_key
+ 7/36 Test  #7: storage.test_event_key ...................   Passed    0.00 sec
+      Start  8: storage.test_regex
+ 8/36 Test  #8: storage.test_regex .......................   Passed    0.00 sec
+      Start  9: storage.test_u64
+ 9/36 Test  #9: storage.test_u64 .........................   Passed    0.00 sec
+      Start 10: storage.test_schema
+10/36 Test #10: storage.test_schema ......................   Passed    0.00 sec
+      Start 11: storage.test_repository
+11/36 Test #11: storage.test_repository ..................   Passed    0.15 sec
+      Start 12: storage.schema_source_drift
+12/36 Test #12: storage.schema_source_drift ..............   Passed    0.04 sec
+      Start 13: device.test_codec
+13/36 Test #13: device.test_codec ........................   Passed    0.00 sec
+      Start 14: device.test_wire
+14/36 Test #14: device.test_wire .........................   Passed    0.00 sec
+      Start 15: device.test_sim_journal
+15/36 Test #15: device.test_sim_journal ..................   Passed    0.05 sec
+      Start 16: device.test_sim_protocol
+16/36 Test #16: device.test_sim_protocol .................   Passed    0.05 sec
+      Start 17: domain.test_domain_text
+17/36 Test #17: domain.test_domain_text ..................   Passed    0.00 sec
+      Start 18: domain.test_domain_json
+18/36 Test #18: domain.test_domain_json ..................   Passed    0.00 sec
+      Start 19: domain.test_domain_repo
+19/36 Test #19: domain.test_domain_repo ..................   Passed    0.00 sec
+      Start 20: domain.test_domain_state
+20/36 Test #20: domain.test_domain_state .................   Passed    0.00 sec
+      Start 21: domain.test_domain_device
+21/36 Test #21: domain.test_domain_device ................   Passed    0.01 sec
+      Start 22: domain.test_domain_commands
+22/36 Test #22: domain.test_domain_commands ..............   Passed    0.01 sec
+      Start 23: domain.test_domain_core
+23/36 Test #23: domain.test_domain_core ..................   Passed    0.03 sec
+      Start 24: contract.device.test_golden_frames
+24/36 Test #24: contract.device.test_golden_frames .......   Passed    0.00 sec
+      Start 25: contract.device.test_device_port
+25/36 Test #25: contract.device.test_device_port .........   Passed    7.03 sec
+      Start 26: contract.device.daemon_smoke
+26/36 Test #26: contract.device.daemon_smoke .............   Passed    3.54 sec
+      Start 27: integration.test_core_interrupt_matrix
+27/36 Test #27: integration.test_core_interrupt_matrix ...   Passed   10.71 sec
+      Start 28: network.pinned_dependencies
+28/36 Test #28: network.pinned_dependencies ..............   Passed    0.13 sec
+      Start 29: network.events
+29/36 Test #29: network.events ...........................   Passed    0.00 sec
+      Start 30: network.core_auth
+30/36 Test #30: network.core_auth ........................   Passed    0.13 sec
+      Start 31: network.auth_repository
+31/36 Test #31: network.auth_repository ..................   Passed    0.10 sec
+      Start 32: network.https_sessions
+32/36 Test #32: network.https_sessions ...................   Passed    7.28 sec
+      Start 33: network.https_flow
+33/36 Test #33: network.https_flow .......................   Passed    6.81 sec
+      Start 34: runtime.health
+34/36 Test #34: runtime.health ...........................   Passed    0.00 sec
+      Start 35: runtime.lifecycle
+35/36 Test #35: runtime.lifecycle ........................   Passed   12.07 sec
+      Start 36: integration.stage_gate_process
+36/36 Test #36: integration.stage_gate_process ...........***Failed   17.47 sec
+return diagnostic (200, {'data': {'id': 'e89c2d55-cc50-4139-8096-9dd6e28cb870', 'tool_id': 'ca2c2528-0f6c-491e-8eec-0f7f35008123', 'kind': 'RETURN', 'actor_id': '47da1869-3247-446b-90c0-352406dfa4b8', 'state': 'REQUESTED', 'operation_revision': '2', 'command_id': None, 'reason_code': None, 'created_at': '2026-10-29T01:44:03Z', 'updated_at': '2026-10-29T01:44:03Z', 'allowed_actions': ['PRESENT_AT_CABINET', 'WAIT', 'CANCEL'], 'evidence': {'history_complete': True, 'door_open_seen': False, 'item_transition_seen': False, 'physical': {'device_id': '404142434445464748494a4b', 'journal_epoch': '22ea1355-9db3-445e-a6af-3273369da462', 'boot_id': '1', 'physical_revision': '4', 'door': 'CLOSED', 'item': 'ABSENT', 'supply_mv': 5000, 'observed_age_ms': 4294967295, 'time_quality': 'HOST_SYNCED', 'continuity_ok': True, 'dropped_events': '0', 'durable_cursor': {'device_id': '404142434445464748494a4b', 'journal_epoch': '22ea1355-9db3-445e-a6af-3273369da462', 'boot_id': '1', 'event_seq': '9'}}, 'source_events': [], 'manual_resolution': False}}, 'snapshot_revision': '17', 'request_id': 'ccc9edef-d6d6-459d-aa6e-34e05f4f4531'}) (200, {'data': {'device_id': '404142434445464748494a4b', 'cabinet_name': 'Stage gate', 'contract_version': '0.2.1', 'simulated': True, 'mode': 'READY', 'health_reasons': [], 'ui_restart_count': None, 'physical': {'device_id': '404142434445464748494a4b', 'journal_epoch': '22ea1355-9db3-445e-a6af-3273369da462', 'boot_id': '1', 'physical_revision': '4', 'door': 'CLOSED', 'item': 'ABSENT', 'supply_mv': 5000, 'observed_age_ms': 387, 'time_quality': 'HOST_SYNCED', 'continuity_ok': True, 'dropped_events': '0', 'durable_cursor': {'device_id': '404142434445464748494a4b', 'journal_epoch': '22ea1355-9db3-445e-a6af-3273369da462', 'boot_id': '1', 'event_seq': '10'}}}, 'snapshot_revision': '17', 'request_id': '1cad156d-9660-49c1-918c-fe947953d637'}) {'session': '32c0fe02-891e-4b74-a387-9fdcc7362ff7', 'journal_epoch': '22ea1355-9db3-445e-a6af-3273369da462', 'boot_id': '1', 'action_watermark': '1', 'dropped_events': '0', 'device_mode': '1', 'journal_state': '1', 'door': '1', 'item': '1', 'command_state': '0', 'has_active': '0', 'continuity_ok': '1', 'first_available': '1:1', 'last_committed': '1:10', 'ack_persisted': '1:10', 'event_count': '10'}
+sim.log:
+ready device backend: simulator uart=/tmp/locker-stage-gate-c1w4qyif/uart.sock control=/tmp/locker-stage-gate-c1w4qyif/control.sock journal=/tmp/locker-stage-gate-c1w4qyif/sim.db
+
+service.log:
+SIMULATOR_ONLY startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+SIMULATOR_ONLY listening; business readiness requires reconciliation
+
+Traceback (most recent call last):
+  File "/home/%USER%/locker-workspace/S1-07/batches/s107-fix01/src/tests/integration/runtime/test_stage_gate.py", line 305, in <module>
+    main()
+    ~~~~^^
+  File "/home/%USER%/locker-workspace/S1-07/batches/s107-fix01/src/tests/integration/runtime/test_stage_gate.py", line 248, in main
+    until(lambda: operation_in("ACCESS_ACTIVE"), "return access active")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/%USER%/locker-workspace/S1-07/batches/s107-fix01/src/tests/integration/runtime/test_stage_gate.py", line 31, in until
+    raise AssertionError(label)
+AssertionError: return access active
+
+
+97% tests passed, 1 tests failed out of 36
+
+Total Test time (real) =  65.71 sec
+
+The following tests FAILED:
+	 36 - integration.stage_gate_process (Failed)
+Errors while running CTest

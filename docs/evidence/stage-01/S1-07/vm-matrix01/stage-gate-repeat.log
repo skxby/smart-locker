@@ -1,0 +1,11 @@
+Test project /home/%USER%/locker-workspace/S1-07/batches/s107-matrix01/build-debug
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed   14.14 sec
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed   13.72 sec
+    Start 36: integration.stage_gate_process
+1/1 Test #36: integration.stage_gate_process ...   Passed   13.90 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  41.77 sec

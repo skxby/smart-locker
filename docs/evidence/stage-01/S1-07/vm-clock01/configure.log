@@ -1,0 +1,9 @@
+-- locker host build: contract 0.2.1
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Found Perl: /usr/bin/perl (found version "5.40.1")
+{"status": "PASS", "network_source_files": 3811, "downloaded_at_configure": false}
+-- storage tests: contract-drift gate enabled (/usr/bin/python3)
+-- device contract tests: daemon smoke enabled (/usr/bin/python3)
+-- Configuring done (1.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/%USER%/locker-workspace/S1-07/batches/s107-clock01/build-debug

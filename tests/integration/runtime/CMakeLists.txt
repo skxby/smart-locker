@@ -12,3 +12,10 @@ add_test(NAME runtime.lifecycle COMMAND "${Python3_EXECUTABLE}"
     $<TARGET_FILE:locker-device-sim>
     "${CMAKE_BINARY_DIR}/network-dependencies/bin/openssl")
 set_tests_properties(runtime.lifecycle PROPERTIES TIMEOUT 180)
+
+add_test(NAME integration.stage_gate_process COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_stage_gate.py"
+    $<TARGET_FILE:locker-service> $<TARGET_FILE:locker-admin>
+    $<TARGET_FILE:locker-device-sim>
+    "${CMAKE_BINARY_DIR}/network-dependencies/bin/openssl")
+set_tests_properties(integration.stage_gate_process PROPERTIES TIMEOUT 120)

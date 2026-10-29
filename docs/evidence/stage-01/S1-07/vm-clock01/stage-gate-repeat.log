@@ -1,0 +1,15 @@
+Test project /home/%USER%/locker-workspace/S1-07/batches/s107-clock01/build-debug
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed    8.77 sec
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed    8.85 sec
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed    8.99 sec
+    Start 36: integration.stage_gate_process
+    Test #36: integration.stage_gate_process ...   Passed    9.06 sec
+    Start 36: integration.stage_gate_process
+1/1 Test #36: integration.stage_gate_process ...   Passed    8.87 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  44.55 sec

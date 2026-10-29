@@ -4,7 +4,7 @@
 
 VM入口已建立：[VM检查与两个工作区](docs/development/vm-inspection-and-code-layout.md)。使用ssh locker-vm；桌面及文件侧栏有借还柜、当前源码和内核驱动入口。两批共800个HOME直属条目已集中归档并核验，根下不再散落脚本/日志/安装包，10个root目录也已完成迁移；[目录用途](docs/development/vm-home-layout.md)说明各类资料的位置。NAT互联网与自编译内核告警仍有待修项。
 
-S1-04业务核心已完成：[交付报告](docs/evidence/stage-01/S1-04/summary.md)、[交接](docs/evidence/stage-01/S1-04/handoff.md)。S1-05 HTTPS/IPC已完成：[交付报告](docs/evidence/stage-01/S1-05/summary.md)、[交接](docs/evidence/stage-01/S1-05/handoff.md)。S1-06已完成（[报告](docs/evidence/stage-01/S1-06/summary.md)、[运行说明](host/runtime/README.md)），S1-07未开始。
+S1-01至S1-07已完成，阶段一主机模拟门禁PASS；场景和VM实跑结果见[阶段一证据](docs/evidence/stage-01/S1-07/summary.md)。
 
 主机端开发环境：[用户已有VMware Ubuntu工作流](docs/development/vm-ubuntu-workflow.md)；S1-01原成果保留，后续按[VM最终复验指令](docs/stages/S1-01-vm-final-review.md)验证整改版。Windows继续用于源文件/Keil，不要求WSL。
 
@@ -16,11 +16,11 @@ STM32开发环境入口：[firmware/README.md](firmware/README.md)和[Keil工程
 
 项目定位：STM32F407负责柜锁、物理状态和独立记录；RK3568负责业务、LVGL、局域网服务及独立v11视觉进程；Android负责查询、申请、确认和管理。Core综合物理事实、视觉证据及本人确认作决定。
 
-STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile尚未实物验证。
+STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile的完整实测记录尚未入库。
 
-当前状态：契约0.2.1，45张产品任务卡；S1-01、S1-02、S1-03、S1-04、S1-05、S1-06 已完成（DONE，[S1-01 报告](docs/evidence/stage-01/S1-01/summary.md)、[S1-02 报告](docs/evidence/stage-01/S1-02/summary.md)、[S1-03 报告](docs/evidence/stage-01/S1-03/summary.md)），S1-07及后续卡未开始，逐卡结果以状态索引和报告为准。STM32环境测试已构建，尚无整柜实物验收。
+当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE且主机模拟门禁PASS，S2-01及后续卡未开始。逐卡结果以状态索引和报告为准。用户确认硬件方面全部测试通过；该声明对应的项目清单、实测值和原始记录尚未入库，硬件profile仍为UNVERIFIED，不据此自动判定阶段2门禁。
 
-**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S1-07，阶段1 gate 仍 NOT_RUN（门禁卡 S1-07，S1-01至S1-06 DONE ≠ 阶段 PASS）。不得把设计产物当成功能交付。
+**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-01，阶段1 gate PASS。S2-01尚未开始。
 
 开发、集成与验证由当前会话统一负责，具体流程见[执行规则](docs/development/execution-policy.md)。
 

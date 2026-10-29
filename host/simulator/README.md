@@ -2,7 +2,7 @@
 
 本模块属于 S1-03，用两个 `AF_UNIX SOCK_STREAM` socket 提供 UART-v1 字节与权限 0600 的私有控制入口，使用独立 SQLite 日志，不共享业务库。契约基线 0.2.1，规格以 `docs/architecture/uart-v1.md` 为准。
 
-- 状态：S1-03 **IN_PROGRESS**（等独立审计）。
+- 状态：S1-03 **DONE**，实际验证记录见 `docs/evidence/stage-01/S1-03/summary.md`。
 - 硬件脉冲只模拟状态与计数，不驱动 GPIO，不证明真实关断。
 - SQLite WAL + `synchronous=FULL` 只验证软件持久化语义，不证明 MCU/littlefs/RK 介质掉电可靠性。
 - 无 HTTP 接口，不连接真实锁。
