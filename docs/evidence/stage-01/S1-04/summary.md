@@ -34,3 +34,7 @@
 历史报告保存在history/，旧audit和VM日志保留，不伪造新的审计PASS。当前交接见handoff.md，非阻塞债务见debt.md。一次性.s104-tmp工具包已完整归档到C:/Users/%USER%/Documents/locker-development-archives/S1-04-takeover-20261028/temporary-tools；正式测试、失败日志、快照指纹和复现runner保留。无临时API、假业务数据或新外部产品依赖。
 
 真实RK UART、锁脉冲硬截止、整柜传感器、介质掉电、相机/RKNN均不属于本次主机模拟验收。STM32环境上板证据独立保存在docs/evidence/environment-board-2026-10-28，不算S2-01完成。未实现的S1-05认证/HTTP、S4监护和视觉端口保持既定归属。
+
+## S1-07门禁补救记录
+
+S1-07真实进程测试发现Core处理设备事件前沿用上一轮tick的单调时间，现场读卡偶发被时间锚判为未来事件。`host/domain/src/domain_core.c`在每条事件出队前刷新主机单调时间；不放宽读卡新鲜度或历史补传约束。固定VM批次`s107-matrix01`的Debug、ASan+UBSan、TSan全量CTest各36/36，详情见[S1-07报告](../S1-07/summary.md)。本节为门禁发现的后续补救证据，不改写本卡原始交付结果。

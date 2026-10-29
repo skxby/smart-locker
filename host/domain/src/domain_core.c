@@ -526,6 +526,10 @@ static void core_run_once(locker_core_t *core)
     /* 设备环：事件与响应都按值复制进来，只在这里出队应用。 */
     domain_event_slot_t event;
     while (locker_bounded_queue_try_pop(&core->event_ring, &event) == LOCKER_STATUS_OK) {
+        /* 读卡帧的 MCU 时间戳取自设备刚刚发出的时刻。先刷新主机单调时钟，
+           否则沿用上次 tick 的时间（最多相差一个空闲周期），新鲜帧会被
+           domain_anchor_mcu_now 误判为来自「未来」，柜前证明偶发丢失。 */
+        domain_now_advance(core, core_clock_now(core));
         domain_handle_device_event(core, &event.event, event.completion);
         drained = true;
     }
