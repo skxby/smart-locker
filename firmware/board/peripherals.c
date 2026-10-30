@@ -144,11 +144,9 @@ locker_status_t board_inputs_copy(locker_board_inputs_t *out)
     }
     return LOCKER_STATUS_OK;
 }
-void board_input_task(void *argument)
+void board_inputs_sample(void)
 {
-    input_debounce_t door = {0}, item = {0};
-    (void)argument;
-    for (;;) {
+    static input_debounce_t door = {0}, item = {0};
         input_raw_t raw = {0};
         locker_board_inputs_t normalized;
         raw.door_level = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_0) == GPIO_PIN_SET;
@@ -175,8 +173,11 @@ void board_input_task(void *argument)
         s202_diag[32] = input_debounce(&door, normalized.door, mapping.debounce_ms, raw.mono_ms);
         s202_diag[33] = input_debounce(&item, normalized.item, mapping.debounce_ms, raw.mono_ms);
         diag_end();
-        vTaskDelay(pdMS_TO_TICKS(10U));
-    }
+}
+void board_input_task(void *argument)
+{
+    (void)argument;
+    for (;;) { board_inputs_sample(); vTaskDelay(pdMS_TO_TICKS(10U)); }
 }
 static locker_status_t rfid_transfer(void *context, const uint8_t *tx, uint8_t *rx, uint16_t length)
 {

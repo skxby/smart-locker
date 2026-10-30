@@ -35,6 +35,9 @@ typedef struct {
     mcu_transport_packet_t tx[MCU_TRANSPORT_TX_SLOTS];
     unsigned tx_head, tx_count;
     bool session_valid, fault_latched;
+    /* S2-05 assembly delegates HELLO metadata to the Control owner. Older
+       diagnostic targets keep their built-in uninitialized HELLO. */
+    bool backend_hello;
     uint16_t dma_position;
     mcu_transport_stats_t stats;
 } mcu_transport_t;

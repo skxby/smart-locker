@@ -17,7 +17,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--toolchain-root', required=True,
                         help='Installed GNU Arm toolchain directory containing bin/')
-    parser.add_argument('--target', choices=['s204'], default='s204')
+    parser.add_argument('--target', choices=['s204', 's205', 's205-cutoff'], default='s204')
     parser.add_argument('--clock', choices=['hsi16', 'hse8_168'], default='hsi16')
     args = parser.parse_args()
     toolroot = Path(args.toolchain_root).resolve()
@@ -35,7 +35,7 @@ def main():
     for entry in supplement['files']:
         if hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest() != entry['sha256']:
             raise SystemExit('GNU supplement hash changed: ' + entry['path'])
-    output = ROOT / 'build/firmware-s204-gnu' / args.clock
+    output = ROOT / ('build/firmware-' + args.target + '-gnu') / args.clock
     output.mkdir(parents=True, exist_ok=True)
     log = []
 
@@ -57,14 +57,30 @@ def main():
                'LFS_NO_ASSERT', 'LFS_NO_DEBUG', 'LFS_NO_WARN', 'LFS_NO_ERROR']
     if args.clock == 'hse8_168':
         defines.append('ENV_HSE8_168')
+    if args.target == 's205':
+        defines += ['LOCKER_S203', 'LOCKER_S205', 'BOARD_UART_QUALIFIED=1']
+    if args.target == 's205-cutoff':
+        defines += ['BOARD_LOCK_QUALIFIED=1']
     includes = [p for p in INCLUDES if 'portable/RVDS/' not in p]
     includes += ['third_party/freertos/portable/GCC/ARM_CM4F', 'hal/cmsis-gcc',
                  'board', 'drivers', 'drivers/flash', 'journal', '../contracts/include']
+    if args.target.startswith('s205'):
+        includes += ['control', 'tasks', 'transport', '../host/device/include']
     flags += ['-D' + name for name in defines] + ['-I' + path for path in includes]
     sources = ['journal/validation_main.c', 'board/board.c', 'hal/timebase_tim6.c', *SOURCES[2:]]
     sources = [p.replace('portable/RVDS/ARM_CM4F/', 'portable/GCC/ARM_CM4F/') for p in sources]
     sources += ['board/peripherals.c', 'drivers/inputs.c', 'drivers/rc522.c',
                 'journal/board_validation.c', 'journal/journal.c', 'drivers/flash/w25q128.c']
+    if args.target == 's205':
+        sources[0] = 'app/main.c'
+        sources.remove('journal/board_validation.c')
+        sources += ['board/lock_output.c', 'control/control.c', 'tasks/assembly.c',
+                    'tasks/communication.c', 'tasks/health.c', 'transport/transport.c',
+                    '../host/device/src/wire.c', '../host/device/src/codec.c']
+    if args.target == 's205-cutoff':
+        sources[0] = 'control/cutoff_validation.c'
+        sources.remove('journal/board_validation.c')
+        sources += ['board/lock_output.c']
     objects = []
     for index, source in enumerate(sources):
         obj = output / (f'{index:02d}_' + Path(source).stem + '.o')
@@ -74,17 +90,17 @@ def main():
     startup = os.path.relpath(output / 'startup_gnu.o', FW)
     run([tools['gcc'], *base, '-g3', '-x', 'assembler-with-cpp', '-c',
          'journal/startup_gnu.S', '-o', startup])
-    image = output / 'locker_s204.elf'
-    mapfile = output / 'locker_s204.map'
+    image = output / ('locker_' + args.target + '.elf')
+    mapfile = output / ('locker_' + args.target + '.map')
     run([tools['gcc'], *base, '-nostartfiles', '--specs=nano.specs', '--specs=nosys.specs',
          '-T', 'keil/stm32f407vg.ld', '-Wl,--gc-sections', '-Wl,--print-memory-usage',
          '-Wl,-Map,' + os.path.relpath(mapfile, FW),
          startup, *objects, '-Wl,--start-group', '-lc', '-lm', '-lnosys', '-Wl,--end-group',
          '-o', os.path.relpath(image, FW)])
     run([tools['objcopy'], '-O', 'ihex', os.path.relpath(image, FW),
-         os.path.relpath(output / 'locker_s204.hex', FW)])
+         os.path.relpath(output / ('locker_' + args.target + '.hex'), FW)])
     run([tools['objcopy'], '-O', 'binary', os.path.relpath(image, FW),
-         os.path.relpath(output / 'locker_s204.bin', FW)])
+         os.path.relpath(output / ('locker_' + args.target + '.bin'), FW)])
     sizes = run([tools['size'], os.path.relpath(image, FW)])
     symbols = run([tools['nm'], '-n', '-S', os.path.relpath(image, FW)])
     (output / 'symbols.txt').write_text(symbols, encoding='utf-8')
@@ -95,13 +111,15 @@ def main():
     if match:
         text_bytes, data_bytes, bss_bytes = map(int, match.groups())
         memory = {'rom_bytes': text_bytes + data_bytes, 'ram_bytes': data_bytes + bss_bytes}
-    result = {'status': 'PASS', 'application': 's204', 'target': 'STM32F407VGTx',
+    result = {'status': 'PASS', 'application': args.target, 'target': 'STM32F407VGTx',
               'clock_profile': args.clock, 'compiler': version, 'toolchain_root': str(toolroot),
               'translation_units': len(sources) + 1, 'dependencies_hashed': len(lock['files']),
               'supplement_files_hashed': len(supplement['files']), 'memory': memory,
               'image_sha256': hashlib.sha256(image.read_bytes()).hexdigest(),
               'compile_link_only': True, 'hardware_tested': False,
-              'uart_enabled': False, 'cabinet_business_implemented': False}
+              'uart_enabled': args.target == 's205', 'lock_qualified': False,
+              'isolated_pulse_bench': args.target == 's205-cutoff',
+              'cabinet_business_implemented': False}
     (output / 'summary.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, ensure_ascii=False))
 

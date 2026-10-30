@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "image": "build\\firmware-s205-cutoff-gnu\\hse8_168\\locker_s205-cutoff.hex",
+  "image_sha256": "29dc255f2f9c89de2851193c3a8828521db82778901223119fc2963ceb9760df",
+  "hex_sha256": "6552b6a5890743e0a9d823f9b5f5706e7974e3176c6cda411ae7677a201c3248",
+  "replaced_sector0_sha256": null,
+  "sector0_sha256": "a39ec7dc5287c25161ebdb20d0cad5c3cbf9d1fb54225f7b962805426f1b8e06",
+  "already_programmed": true,
+  "segments": [
+    [
+      "0x8000000",
+      "0x8002774"
+    ]
+  ],
+  "pc_after_reset": "0x8000188",
+  "memory": {
+    "rom_bytes": 10100,
+    "ram_bytes": 19448
+  },
+  "first": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 50,
+    "count": 0,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  },
+  "second": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 80,
+    "count": 0,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  },
+  "when": "2026-10-30T10:47:33.880495+08:00"
+}

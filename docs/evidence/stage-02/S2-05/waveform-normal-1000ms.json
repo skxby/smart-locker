@@ -1,0 +1,39 @@
+{
+  "case": "normal_1000ms_pulse",
+  "card": "S2-05",
+  "bench": "PB6 bare pin, lock coil / MOS / 12V / PB6-to-MOS wire all disconnected",
+  "request": {
+    "mode": 1,
+    "pulse_ms": 1000,
+    "commands_issued": 3
+  },
+  "mailbox": {
+    "count_0_to_1": "11:00:55 count 0->1, result OK, fault 0",
+    "count_1_to_2": "11:02:10 count 1->2, result OK, fault 0",
+    "count_2_to_3": "11:02:26 count 2->3, result OK, fault 0",
+    "gpio_b_moder_before": "0x1280 (PB6 GPIO output, pin low after apply)",
+    "gpio_b_moder_after": "0x2280 (PB6 handed to TIM4_CH1 AF, timer stopped at CNT=0)",
+    "gpio_b_odr_after": "0x0"
+  },
+  "scope": {
+    "model": "Siglent SDS1102X-C",
+    "probe": "10X, DC coupling",
+    "vertical": "1.00 V/div",
+    "timebase": "500 ms/div",
+    "trigger": "Edge, CH1, falling, level 1.50 V, Single"
+  },
+  "operator_checks": {
+    "high_level_about_3v3": true,
+    "width_about_1s_two_divisions": true,
+    "falling_edge_clean": true,
+    "stays_low_after_pulse": true
+  },
+  "verified_by": "operator reading the scope screen in this session (2026-10-30 11:03)",
+  "scope_photo": "photo-normal-1000ms-500msdiv.jpg",
+  "note": "Proves the pin, polarity, width and return-to-low of the normal path only. Hardware cutoff under blocked software is proven by the masked-IRQ / suspended-scheduler cases.",
+  "scope_readouts": {
+    "peak_to_peak": "3.76 V",
+    "positive_width": "1.00 s",
+    "cursor_y1_y2": "3.300 V (high level)"
+  }
+}

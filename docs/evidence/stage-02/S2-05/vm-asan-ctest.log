@@ -1,0 +1,31 @@
+Test project /home/%USER%/locker-workspace/build/S2-05/asan
+      Start  1: firmware.control_persistent_guards
+ 1/13 Test  #1: firmware.control_persistent_guards ............   Passed    0.56 sec
+      Start  2: firmware.lock_hal_0
+ 2/13 Test  #2: firmware.lock_hal_0 ...........................   Passed    0.01 sec
+      Start  3: firmware.lock_hal_1
+ 3/13 Test  #3: firmware.lock_hal_1 ...........................   Passed    0.01 sec
+      Start  4: firmware.assembly_concurrent_mailboxes
+ 4/13 Test  #4: firmware.assembly_concurrent_mailboxes ........   Passed    0.02 sec
+      Start  5: firmware.journal_transactions_and_powercuts
+ 5/13 Test  #5: firmware.journal_transactions_and_powercuts ...   Passed    1.23 sec
+      Start  6: firmware.journal_concurrent_owner
+ 6/13 Test  #6: firmware.journal_concurrent_owner .............   Passed    0.05 sec
+      Start  7: firmware.flash_commands_and_failures
+ 7/13 Test  #7: firmware.flash_commands_and_failures ..........   Passed    0.02 sec
+      Start  8: firmware.transport
+ 8/13 Test  #8: firmware.transport ............................   Passed    0.01 sec
+      Start  9: firmware.communication_0
+ 9/13 Test  #9: firmware.communication_0 ......................   Passed    0.02 sec
+      Start 10: firmware.communication_1
+10/13 Test #10: firmware.communication_1 ......................   Passed    0.01 sec
+      Start 11: firmware.inputs_and_uid
+11/13 Test #11: firmware.inputs_and_uid .......................   Passed    0.01 sec
+      Start 12: firmware.spi_mutex_and_failures
+12/13 Test #12: firmware.spi_mutex_and_failures ...............   Passed    0.09 sec
+      Start 13: firmware.board_safety
+13/13 Test #13: firmware.board_safety .........................   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 13
+
+Total Test time (real) =   2.09 sec

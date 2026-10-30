@@ -1,0 +1,28 @@
+{
+  "status": "DONE",
+  "mode": 4,
+  "pulse_ms": 1000,
+  "before": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 26456,
+    "count": 0,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  },
+  "after": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 26644,
+    "count": 1,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  },
+  "when": "2026-10-30T11:13:28.287730+08:00"
+}

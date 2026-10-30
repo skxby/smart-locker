@@ -5,6 +5,9 @@
 #include "task.h"
 #include "timebase.h"
 #include "transport.h"
+#ifdef LOCKER_S205
+#include "assembly.h"
+#endif
 #include <string.h>
 
 volatile uint32_t s203_diag[24];
@@ -117,12 +120,21 @@ static int uart_init(void)
 
 void communication_task(void *argument)
 {
+#ifdef LOCKER_S205
+    uint64_t progress = 0U;
+#endif
     (void)argument;
     /* No backend until S2-04/05; no fake journal/Control success. */
     {
         uint8_t uid[12];
         memcpy(uid, (const void *)UID_BASE, sizeof(uid));
+#ifdef LOCKER_S205
+        while(!assembly_ready()) vTaskDelay(pdMS_TO_TICKS(1U));
+        mcu_transport_init(&transport, uid, 0U, NULL, assembly_dispatch);
+        transport.backend_hello = true;
+#else
         mcu_transport_init(&transport, uid, 0U, NULL, NULL);
+#endif
     }
     s203_diag[0] = 0x53323033U;
 #if BOARD_UART_QUALIFIED
@@ -148,6 +160,9 @@ void communication_task(void *argument)
             count = begin - consumed;
             if (rx_fault != 0U || now - previous >= 170U || count >= sizeof(rx_ring)) {
                 mcu_transport_rx_lost(&transport);
+#ifdef LOCKER_S205
+                assembly_session_lost();
+#endif
                 ++s203_diag[6];
                 consumed = begin;
                 if (rx_fault != 0U) {
@@ -177,6 +192,9 @@ void communication_task(void *argument)
                 taskEXIT_CRITICAL();
                 if (end - consumed >= sizeof(rx_ring) || mcu_board_monotonic_ms() - now >= 170U) {
                     mcu_transport_rx_lost(&transport);
+#ifdef LOCKER_S205
+                    assembly_session_lost();
+#endif
                     ++s203_diag[6]; consumed = end;
                 } else {
                     (void)mcu_transport_feed(&transport, rx_copy, count, now);
@@ -185,6 +203,9 @@ void communication_task(void *argument)
                 }
             }
             previous = now;
+#ifdef LOCKER_S205
+            assembly_transmit(&transport);
+#endif
             if (transmitting && tx_done != 0U) {
                 mcu_transport_tx_pop(&transport);
                 tx_done = 0U; transmitting = 0;
@@ -205,6 +226,9 @@ void communication_task(void *argument)
             s203_diag[16] = (uint32_t)transport.stats.unsupported;
             s203_diag[17] = (uint32_t)transport.stats.stale_replies;
             ++s203_diag[2];
+#ifdef LOCKER_S205
+            assembly_progress(LOCKER_MCU_TASK_ID_COMMUNICATION, ++progress);
+#endif
         }
     }
 #else

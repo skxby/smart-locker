@@ -321,6 +321,20 @@ static void test_contract_golden(void)
     assert(reply_result(1u, 1u) == 0u);
 }
 
+static void test_backend_hello(void)
+{
+    locker_device_reply_t reply={0};
+    init(); calls=0u; transport.dispatch=dispatch; transport.backend_hello=true;
+    send_request(1u,901u);
+    assert(calls==1u && received[0].message_type==1u && received[0].request_no==901u);
+    assert(!memcmp(received[0].session_id.bytes,session.bytes,16u) && transport.tx_count==0u);
+    reply.message_type=1u; reply.request_no=901u; reply.body.hello.session_id=session;
+    reply.body.hello.journal_epoch=epoch; reply.body.hello.boot_id=42u;
+    reply.body.hello.journal_state=LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY;
+    assert(mcu_transport_queue_reply(&transport,&reply)==LOCKER_STATUS_OK);
+    assert(reply_result(1u,901u)==0u);
+}
+
 int main(void)
 {
     assert(locker_wire_crc16((const uint8_t *)"123456789", 9u) == 0x29b1u);
@@ -328,6 +342,7 @@ int main(void)
     test_backpressure(); test_dma_positions(); test_max_payload_and_unknown_type();
     test_committed_event_encoding();
     test_contract_golden();
+    test_backend_hello();
     puts("S2-03 stream/session/11 dispatch/DMA/backpressure passed");
     return 0;
 }

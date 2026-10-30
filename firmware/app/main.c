@@ -3,6 +3,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "locker_contracts.h"
+#ifdef LOCKER_S205
+#include "assembly.h"
+#endif
 #ifdef LOCKER_S203
 #include "communication.h"
 #endif
@@ -77,6 +80,7 @@ int main(void)
     HAL_Init();
     clock_config();
     mcu_board_force_off();
+#ifndef LOCKER_S205
     {
         mcu_board_profile_t candidate = {0};
         if (mcu_board_apply_profile(NULL) == LOCKER_STATUS_NOT_READY)
@@ -90,9 +94,14 @@ int main(void)
             s201_safety_checks |= 8U;
         if (s201_safety_checks != 15U) env_assert_failed();
     }
+#endif
 #ifdef LOCKER_S202
     if (board_peripherals_init() != LOCKER_STATUS_OK) env_assert_failed();
 #endif
+#ifdef LOCKER_S205
+    (void)names; (void)i;
+    assembly_start();
+#else
     for (i = 0U; i < 4U; ++i) {
 #ifdef LOCKER_S202
         TaskFunction_t role = i == 0U ? board_input_task : i == 2U ? board_storage_task : inactive_role;
@@ -109,6 +118,7 @@ int main(void)
 #endif
             env_assert_failed();
     }
+#endif
     vTaskStartScheduler();
     env_assert_failed();
     return 0;

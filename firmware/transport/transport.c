@@ -76,6 +76,20 @@ static locker_status_t handle_frame(void *user, const locker_wire_frame_t *f)
             ++t->stats.bad_session;
             return LOCKER_STATUS_OK;
         }
+        if (t->backend_hello && t->dispatch != NULL) {
+            if (t->tx_count == MCU_TRANSPORT_TX_SLOTS) { (void)reserve_packet(t); return LOCKER_STATUS_OK; }
+            context.session_id = request.hello.new_session_id;
+            context.request_no = f->request_no; context.message_type = 1u;
+            context.received_mono_ms = t->received_mono_ms;
+            t->session_id = request.hello.new_session_id; t->host_instance_id = request.hello.host_instance_id;
+            t->session_valid = true;
+            status = t->dispatch(t->user, &context, &request);
+            if (status != LOCKER_STATUS_QUEUED && status != LOCKER_STATUS_ACCEPTED) {
+                t->session_valid = false;
+                error_response(t, f, &context.session_id, LOCKER_WIRE_RESULT_NOT_READY);
+            }
+            return LOCKER_STATUS_OK;
+        }
         packet = reserve_packet(t);
         if (packet == NULL) return LOCKER_STATUS_OK;
         memset(&response, 0, sizeof(response));

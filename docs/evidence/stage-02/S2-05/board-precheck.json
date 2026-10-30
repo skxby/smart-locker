@@ -1,0 +1,9 @@
+{
+  "probe": "000000000000000000000000",
+  "dbgmcu_idcode": "0x101f6413",
+  "flash_kb": 1024,
+  "state": "RUNNING",
+  "sector0_sha256": "19ac7d9ad16f65b5c856058e9398eee30228f2052ff8828c99c9517215760112",
+  "sector0_ff_padded": false,
+  "when": "2026-10-30T10:40:54.496861+08:00"
+}

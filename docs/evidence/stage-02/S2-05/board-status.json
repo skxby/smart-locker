@@ -1,0 +1,12 @@
+{
+  "command": 0,
+  "pulse_ms": 1000,
+  "progress": 1089,
+  "count": 0,
+  "result": "OK",
+  "phase": 0,
+  "fault": 0,
+  "gpio_b_moder": "0x1280",
+  "gpio_b_odr": "0x0",
+  "when": "2026-10-30T11:14:52.868576+08:00"
+}
