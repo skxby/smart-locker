@@ -55,7 +55,7 @@ aarch64 静态二进制在板运行，DevicePort 走真实 `/dev/ttyS4`，HTTPS 
 | 证书 SAN 匹配 | PASS | 部署证书 SAN = `DNS:locker.local, IP:192.0.2.20, IP:127.0.0.1`；信任该证书时登录 200 |
 | 未信任被拒绝 | PASS | 系统信任库直连报 `CERTIFICATE_VERIFY_FAILED: self-signed certificate` |
 | 配对文件无敏感字段 | PASS | 仅 5 字段，1329 B，DER 824 B；工具显式拒绝 password/token/private_key 字段名 |
-| 串口断接不重放旧动作 | PASS（部分） | 冻结 MCU 10 s：`execute_unlock` 0→0，`observed_age` 96.8→112.9 s |
+| 串口断接不重放旧动作 | PASS | 物理拔线 5 s（轨迹见 `uart-trace-unplug.json`）：120 s 内 `execute_unlock` 恒为 0、`tick` 连续；关闭状态下所有动作被 `opened` 门禁判 `NOT_READY`（`test_device_port` 覆盖） |
 
 ## 本轮修复的缺陷
 
@@ -69,8 +69,10 @@ aarch64 静态二进制在板运行，DevicePort 走真实 `/dev/ttyS4`，HTTPS 
 
 ## 未覆盖 / 风险
 
-- **物理断线重连未验**：冻结 MCU 不会让 tty 产生 `EIO/POLLHUP`，因此“重连后先重新握手”这条
-  没有被证明；需要拔一次 UART 线复测。
+- **拔 UART 信号线对 tty 不可见**：实测 120 s 内 `hello` 恒为 2、无 `EIO/POLLHUP`，主机不知道线断过，
+  靠请求超时才能发现；只有 USB 串口拔出才会产生链路错误。
+- **设备关闭后无自动重开路径**：`locker_device_open` 只在 `host/runtime/main.c` 启动时调用一次，
+  domain/runtime 都没有 reopen；一旦适配器因超时关闭，恢复需重启服务。属 S2-07「MCU 重启／主机支路断电」范围。
 - 业务借还闭环、真实开锁动作、No-Charge 等属 S2-07/S2-08。
 - 设备当前 `mode=DEGRADED`、`continuity_ok=false`：MCU 侧 Journal 需补账，属真实状态，未用格式化掩盖。
 - RK 的 MAC 为运行时随机本地地址，DHCP 续租可能变址；证书 SAN 绑定了当前 IP，换址需重签。

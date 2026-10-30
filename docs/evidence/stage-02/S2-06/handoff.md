@@ -42,7 +42,8 @@
 
 ## 未实现项（随卡交接）
 
-- **物理断线重连未验**：需拔 UART 线复测“重连先握手、不重放”。
+- **拔线不可见**：实测拔 UART 信号线 5 s，tty 无 `EIO/POLLHUP`，`hello` 不变；断线只能靠超时发现。
+- **无自动重开**：`locker_device_open` 仅启动时调用一次，适配器关闭后需重启服务才能恢复，归 S2-07。
 - 业务借还闭环、真实开锁、No-Charge 属 S2-07/S2-08。
 - 设备 `mode=DEGRADED`、`continuity_ok=false` 未解除：MCU Journal 需补账，未格式化掩盖。
 - RK 的 MAC 随机、IP 由 DHCP 分配；证书 SAN 绑定当前 IP，换址需重签。
