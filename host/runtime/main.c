@@ -1,7 +1,9 @@
 #define _POSIX_C_SOURCE 200809L
 #include "runtime.h"
 #include "locker/common/clock.h"
+#include "locker/device/recovery.h"
 #include "cJSON.h"
+#include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +45,90 @@ static bool initialized_database(locker_repo_t *repo)
     }
     free(rows); return ok;
 }
+/*
+ * The tty cannot report a pulled wire, so the adapter marks the link lost after
+ * three unanswered requests. This supervisor performs the recovery a service
+ * restart would do, with backoff, and lets HELLO re-establish the session before
+ * any action is admitted again.
+ */
+typedef struct {
+    locker_device_t *device;
+    const locker_device_config_t *config;
+} supervisor_ctx_t;
+static supervisor_ctx_t supervisor_ctx;
+static volatile sig_atomic_t supervisor_stop;
+static pthread_t supervisor_thread;
+static bool supervisor_started;
+
+#define SUPERVISOR_GRACE_MS 3000u
+
+static uint64_t supervisor_now_ms(void)
+{
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    return (uint64_t)now.tv_sec * 1000u + (uint64_t)(now.tv_nsec / 1000000L);
+}
+
+static void *device_supervisor(void *argument)
+{
+    supervisor_ctx_t *ctx = argument;
+    unsigned backoff_ms = 1000u;
+    unsigned trace_tick = 0u;
+    uint64_t opened_ms = supervisor_now_ms();
+    const bool trace = getenv("LOCKER_DEVICE_TRACE") != NULL;
+    for (;;) {
+        struct timespec pause = {0, 500000000L};
+        locker_status_t status;
+        locker_device_diagnosis_t diag;
+        bool workers_dead;
+
+        (void)nanosleep(&pause, NULL);
+        if (supervisor_stop) {
+            return NULL;
+        }
+        (void)locker_device_diagnose(ctx->device, &diag);
+        if (trace && (++trace_tick % 2u) == 0u) {
+            printf("dev open=%d hello=%d lost=%d rd=%d wr=%d streak=%u pend=%u tx=%u\n",
+                   diag.opened, diag.hello_complete, diag.link_lost, diag.reader_alive,
+                   diag.writer_alive, diag.expired_streak, diag.pending_used,
+                   diag.transmit_used);
+            fflush(stdout);
+        }
+        workers_dead = diag.opened && (!diag.reader_alive || !diag.writer_alive);
+        /* Order matters: a dead link keeps opened/hello_complete true because
+         * nothing tears the session down, so "session ready" must be tested only
+         * after "link lost". Testing it first made the supervisor skip recovery
+         * for ever while streak climbed to 63. */
+        if (diag.link_lost || workers_dead) {
+            printf("device link lost; closing before reopen (lost=%d rd=%d wr=%d)\n",
+                   diag.link_lost, diag.reader_alive, diag.writer_alive);
+            fflush(stdout);
+        } else if (locker_device_session_ready(ctx->device)) {
+            backoff_ms = 1000u;
+            continue;
+        } else if (supervisor_now_ms() - opened_ms < SUPERVISOR_GRACE_MS) {
+            continue; /* HELLO may still be in flight right after open */
+        } else {
+            /* Opened but silent: the reopen landed while the wire was still out.
+             * Without this branch hello_complete stays false for ever and every
+             * request is refused, which looks exactly like a dead cabinet. */
+            fputs("device session not established; reopening\n", stdout); fflush(stdout);
+        }
+        (void)locker_device_close(ctx->device);
+        pause.tv_sec = (time_t)(backoff_ms / 1000u);
+        pause.tv_nsec = (long)(backoff_ms % 1000u) * 1000000L;
+        (void)nanosleep(&pause, NULL);
+        if (supervisor_stop) {
+            return NULL;
+        }
+        status = locker_device_open(ctx->device, ctx->config);
+        opened_ms = supervisor_now_ms();
+        printf("device reopen %s\n", status == LOCKER_STATUS_OK ? "ok" : "failed"); fflush(stdout);
+        backoff_ms = backoff_ms < 8000u ? backoff_ms * 2u : 8000u;
+    }
+    return NULL;
+}
+
 int main(int argc, char **argv)
 {
     runtime_config_t config;
@@ -79,6 +165,13 @@ int main(int argc, char **argv)
     if (locker_device_open(device,&config.device)!=LOCKER_STATUS_OK) {
         fputs(config.device.simulated ? "simulator connection failed\n"
                                       : "device open failed (UART missing, busy or permissions)\n",stderr); goto done; }
+    {
+        supervisor_ctx.device = device; supervisor_ctx.config = &config.device;
+        if (pthread_create(&supervisor_thread, NULL, device_supervisor, &supervisor_ctx) != 0)
+            fputs("device supervisor unavailable; a link loss will need a restart\n", stderr);
+        else
+            supervisor_started = true;
+    }
     if (locker_http_start(&config.http,core,events,&http)!=LOCKER_STATUS_OK) { fputs("HTTPS start failed (certificate/bind/port)\n",stderr); goto done; }
     if (locker_ipc_start(&config.ipc,core,&ipc)!=LOCKER_STATUS_OK) { fputs("IPC start failed (path/permissions)\n",stderr); goto done; }
     printf("%s listening; business readiness requires reconciliation\n",
@@ -110,6 +203,11 @@ done:
         }
         locker_ipc_destroy(ipc);
     }
+    /* Stop the supervisor before the adapter goes away; a detached thread that
+     * keeps reopening a device during teardown would be a race, not a recovery.
+     * It polls every 500 ms, so the join costs at most one poll interval. */
+    supervisor_stop = 1;
+    if (supervisor_started) (void)pthread_join(supervisor_thread, NULL);
     if (device) (void)locker_device_close(device);
     if (core) {
         while (locker_core_stop(core,1000)!=LOCKER_STATUS_OK) {

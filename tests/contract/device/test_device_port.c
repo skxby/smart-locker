@@ -33,6 +33,7 @@
 
 #include "locker/common/clock.h"
 #include "locker/device/codec.h"
+#include "locker/device/recovery.h"
 #include "locker/device/wire.h"
 #include "locker/device/transport.h"
 #include "locker/simulator/sim.h"
@@ -909,6 +910,63 @@ static void test_config_validation(void)
     locker_device_destroy(bare);
     locker_device_destroy(device);
     locker_device_destroy(NULL);
+    port_env_finish(&env);
+}
+
+/* An accepted link that never answers is the exact shape of a reopen landing
+ * while the UART wire is still out: open() returns OK because HELLO is merely
+ * queued, hello_complete never turns true, and every later request is refused
+ * with NOT_READY. The runtime supervisor relies on session_ready to notice that
+ * and retry, so this invariant must not regress into "open OK means usable". */
+static void test_open_without_hello_has_no_session(void)
+{
+    port_env_t env;
+    locker_device_sink_t sink;
+    locker_device_config_t config;
+    locker_device_t *device = NULL;
+    struct sockaddr_un address;
+    int listener;
+    char path[108];
+
+    port_env_init(&env);
+    sink = port_env_sink(&env);
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_create(&device));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_bind_sink(device, &sink));
+
+    (void)snprintf(path, sizeof(path), "/tmp/locker_s206_silent_%ld.sock", (long)getpid());
+    (void)unlink(path);
+    memset(&address, 0, sizeof(address));
+    address.sun_family = AF_UNIX;
+    (void)snprintf(address.sun_path, sizeof(address.sun_path), "%s", path);
+    listener = socket(AF_UNIX, SOCK_STREAM, 0);
+    TEST_CHECK(listener >= 0);
+    TEST_CHECK(bind(listener, (const struct sockaddr *)&address,
+                    (socklen_t)sizeof(address)) == 0);
+    TEST_CHECK(listen(listener, 1) == 0);
+
+    memset(&config, 0, sizeof(config));
+    /* Simulated mode only to satisfy the /dev prefix rule that real mode needs:
+     * the invariant under test is adapter-level (open returns before HELLO is
+     * answered), not backend-level, and the same code path queues HELLO. */
+    config.simulated = true;
+    config.clock = test_clock_port(&env.clock);
+    (void)snprintf(config.path, sizeof(config.path), "%s", path);
+    (void)snprintf(config.expected_device_id, sizeof(config.expected_device_id),
+                   "01000000000000000000000c");
+
+    TEST_CHECK(!locker_device_session_ready(device));
+    TEST_CHECK(!locker_device_link_lost(device));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_open(device, &config));
+    /* Open succeeded, nothing answered: still no session, and no action may pass. */
+    TEST_CHECK(!locker_device_session_ready(device));
+    TEST_CHECK(!locker_device_link_lost(device));
+    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, locker_device_get_snapshot(device, 5u));
+    TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_close(device));
+    TEST_CHECK(!locker_device_session_ready(device));
+
+    (void)close(listener);
+    (void)unlink(path);
+    locker_device_destroy(device);
     port_env_finish(&env);
 }
 
@@ -2165,6 +2223,7 @@ int main(void)
     test_pending_timeout_and_request_wrap();
     test_real_clock_smoke();
     test_execute_ack_loss_queries_without_replay();
+    test_open_without_hello_has_no_session();
     test_open_and_snapshot();
     test_config_validation();
     test_port_guards();

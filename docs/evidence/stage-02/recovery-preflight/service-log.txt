@@ -1,0 +1,21 @@
+# 第 3 次尝试（通过）：断线 40 s 后插回
+# 启动
+DEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+# 断线约 5 s 后
+device link lost; closing before reopen (lost=1 rd=1 wr=1)
+device reopen ok
+# 线仍断开：重开也建不了会话，按退避重试
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+# 之后日志不再刷新：插回后的重开拿到了 HELLO 应答

@@ -71,8 +71,9 @@ aarch64 静态二进制在板运行，DevicePort 走真实 `/dev/ttyS4`，HTTPS 
 
 - **拔 UART 信号线对 tty 不可见**：实测 120 s 内 `hello` 恒为 2、无 `EIO/POLLHUP`，主机不知道线断过，
   靠请求超时才能发现；只有 USB 串口拔出才会产生链路错误。
-- **设备关闭后无自动重开路径**：`locker_device_open` 只在 `host/runtime/main.c` 启动时调用一次，
-  domain/runtime 都没有 reopen；一旦适配器因超时关闭，恢复需重启服务。属 S2-07「MCU 重启／主机支路断电」范围。
+- **设备关闭后无自动重开路径**（已补，见 `../recovery-preflight/summary.md`）：原实现只在启动时
+  `locker_device_open` 一次，适配器因超时关闭后需重启服务。现已加入守护线程：连续超时判失效 →
+  关闭 → 退避重开 → 3 s 内未建链则继续重试；物理拔线 40 s 实测恢复，`execute_unlock` 全程为 0。
 - 业务借还闭环、真实开锁动作、No-Charge 等属 S2-07/S2-08。
 - 设备当前 `mode=DEGRADED`、`continuity_ok=false`：MCU 侧 Journal 需补账，属真实状态，未用格式化掩盖。
 - RK 的 MAC 为运行时随机本地地址，DHCP 续租可能变址；证书 SAN 绑定了当前 IP，换址需重签。

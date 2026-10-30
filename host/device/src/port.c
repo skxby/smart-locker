@@ -29,6 +29,7 @@
 #include "locker/common/clock.h"
 #include "locker/common/uuid.h"
 #include "locker/device/codec.h"
+#include "locker/device/recovery.h"
 #include "locker/device/transport.h"
 #include "locker/device/wire.h"
 #include "locker_contracts.h"
@@ -100,6 +101,16 @@ struct locker_device {
     bool hello_complete;
     bool reconcile_required;
     bool request_numbers_exhausted;
+    /* A pulled UART wire is invisible to the tty, so the only evidence of a dead
+     * link is a run of unanswered requests. Three consecutive expiries mark the
+     * link lost; any matched reply clears the streak. */
+    bool link_lost;
+    uint32_t expired_streak;
+    /* Liveness of the two workers: if either dies the adapter keeps accepting
+     * frames but nothing expires or answers them, so "silent" would otherwise be
+     * indistinguishable from "healthy". */
+    bool reader_alive;
+    bool writer_alive;
 };
 
 /* Monotonic milliseconds from the injected clock; 0 when the port is unusable
@@ -139,6 +150,10 @@ static void pending_expire(locker_device_t *device)
                 device->expired_request_floor = device->pending[index].request_no;
             }
             device->pending[index].used = false;
+            ++device->expired_streak;
+            if (device->expired_streak >= 3u) {
+                device->link_lost = true;
+            }
         }
     }
 }
@@ -431,6 +446,9 @@ static locker_status_t device_on_frame(void *user, const locker_wire_frame_t *fr
     pending_expire(device);
     matched = !device->reconcile_required &&
               pending_take(device, frame->request_no, request_type, &response.hello.session_id, &pending);
+    if (matched) {
+        device->expired_streak = 0u;
+    }
     if (matched && request_type == 1u && response.hello.result == 0u &&
         !device_identity_matches(device, &response.hello)) {
         locker_uuid_t response_session = response.hello.session_id;
@@ -469,6 +487,9 @@ static void *device_reader_main(void *argument)
     int received;
     bool stop;
 
+    pthread_mutex_lock(&device->lock);
+    device->reader_alive = true;
+    pthread_mutex_unlock(&device->lock);
     for (;;) {
         pthread_mutex_lock(&device->lock);
         stop = device->reader_stop;
@@ -482,10 +503,12 @@ static void *device_reader_main(void *argument)
             (void)device_sink_result(device, LOCKER_STATUS_IO_ERROR);
             break;
         }
+        /* Expire on every pass: a floating RX line keeps returning noise bytes,
+         * so "received == 0" is not a reliable clock for detecting silence. */
+        pthread_mutex_lock(&device->lock);
+        pending_expire(device);
+        pthread_mutex_unlock(&device->lock);
         if (received == 0) {
-            pthread_mutex_lock(&device->lock);
-            pending_expire(device);
-            pthread_mutex_unlock(&device->lock);
             continue;
         }
         if (locker_wire_stream_feed(&device->stream, buffer, (size_t)received) !=
@@ -493,6 +516,9 @@ static void *device_reader_main(void *argument)
             break;
         }
     }
+    pthread_mutex_lock(&device->lock);
+    device->reader_alive = false;
+    pthread_mutex_unlock(&device->lock);
     return NULL;
 }
 
@@ -502,6 +528,9 @@ static void *device_reader_main(void *argument)
 static void *device_writer_main(void *argument)
 {
     locker_device_t *device = (locker_device_t *)argument;
+    pthread_mutex_lock(&device->lock);
+    device->writer_alive = true;
+    pthread_mutex_unlock(&device->lock);
     for (;;) {
         transmit_frame_t frame;
         bool pending = false;
@@ -533,9 +562,17 @@ static void *device_writer_main(void *argument)
         if (locker_device_transport_write(&device->transport,
                                            frame.bytes, frame.length) != LOCKER_STATUS_OK) {
             (void)device_sink_result(device, LOCKER_STATUS_IO_ERROR);
+            /* A dead writer must be visible as a lost link, otherwise every later
+             * request is queued for ever and the cabinet looks silently healthy. */
+            pthread_mutex_lock(&device->lock);
+            device->link_lost = true;
+            pthread_mutex_unlock(&device->lock);
             break;
         }
     }
+    pthread_mutex_lock(&device->lock);
+    device->writer_alive = false;
+    pthread_mutex_unlock(&device->lock);
     return NULL;
 }
 
@@ -682,6 +719,10 @@ locker_status_t locker_device_open(locker_device_t *device, const locker_device_
     device->expired_request_floor = 0u;
     device->request_numbers_exhausted = false;
     device->reconcile_required = false;
+    device->link_lost = false;
+    device->expired_streak = 0u;
+    device->reader_alive = false;
+    device->writer_alive = false;
     device->hello_complete = false;
     device->device_mode = (uint8_t)LOCKER_DEVICE_MODE_RECONCILING;
     device->reader_stop = false;
@@ -1063,4 +1104,48 @@ void locker_device_destroy(locker_device_t *device)
     pthread_mutex_destroy(&device->write_lock);
     pthread_mutex_destroy(&device->lock);
     free(device);
+}
+
+bool locker_device_link_lost(const locker_device_t *device)
+{
+    return device != NULL && device->created && device->link_lost;
+}
+
+bool locker_device_session_ready(locker_device_t *device)
+{
+    bool ready;
+
+    if (device == NULL || !device->created) {
+        return false;
+    }
+    pthread_mutex_lock(&device->lock);
+    ready = device->opened && device->hello_complete;
+    pthread_mutex_unlock(&device->lock);
+    return ready;
+}
+
+bool locker_device_diagnose(locker_device_t *device, locker_device_diagnosis_t *out)
+{
+    unsigned index;
+    unsigned pending_used = 0u;
+
+    if (device == NULL || !device->created || out == NULL) {
+        return false;
+    }
+    pthread_mutex_lock(&device->lock);
+    for (index = 0u; index < LOCKER_DEVICE_PENDING_MAX; ++index) {
+        if (device->pending[index].used) {
+            ++pending_used;
+        }
+    }
+    out->opened = device->opened;
+    out->hello_complete = device->hello_complete;
+    out->link_lost = device->link_lost;
+    out->writer_alive = device->writer_alive;
+    out->reader_alive = device->reader_alive;
+    out->expired_streak = device->expired_streak;
+    out->pending_used = pending_used;
+    out->transmit_used = device->transmit_count;
+    pthread_mutex_unlock(&device->lock);
+    return true;
 }

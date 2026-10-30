@@ -1,0 +1,17 @@
+# LOCKER_DEVICE_TRACE=1 每秒一行；此处为断线末尾与恢复后的片段
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+
+# 第 2 次尝试（失败：判断顺序错误）的断线片段——lost 已置位但无恢复动作
+dev open=1 hello=1 lost=1 rd=1 wr=1 streak=54 pend=5 tx=0
+dev open=1 hello=1 lost=1 rd=1 wr=1 streak=63 pend=5 tx=0
+dev open=1 hello=1 lost=1 rd=1 wr=1 streak=0 pend=1 tx=0
