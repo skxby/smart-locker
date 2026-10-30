@@ -1,0 +1,9 @@
+[ 21%] Built target journal_littlefs
+[ 42%] Built target test_flash
+[ 50%] Building C object CMakeFiles/test_journal.dir/home/%USER%/locker-workspace/S2-04/src/firmware/journal/journal.c.o
+[ 57%] Building C object CMakeFiles/test_journal_concurrency.dir/home/%USER%/locker-workspace/S2-04/src/firmware/journal/journal.c.o
+[ 64%] Linking C executable test_journal_concurrency
+[ 71%] Building C object CMakeFiles/test_journal.dir/test_journal.c.o
+[ 85%] Built target test_journal_concurrency
+[ 92%] Linking C executable test_journal
+[100%] Built target test_journal

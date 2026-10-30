@@ -1,0 +1,1 @@
+{"status": "PASS", "flash_bytes_backed_up": 16777216, "same_uid_and_epoch": true, "original_three_events_byte_identical": true, "physical_power_cut_position": "after committed intent/watermark/ACK", "clean_and_unclean_recovery_checked": true, "fault_latch_not_cleared": true, "lock_hard_cutoff_tested": false, "physical_mid_program_power_cut_tested": false}

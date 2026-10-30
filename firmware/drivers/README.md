@@ -12,7 +12,7 @@
 - PeripheralStorage是RC522操作的唯一调用者。驱动只返回UID事实，覆盖ISO14443A三级级联4/7/10字节，检查BCC、SAK CRC和级联一致性；碰撞、超时、错误或截断清空结果。多卡冲突拒绝，不尝试猜选UID。读取不调用Control、Journal、账本或锁入口。
 - SPI1为板载Flash（PA4–7），SPI2为RC522（PB12–15、PE3复位）。各总线独立FreeRTOS互斥锁；取锁不等待，争用返回BUSY；ISR/调度器启动前拒绝。片选先预置高再改输出，所有HAL传输返回路径均拉高片选并释放锁。单次长度1–512字节，timeout_us接收1000–50000，HAL超时向下取整为毫秒，实际截止粒度为HAL tick并可能有调度延迟；不作为锁硬截止。
 - HSE目标SPI1/2分别为656.25/328.125kHz；HSI目标均125kHz，Mode0、8bit、MSB。超时/总线事务计数和最大耗时以毫秒诊断，不宣称微秒实测精度。
-- Flash只读JEDEC(9F)和STATUS(05)，不写使能、不擦写、不挂载；每条命令后即释放总线，不在busy状态持锁等待。真实擦写busy与读卡延迟组合试验须由S2-04补证。本卡不把读到WIP=0写成busy试验PASS。
+- S202的Storage目标只读Flash JEDEC(9F)和STATUS(05)，不写使能/擦写/挂载。S204的[W25Q128驱动](flash/README.md)供真实littlefs块设备使用，每条命令返回即释放CS/总线，busy等待在锁外；完整实测见Journal报告。独立S204板测不运行RC522，真实busy与读卡混合调度/延迟在四任务装配与基础门禁前补证，不把只读WIP=0当成通过。
 
 ## 板上诊断
 

@@ -1,0 +1,60 @@
+{
+  "before": "HALTED",
+  "regs": {
+    "pc": "0x8000188",
+    "lr": "0xffffffff",
+    "sp": "0x20020000",
+    "psp": "0x0",
+    "xpsr": "0x1000000",
+    "control": "0x0",
+    "primask": "0x0",
+    "basepri": "0x0"
+  },
+  "diag": [
+    2,
+    0,
+    0,
+    15679512,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "values": {
+    "s204_fault": 0,
+    "s204_command": 3,
+    "uwTick": 211,
+    "xTickCount": 209,
+    "SystemCoreClock": 3735941133
+  },
+  "faults": {
+    "0xe000ed28": "0x0",
+    "0xe000ed2c": "0x0",
+    "0xe000ed34": "0xe000edf8",
+    "0xe000ed38": "0xe000edf8"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "firmware/journal/journal.c": "dd76f9b73460b2d2a3013eec7cd0c382001aa9365509e3cf5e9b48d72dee7c94",
+  "firmware/journal/journal.h": "9353d7d0fc2568ba3e03d5645e28cb1e12d242648e9660a89eda29fb6678b845",
+  "firmware/drivers/flash/w25q128.c": "12c088ea394a20c9746e995d8c573a633849db208627ad5440ed38b649edd3c7",
+  "firmware/drivers/flash/w25q128.h": "2dc5726f85de9f6bb48d6af0859b292575335f9dfad63c54e687a90071ea8fd6",
+  "contracts/include/locker_contracts.h": "b1b8fe4bad199ad29cecf95f63183685412cd5b5df2e898579459ae37e8be966",
+  "tests/firmware/journal/CMakeLists.txt": "72b784819c5b279712a13a9703470adfff4b5a9221c364a030e048939e55a511",
+  "tests/firmware/journal/flash-test.cmake": "a0b5c289a5dc1e735eb5efda4802bca33b105693365b40496744677739797679",
+  "tests/firmware/journal/nor_fixture.c": "63a99a964de8ff2d3ad0bd98b95e5183ed9b776af5f5754ad41c139e48165a64",
+  "tests/firmware/journal/nor_fixture.h": "4df7f760f57adb06b4389d97c4fad8df7189966e13e1651e99382779b6a81797",
+  "tests/firmware/journal/test_concurrency.c": "9644a3ba39c5ab1b3f410a7f35bc849ad828f831423c5c8bb6c72bdb9911080b",
+  "tests/firmware/journal/test_flash.c": "1a27f91397204e511a87ba18dde8de45384b458863e1bb0da54833539aec3c62",
+  "tests/firmware/journal/test_journal.c": "845f4581f87d1907696be60ed7dde76840ef1e1746906eea3326b18cbc997c04",
+  "firmware/third_party/littlefs/lfs.c": "41b7aa8d6e1601ef26129399cc2e5988e736c82a4b89e31183be787722aebf07",
+  "firmware/third_party/littlefs/lfs.h": "51c8215142691c2c177ef757ad09c95d96d75e5260eb403368d59ed14d5f11c0",
+  "firmware/third_party/littlefs/lfs_util.c": "f2fbde533670560434bd9f5a547174cc7c5a4670a02c47b4bd85180dced8b2ec",
+  "firmware/third_party/littlefs/lfs_util.h": "548d46aa524dc7449e16739286c1a422a52f9de727ff0be0c2ffc5593f5ca981",
+  "firmware/third_party/littlefs/LICENSE.md": "0cb4ff1daf5fdc1359c6a6ee3116092f08fc100c9d58b1b77ab17bfd801f856d"
+}

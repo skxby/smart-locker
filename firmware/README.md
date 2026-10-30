@@ -32,7 +32,7 @@ python -B scripts/generate_keil_environment.py
 | HAL | 本地HAL1.8.5只读复制；配置HAL核心/RCC/PWR/Flash/GPIO/DMA/ADC/SPI/UART/TIM/IWDG，未初始化外接引脚 |
 | FreeRTOS | V11.2.0固定提交，RVDS/ARM_CM4F、heap_4、16KB堆；SVC/PendSV/SysTick归内核 |
 | HAL时间基准 | TIM6 1ms独立时基；TIM6_DAC IRQ已实现，后续BSP不得重复占用TIM6 |
-| littlefs | v2.11.2固定提交，源码编译、无malloc/stdio诊断；实际mount/掉电恢复未做 |
+| littlefs | v2.11.2固定提交，源码编译、无malloc/stdio诊断；环境目标不挂载；S2-04真实Journal/掉电结果见本卡报告 |
 | 下载入口 | 预选本机ST-Link DLL、1MB Flash算法；不自动下载。接板后在Debug Settings核对SWD/频率/芯片ID与实际探针 |
 
 FreeRTOS中断阈值为逻辑优先级5（编码80），最低15（编码240）；ARMCC5汇编使用无U后缀的数值。调用FromISR的外设优先级必须满足内核约束，不把本配置当所有外设中断已分配。HAL的USE_RTOS保持0。
@@ -53,7 +53,7 @@ S2-01安全应用构建命令为 `python -B scripts/build_firmware.py --target s
 
 ## 工具与硬件边界
 
-当前工具报告MDK-Lite，官方限制32KB程序容量；本环境小程序能构建不代表后续完整柜体固件永远能在Lite链接。超限时使用合法完整版或另配GNU Arm工具链，不缩减正式功能/保护逻辑，也不修改许可。本轮尝试访问Arm GNU下载站证书校验失败，未关闭TLS校验、未安装替代工具链；GNU构建当前不作为可运行入口。
+当前工具报告MDK-Lite，官方限制32KB程序容量；本环境小程序能构建不代表后续完整柜体固件永远能在Lite链接。超限时使用合法完整版或另配GNU Arm工具链，不缩减正式功能/保护逻辑，也不修改许可。S2-04完整Journal目标已使用合法的xPack GNU Arm工具链建立独立构建入口，版本、归档SHA和CMSIS补充依赖见[GNU构建说明](../deployment/firmware/gnu-toolchain.md)；工具链放在用户正式工具目录，不改原HAL、PATH或注册表。ARMCC环境及既有目标保持原构建入口。
 
 板卡型号、HSE8MHz/W25Q128来自[官方高配资源表](https://wiki.lckfb.com/zh-hans/fdb/skystar.html)与[商品型号](https://www.lcsc.com/product-detail/C32710423.html)。用户已于2026-10-27报告器件全部到货，板型/电压/连接/调度实测以[到货记录](../docs/evidence/hardware-receipt-2026-10-27/summary.md)为准，目前未登记通过证据；不将筑基底板外设/引脚误当核心板板载资源。SWD排针需焊接、Type-C不是独立调试器/VCP；SPI实例、CS引脚、锁TIM输出和供电电平仍取实物与原理图证据，硬件profile维持UNVERIFIED。
 
@@ -69,6 +69,10 @@ S2-01安全应用构建命令为 `python -B scripts/build_firmware.py --target s
 
 UART分支为USART2/AF7、PD5 TX/PD6 RX、115200 8N1；RX DMA1 Stream5 Channel4循环2048B，TX Stream6 Channel4普通模式，UART/DMA逻辑中断优先级5。ISR只采样DMA位置/通知；Communication每5ms复制并核查覆盖后解析，170ms失调度、RX覆盖或硬件错误撤销session。TX四槽有界，DMA完成或成功abort前不归还缓冲。协议直接复用已有纯C wire/codec，11类请求分派与后续回调约束见[传输说明](transport/README.md)。Journal/Control未装配，诊断HELLO以外请求NOT_READY，不产生开锁动作。
 
-两时钟默认目标ROM 16540/17948 B、RAM 23320 B；UART编译检查ROM 22296/23704 B、RAM 27704 B。所有数据仅主SRAM，未使用CCM；16KiB RTOS堆，Communication 1024words/优先级2，其余任务768words/优先级1。HSE启用目标已烧录，RK UART4经ADuM双向实测通过，11,103字节完整消费、TX满10次与128请求中10个缺失响应一致，HAL错误/RX覆盖均0。默认禁用目标和HSI仍仅编译；实际栈高水位未配置。用户确认近端去耦、V1改MCU侧3V3、V2实测3.3V及UART4方向，完整profile仍UNVERIFIED，详见[本卡证据](../docs/evidence/stage-02/S2-03/summary.md)。S2-04未开始。
+两时钟默认目标ROM 16540/17948 B、RAM 23320 B；UART编译检查ROM 22296/23704 B、RAM 27704 B。所有数据仅主SRAM，未使用CCM；16KiB RTOS堆，Communication 1024words/优先级2，其余任务768words/优先级1。HSE启用目标已烧录，RK UART4经ADuM双向实测通过，11,103字节完整消费、TX满10次与128请求中10个缺失响应一致，HAL错误/RX覆盖均0。默认禁用目标和HSI仍仅编译；实际栈高水位未配置。用户确认近端去耦、V1改MCU侧3V3、V2实测3.3V及UART4方向，完整profile仍UNVERIFIED，详见[本卡证据](../docs/evidence/stage-02/S2-03/summary.md)。S2-04独立Journal目标已交付；当前板上为S204诊断镜像，UART/Control未运行，Journal故障诊断epoch保留且已清洁关闭，详见下节。
 
 对已核对隔离供电/方向的本板，`python -B scripts/build_firmware.py --target s203 --clock hse8_168 --enable-uart`构建上板验证镜像到`build/firmware-s203-enabled/hse8_168/`。该开关不能与`--check-uart-build`合用，不改变profile/锁资格；显式烧录使用本卡受保护工具及镜像/旧Flash守卫。板上保留的是该启用镜像，Journal/Control仍无后端且拒绝业务动作。真实测试只发送HELLO/GET_SNAPSHOT；11类分派与动作拒绝由正式C回归覆盖。RK驱动本次对ttyS4采用中断模式，MCU侧为循环DMA；未修改RK设备树或部署业务服务，后续部署仍属S2-06。
+
+## S2-04 Journal
+
+真实W25Q128/littlefs与最小Journal入口为[journal/README](journal/README.md)，独立SWD板测见[journal/board-validation.md](journal/board-validation.md)。完整littlefs链接超过当前MDK-Lite32KiB容量，使用[GNU Arm构建](../deployment/firmware/gnu-toolchain.md)，不删减持久化或保护。GNU工具链放在用户正式工具目录，不改全局PATH或原HAL。当前板测目标与业务应用分开，默认只读核对Flash，不自动挂载/format，不运行UART/Control或驱动锁；本卡软件与实物结果见[S2-04报告](../docs/evidence/stage-02/S2-04/summary.md)，S2-05装配尚未开发。

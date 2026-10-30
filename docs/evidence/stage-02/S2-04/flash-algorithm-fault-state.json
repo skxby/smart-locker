@@ -1,0 +1,24 @@
+{
+  "state": "HALTED",
+  "registers": {
+    "pc": "0x80001f8",
+    "sp": "0x2001ffe0",
+    "msp": "0x2001ffe0",
+    "psp": "0x2001f690",
+    "control": "0x0",
+    "primask": "0x1",
+    "basepri": "0x0",
+    "faultmask": "0x0",
+    "xpsr": "0x41000003"
+  },
+  "system": {
+    "0xe000ed04": "0x446803",
+    "0xe000ed08": "0x8000000",
+    "0xe000ed24": "0x0",
+    "0xe000ed28": "0x400",
+    "0xe000ed2c": "0x40000000",
+    "0xe000ed34": "0xe000edf8",
+    "0xe000ed38": "0xe000edf8",
+    "0xe000ed88": "0xf00000"
+  }
+}

@@ -1,0 +1,18 @@
+[ 14%] Building C object CMakeFiles/journal_littlefs.dir/home/%USER%/locker-workspace/S2-04/src/firmware/third_party/littlefs/lfs.c.o
+[ 14%] Building C object CMakeFiles/test_flash.dir/test_flash.c.o
+[ 21%] Building C object CMakeFiles/test_flash.dir/home/%USER%/locker-workspace/S2-04/src/firmware/drivers/flash/w25q128.c.o
+[ 28%] Linking C executable test_flash
+[ 28%] Built target test_flash
+[ 35%] Building C object CMakeFiles/journal_littlefs.dir/home/%USER%/locker-workspace/S2-04/src/firmware/third_party/littlefs/lfs_util.c.o
+[ 42%] Linking C static library libjournal_littlefs.a
+[ 42%] Built target journal_littlefs
+[ 50%] Building C object CMakeFiles/test_journal_concurrency.dir/test_concurrency.c.o
+[ 57%] Building C object CMakeFiles/test_journal.dir/test_journal.c.o
+[ 64%] Building C object CMakeFiles/test_journal_concurrency.dir/nor_fixture.c.o
+[ 71%] Building C object CMakeFiles/test_journal.dir/nor_fixture.c.o
+[ 78%] Building C object CMakeFiles/test_journal_concurrency.dir/home/%USER%/locker-workspace/S2-04/src/firmware/journal/journal.c.o
+[ 85%] Building C object CMakeFiles/test_journal.dir/home/%USER%/locker-workspace/S2-04/src/firmware/journal/journal.c.o
+[ 92%] Linking C executable test_journal_concurrency
+[ 92%] Built target test_journal_concurrency
+[100%] Linking C executable test_journal
+[100%] Built target test_journal

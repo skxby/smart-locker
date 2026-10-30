@@ -1,0 +1,77 @@
+Test project /home/%USER%/locker-workspace/S1-07/batches/s107-matrix01/build-debug
+      Start  1: common.test_bounded_queue
+ 1/36 Test  #1: common.test_bounded_queue ................   Passed    0.00 sec
+      Start  2: common.test_build_info
+ 2/36 Test  #2: common.test_build_info ...................   Passed    0.00 sec
+      Start  3: common.test_clock
+ 3/36 Test  #3: common.test_clock ........................   Passed    0.02 sec
+      Start  4: common.test_log
+ 4/36 Test  #4: common.test_log ..........................   Passed    0.00 sec
+      Start  5: common.test_numeric
+ 5/36 Test  #5: common.test_numeric ......................   Passed    0.00 sec
+      Start  6: common.test_uuid
+ 6/36 Test  #6: common.test_uuid .........................   Passed    0.00 sec
+      Start  7: storage.test_event_key
+ 7/36 Test  #7: storage.test_event_key ...................   Passed    0.00 sec
+      Start  8: storage.test_regex
+ 8/36 Test  #8: storage.test_regex .......................   Passed    0.00 sec
+      Start  9: storage.test_u64
+ 9/36 Test  #9: storage.test_u64 .........................   Passed    0.00 sec
+      Start 10: storage.test_schema
+10/36 Test #10: storage.test_schema ......................   Passed    0.00 sec
+      Start 11: storage.test_repository
+11/36 Test #11: storage.test_repository ..................   Passed    0.17 sec
+      Start 12: storage.schema_source_drift
+12/36 Test #12: storage.schema_source_drift ..............   Passed    0.05 sec
+      Start 13: device.test_codec
+13/36 Test #13: device.test_codec ........................   Passed    0.00 sec
+      Start 14: device.test_wire
+14/36 Test #14: device.test_wire .........................   Passed    0.00 sec
+      Start 15: device.test_sim_journal
+15/36 Test #15: device.test_sim_journal ..................   Passed    0.06 sec
+      Start 16: device.test_sim_protocol
+16/36 Test #16: device.test_sim_protocol .................   Passed    0.05 sec
+      Start 17: domain.test_domain_text
+17/36 Test #17: domain.test_domain_text ..................   Passed    0.00 sec
+      Start 18: domain.test_domain_json
+18/36 Test #18: domain.test_domain_json ..................   Passed    0.00 sec
+      Start 19: domain.test_domain_repo
+19/36 Test #19: domain.test_domain_repo ..................   Passed    0.00 sec
+      Start 20: domain.test_domain_state
+20/36 Test #20: domain.test_domain_state .................   Passed    0.00 sec
+      Start 21: domain.test_domain_device
+21/36 Test #21: domain.test_domain_device ................   Passed    0.01 sec
+      Start 22: domain.test_domain_commands
+22/36 Test #22: domain.test_domain_commands ..............   Passed    0.01 sec
+      Start 23: domain.test_domain_core
+23/36 Test #23: domain.test_domain_core ..................   Passed    0.03 sec
+      Start 24: contract.device.test_golden_frames
+24/36 Test #24: contract.device.test_golden_frames .......   Passed    0.00 sec
+      Start 25: contract.device.test_device_port
+25/36 Test #25: contract.device.test_device_port .........   Passed    7.02 sec
+      Start 26: contract.device.daemon_smoke
+26/36 Test #26: contract.device.daemon_smoke .............   Passed    3.58 sec
+      Start 27: integration.test_core_interrupt_matrix
+27/36 Test #27: integration.test_core_interrupt_matrix ...   Passed   10.56 sec
+      Start 28: network.pinned_dependencies
+28/36 Test #28: network.pinned_dependencies ..............   Passed    0.15 sec
+      Start 29: network.events
+29/36 Test #29: network.events ...........................   Passed    0.00 sec
+      Start 30: network.core_auth
+30/36 Test #30: network.core_auth ........................   Passed    0.14 sec
+      Start 31: network.auth_repository
+31/36 Test #31: network.auth_repository ..................   Passed    0.11 sec
+      Start 32: network.https_sessions
+32/36 Test #32: network.https_sessions ...................   Passed    7.36 sec
+      Start 33: network.https_flow
+33/36 Test #33: network.https_flow .......................   Passed    6.84 sec
+      Start 34: runtime.health
+34/36 Test #34: runtime.health ...........................   Passed    0.00 sec
+      Start 35: runtime.lifecycle
+35/36 Test #35: runtime.lifecycle ........................   Passed   12.10 sec
+      Start 36: integration.stage_gate_process
+36/36 Test #36: integration.stage_gate_process ...........   Passed   14.05 sec
+
+100% tests passed, 0 tests failed out of 36
+
+Total Test time (real) =  62.38 sec

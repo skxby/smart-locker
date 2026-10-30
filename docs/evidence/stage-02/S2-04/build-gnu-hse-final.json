@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "application": "s204",
+  "target": "STM32F407VGTx",
+  "clock_profile": "hse8_168",
+  "compiler": "arm-none-eabi-gcc.exe (xPack GNU Arm Embedded GCC x86_64) 15.2.1 20251203",
+  "toolchain_root": "C:\\Users\\%USER%\\Documents\\locker-hardware-tools\\xpack-arm-none-eabi-gcc-15.2.1-1.1",
+  "translation_units": 39,
+  "dependencies_hashed": 254,
+  "supplement_files_hashed": 2,
+  "memory": {
+    "rom_bytes": 34924,
+    "ram_bytes": 60064
+  },
+  "image_sha256": "0a78dfd79d410623b44bf42d4381aa4a31b78490bb2768668c42a5d1b99eaf6b",
+  "compile_link_only": true,
+  "hardware_tested": false,
+  "uart_enabled": false,
+  "cabinet_business_implemented": false
+}

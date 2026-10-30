@@ -1,0 +1,3 @@
+debug-build exit=0
+debug-ctest exit=0
+host-ctest exit=0

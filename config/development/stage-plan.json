@@ -3,7 +3,7 @@
   "contract_version": "0.2.1",
   "activity": "IMPLEMENTATION",
   "active_task": null,
-  "recommended_next": "S2-04",
+  "recommended_next": "S2-05",
   "execution_policy": "ONE_CARD_AT_A_TIME",
   "stages": [
     {
@@ -292,8 +292,8 @@
         "firmware/drivers/flash/"
       ],
       "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
-      "status": "NOT_STARTED",
-      "report": null
+      "status": "DONE",
+      "report": "docs/evidence/stage-02/S2-04/summary.md"
     },
     {
       "id": "S2-05",

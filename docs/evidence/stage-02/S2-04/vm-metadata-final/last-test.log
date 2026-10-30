@@ -1,0 +1,55 @@
+Start testing: Oct 30 09:41 CST
+----------------------------------------------------------
+1/3 Testing: firmware.journal_transactions_and_powercuts
+1/3 Test: firmware.journal_transactions_and_powercuts
+Command: "/home/%USER%/locker-workspace/build/S2-04/debug-final/test_journal"
+Directory: /home/%USER%/locker-workspace/build/S2-04/debug-final
+"firmware.journal_transactions_and_powercuts" start time: Oct 30 09:41 CST
+Output:
+----------------------------------------------------------
+intent power-cut positions checked: 35
+management kind 0 power-cut positions checked: 37
+management kind 1 power-cut positions checked: 37
+management kind 2 power-cut positions checked: 35
+Journal littlefs software fixture checks passed; hardware NOT_RUN
+<end of output>
+Test time =   0.39 sec
+----------------------------------------------------------
+Test Passed.
+"firmware.journal_transactions_and_powercuts" end time: Oct 30 09:41 CST
+"firmware.journal_transactions_and_powercuts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/3 Testing: firmware.journal_concurrent_owner
+2/3 Test: firmware.journal_concurrent_owner
+Command: "/home/%USER%/locker-workspace/build/S2-04/debug-final/test_journal_concurrency"
+Directory: /home/%USER%/locker-workspace/build/S2-04/debug-final
+"firmware.journal_concurrent_owner" start time: Oct 30 09:41 CST
+Output:
+----------------------------------------------------------
+Two pthread producers, FIFO read/ACK, and one Storage owner passed; hardware NOT_RUN
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"firmware.journal_concurrent_owner" end time: Oct 30 09:41 CST
+"firmware.journal_concurrent_owner" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/3 Testing: firmware.flash_commands_and_failures
+3/3 Test: firmware.flash_commands_and_failures
+Command: "/home/%USER%/locker-workspace/build/S2-04/debug-final/test_flash"
+Directory: /home/%USER%/locker-workspace/build/S2-04/debug-final
+"firmware.flash_commands_and_failures" start time: Oct 30 09:41 CST
+Output:
+----------------------------------------------------------
+flash protocol, geometry, page split, bounds, readback, protection, timeout and failure latch PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"firmware.flash_commands_and_failures" end time: Oct 30 09:41 CST
+"firmware.flash_commands_and_failures" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 30 09:41 CST

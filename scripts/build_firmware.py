@@ -22,7 +22,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--keil-root', default='E:/Keil5')
     ap.add_argument('--clock', choices=['hsi16','hse8_168'], default='hsi16')
-    ap.add_argument('--target', choices=['environment','s201','s202','s203'], default='environment')
+    ap.add_argument('--target', choices=['environment','s201','s202','s203','s204'], default='environment')
     ap.add_argument('--check-adc-build', action='store_true', help='Compile-only S202 ADC branch in an isolated output directory')
     ap.add_argument('--check-uart-build', action='store_true', help='Compile-only S203 qualified UART branch; never implies wiring qualification')
     ap.add_argument('--enable-uart', action='store_true', help='S203 board validation only; requires confirmed isolation wiring and supplies')
@@ -60,16 +60,20 @@ def main():
             raise SystemExit('Dependency hash changed: ' + relative)
     version = run([tools / 'armcc.exe','--vsn'])
     flags = ['--cpu','Cortex-M4.fp','--fpu','FPv4-SP','--c99','--split_sections','--library_type=microlib','-O2','-g']
+    if args.target == 's204': flags += ['-Ospace']
     defines = DEFINES + (['ENV_HSE8_168'] if args.clock == 'hse8_168' else [])
-    if args.target in ('s202', 's203'): defines += ['LOCKER_S202']
+    if args.target in ('s202', 's203', 's204'): defines += ['LOCKER_S202']
     if args.target == 's203': defines += ['LOCKER_S203']
     if args.enable_uart: defines += ['BOARD_UART_QUALIFIED=1']
     if args.check_uart_build: defines += ['BOARD_UART_QUALIFIED=1']
     if args.check_adc_build: defines += ['BOARD_ADC_QUALIFIED=1']
-    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','drivers','tasks','transport','../contracts/include','../host/device/include'])]
+    flags += ['-D' + item for item in defines] + ['-I' + item for item in (INCLUDES + ['board','drivers','drivers/flash','journal','tasks','transport','../contracts/include','../host/device/include'])]
     sources = SOURCES if args.target == 'environment' else ['app/main.c','board/board.c','hal/timebase_tim6.c', *SOURCES[2:]]
-    if args.target in ('s202', 's203'): sources += ['board/peripherals.c','drivers/inputs.c','drivers/rc522.c']
+    if args.target in ('s202', 's203', 's204'): sources += ['board/peripherals.c','drivers/inputs.c','drivers/rc522.c']
     if args.target == 's203': sources += ['tasks/communication.c','transport/transport.c','../host/device/src/wire.c','../host/device/src/codec.c']
+    if args.target == 's204':
+        sources[0] = 'journal/validation_main.c'
+        sources += ['journal/board_validation.c','journal/journal.c','drivers/flash/w25q128.c']
     objects = []
     for index, source in enumerate(sources):
         obj = output / (f'{index:02d}_' + Path(source).stem + '.o')

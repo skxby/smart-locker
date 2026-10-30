@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "cmsis_tag": "5.6.0",
+  "cmsis_commit": "b5f0603d6a584d1724d952fd8b0737458b90d62b",
+  "license": "Apache-2.0",
+  "files": [
+    {
+      "path": "firmware/hal/cmsis-gcc/cmsis_gcc.h",
+      "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_5/b5f0603d6a584d1724d952fd8b0737458b90d62b/CMSIS/Core/Include/cmsis_gcc.h",
+      "sha256": "1fba3e120e5c0a439e0982bd37fae04bd033dbd14187428214462a1707c56252"
+    },
+    {
+      "path": "firmware/hal/cmsis-gcc/LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_5/b5f0603d6a584d1724d952fd8b0737458b90d62b/LICENSE.txt",
+      "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+    }
+  ],
+  "toolchain": {
+    "repository": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack",
+    "release": "v15.2.1-1.1",
+    "archive_url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v15.2.1-1.1/xpack-arm-none-eabi-gcc-15.2.1-1.1-win32-x64.zip",
+    "archive_sha256": "bae6a3d1667697ce750c3b13d6d26d80973ecedc2cc87bf04869e83447fd93ea",
+    "install_policy": "External installation supplied by operator; build never downloads or changes PATH"
+  },
+  "reuse": {
+    "freertos_commit": "0adc196d4bd52a2d91102b525b0aafc1e14a2386",
+    "paths": {
+      "firmware/third_party/freertos/portable/GCC/ARM_CM4F/port.c": "1e7e155953ba7689af5244547438c76916f5973f103b5c09f3b75dee83e2146f",
+      "firmware/third_party/freertos/portable/GCC/ARM_CM4F/portmacro.h": "d572c37c0cf64ad8be77f0c7162e4a1bee89048c77c4327b62b9b62c37ce7b1d"
+    },
+    "verification": "Original dependencies.lock.json checked on every build; no duplicate FreeRTOS port"
+  }
+}

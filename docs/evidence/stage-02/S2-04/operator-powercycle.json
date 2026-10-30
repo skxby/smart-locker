@@ -1,0 +1,10 @@
+{
+  "source": "Explicit human reply in this chat",
+  "operator_reply": "已断电，灯已灭，已重接",
+  "requested_off_seconds_minimum": 3,
+  "position": "after transactions-before-cut.json: committed diagnostic intent+watermark+events and persistent ACK through boot1/seq3; no write workload in flight",
+  "mcu_power_led_extinguished_reported": true,
+  "lock_and_mos_12v_disconnected": "confirmed by user before board tests; requested to remain disconnected",
+  "recorded_at": "2026-10-30T09:49:09.689228+08:00",
+  "precision": "Post-commit boundary. No claim of sub-command timing or oscilloscope power-rail measurement."
+}

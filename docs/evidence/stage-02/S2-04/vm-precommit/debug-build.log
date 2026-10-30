@@ -1,0 +1,4 @@
+[ 35%] Built target test_flash
+[ 42%] Built target journal_littlefs
+[100%] Built target test_journal_concurrency
+[100%] Built target test_journal
