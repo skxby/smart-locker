@@ -1,0 +1,51 @@
+START 2026-10-28T12:23:36.7362722+08:00
+INFO:pyocd.board.board:Target type is stm32f407vgtx
+INFO:pyocd.coresight.dap:DP IDR = 0x2ba01477 (v1 rev2)
+INFO:pyocd.coresight.discovery:AHB-AP#0 IDR = 0x24770011 (AHB-AP var1 rev2)
+INFO:pyocd.coresight.rom_table:AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00ff000 (designer=020:ST part=411)
+INFO:pyocd.coresight.rom_table:[0]<e000e000:SCS v7-M class=14 designer=43b:Arm part=00c>
+INFO:pyocd.coresight.rom_table:[1]<e0001000:DWT v7-M class=14 designer=43b:Arm part=002>
+INFO:pyocd.coresight.rom_table:[2]<e0002000:FPB v7-M class=14 designer=43b:Arm part=003>
+INFO:pyocd.coresight.rom_table:[3]<e0000000:ITM v7-M class=14 designer=43b:Arm part=001>
+INFO:pyocd.coresight.rom_table:[4]<e0040000:TPIU M4 class=9 designer=43b:Arm part=9a1 devtype=11 archid=0000 devid=ca1:0:0>
+INFO:pyocd.coresight.rom_table:[5]<e0041000:ETM M4 class=9 designer=43b:Arm part=925 devtype=13 archid=0000 devid=0:0:0>
+INFO:pyocd.coresight.cortex_m:CPU core #0: Cortex-M4 r0p1, v7.0-M architecture
+INFO:pyocd.coresight.cortex_m:  Extensions: [DSP, FPU, FPU_V4, MPU]
+INFO:pyocd.coresight.cortex_m:  FPU present: FPv4-SP-D16-M
+INFO:pyocd.coresight.dwt:4 hardware watchpoints
+INFO:pyocd.coresight.fpb:6 hardware breakpoints, 2 literal comparators
+START_PROGRAM: Env_hsi16, sector erase only, no automatic unlock
+INFO:pyocd.flash.loader:Erasing...
+ERROR:pyocd.flash.flash:IPSR should be 0 but is 0x3
+ERROR:pyocd.flash.flash:Stack pointer should be 0x2001f6b0 but is 0x2001f618
+ERROR:pyocd.flash.flash:PC should be 0x2001feb4 but is 0x0
+RESULT FAIL
+Traceback (most recent call last):
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 118, in <module>
+    main()
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 67, in main
+    trust_crc=False, keep_unwritten=False).program(str(IMAGE))
+                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\file_programmer.py", line 199, in program
+    self.commit()
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\file_programmer.py", line 173, in commit
+    self._loader.commit()
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\loader.py", line 299, in commit
+    builder.erase(chip_erase=self._chip_erase,
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\builder.py", line 536, in erase
+    self._erase_sectors(progress_cb)
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\builder.py", line 874, in _erase_sectors
+    self.flash.erase_sector(addr)
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\flash.py", line 377, in erase_sector
+    result = self._call_function_and_wait(self.flash_algo['pc_erase_sector'], address,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\flash.py", line 684, in _call_function_and_wait
+    return self.wait_for_completion(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\flash.py", line 666, in wait_for_completion
+    self._flash_algo_debug_check()
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\flash.py", line 632, in _flash_algo_debug_check
+    assert not error
+           ^^^^^^^^^
+AssertionError
+EXIT 1 END 2026-10-28T12:23:54.7640863+08:00

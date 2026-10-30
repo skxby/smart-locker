@@ -1,0 +1,16 @@
+{
+  "algorithm": {
+    "load_address": "0x2001feb4",
+    "pc_init": "0x2001fed5",
+    "pc_unInit": "0x2001ff03",
+    "pc_eraseAll": "0x2001ff11",
+    "pc_erase_sector": "0x2001ff3d",
+    "pc_program_page": "0x2001ff89",
+    "begin_stack": "0x2001f6b0",
+    "end_stack": "0x20000000",
+    "static_base": "0x2001fffc",
+    "min_program_length": "0x400",
+    "analyzer_supported": "0x0"
+  },
+  "init": "PASS"
+}

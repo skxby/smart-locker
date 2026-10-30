@@ -63,6 +63,9 @@ void UsageFault_Handler(void) { env_assert_failed(); }
 
 int main(void)
 {
+    /* SystemInit selects HSI; the vendor's initial clock variable may still
+       describe PLL speed. HAL_InitTick must see the actual boot clock. */
+    SystemCoreClockUpdate();
     HAL_Init();
     clock_config();
     env_littlefs_version = LFS_VERSION;

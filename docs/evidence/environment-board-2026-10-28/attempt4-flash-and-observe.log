@@ -1,0 +1,41 @@
+START 2026-10-28T12:28:40.4972936+08:00
+INFO:pyocd.board.board:Target type is stm32f407vgtx
+INFO:pyocd.coresight.dap:DP IDR = 0x2ba01477 (v1 rev2)
+INFO:pyocd.coresight.discovery:AHB-AP#0 IDR = 0x24770011 (AHB-AP var1 rev2)
+INFO:pyocd.coresight.rom_table:AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00ff000 (designer=020:ST part=411)
+INFO:pyocd.coresight.rom_table:[0]<e000e000:SCS v7-M class=14 designer=43b:Arm part=00c>
+INFO:pyocd.coresight.rom_table:[1]<e0001000:DWT v7-M class=14 designer=43b:Arm part=002>
+INFO:pyocd.coresight.rom_table:[2]<e0002000:FPB v7-M class=14 designer=43b:Arm part=003>
+INFO:pyocd.coresight.rom_table:[3]<e0000000:ITM v7-M class=14 designer=43b:Arm part=001>
+INFO:pyocd.coresight.rom_table:[4]<e0040000:TPIU M4 class=9 designer=43b:Arm part=9a1 devtype=11 archid=0000 devid=ca1:0:0>
+INFO:pyocd.coresight.rom_table:[5]<e0041000:ETM M4 class=9 designer=43b:Arm part=925 devtype=13 archid=0000 devid=0:0:0>
+INFO:pyocd.coresight.cortex_m:CPU core #0: Cortex-M4 r0p1, v7.0-M architecture
+INFO:pyocd.coresight.cortex_m:  Extensions: [DSP, FPU, FPU_V4, MPU]
+INFO:pyocd.coresight.cortex_m:  FPU present: FPv4-SP-D16-M
+INFO:pyocd.coresight.dwt:4 hardware watchpoints
+INFO:pyocd.coresight.fpb:6 hardware breakpoints, 2 literal comparators
+START_PROGRAM: Env_hsi16, sector erase only, no automatic unlock
+INFO:pyocd.flash.loader:Erasing...
+INFO:pyocd.flash.loader:Programming...
+Traceback (most recent call last):
+RESULT FAIL
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 136, in <module>
+    main()
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 85, in main
+    trust_crc=False, keep_unwritten=False).program(str(IMAGE))
+                                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\file_programmer.py", line 199, in program
+    self.commit()
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\file_programmer.py", line 173, in commit
+    self._loader.commit()
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\loader.py", line 316, in commit
+    perf = builder.program(progress_cb=self._progress_cb,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\builder.py", line 604, in program
+    self._program_pages(progress_cb)
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\builder.py", line 959, in _program_pages
+    self.flash.program_page(page.addr, page.data)
+  File "C:\Users\%USER%\AppData\Local\Temp\locker-stlink-diag-packages\pyocd\flash\flash.py", line 410, in program_page
+    raise FlashProgramFailure('flash program page failure', address=address, result_code=result)
+pyocd.core.exceptions.FlashProgramFailure: flash program page failure (address 0x08000000; result code 0x1)
+EXIT 1 END 2026-10-28T12:28:58.2920746+08:00

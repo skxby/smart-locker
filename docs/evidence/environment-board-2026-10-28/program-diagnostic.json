@@ -1,0 +1,43 @@
+{
+  "registers": {
+    "pc": "0x2001feb4",
+    "lr": "0x2001feb5",
+    "sp": "0x2001f6b0",
+    "r0": "0x1",
+    "r1": "0x400",
+    "r2": "0x2001fab0",
+    "r3": "0x201",
+    "r4": "0x2",
+    "r5": "0x10000",
+    "r6": "0x0",
+    "r7": "0x0",
+    "r9": "0x2001fffc",
+    "xpsr": "0x1000000",
+    "primask": "0x1"
+  },
+  "peripherals": {
+    "0x40023c00": "0x0",
+    "0x40023c0c": "0x0",
+    "0x40023c10": "0x80000002",
+    "0x40023c14": "0xfffaaed",
+    "0x40023808": "0x9400",
+    "0x8000000": "0xffffffff"
+  },
+  "algo": {
+    "load_address": 537001652,
+    "pc_init": 537001685,
+    "pc_unInit": 537001731,
+    "pc_eraseAll": 537001745,
+    "pc_erase_sector": 537001789,
+    "pc_program_page": 537001865,
+    "page_buffers": [
+      537000624,
+      536999600
+    ],
+    "begin_stack": 536999600,
+    "end_stack": 536870912,
+    "static_base": 537001980,
+    "min_program_length": 1024,
+    "analyzer_supported": false
+  }
+}

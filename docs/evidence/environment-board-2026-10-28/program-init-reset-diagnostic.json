@@ -1,0 +1,7 @@
+{
+  "rcc_cfgr": "0x0",
+  "before_cr": "0x80000000",
+  "after_init_cr": "0x0",
+  "sr": "0x0",
+  "flash_first": "0xffffffff"
+}

@@ -1,0 +1,17 @@
+{
+  "start": "2026-10-28T12:23:37.462188+08:00",
+  "status": "FAIL",
+  "image": "E:\\stm32\u9879\u76ee\\build\\firmware-env\\hsi16\\locker_env.hex",
+  "backup": "C:\\Users\\%USER%\\Documents\\locker-hardware-backups\\2026-10-28\\stm32f407-original-121141.bin",
+  "samples": [],
+  "image_segments": [
+    [
+      "0x8000000",
+      "0x80014fc"
+    ]
+  ],
+  "dbgmcu_idcode": "0x101f6413",
+  "preflash_backup_match": true,
+  "error": "AssertionError()",
+  "end": "2026-10-28T12:23:54.675985+08:00"
+}

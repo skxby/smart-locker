@@ -53,9 +53,9 @@
 <text x="80" y="442" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">输入保护 / 控制</text>
 <text x="80" y="481" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">保险后 12V+ 接 470µF(+)；12V− 接 (−)</text>
 <text x="80" y="509" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">100nF 与 470µF 并联在输入端</text>
-<text x="80" y="537" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PB6 → PWM；10k：PWM → 模块 GND</text>
+<text x="80" y="537" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">PB6 → PWM（可直连）；10k：PWM → 模块 GND</text>
 <text x="80" y="565" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">模块 GND → MCU GND，单独信号回路</text>
-<text x="80" y="593" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">该下拉只适用于确认高电平有效的模块</text>
+<text x="80" y="593" font-family="Microsoft YaHei,sans-serif" font-size="20" fill="#172d46">串阻禁用1k：分压会把3.3V压到3.0V而拒动</text>
 <rect x="60" y="680" width="695" height="220" rx="5" fill="#eef4f8" stroke="#eef4f8"/>
 <rect x="60" y="680" width="5" height="220" rx="5" fill="#176da6" stroke="#176da6"/>
 <text x="80" y="717" font-family="Microsoft YaHei,sans-serif" font-size="25" fill="#176da6">分压板：100k / 22k / 100nF</text>

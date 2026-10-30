@@ -1,0 +1,26 @@
+START 2026-10-28T12:22:47.9178536+08:00
+INFO:pyocd.board.board:Target type is stm32f407vgtx
+INFO:pyocd.coresight.dap:DP IDR = 0x2ba01477 (v1 rev2)
+INFO:pyocd.coresight.discovery:AHB-AP#0 IDR = 0x24770011 (AHB-AP var1 rev2)
+INFO:pyocd.coresight.rom_table:AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00ff000 (designer=020:ST part=411)
+INFO:pyocd.coresight.rom_table:[0]<e000e000:SCS v7-M class=14 designer=43b:Arm part=00c>
+INFO:pyocd.coresight.rom_table:[1]<e0001000:DWT v7-M class=14 designer=43b:Arm part=002>
+INFO:pyocd.coresight.rom_table:[2]<e0002000:FPB v7-M class=14 designer=43b:Arm part=003>
+INFO:pyocd.coresight.rom_table:[3]<e0000000:ITM v7-M class=14 designer=43b:Arm part=001>
+INFO:pyocd.coresight.rom_table:[4]<e0040000:TPIU M4 class=9 designer=43b:Arm part=9a1 devtype=11 archid=0000 devid=ca1:0:0>
+INFO:pyocd.coresight.rom_table:[5]<e0041000:ETM M4 class=9 designer=43b:Arm part=925 devtype=13 archid=0000 devid=0:0:0>
+INFO:pyocd.coresight.cortex_m:CPU core #0: Cortex-M4 r0p1, v7.0-M architecture
+INFO:pyocd.coresight.cortex_m:  Extensions: [DSP, FPU, FPU_V4, MPU]
+INFO:pyocd.coresight.cortex_m:  FPU present: FPv4-SP-D16-M
+INFO:pyocd.coresight.dwt:4 hardware watchpoints
+INFO:pyocd.coresight.fpb:6 hardware breakpoints, 2 literal comparators
+WARNING:pyocd.coresight.cortex_m:Timed out waiting for core to halt after reset (state is RUNNING)
+RESULT FAIL
+Traceback (most recent call last):
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 108, in <module>
+    main()
+  File "E:\stm32��Ŀ\docs\evidence\environment-board-2026-10-28\flash-and-observe.py", line 51, in main
+    assert target.get_state() == Target.State.HALTED
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+EXIT 1 END 2026-10-28T12:22:51.1663174+08:00

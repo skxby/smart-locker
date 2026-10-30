@@ -1,0 +1,26 @@
+{
+  "registers": {
+    "pc": "0x0",
+    "lr": "0xfffffff1",
+    "sp": "0x2001f618",
+    "xpsr": "0x80000003",
+    "ipsr": "0x3",
+    "primask": "0x0"
+  },
+  "faults": {
+    "0xe000ed28": "0x20000",
+    "0xe000ed2c": "0x40000000",
+    "0xe000ed38": "0xe000edf8",
+    "0xe000ed08": "0x0",
+    "0xe000e010": "0x10007",
+    "0x40023c0c": "0x0"
+  },
+  "sector0_sha256": "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe",
+  "sector0_all_ff": false,
+  "first32": "0000000000000000000000000000000000000000000000000000000000000000",
+  "after_xpsr_write": {
+    "ipsr": "0x0",
+    "primask": "0x1",
+    "xpsr": "0x1000000"
+  }
+}

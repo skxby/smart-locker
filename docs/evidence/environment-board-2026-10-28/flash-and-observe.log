@@ -1,0 +1,25 @@
+START 2026-10-28T12:35:24.5180159+08:00
+INFO:pyocd.board.board:Target type is stm32f407vgtx
+INFO:pyocd.coresight.dap:DP IDR = 0x2ba01477 (v1 rev2)
+INFO:pyocd.coresight.discovery:AHB-AP#0 IDR = 0x24770011 (AHB-AP var1 rev2)
+INFO:pyocd.coresight.rom_table:AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00ff000 (designer=020:ST part=411)
+INFO:pyocd.coresight.rom_table:[0]<e000e000:SCS v7-M class=14 designer=43b:Arm part=00c>
+INFO:pyocd.coresight.rom_table:[1]<e0001000:DWT v7-M class=14 designer=43b:Arm part=002>
+INFO:pyocd.coresight.rom_table:[2]<e0002000:FPB v7-M class=14 designer=43b:Arm part=003>
+INFO:pyocd.coresight.rom_table:[3]<e0000000:ITM v7-M class=14 designer=43b:Arm part=001>
+INFO:pyocd.coresight.rom_table:[4]<e0040000:TPIU M4 class=9 designer=43b:Arm part=9a1 devtype=11 archid=0000 devid=ca1:0:0>
+INFO:pyocd.coresight.rom_table:[5]<e0041000:ETM M4 class=9 designer=43b:Arm part=925 devtype=13 archid=0000 devid=0:0:0>
+INFO:pyocd.coresight.cortex_m:CPU core #0: Cortex-M4 r0p1, v7.0-M architecture
+INFO:pyocd.coresight.cortex_m:  Extensions: [DSP, FPU, FPU_V4, MPU]
+INFO:pyocd.coresight.cortex_m:  FPU present: FPv4-SP-D16-M
+INFO:pyocd.coresight.dwt:4 hardware watchpoints
+INFO:pyocd.coresight.fpb:6 hardware breakpoints, 2 literal comparators
+START_PROGRAM: Env_hsi16, sector erase only, no automatic unlock
+{"elapsed_s": 0.0, "state": "RUNNING", "env_task_progress": 0, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 2, "rtos_tick": 1}
+{"elapsed_s": 1.203, "state": "RUNNING", "env_task_progress": 2, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 1205, "rtos_tick": 1204}
+{"elapsed_s": 2.406, "state": "RUNNING", "env_task_progress": 3, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 2406, "rtos_tick": 2405}
+{"elapsed_s": 3.609, "state": "RUNNING", "env_task_progress": 4, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 3607, "rtos_tick": 3605}
+{"elapsed_s": 4.828, "state": "RUNNING", "env_task_progress": 5, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 4809, "rtos_tick": 4808}
+{"elapsed_s": 6.031, "state": "RUNNING", "env_task_progress": 7, "env_fault": 0, "env_littlefs_version": 131083, "SystemCoreClock": 16000000, "uwTick": 6011, "rtos_tick": 6010}
+RESULT PASS
+EXIT 0 END 2026-10-28T12:36:05.9835882+08:00

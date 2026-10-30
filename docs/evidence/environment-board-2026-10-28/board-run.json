@@ -1,0 +1,84 @@
+{
+  "start": "2026-10-28T12:35:25.382977+08:00",
+  "status": "PASS",
+  "image": "E:\\stm32\u9879\u76ee\\build\\firmware-env\\hsi16\\locker_env.hex",
+  "backup": "C:\\Users\\%USER%\\Documents\\locker-hardware-backups\\2026-10-28\\stm32f407-original-121141.bin",
+  "samples": [
+    {
+      "elapsed_s": 0.0,
+      "state": "RUNNING",
+      "env_task_progress": 0,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 2,
+      "rtos_tick": 1
+    },
+    {
+      "elapsed_s": 1.203,
+      "state": "RUNNING",
+      "env_task_progress": 2,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 1205,
+      "rtos_tick": 1204
+    },
+    {
+      "elapsed_s": 2.406,
+      "state": "RUNNING",
+      "env_task_progress": 3,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 2406,
+      "rtos_tick": 2405
+    },
+    {
+      "elapsed_s": 3.609,
+      "state": "RUNNING",
+      "env_task_progress": 4,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 3607,
+      "rtos_tick": 3605
+    },
+    {
+      "elapsed_s": 4.828,
+      "state": "RUNNING",
+      "env_task_progress": 5,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 4809,
+      "rtos_tick": 4808
+    },
+    {
+      "elapsed_s": 6.031,
+      "state": "RUNNING",
+      "env_task_progress": 7,
+      "env_fault": 0,
+      "env_littlefs_version": 131083,
+      "SystemCoreClock": 16000000,
+      "uwTick": 6011,
+      "rtos_tick": 6010
+    }
+  ],
+  "image_segments": [
+    [
+      "0x8000000",
+      "0x8001500"
+    ]
+  ],
+  "dbgmcu_idcode": "0x101f6413",
+  "preflash_state": "explicit_previous_environment_hash_match",
+  "sector0_erased": true,
+  "program_returned": true,
+  "all_hex_bytes_verified": true,
+  "outside_sector0_unchanged": true,
+  "pc_after_reset": "0x800025c",
+  "hal_ticks_per_second": 996.3521804012602,
+  "rtos_ticks_per_second": 996.3521804012602,
+  "end": "2026-10-28T12:36:05.863839+08:00"
+}
