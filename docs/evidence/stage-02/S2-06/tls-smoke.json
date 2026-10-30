@@ -1,0 +1,51 @@
+{
+  "started": "2026-10-30T13:24:18.495252+08:00",
+  "host": "192.0.2.20",
+  "ca": "build\\http-deploy\\tls\\server.crt",
+  "checks": {
+    "untrusted_rejected": {
+      "ok": true,
+      "detail": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate (_ssl.c:1032)"
+    },
+    "login": {
+      "ok": true,
+      "status": 200,
+      "token_length": 64,
+      "user": "admin"
+    },
+    "device": {
+      "ok": true,
+      "status": 200,
+      "revision": "6",
+      "payload": {
+        "device_id": "000000000000000000000000",
+        "cabinet_name": "实验室工具柜-RK3568",
+        "contract_version": "0.2.1",
+        "simulated": false,
+        "mode": "RECONCILING",
+        "health_reasons": [],
+        "ui_restart_count": null,
+        "physical": {
+          "device_id": "000000000000000000000000",
+          "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f",
+          "boot_id": "8",
+          "physical_revision": "1",
+          "door": "OPEN",
+          "item": "ABSENT",
+          "supply_mv": null,
+          "observed_age_ms": 15,
+          "time_quality": "HOST_SYNCED",
+          "continuity_ok": false,
+          "dropped_events": "18446744073709551615",
+          "durable_cursor": {
+            "device_id": "000000000000000000000000",
+            "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f",
+            "boot_id": "0",
+            "event_seq": "0"
+          }
+        }
+      }
+    }
+  },
+  "finished": "2026-10-30T13:24:19.152734+08:00"
+}

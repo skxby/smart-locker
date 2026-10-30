@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "already_programmed": true,
+  "image": "build\\firmware-s205-gnu\\hse8_168\\locker_s205.hex",
+  "hex_sha256": "631fa1360ddde8e120c8ce0a2d89aaa2f5128ce898fed0efe6a65a2eaaf9b025",
+  "pc_after_reset": "0x8000188",
+  "first": {
+    "xtick": 593,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "second": {
+    "xtick": 995,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "when": "2026-10-30T12:35:13.721866+08:00"
+}

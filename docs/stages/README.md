@@ -2,7 +2,7 @@
 
 当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](../development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
 
-阶段0为设计基线；阶段一S1-01至S1-07 DONE、主机模拟门禁PASS。S2-01与S2-02已DONE；PC0/ADC实物标定按用户授权后移，供电有效性保持false，补证须在基础门禁前完成；硬件profile仍UNVERIFIED。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实收发、黄金帧/回绕/背压验收通过。S2-04真实Journal DONE，软件回归与提交后真实断电恢复通过，诊断epoch故障锁存保留。S2-05 Control与硬截止DONE，空载PB6五组波形（正常/关中断/挂起调度器/软件提前关断/强制复位）与主机Debug/ASan/TSan各13/13通过，真锁未接。当前active_task=null、recommended_next=S2-06，阶段2 gate NOT_RUN。其余状态以机器索引和真实报告为准。主机默认VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
+阶段0为设计基线；阶段一S1-01至S1-07 DONE、主机模拟门禁PASS。S2-01与S2-02已DONE；PC0/ADC实物标定按用户授权后移，供电有效性保持false，补证须在基础门禁前完成；硬件profile仍UNVERIFIED。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实收发、黄金帧/回绕/背压验收通过。S2-04真实Journal DONE，软件回归与提交后真实断电恢复通过，诊断epoch故障锁存保留。S2-05 Control与硬截止DONE，空载PB6五组波形（正常/关中断/挂起调度器/软件提前关断/强制复位）与主机Debug/ASan/TSan各13/13通过，真锁未接。S2-06 RK真实串口/ABI/局域网DONE：aarch64静态服务在板运行、ttyS4真实链路、HTTPS证书SAN与配对导出通过；当前active_task=null、recommended_next=S2-07，阶段2 gate NOT_RUN。其余状态以机器索引和真实报告为准。主机默认VMware Ubuntu，见[VM工作流](../development/vm-ubuntu-workflow.md)。
 
 ## 1. 固定路线
 
@@ -46,6 +46,6 @@
 
 用户操作见[完整执行手册](../AI开发执行手册.md)，全部45卡的180份现成指令见[索引](../ai-prompts/README.md)；每卡均含开发/审计/整改/交接，直接复制对应段落即可。
 
-使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。阶段一7卡均DONE，报告位于`docs/evidence/stage-01/`各卡目录；[S1-07报告](../evidence/stage-01/S1-07/summary.md)记录门禁PASS证据。S2-03软件与实物验收结果见[本卡报告](../evidence/stage-02/S2-03/summary.md)；S2-05结果见[S2-05报告](../evidence/stage-02/S2-05/summary.md)，当前active_task=null、recommended_next=S2-06。
+使用[单卡交接模板](task-handoff-template.md)，只填写当前卡ID，不一次要求实现45张卡。阶段一7卡均DONE，报告位于`docs/evidence/stage-01/`各卡目录；[S1-07报告](../evidence/stage-01/S1-07/summary.md)记录门禁PASS证据。S2-03软件与实物验收结果见[本卡报告](../evidence/stage-02/S2-03/summary.md)；S2-05结果见[S2-05报告](../evidence/stage-02/S2-05/summary.md)，S2-06结果见[S2-06报告](../evidence/stage-02/S2-06/summary.md)；当前active_task=null、recommended_next=S2-07。
 
 重新打开对话，从active_task和最近报告恢复。状态与文件冲突先核对事实；不重复已发生的物理动作。

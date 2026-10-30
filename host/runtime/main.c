@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 {
     runtime_config_t config;
     if (argc!=3 || strcmp(argv[1],"--config") || !runtime_config_load(argv[2],&config)) {
-        fputs("usage: locker-service --config FILE (valid SIMULATOR_ONLY config required)\n",stderr); return 2;
+        fputs("usage: locker-service --config FILE (valid SIMULATOR_ONLY or DEVICE_SERIAL config)\n",stderr); return 2;
     }
     umask(0077);
     struct sigaction action={0}; action.sa_handler=stop_signal; sigemptyset(&action.sa_mask);
@@ -65,7 +65,8 @@ int main(int argc, char **argv)
     if (!initialized_database(repo)) { fputs("initialization incomplete: administrator/single tool missing\n",stderr); goto done; }
     cc.clock=locker_clock_port_real(); cc.queue_capacity=64; strcpy(cc.cabinet_name,config.cabinet_name);
     cc.runtime_health_owned=true;
-    cc.device_simulated=true;
+    /* The core records provenance: a real UART must never be reported as simulated. */
+    cc.device_simulated=config.device.simulated;
     if (locker_clock_real_new_uuid(&cc.instance_id)!=LOCKER_STATUS_OK) goto done;
     strcpy(cc.vision_policy.json,"{\"mode\":\"DISABLED_FOR_FOUNDATION\"}"); cc.vision_policy.length=strlen(cc.vision_policy.json);
     config.device.host_instance_id=cc.instance_id; config.device.clock=cc.clock;
@@ -73,11 +74,15 @@ int main(int argc, char **argv)
         locker_core_create(&cc,repo,device,events,&core)!=LOCKER_STATUS_OK || locker_core_start(core)!=LOCKER_STATUS_OK) {
         fputs("core assembly failed\n",stderr); goto done;
     }
-    fputs("SIMULATOR_ONLY startup RECONCILING; queue=64 http_workers=4 ws_buffer=16\n",stdout); fflush(stdout);
-    if (locker_device_open(device,&config.device)!=LOCKER_STATUS_OK) { fputs("simulator connection failed\n",stderr); goto done; }
+    printf("%s startup RECONCILING; queue=64 http_workers=4 ws_buffer=16\n",
+           config.device.simulated ? "SIMULATOR_ONLY" : "DEVICE_SERIAL"); fflush(stdout);
+    if (locker_device_open(device,&config.device)!=LOCKER_STATUS_OK) {
+        fputs(config.device.simulated ? "simulator connection failed\n"
+                                      : "device open failed (UART missing, busy or permissions)\n",stderr); goto done; }
     if (locker_http_start(&config.http,core,events,&http)!=LOCKER_STATUS_OK) { fputs("HTTPS start failed (certificate/bind/port)\n",stderr); goto done; }
     if (locker_ipc_start(&config.ipc,core,&ipc)!=LOCKER_STATUS_OK) { fputs("IPC start failed (path/permissions)\n",stderr); goto done; }
-    fputs("SIMULATOR_ONLY listening; business readiness requires reconciliation\n",stdout); fflush(stdout);
+    printf("%s listening; business readiness requires reconciliation\n",
+           config.device.simulated ? "SIMULATOR_ONLY" : "DEVICE_SERIAL"); fflush(stdout);
     runtime_health_t health={0}; uint64_t last=0;
     while (!stopping) {
         uint64_t now=locker_clock_real_monotonic_ms();

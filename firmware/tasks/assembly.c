@@ -116,8 +116,13 @@ void assembly_transmit(mcu_transport_t *t)
         if(available) { o=outgoing[oh]; oh=(oh+1u)%8u; --oc; }
         taskEXIT_CRITICAL(); if(!available) break;
         if(!o.event && o.body.reply.message_type==1) {
+            /* Advertise exactly what this build drives. SUPPLY_ADC stays clear:
+               PC0 calibration is deferred (S2-02 debt) and supply_valid is false,
+               so claiming it would misrepresent the cabinet. */
             memcpy(o.body.reply.body.hello.device_uid,t->device_uid,12u);
-            o.body.reply.body.hello.capabilities=LOCKER_WIRE_CAP_DOOR_AND_ITEM|LOCKER_WIRE_CAP_PERSISTENT_JOURNAL;
+            o.body.reply.body.hello.capabilities=LOCKER_WIRE_CAP_DOOR_AND_ITEM|
+                LOCKER_WIRE_CAP_PERSISTENT_JOURNAL|LOCKER_WIRE_CAP_CARD_READER|
+                LOCKER_WIRE_CAP_BOUNDED_PULSE;
         }
         if(o.event) {
             if(t->session_valid && mcu_transport_queue_event(t,&o.body.fact)!=LOCKER_STATUS_OK) fail();

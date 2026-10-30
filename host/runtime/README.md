@@ -1,9 +1,9 @@
 # 主机模拟运行入口（S1-06）
 
 `locker-service` 装配已有 Core、仓储、设备适配器、HTTPS/WS 和本机 IPC；
-`locker-admin init` 显式创建首位管理员与单工具。只接受 `SIMULATOR_ONLY`。
+`locker-admin init` 显式创建首位管理员与单工具。配置接受 `SIMULATOR_ONLY`（模拟器 socket）和 `DEVICE_SERIAL`（/dev 下的真实 UART），由 `device_path` 决定后端。
 模拟器拥有独立 SQLite journal，业务服务只打开 `state_dir/business.db`。
-本模块没有真实 UART、GPIO、HAL、UI 或监督进程。阶段一门禁仍由 S1-07 执行。
+S2-06 起本模块可指向真实 UART；GPIO/HAL/UI/监督进程仍不在本模块。阶段一门禁仍由 S1-07 执行。
 
 ## 构建和空目录运行
 

@@ -13,8 +13,10 @@
  * device's, and this adapter only mirrors what the device reported so it can
  * populate the next request. No retry loop ever re-sends EXECUTE (uart-v1.md:382).
  *
- * Stage 1 has no physical UART, so config->simulated == false is refused with
- * NOT_READY instead of pretending to drive a serial port.
+ * Stage 1 had no physical UART and refused config->simulated == false. S2-06
+ * drives the real board UART through the transport's /dev/ backend; the path
+ * selects the backend, so a "real" configuration must name a device node and is
+ * rejected if it still points at the simulator socket.
  */
 
 #define _POSIX_C_SOURCE 200809L
@@ -35,7 +37,12 @@
 #define LOCKER_DEVICE_CONNECT_TIMEOUT_MS 5000u
 #define LOCKER_DEVICE_READ_TIMEOUT_MS 200
 #define LOCKER_DEVICE_PENDING_TIMEOUT_MS 5000u
-#define LOCKER_DEVICE_REQUIRED_CAPS 0x1fu
+/* CR-S206-1: SUPPLY_ADC (bit 3) is deliberately not required yet. The MCU cannot
+ * advertise it honestly while PC0 calibration is deferred and supply_valid stays
+ * false (S2-02 debt, due before the S2-08 foundation gate). Restore 0x1f here in
+ * the same change that lands the calibration; requiring a capability the device
+ * does not have would only push every real cabinet into BAD_PRECONDITION. */
+#define LOCKER_DEVICE_REQUIRED_CAPS 0x17u
 
 typedef struct pending_request {
     bool used;
@@ -659,9 +666,8 @@ locker_status_t locker_device_open(locker_device_t *device, const locker_device_
         strspn(config->expected_device_id, "0123456789abcdef") != 24u) {
         return LOCKER_STATUS_INVALID;
     }
-    /* Stage 1: every device result is simulated (stage-01-task-cards.md:19). */
-    if (!config->simulated) {
-        return LOCKER_STATUS_NOT_READY;
+    if (!config->simulated && strncmp(config->path, "/dev/", 5u) != 0) {
+        return LOCKER_STATUS_INVALID;
     }
 
     device->config = *config;

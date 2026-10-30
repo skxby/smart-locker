@@ -1,8 +1,12 @@
 /*
- * S1-03 AF_UNIX SOCK_STREAM transport for the simulator-backed device adapter.
+ * S1-03 AF_UNIX SOCK_STREAM transport for the simulator-backed device adapter,
+ * plus the S2-06 real UART backend selected by a /dev/ path.
  */
 
-/* clock_gettime/nanosleep are POSIX; -std=c11 without extensions hides them. */
+/* clock_gettime/nanosleep are POSIX; -std=c11 without extensions hides them.
+ * _DEFAULT_SOURCE additionally exposes the termios extensions used below
+ * (CRTSCTS), which strict POSIX mode hides. */
+#define _DEFAULT_SOURCE 1
 #define _POSIX_C_SOURCE 200809L
 
 #include "locker/device/transport.h"
@@ -14,6 +18,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/un.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -48,6 +53,11 @@ void locker_device_transport_shutdown(locker_device_transport_t *transport)
     if (transport == NULL || transport->fd < 0) {
         return;
     }
+    if (transport->is_tty) {
+        /* shutdown() is socket-only. The reader polls with a bounded timeout,
+         * so it wakes on its own and observes the stop flag. */
+        return;
+    }
     /* Wake a reader blocked in recv(); the reader then observes EOF. */
     (void)shutdown(transport->fd, SHUT_RDWR);
 }
@@ -58,9 +68,13 @@ void locker_device_transport_close(locker_device_transport_t *transport)
         return;
     }
     if (transport->fd >= 0) {
+        if (transport->is_tty) {
+            (void)tcflush(transport->fd, TCIOFLUSH);
+        }
         (void)close(transport->fd);
     }
     transport->fd = -1;
+    transport->is_tty = false;
     transport->connected = false;
 }
 
@@ -74,6 +88,53 @@ static locker_status_t transport_connect_result(int fd)
     if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &length) != 0 || error != 0) {
         return LOCKER_STATUS_IO_ERROR;
     }
+    return LOCKER_STATUS_OK;
+}
+
+/* A path under /dev/ means a real character device; anything else stays the
+ * simulator socket, so host-only tests keep their existing setup. */
+static bool transport_path_is_serial(const char *path)
+{
+    return path != NULL && strncmp(path, "/dev/", 5u) == 0;
+}
+
+/*
+ * Opens the board UART in the wire format fixed by docs/architecture/uart-v1.md:
+ * 115200 baud, 8 data bits, no parity, one stop bit, raw, no modem control.
+ *
+ * CRTSCTS stays off on purpose. The ADuM isolator carries TX/RX/GND only, so a
+ * flow-controlled write would wait for a CTS that never arrives and the link
+ * would look dead while every frame silently parks in the driver.
+ */
+static locker_status_t transport_open_serial(locker_device_transport_t *transport)
+{
+    struct termios config;
+    int fd = open(transport->path, O_RDWR | O_NOCTTY | O_NONBLOCK);
+
+    if (fd < 0) {
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    if (tcgetattr(fd, &config) != 0) {
+        (void)close(fd);
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    config.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL |
+                        IXON | IXOFF | IXANY);
+    config.c_oflag &= ~(OPOST);
+    config.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    config.c_cflag &= ~(CSIZE | PARENB | CSTOPB | CRTSCTS);
+    config.c_cflag |= (CS8 | CLOCAL | CREAD);
+    config.c_cc[VMIN] = 0;
+    config.c_cc[VTIME] = 0;
+    if (cfsetispeed(&config, B115200) != 0 || cfsetospeed(&config, B115200) != 0 ||
+        tcsetattr(fd, TCSANOW, &config) != 0) {
+        (void)close(fd);
+        return LOCKER_STATUS_IO_ERROR;
+    }
+    (void)tcflush(fd, TCIOFLUSH);
+    transport->fd = fd;
+    transport->is_tty = true;
+    transport->connected = true;
     return LOCKER_STATUS_OK;
 }
 
@@ -166,6 +227,12 @@ locker_status_t locker_device_transport_connect(locker_device_transport_t *trans
     memset(transport->path, 0, sizeof(transport->path));
     memcpy(transport->path, path, strlen(path));
 
+    /* A serial device is opened once: unlike a socket listener it will not
+     * appear later, so retrying would only delay the failure report. */
+    if (transport_path_is_serial(path)) {
+        return transport_open_serial(transport);
+    }
+
     started_ms = transport_real_monotonic_ms();
     deadline_ms = started_ms + (uint64_t)timeout_ms;
     for (;;) {
@@ -221,8 +288,10 @@ locker_status_t locker_device_transport_write(locker_device_transport_t *transpo
             transport->connected = false;
             return LOCKER_STATUS_IO_ERROR;
         }
-        result = send(transport->fd, &data[written], length - written,
-                      MSG_NOSIGNAL | MSG_DONTWAIT);
+        result = transport->is_tty
+                     ? write(transport->fd, &data[written], length - written)
+                     : send(transport->fd, &data[written], length - written,
+                            MSG_NOSIGNAL | MSG_DONTWAIT);
         if (result < 0) {
             if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) {
                 continue;
@@ -247,6 +316,35 @@ int locker_device_transport_read(locker_device_transport_t *transport, uint8_t *
 
     if (!locker_device_transport_connected(transport) || buffer == NULL || capacity == 0u) {
         return -1;
+    }
+    if (transport->is_tty) {
+        struct pollfd readable;
+        int ready;
+
+        readable.fd = transport->fd;
+        readable.events = POLLIN;
+        readable.revents = 0;
+        ready = poll(&readable, 1u, timeout_ms);
+        if (ready < 0 && errno == EINTR) {
+            return 0;
+        }
+        if (ready <= 0) {
+            return 0;
+        }
+        if ((readable.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0) {
+            transport->connected = false;
+            return -1;
+        }
+        result = read(transport->fd, buffer, capacity);
+        if (result < 0) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+                return 0;
+            }
+            transport->connected = false;
+            return -1;
+        }
+        /* VMIN=0 means "no bytes yet", not end of file. */
+        return (int)result;
     }
     timeout.tv_sec = timeout_ms / 1000;
     timeout.tv_usec = (timeout_ms % 1000) * 1000;

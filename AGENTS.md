@@ -1,6 +1,6 @@
 # 后续 AI 开发入口
 
-本项目由用户分阶段评审和开发。当前契约0.2.1、45张产品卡；S1-01至S1-07 DONE、阶段一主机模拟门禁PASS；S2-01至S2-05 DONE。S2-02门磁/微动低有效且启用内部上拉、RC522两张4字节卡与SPI读Flash通过；PC0/ADC实物标定按用户2026-10-29授权后移，supply_valid保持false，基础门禁前补证；7/10字节仅协议回归通过。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实收发、黄金帧/回绕/背压验收通过；S2-04真实Journal DONE，提交后真实断电恢复通过，诊断epoch保留DEGRADED与未ACK记录；S2-05 Control与硬截止DONE，空载PB6五组波形通过（正常、关中断、挂起调度器、软件提前关断、强制复位），主机Debug/ASan/TSan各13/13，100µs/格复位落沿未见危险电平。当前active_task=null、recommended_next=S2-06。硬件profile仍UNVERIFIED、阶段二门禁NOT_RUN；真锁线圈、MOS、12V回路与断电瞬态仍未验。详情以机器索引和各卡报告为准。
+本项目由用户分阶段评审和开发。当前契约0.2.1、45张产品卡；S1-01至S1-07 DONE、阶段一主机模拟门禁PASS；S2-01至S2-06 DONE。S2-02门磁/微动低有效且启用内部上拉、RC522两张4字节卡与SPI读Flash通过；PC0/ADC实物标定按用户2026-10-29授权后移，supply_valid保持false，基础门禁前补证；7/10字节仅协议回归通过。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实收发、黄金帧/回绕/背压验收通过；S2-04真实Journal DONE，提交后真实断电恢复通过，诊断epoch保留DEGRADED与未ACK记录；S2-05 Control与硬截止DONE，空载PB6五组波形通过（正常、关中断、挂起调度器、软件提前关断、强制复位），主机Debug/ASan/TSan各13/13，100µs/格复位落沿未见危险电平。S2-06 RK真实串口/ABI/局域网DONE：aarch64静态服务在板运行、DevicePort走/dev/ttyS4、HTTPS 8443与证书SAN通过、配对导出仅5公开字段；修复HELLO身份字段与能力位两处缺陷并记CR-S206-1（暂不要求SUPPLY_ADC）。当前active_task=null、recommended_next=S2-07。硬件profile仍UNVERIFIED、阶段二门禁NOT_RUN；真锁线圈、MOS、12V回路、物理断线重连与断电瞬态仍未验。详情以机器索引和各卡报告为准。
 
 用户已另行授权开发环境准备，firmware/env是正式保留的非执行器环境测试目标，Keil/ARMCC编译链接通过；不算S1-01或S2-01产品门禁完成。后续复用firmware/third_party及依赖锁，不重复下载或修改原HAL。TIM6已分配HAL tick，SysTick/SVC/PendSV归FreeRTOS；硬件profile仍UNVERIFIED。
 

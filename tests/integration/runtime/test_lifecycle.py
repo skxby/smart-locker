@@ -217,7 +217,7 @@ def main():
             port = probe.getsockname()[1]
         state = root / "state"
         config = dict(mode="SIMULATOR_ONLY", state_dir=str(state),
-                      sim_socket=str(root / "proxy.sock"), device_id="404142434445464748494a4b",
+                      device_path=str(root / "proxy.sock"), device_id="404142434445464748494a4b",
                       certificate=str(cert), private_key=str(key), bind_address="127.0.0.1",
                       port=port, ui_uid=os.geteuid(), admin_uid=os.geteuid(), cabinet_name="S1-06")
         config_file = root / "config.json"

@@ -1,6 +1,6 @@
 # 阶段 2A：HAL 与一个基础柜格
 
-状态：S2-01与S2-02已DONE，S2-03 UART DMA/通信任务已DONE，S2-04真实Journal已DONE，S2-05 Control与硬截止已DONE（空载PB6波形与硬截止通过，真锁/MOS/12V未接），S2-06至S2-08未执行；PC0/ADC实物标定按本卡授权后移说明补证，供电资格仍无效。前置S1-07已通过，契约0.2.1。显式DISABLED_FOR_FOUNDATION验收物理底座，再执行[2B视觉八卡](stage-02b-vision-task-cards.md)，S2-16才为阶段2完整门禁。本单元不开发Flutter/LVGL或自动恢复。
+状态：S2-01与S2-02已DONE，S2-03 UART DMA/通信任务已DONE，S2-04真实Journal已DONE，S2-05 Control与硬截止已DONE（空载PB6波形与硬截止通过，真锁/MOS/12V未接），S2-06 RK真实串口/ABI/局域网已DONE（aarch64静态服务、ttyS4真实链路、HTTPS与配对导出通过；物理断线重连未验），S2-07至S2-08未执行；PC0/ADC实物标定按本卡授权后移说明补证，供电资格仍无效。前置S1-07已通过，契约0.2.1。显式DISABLED_FOR_FOUNDATION验收物理底座，再执行[2B视觉八卡](stage-02b-vision-task-cards.md)，S2-16才为阶段2完整门禁。本单元不开发Flutter/LVGL或自动恢复。
 
 ## 1. 阶段目标与接口链
 

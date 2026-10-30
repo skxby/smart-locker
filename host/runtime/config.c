@@ -29,7 +29,7 @@ static bool number(const cJSON *root, const char *key, uint32_t max, uint32_t *o
 }
 bool runtime_config_load(const char *path, runtime_config_t *out)
 {
-    static const char *keys[] = {"mode", "state_dir", "sim_socket", "device_id", "certificate",
+    static const char *keys[] = {"mode", "state_dir", "device_path", "device_id", "certificate",
         "private_key", "bind_address", "port", "ui_uid", "admin_uid", "cabinet_name"};
     char buffer[4097], mode[32];
     FILE *f = fopen(path, "rb");
@@ -54,9 +54,17 @@ bool runtime_config_load(const char *path, runtime_config_t *out)
     memset(out, 0, sizeof(*out));
     uint32_t port = 0;
     unsigned char address[16];
-    ok = ok && text(root,"mode",mode,sizeof(mode)) && !strcmp(mode,"SIMULATOR_ONLY") &&
+    /* Two deployment modes share one schema. SIMULATOR_ONLY talks to
+     * locker-device-sim over a socket; DEVICE_SERIAL drives the board's UART and
+     * therefore demands a character device. Anything else is rejected rather
+     * than guessed, because mistaking one for the other would report a real
+     * cabinet from a fake device. */
+    bool simulator = false;
+    ok = ok && text(root,"mode",mode,sizeof(mode)) &&
+        ((simulator = !strcmp(mode,"SIMULATOR_ONLY")) || !strcmp(mode,"DEVICE_SERIAL")) &&
         text(root,"state_dir",out->state_dir,sizeof(out->state_dir)) && out->state_dir[0]=='/' &&
-        text(root,"sim_socket",out->device.path,sizeof(out->device.path)) && out->device.path[0]=='/' &&
+        text(root,"device_path",out->device.path,sizeof(out->device.path)) && out->device.path[0]=='/' &&
+        (simulator || !strncmp(out->device.path,"/dev/",5)) &&
         text(root,"device_id",out->device.expected_device_id,sizeof(out->device.expected_device_id)) &&
         strlen(out->device.expected_device_id)==24 && strspn(out->device.expected_device_id,"0123456789abcdef")==24 &&
         text(root,"certificate",out->http.certificate_path,sizeof(out->http.certificate_path)) && out->http.certificate_path[0]=='/' &&
@@ -71,7 +79,7 @@ bool runtime_config_load(const char *path, runtime_config_t *out)
         out->http.port = (uint16_t)port;
         out->http.worker_count = 4;
         out->ipc.file_mode = 0600;
-        out->device.simulated = true;
+        out->device.simulated = simulator;
         out->device.baud_rate = 115200;
         snprintf(out->database,sizeof(out->database),"%s/business.db",out->state_dir);
         snprintf(out->lock_path,sizeof(out->lock_path),"%s/instance.lock",out->state_dir);

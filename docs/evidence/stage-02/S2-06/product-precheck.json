@@ -1,0 +1,21 @@
+{
+  "state": "RUNNING",
+  "dbgmcu_idcode": "0x101f6413",
+  "flash_kb": 1024,
+  "image": "build\\firmware-s205-gnu\\hse8_168\\locker_s205.hex",
+  "image_segments": [
+    [
+      "0x8000000",
+      "0x800dacc"
+    ]
+  ],
+  "sectors_to_erase": [
+    "0x8000000",
+    "0x8004000",
+    "0x8008000",
+    "0x800c000"
+  ],
+  "current_head_sha256": "0ec3fce19df18731e5dca8470641bd7885d265e7297e2ebf38b09863acc6d27a",
+  "current_keep_sha256": "8e6f77366baf8f9b9cddc873765484b539c202d890ef8291302eae35e63b37ce",
+  "when": "2026-10-30T13:21:00.045188+08:00"
+}

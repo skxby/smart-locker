@@ -9,8 +9,26 @@ execute_process(COMMAND "${Python3_EXECUTABLE}"
 if(NOT verified EQUAL 0)
     message(FATAL_ERROR "Network dependency fingerprint/lock check failed")
 endif()
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64")
-    message(FATAL_ERROR "S1-05 network dependencies are verified for Linux x86_64 only")
+# Two qualified targets: the host simulator (Linux x86_64) and the RK3568
+# cabinet controller (Linux aarch64, S2-06). Any other triple must be qualified
+# before it is built rather than silently producing an unverified library.
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(FATAL_ERROR "Network dependencies are only wired for Linux targets")
+endif()
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64")
+    set(LOCKER_OPENSSL_TARGET "linux-x86_64")
+    set(LOCKER_OPENSSL_CROSS_ARG "")
+    set(LOCKER_SODIUM_HOST_ARGS "")
+    message(STATUS "Network dependencies: linux-x86_64 (native)")
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+    set(LOCKER_OPENSSL_TARGET "linux-aarch64")
+    set(LOCKER_OPENSSL_CROSS_ARG "--cross-compile-prefix=aarch64-linux-gnu-")
+    set(LOCKER_SODIUM_HOST_ARGS "--host=aarch64-linux-gnu")
+    message(STATUS "Network dependencies: linux-aarch64 (cross)")
+else()
+    message(FATAL_ERROR
+        "Network dependencies are not qualified for ${CMAKE_SYSTEM_PROCESSOR}; "
+        "add a target triple here before building the service for it")
 endif()
 set(prefix "${CMAKE_BINARY_DIR}/network-dependencies")
 file(MAKE_DIRECTORY "${prefix}/include" "${prefix}/lib")
@@ -18,8 +36,9 @@ ExternalProject_Add(locker_openssl_build
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/openssl"
     BINARY_DIR "${prefix}/openssl-build"
     DOWNLOAD_COMMAND "" UPDATE_COMMAND "" PATCH_COMMAND ""
-    CONFIGURE_COMMAND "${PERL_EXECUTABLE}" <SOURCE_DIR>/Configure linux-x86_64
+    CONFIGURE_COMMAND "${PERL_EXECUTABLE}" <SOURCE_DIR>/Configure ${LOCKER_OPENSSL_TARGET}
         no-shared no-tests no-docs no-module "--prefix=${prefix}" --libdir=lib -fPIC
+        ${LOCKER_OPENSSL_CROSS_ARG}
     BUILD_COMMAND "${LOCKER_MAKE}" -j2
     INSTALL_COMMAND "${LOCKER_MAKE}" install_sw
     BUILD_BYPRODUCTS "${prefix}/lib/libssl.a" "${prefix}/lib/libcrypto.a"
@@ -29,7 +48,7 @@ ExternalProject_Add(locker_sodium_build
     BINARY_DIR "${prefix}/sodium-build"
     DOWNLOAD_COMMAND "" UPDATE_COMMAND "" PATCH_COMMAND ""
     CONFIGURE_COMMAND sh <SOURCE_DIR>/configure --disable-shared --enable-static
-        --with-pic "--prefix=${prefix}"
+        --with-pic "--prefix=${prefix}" ${LOCKER_SODIUM_HOST_ARGS}
     BUILD_COMMAND "${LOCKER_MAKE}" -j2
     INSTALL_COMMAND "${LOCKER_MAKE}" install
     BUILD_BYPRODUCTS "${prefix}/lib/libsodium.a"

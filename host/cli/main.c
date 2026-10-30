@@ -137,7 +137,11 @@ int main(int argc,char **argv)
     if (locker_repo_open(&rc,&repo)!=LOCKER_STATUS_OK || locker_repo_commit_change(repo,change)!=LOCKER_STATUS_OK) {
         fputs("initialization failed; database preserved for diagnosis\n",stderr); goto done;
     }
-    puts("SIMULATOR_ONLY initialized: one administrator, one tool; no physical state asserted"); result=0;
+    printf("%s initialized: one administrator, one tool; %s\n",
+           config.device.simulated ? "SIMULATOR_ONLY" : "DEVICE_SERIAL",
+           config.device.simulated ? "no physical state asserted"
+                                   : "device path recorded, physical state still unproven");
+    result=0;
 done:
     if (result) fputs("initialization did not commit; existing state is preserved\n",stderr);
     sodium_memzero(password,sizeof(password)); sodium_memzero(hash,sizeof(hash));

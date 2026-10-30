@@ -1,0 +1,13 @@
+{
+  "mode": "DEVICE_SERIAL",
+  "state_dir": "/userdata/locker/state",
+  "device_path": "/dev/ttyS4",
+  "device_id": "000000000000000000000000",
+  "certificate": "/data/locker/tls/server.crt",
+  "private_key": "/data/locker/tls/server.key",
+  "bind_address": "192.0.2.20",
+  "port": 8443,
+  "ui_uid": 0,
+  "admin_uid": 0,
+  "cabinet_name": "实验室工具柜-RK3568"
+}

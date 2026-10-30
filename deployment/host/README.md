@@ -22,9 +22,9 @@ CivetWeb的接收帧边界和原子停止标志由CMake生成构建副本，保�
 S1-06复用已验证的S1-05依赖，不升级库、不新增包，不因上游浮动分支变化换掉锁定输入。
 POSIX时钟、线程、flock、termios均来自系统libc；主机模块没有HAL依赖。
 开启LOCKER_BUILD_NETWORK后同时构建locker-service、locker-admin、已有locker-device-sim；
-LOCKER_BUILD_TESTS开启正式回归。网络依赖目前只核验Linux x86_64；RK平台另按后续卡验证。
+LOCKER_BUILD_TESTS开启正式回归。网络依赖按目标三元组核验：x86_64 为主机模拟，aarch64 为 RK3568（`deployment/target/aarch64-linux-gnu.cmake`，静态链接）。
 
-运行配置只选SIMULATOR_ONLY；默认样例loopback。私有socket、业务DB、模拟journal、测试密钥
+运行配置两个模式：`SIMULATOR_ONLY`（对接 locker-device-sim 的 socket）与 `DEVICE_SERIAL`（对接 /dev/ttyS4 真实 UART）；默认样例loopback。私有socket、业务DB、模拟journal、测试密钥
 都进入源码之外的runtime目录，不提交。业务服务与本机init共用同一个实例/维护锁，
 不自动重启、不清库、不生成默认账号。局域网测试须显式绑定及正确部署证书信任。
 固件锁 [deployment/firmware/dependencies.lock.json](../firmware/dependencies.lock.json)

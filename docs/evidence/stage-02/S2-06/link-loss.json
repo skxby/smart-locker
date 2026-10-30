@@ -1,0 +1,87 @@
+{
+  "started": "2026-10-30T13:27:54.022318+08:00",
+  "host": "192.0.2.20",
+  "freeze_seconds": 10.0,
+  "device_before": {
+    "mode": "DEGRADED",
+    "device_id": "000000000000000000000000",
+    "health_reasons": [],
+    "observed_age_ms": 96773,
+    "continuity_ok": false
+  },
+  "frozen": false,
+  "device_while_frozen": {
+    "mode": "DEGRADED",
+    "device_id": "000000000000000000000000",
+    "health_reasons": [],
+    "observed_age_ms": 96795,
+    "continuity_ok": false
+  },
+  "device_after_wait": {
+    "mode": "DEGRADED",
+    "device_id": "000000000000000000000000",
+    "health_reasons": [],
+    "observed_age_ms": 106869,
+    "continuity_ok": false
+  },
+  "counters_before": {
+    "hello": 2,
+    "get_snapshot": 310,
+    "fetch_events": 1538,
+    "ack_persisted": 0,
+    "resume_ready": 0,
+    "disarm": 0,
+    "execute_unlock": 0,
+    "query_command": 0,
+    "host_health": 251,
+    "time_anchor": 80,
+    "release_context": 0,
+    "bad_session": 0,
+    "bad_payload": 0,
+    "bad_version": 0,
+    "unsupported": 0,
+    "tx_full": 12,
+    "stale_replies": 0,
+    "rx_lost": 0,
+    "dma_duplicates": 0,
+    "dma_invalid": 0
+  },
+  "counters_after": {
+    "hello": 2,
+    "get_snapshot": 310,
+    "fetch_events": 1538,
+    "ack_persisted": 0,
+    "resume_ready": 0,
+    "disarm": 0,
+    "execute_unlock": 0,
+    "query_command": 0,
+    "host_health": 269,
+    "time_anchor": 80,
+    "release_context": 0,
+    "bad_session": 0,
+    "bad_payload": 0,
+    "bad_version": 0,
+    "unsupported": 0,
+    "tx_full": 16,
+    "stale_replies": 0,
+    "rx_lost": 0,
+    "dma_duplicates": 0,
+    "dma_invalid": 0
+  },
+  "hello_delta": 0,
+  "execute_before": 0,
+  "execute_after": 0,
+  "device_after_recovery": {
+    "mode": "DEGRADED",
+    "device_id": "000000000000000000000000",
+    "health_reasons": [],
+    "observed_age_ms": 112955,
+    "continuity_ok": false
+  },
+  "checks": {
+    "no_action_replayed": true,
+    "handshake_repeated": false,
+    "age_grew_while_frozen": true
+  },
+  "finished": "2026-10-30T13:28:12.264089+08:00"
+}

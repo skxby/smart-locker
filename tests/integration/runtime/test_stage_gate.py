@@ -64,7 +64,7 @@ def main():
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
-        config = dict(mode="SIMULATOR_ONLY", state_dir=str(state), sim_socket=str(uart),
+        config = dict(mode="SIMULATOR_ONLY", state_dir=str(state), device_path=str(uart),
                       device_id="404142434445464748494a4b", certificate=str(cert),
                       private_key=str(key), bind_address="127.0.0.1", port=port,
                       ui_uid=os.geteuid(), admin_uid=os.geteuid(), cabinet_name="Stage gate")

@@ -2,13 +2,15 @@
 #define LOCKER_DEVICE_TRANSPORT_H
 
 /*
- * S1-03 byte transport for the device adapter.
+ * S1-03 byte transport for the device adapter; S2-06 adds the real UART.
  *
- * Stage 1 has no physical UART (stage-01-task-cards.md:19: "本阶段全部设备结果
- * 为模拟"). The transport therefore speaks AF_UNIX SOCK_STREAM to
- * locker-device-sim, which carries the exact UART v1 byte stream. A real serial
- * backend is deliberately not implemented here; locker_device_open() reports
- * NOT_READY for config->simulated == false instead of pretending to drive a port.
+ * Two backends share one byte interface:
+ *   - path under /dev/  -> a real character device (the board's UART), opened
+ *     115200 8N1 raw with hardware flow control disabled;
+ *   - any other path    -> AF_UNIX SOCK_STREAM to locker-device-sim, which
+ *     carries the same UART v1 byte stream for host-only tests.
+ * locker_device_open() no longer refuses config->simulated == false; the caller
+ * chooses the backend by the path it supplies.
  *
  * Threading: one reader owns read(), one writer owns write(). Public port
  * calls only admit copied frames to a bounded FIFO. shutdown() may run during
@@ -30,6 +32,7 @@ extern "C" {
 typedef struct locker_device_transport {
     int fd;
     char path[108];
+    bool is_tty;
     atomic_bool connected;
 } locker_device_transport_t;
 

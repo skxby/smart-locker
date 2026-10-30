@@ -1,7 +1,7 @@
 {
   "mode": "SIMULATOR_ONLY",
   "state_dir": "/home/USER/locker-workspace/runtime/service",
-  "sim_socket": "/home/USER/locker-workspace/runtime/simulator/uart.sock",
+  "device_path": "/home/USER/locker-workspace/runtime/simulator/uart.sock",
   "device_id": "404142434445464748494a4b",
   "certificate": "/home/USER/locker-workspace/runtime/tls/server.crt",
   "private_key": "/home/USER/locker-workspace/runtime/tls/server.key",

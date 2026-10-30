@@ -880,10 +880,17 @@ static void test_config_validation(void)
                    "01000000000000000000000c");
     memset(&config.clock, 0, sizeof(config.clock));
     TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_device_open(device, &config));
-    /* Real hardware is out of scope for stage 1: simulated must be true. */
+    /* S2-06: the path selects the backend. A "real" configuration that still
+     * points at the simulator socket is rejected, never silently simulated. */
     config.clock = test_clock_port(&env.clock);
     config.simulated = false;
-    TEST_CHECK_STATUS(LOCKER_STATUS_NOT_READY, locker_device_open(device, &config));
+    TEST_CHECK_STATUS(LOCKER_STATUS_INVALID, locker_device_open(device, &config));
+    /* A real device node that cannot be opened fails as IO without retrying and
+     * without admitting a request: a missing UART must not look like a worked
+     * device. */
+    (void)snprintf(config.path, sizeof(config.path), "/dev/locker_absent_uart");
+    TEST_CHECK_STATUS(LOCKER_STATUS_IO_ERROR, locker_device_open(device, &config));
+    (void)snprintf(config.path, sizeof(config.path), "/tmp/locker_s103_port_absent.sock");
 
     /* A device without a sink cannot be opened. */
     TEST_CHECK_STATUS(LOCKER_STATUS_OK, locker_device_create(&bare));
