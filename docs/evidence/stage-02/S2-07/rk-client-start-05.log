@@ -1,0 +1,2 @@
+cd /userdata/locker/tests/S2-07 && pythhon3 -B bench_client.py --host 192.0.2.20 --ca /data/locker/tls/server.crt --ddevice-id 000000000000000000000000 --user admin --socket /userdata/locker/state-ss207/service.sock --evidence /userdata/locker/tests/S2-07/session-admin-05.jsonl [As207/service.sock --evidence /userdata/locker/tests/S2-07/session-admin-05.json[Kl
+[?2004lPassword: 

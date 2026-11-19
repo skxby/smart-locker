@@ -1,0 +1,4 @@
+PASSWORD_PROMPT=False
+. ./r17.sh
+[?2004lsh: ./r17.sh: No such file or directory
+[?2004hroot@RK356X:/data/locker# 

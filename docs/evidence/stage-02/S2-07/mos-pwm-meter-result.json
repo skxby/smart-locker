@@ -1,0 +1,11 @@
+{
+  "when_recorded": "2026-10-30T15:52:04.942384+08:00",
+  "source": "operator multimeter and LED observation",
+  "pulse_evidence": "mos-bench-pulse03-samples.json",
+  "fixture": "coil disconnected; 10k dummy load across OUT; PC0 disconnected; MOS connected to PB6",
+  "pwm_to_mos_signal_gnd_high_v": 3.3,
+  "pwm_after_v": 0,
+  "input_led_after": "off",
+  "output_led_after": "off",
+  "conclusion": "input control high/low preliminary check meets expectation; precise pulse width, transients, output voltage and real lock load not proven"
+}

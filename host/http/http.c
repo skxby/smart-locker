@@ -80,6 +80,15 @@ static bool admit(locker_http_t *h, const char *address)
     bool allowed = slot < 64 && h->limits[slot].attempts < 5;
     if (allowed) ++h->limits[slot].attempts;
     pthread_mutex_unlock(&h->limits_mutex);
+    if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        fprintf(stderr, "admit addr=%s slot=%zu attempts=%u now=%llu expires=%llu allowed=%d\n",
+                address ? address : "(null)", slot,
+                slot < 64 ? h->limits[slot].attempts : 0u,
+                (unsigned long long)now,
+                slot < 64 ? (unsigned long long)h->limits[slot].expires : 0ull,
+                allowed ? 1 : 0);
+        fflush(stderr);
+    }
     return allowed;
 }
 

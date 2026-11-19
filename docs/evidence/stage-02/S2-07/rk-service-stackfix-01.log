@@ -1,0 +1,24 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-stackfix-01.log 2>&1 < /ddev/null & sleep 15; echo STARTED
+[?2004l[1] 1688
+tail -6 /userdata/locker/tests/S2-07/service-stackfix-01.log
+sqlite3 "file:/userdata/locker/state-s207/business.db?mode=ro" "select collection,count(*) from documents group by collection"
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -6 /userdata/locker/tests/S2-07/seervice-stackfix-01.log
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_events|11
+device_state|1
+import_cursors|1
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_86fa64a4afaa424293a780aa8a601f44d=END\n'
+[?2004lRK_DONE_86fa64a4afaa424293a780a8a601f44d=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

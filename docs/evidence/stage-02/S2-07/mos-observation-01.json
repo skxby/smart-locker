@@ -1,0 +1,39 @@
+{
+  "when": "2026-10-30T15:41:26.959522+08:00",
+  "operation": "read-only after failed MOS observation; no trigger",
+  "cpu_state": "RUNNING",
+  "mailbox": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 130552,
+    "count": 1,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x2280",
+    "gpio_b_odr": "0x0"
+  },
+  "registers": {
+    "RCC_AHB1ENR": "0x100002",
+    "RCC_APB1ENR": "0x10000014",
+    "GPIOB_MODER": "0x2280",
+    "GPIOB_OTYPER": "0x0",
+    "GPIOB_PUPDR": "0x2100",
+    "GPIOB_IDR": "0xa79b",
+    "GPIOB_ODR": "0x0",
+    "GPIOB_AFRL": "0x2000000",
+    "TIM4_CR1": "0x8",
+    "TIM4_CCMR1": "0x78",
+    "TIM4_CCER": "0x1",
+    "TIM4_CNT": "0x0",
+    "TIM4_PSC": "0x20cf",
+    "TIM4_ARR": "0x2710",
+    "TIM4_CCR1": "0x1"
+  },
+  "operator_observation": {
+    "pwm_voltage": "no voltage observed on multimeter; numeric peak unavailable",
+    "input_led": "did not light",
+    "output_led": "did not light"
+  },
+  "physical_result": "MOS conduction not demonstrated; no lock connected"
+}

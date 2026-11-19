@@ -1,0 +1,12 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# rm -f /userdata/locker/tests/S2-07/session-admin-01.jsonl &&& echo REMOVED_EMPTY
+[?2004lREMOVED_EMPTY
+[?2004hroot@RK356X:/gec_yay# wget -q -O /userdata/locker/tests/S2-07/bench_client.py.neww http://172.100.1.2:8007/bench_client.py && echo WGET_OK
+[?2004lWGET_OK
+[?2004hroot@RK356X:/gec_yay# sha256sum /userdata/locker/tests/S2-07/bench_client.py.new [Aroot@RK356X:/gec_yay# sha256sum /userdata/locker/tests/S2-07/bench_client.py.ne[Kw
+[?2004l91a6ca223110aa53861baa89edd4eb7761c9868b67126006dc558ab2e5054d3f  /userdata/locker/tests/S2-07/bench_client.py.new
+[?2004hroot@RK356X:/gec_yay# ls -l /userdata/locker/tests/S2-07/bench_client.py.new
+[?2004l-rw-r--r-- 1 root root 12813 Oct 30 09:16 /userdata/locker/tests/S2-07/bench_client.py.new
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_18648bcb60d04cbc8e6c13dab5c1b44e=END\n'
+[?2004lRK_DONE_18648bcb60d04cbc8e6c13dab5c1b44e=END
+[?2004hroot@RK356X:/gec_yay# 

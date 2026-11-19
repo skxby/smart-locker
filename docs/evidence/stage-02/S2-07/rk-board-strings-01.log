@@ -1,0 +1,8 @@
+sha256sum /userdata/locker/locker-serviice
+[?2004l2e0a905a67864fe325dd064578b02649906d2483edf30254cbab8c62e0662158  /userdata/locker/locker-service
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -c "reply refused" /userdata/lockeer/locker-service; echo GREP_RC=$?
+[?2004l1
+GREP_RC=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# md5sum /userdata/locker/tests/S2-07/loccker-service-prev7 2>/dev/null | head -1
+[?2004l3d820a0a2b50851ef5abffe5bb30fab7  /userdata/locker/tests/S2-07/locker-service-prev7
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

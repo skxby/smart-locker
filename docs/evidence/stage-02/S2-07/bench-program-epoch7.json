@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "image": "build\\firmware-s204-gnu\\hse8_168\\locker_s204.hex",
+  "hex_sha256": "8d6b6b95a5f83a6d422d2bf4907847118fc57b9f225a0f3b222c628c164b1080",
+  "payload_bytes": 34936,
+  "sectors_erased": [
+    "0x8000000",
+    "0x8004000",
+    "0x8008000"
+  ],
+  "pc_after_reset": "0x8000188",
+  "replaced_head_sha256": "a453bbc9f6c3ff5d4251b4705d517cb140207cb590af14af128f58e7ee5c1931",
+  "bench_diag": {
+    "phase": 2,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 0,
+    "boot_id": "0",
+    "action_watermark": "0",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 0,
+    "first_available": [
+      "0",
+      "0"
+    ],
+    "last_committed": [
+      "0",
+      "0"
+    ],
+    "ack_persisted": [
+      "0",
+      "0"
+    ],
+    "journal_state": "UNINITIALIZED",
+    "continuity_ok": 0,
+    "commands_served": 0,
+    "raw": [
+      2,
+      0,
+      0,
+      15679512,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "when": "2026-10-30T19:45:25.956674+08:00"
+}

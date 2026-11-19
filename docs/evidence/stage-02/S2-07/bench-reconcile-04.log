@@ -1,0 +1,5 @@
+device
+{"status": 200, "body": {"data": {"device_id": "000000000000000000000000", "cabinet_name": "??????????????????-RK3568", "contract_version": "0.2.1", "simulated": false, "mode": "DEGRADED", "health_reasons": [], "ui_restart_count": null, "physical": {"device_id": "000000000000000000000000", "journal_epoch": "6fad5fcd-7242-4c6b-8a9f-4540d4cfd976", "boot_id": "2", "physical_revision": "41", "door": "CLOSED", "item": "PRESENT", "supply_mv": null, "observed_age_ms": 180625, "time_quality": "HOST_SYNCED", "continuity_ok": true, "dropped_events": "0", "durable_cursor": {"device_id": "000000000000000000000000", "journal_epoch": "6fad5fcd-7242-4c6b-8a9f-4540d4cfd976", "boot_id": "2", "event_seq": "36"}}}, "snapshot_revision": "23", "request_id": "145463e3-8ff7-40d5-87ac-829e3fb9e03b"}}
+bench> reconcile 6fad5fcd-7242-4c6b-8a9f-4540d4cfd976 2 41 23 5f748c7b-523a-4c96-8dd8-b3d41e32ab2c "bench reconcile after journal epoch provision"
+{"status": 503, "body": {"error": {"code": "DEVICE_UNAVAILABLE", "message": "Request rejected", "retryable": true, "operation_id": null}, "request_id": "839787da-4d1b-495f-a319-e0666db74edc"}}
+bench> 

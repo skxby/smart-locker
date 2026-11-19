@@ -1,0 +1,10 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# kill -TERM 960; sleep 2; pidof locker-sservice; echo STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-s207-01.log 2>&1 < /dev/null  (wd: /gec_yay)
+(wd now: /userdata/locker/tests/S2-07)
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-01.log 2>&1 < /dev//null & sleep 1; echo STARTED
+[?2004l[1] 1240
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sleep 6; tail -14 /userdata/locker/testts/S2-07/service-trace-01.log
+[?2004lprintf 'RK_DONE_86f6e46910c74ae5b05da1234fabdc90=END\n'

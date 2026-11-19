@@ -1,0 +1,5 @@
+wget -q -O s10.sh http://172.100.1.2:80007/s10.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r11.sh http://172.100.1.2:80007/r11.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s10.sh
+[?2004l2222
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

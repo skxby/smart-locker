@@ -1,0 +1,33 @@
+{
+  "snapshot_files": 4058,
+  "vm_source": "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src",
+  "manifest_sha256": "e2c14c060bc067cabb07455189b2c9600c5a68fa4c506e0fc6a489d1c2eec619",
+  "changes_after_snapshot": [
+    "config/development/stage-plan.json",
+    "host/runtime/README.md"
+  ],
+  "compiled_code_and_tests_match_current": true,
+  "debug_ctest": {
+    "passed": 37,
+    "total": 37,
+    "exit_code": 0
+  },
+  "asan_ubsan_ctest": {
+    "passed": 37,
+    "total": 37,
+    "exit_code": 0
+  },
+  "tsan": "not run: this diff changes no C threads/shared state/locks; client is single-threaded Python",
+  "logs": {
+    "asan-build.log": "305de7fee5576da049dc7dd70f1642b84c68c53bfbbc6b74f560937572caac4a",
+    "asan-configure.log": "147dc217356a58536d094fe78c27e8d7a1832f4f1309abf56bccc15c91192805",
+    "asan-ctest.log": "3798cdbc54003c8e97caa35dd3c446df6584ba863a76816332e0b975940b5652",
+    "debug-build.log": "3b25ee97a6f822e982f199142afd92b1fcc511dccd1052c17bc8d4db828cf84c",
+    "debug-configure.log": "65293f01d6246726c495d30095b40543d2c2472d3d3da7a636b034eb81a454e7",
+    "debug-ctest.log": "d1057a28d9aa3d605cfe33d148ea1c11970e8454e4250780e379e5b0f933889f",
+    "environment.log": "ac8353b6b45c66ebeab404bbb678562b92bf155e2a0164a646fdabd117eae882",
+    "results.log": "42c8d28ca3ac50456aa8d90a0ee1ca720d65b8e34644ca0ad65b7da1d90cd396",
+    "source-match.log": "436e4bc714ecc1e4488c7bb9509905ae09ba8d1cc468ea8204260a436c59c069"
+  },
+  "non_build_changes_only": true
+}

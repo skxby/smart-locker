@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,620) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d","boot_id":"2","physical_revision":"1","door":"CLOSED","item":"ABSENT","supply_mv":null,"observed_age_ms":121,"time_quality":"HOST_SYNCED","continuity_ok":true,"dropped_events":"0","durable_cursor":{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d","boot_id":"2","event_seq":"3"}}
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,200) from documents where coollection='import_cursors'"
+[?2004l{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d","through":{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d",
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_09f7af03f52745548c35c199bee19b709=END\n'
+[?2004lRK_DONE_09f7af03f52745548c35c19bee19b709=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

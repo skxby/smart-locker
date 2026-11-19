@@ -1,0 +1,12 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ""select collection,count(*) from documents group by collection"
+[?2004ldevice_state|1
+sessions|7
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ""select json_extract(value,'$.user.username'), json_extract(value,'$.user.role')  from documents where collection='users'"
+[?2004lError: no such column: value
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_ea2e84bdca364776b692781c51cdcb01=END\n'
+[?2004lRK_DONE_ea2e84bdca364776b692781c51cdcb01=END
+[?2004hroot@RK356X:/gec_yay# 

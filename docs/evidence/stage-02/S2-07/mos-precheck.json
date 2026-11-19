@@ -1,0 +1,13 @@
+{
+  "when": "2026-10-30T15:14:46.716161+08:00",
+  "operation": "read-only flash and GPIO survey; no halt/reset/program/trigger",
+  "state": "RUNNING",
+  "head_64k_sha256": "de62dfd4bb115a42f04728aa6de94e00530fb76a2040624bcab5e9225e2f5c33",
+  "gpiob_moder": "0xa9001280",
+  "gpiob_odr": "0x1000",
+  "gpiob_idr": "0x17bb",
+  "product_hex_sha256": "9b6032832c92636118d0836c4b2cb49539e1911b040919e8b9f0d83f6f22dbac",
+  "product_segments_match": true,
+  "cutoff_bench_hex_sha256": "6552b6a5890743e0a9d823f9b5f5706e7974e3176c6cda411ae7677a201c3248",
+  "cutoff_bench_segments_match": false
+}

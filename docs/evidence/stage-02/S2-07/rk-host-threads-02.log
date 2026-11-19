@@ -1,0 +1,10 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cat /proc/1751/task/*/comm | sort | uniiq -c
+[?2004l      1 civetweb-master
+      4 civetweb-worker
+      7 locker-service
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cat /proc/1751/task/*/wchan 2>/dev/nulll | sort | uniq -c
+[?2004l      1 hrtimer_nanosleepfutex_wait_queue_medo_sys_pollfutex_wait_queue_mehrtimer_nanosleepfutex_wait_queue_mefutex_wait_queue_mefutex_wait_queue_mefutex_wait_queue_medo_sys_pollhrtimer_nanosleepdo_sys_poll
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_bcbecc36d2d34228b369666691cd5ce97=END\n'
+[?2004lRK_DONE_bcbecc36d2d34228b36966691cd5ce97=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

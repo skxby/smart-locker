@@ -1,0 +1,636 @@
+Start testing: Oct 30 18:34 CST
+----------------------------------------------------------
+1/37 Testing: common.test_bounded_queue
+1/37 Test: common.test_bounded_queue
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_bounded_queue"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_bounded_queue" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.bounded_queue (97 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_bounded_queue" end time: Oct 30 18:34 CST
+"common.test_bounded_queue" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/37 Testing: common.test_build_info
+2/37 Test: common.test_build_info
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_build_info"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_build_info" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.build_info (5 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_build_info" end time: Oct 30 18:34 CST
+"common.test_build_info" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/37 Testing: common.test_clock
+3/37 Test: common.test_clock
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_clock"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_clock" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.clock (53 checks)
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_clock" end time: Oct 30 18:34 CST
+"common.test_clock" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/37 Testing: common.test_log
+4/37 Test: common.test_log
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_log"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_log" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.log (164 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_log" end time: Oct 30 18:34 CST
+"common.test_log" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/37 Testing: common.test_numeric
+5/37 Test: common.test_numeric
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_numeric"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_numeric" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.numeric (133 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_numeric" end time: Oct 30 18:34 CST
+"common.test_numeric" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/37 Testing: common.test_uuid
+6/37 Test: common.test_uuid
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common/test_uuid"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/common
+"common.test_uuid" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS common.uuid (53 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"common.test_uuid" end time: Oct 30 18:34 CST
+"common.test_uuid" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/37 Testing: storage.test_event_key
+7/37 Test: storage.test_event_key
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage/test_event_key"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage
+"storage.test_event_key" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS storage.event_key (80 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"storage.test_event_key" end time: Oct 30 18:34 CST
+"storage.test_event_key" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/37 Testing: storage.test_regex
+8/37 Test: storage.test_regex
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage/test_regex"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage
+"storage.test_regex" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS storage.regex (46 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"storage.test_regex" end time: Oct 30 18:34 CST
+"storage.test_regex" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/37 Testing: storage.test_u64
+9/37 Test: storage.test_u64
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage/test_u64"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage
+"storage.test_u64" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS storage.u64 (90 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"storage.test_u64" end time: Oct 30 18:34 CST
+"storage.test_u64" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/37 Testing: storage.test_schema
+10/37 Test: storage.test_schema
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage/test_schema"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage
+"storage.test_schema" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS storage.schema (131 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"storage.test_schema" end time: Oct 30 18:34 CST
+"storage.test_schema" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/37 Testing: storage.test_repository
+11/37 Test: storage.test_repository
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage/test_repository"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/storage
+"storage.test_repository" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS storage.repository (865 checks)
+<end of output>
+Test time =   0.17 sec
+----------------------------------------------------------
+Test Passed.
+"storage.test_repository" end time: Oct 30 18:34 CST
+"storage.test_repository" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/37 Testing: storage.schema_source_drift
+12/37 Test: storage.schema_source_drift
+Command: "/usr/bin/python3" "-B" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/host/storage/tools/extract_schema.py" "--check"
+Directory: /home/%USER%/locker-workspace/S2-07/batches/20261030-01/src
+"storage.schema_source_drift" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+OK host/storage/src/schema_records.json matches contracts/internal-data.schema.json (27525 bytes)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"storage.schema_source_drift" end time: Oct 30 18:34 CST
+"storage.schema_source_drift" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/37 Testing: device.test_codec
+13/37 Test: device.test_codec
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device/test_codec"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device
+"device.test_codec" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS device.test_codec (179 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"device.test_codec" end time: Oct 30 18:34 CST
+"device.test_codec" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/37 Testing: device.test_wire
+14/37 Test: device.test_wire
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device/test_wire"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device
+"device.test_wire" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS device.test_wire (130 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"device.test_wire" end time: Oct 30 18:34 CST
+"device.test_wire" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/37 Testing: device.test_sim_journal
+15/37 Test: device.test_sim_journal
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device/test_sim_journal"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device
+"device.test_sim_journal" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS device.test_sim_journal (461 checks)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"device.test_sim_journal" end time: Oct 30 18:34 CST
+"device.test_sim_journal" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/37 Testing: device.test_sim_protocol
+16/37 Test: device.test_sim_protocol
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device/test_sim_protocol"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/device
+"device.test_sim_protocol" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS device.test_sim_protocol (507 checks)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"device.test_sim_protocol" end time: Oct 30 18:34 CST
+"device.test_sim_protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/37 Testing: domain.test_domain_text
+17/37 Test: domain.test_domain_text
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_text"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_text" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_text (213 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_text" end time: Oct 30 18:34 CST
+"domain.test_domain_text" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/37 Testing: domain.test_domain_json
+18/37 Test: domain.test_domain_json
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_json"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_json" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_json (165 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_json" end time: Oct 30 18:34 CST
+"domain.test_domain_json" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/37 Testing: domain.test_domain_repo
+19/37 Test: domain.test_domain_repo
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_repo"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_repo" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_repo (345 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_repo" end time: Oct 30 18:34 CST
+"domain.test_domain_repo" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/37 Testing: domain.test_domain_state
+20/37 Test: domain.test_domain_state
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_state"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_state" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_state (380 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_state" end time: Oct 30 18:34 CST
+"domain.test_domain_state" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/37 Testing: domain.test_domain_device
+21/37 Test: domain.test_domain_device
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_device"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_device" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_device (933 checks)
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_device" end time: Oct 30 18:34 CST
+"domain.test_domain_device" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/37 Testing: domain.test_domain_commands
+22/37 Test: domain.test_domain_commands
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_commands"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_commands" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_commands (658 checks)
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_commands" end time: Oct 30 18:34 CST
+"domain.test_domain_commands" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/37 Testing: domain.test_domain_core
+23/37 Test: domain.test_domain_core
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain/test_domain_core"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/unit/domain
+"domain.test_domain_core" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS domain.test_domain_core (217 checks)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"domain.test_domain_core" end time: Oct 30 18:34 CST
+"domain.test_domain_core" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/37 Testing: contract.device.test_golden_frames
+24/37 Test: contract.device.test_golden_frames
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/test_golden_frames"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device
+"contract.device.test_golden_frames" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS contract.device.test_golden_frames (168 checks)
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"contract.device.test_golden_frames" end time: Oct 30 18:34 CST
+"contract.device.test_golden_frames" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/37 Testing: contract.device.test_device_port
+25/37 Test: contract.device.test_device_port
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/test_device_port"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device
+"contract.device.test_device_port" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS contract.device.test_device_port (420 checks)
+<end of output>
+Test time =   7.06 sec
+----------------------------------------------------------
+Test Passed.
+"contract.device.test_device_port" end time: Oct 30 18:34 CST
+"contract.device.test_device_port" time elapsed: 00:00:07
+----------------------------------------------------------
+
+26/37 Testing: contract.device.daemon_smoke
+26/37 Test: contract.device.daemon_smoke
+Command: "/usr/bin/python3" "-B" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/contract/device/daemon_smoke.py" "/home/%USER%/locker-workspace/build/S2-07-debug/host/simulator/locker-device-sim" "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/daemon-smoke"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device
+"contract.device.daemon_smoke" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+ready_line=ready device backend: simulator uart=/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/daemon-smoke/uart.sock control=/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/daemon-smoke/control.sock journal=/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/device/daemon-smoke/device.db
+socket_mode_uart=0600
+socket_mode_control=0600
+status_before=[('ack_persisted', '0:0'), ('action_watermark', '0'), ('boot_id', '1'), ('command_state', '0'), ('continuity_ok', '1'), ('device_mode', '0'), ('door', '1'), ('dropped_events', '0'), ('event_count', '1'), ('first_available', '1:1'), ('has_active', '0'), ('item', '2'), ('journal_epoch', '5b1d6c65-05c3-4dfd-b896-402173e2f75c'), ('journal_state', '1'), ('last_committed', '1:1'), ('session', '00000000-0000-0000-0000-000000000000')]
+status_after_hello=[('ack_persisted', '0:0'), ('action_watermark', '0'), ('boot_id', '1'), ('command_state', '0'), ('continuity_ok', '1'), ('device_mode', '0'), ('door', '1'), ('dropped_events', '0'), ('event_count', '1'), ('first_available', '1:1'), ('has_active', '0'), ('item', '2'), ('journal_epoch', '5b1d6c65-05c3-4dfd-b896-402173e2f75c'), ('journal_state', '1'), ('last_committed', '1:1'), ('session', '00000000-0000-4000-8000-00000000000a')]
+snapshot_frame_types=[(130, 189, 2)]
+status_after_ack=[('ack_persisted', '1:3'), ('action_watermark', '0'), ('boot_id', '1'), ('command_state', '0'), ('continuity_ok', '1'), ('device_mode', '0'), ('door', '2'), ('dropped_events', '0'), ('event_count', '3'), ('first_available', '1:1'), ('has_active', '0'), ('item', '2'), ('journal_epoch', '5b1d6c65-05c3-4dfd-b896-402173e2f75c'), ('journal_state', '1'), ('last_committed', '1:3'), ('session', '00000000-0000-4000-8000-00000000000a')]
+status_after_gap=[('ack_persisted', '1:3'), ('action_watermark', '0'), ('boot_id', '1'), ('command_state', '0'), ('continuity_ok', '0'), ('device_mode', '2'), ('door', '2'), ('dropped_events', '3'), ('event_count', '4'), ('first_available', '1:1'), ('has_active', '0'), ('item', '2'), ('journal_epoch', '5b1d6c65-05c3-4dfd-b896-402173e2f75c'), ('journal_state', '1'), ('last_committed', '1:4'), ('session', '00000000-0000-4000-8000-00000000000a')]
+status_after_restart=[('ack_persisted', '1:3'), ('action_watermark', '0'), ('boot_id', '2'), ('command_state', '0'), ('continuity_ok', '0'), ('device_mode', '0'), ('door', '0'), ('dropped_events', '3'), ('event_count', '5'), ('first_available', '1:1'), ('has_active', '0'), ('item', '0'), ('journal_epoch', '5b1d6c65-05c3-4dfd-b896-402173e2f75c'), ('journal_state', '1'), ('last_committed', '2:1'), ('session', '00000000-0000-0000-0000-000000000000')]
+daemon_exit=0
+journal_limit_100_exit=2 stderr=journal path too long
+journal_limit_107_exit=2 stderr=journal path too long
+journal_collision_exit=2 stderr=paths must name distinct filesystem entries
+alias_control_exit=2 stderr=paths must name distinct filesystem entries
+alias_uart_exit=2 stderr=paths must name distinct filesystem entries
+wal_collision_exit=2 stderr=paths must name distinct filesystem entries
+shm_collision_exit=2 stderr=paths must name distinct filesystem entries
+same_sockets_exit=2 stderr=paths must name distinct filesystem entries
+same_alias_exit=2 stderr=paths must name distinct filesystem entries
+same_alias_sockets_exit=2 stderr=paths must name distinct filesystem entries
+link_to_control_exit=2 stderr=paths must name distinct filesystem entries
+link_to_uart_exit=2 stderr=paths must name distinct filesystem entries
+link_absolute_exit=2 stderr=paths must name distinct filesystem entries
+link_chain_exit=2 stderr=paths must name distinct filesystem entries
+link_parent_exit=2 stderr=paths must name distinct filesystem entries
+link_wal_exit=2 stderr=paths must name distinct filesystem entries
+link_shm_exit=2 stderr=paths must name distinct filesystem entries
+link_loop_exit=2 stderr=paths must name distinct filesystem entries
+link_spelling_wal_exit=2 stderr=paths must name distinct filesystem entries
+link_spelling_shm_exit=2 stderr=paths must name distinct filesystem entries
+link_hops_exit=2 stderr=paths must name distinct filesystem entries
+DAEMON_CHECKS=391
+DAEMON_FAILURES=0
+PASS locker-device-sim smoke (391 checks)
+<end of output>
+Test time =   3.66 sec
+----------------------------------------------------------
+Test Passed.
+"contract.device.daemon_smoke" end time: Oct 30 18:34 CST
+"contract.device.daemon_smoke" time elapsed: 00:00:03
+----------------------------------------------------------
+
+27/37 Testing: integration.test_core_interrupt_matrix
+27/37 Test: integration.test_core_interrupt_matrix
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/integration/test_core_interrupt_matrix"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/integration
+"integration.test_core_interrupt_matrix" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+it_create_operation: business=4 length=0 json=
+PASS integration.test_core_interrupt_matrix (133 checks)
+<end of output>
+Test time =  10.44 sec
+----------------------------------------------------------
+Test Passed.
+"integration.test_core_interrupt_matrix" end time: Oct 30 18:34 CST
+"integration.test_core_interrupt_matrix" time elapsed: 00:00:10
+----------------------------------------------------------
+
+28/37 Testing: hardware.bench_client_boundaries
+28/37 Test: hardware.bench_client_boundaries
+Command: "/usr/bin/python3" "-B" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/hardware/test_bench_client.py"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/hardware
+"hardware.bench_client_boundaries" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.045s
+
+OK
+<end of output>
+Test time =   0.18 sec
+----------------------------------------------------------
+Test Passed.
+"hardware.bench_client_boundaries" end time: Oct 30 18:34 CST
+"hardware.bench_client_boundaries" time elapsed: 00:00:00
+----------------------------------------------------------
+
+29/37 Testing: network.pinned_dependencies
+29/37 Test: network.pinned_dependencies
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_network_dependencies"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.pinned_dependencies" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS network.pinned_dependencies (10 checks)
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"network.pinned_dependencies" end time: Oct 30 18:34 CST
+"network.pinned_dependencies" time elapsed: 00:00:00
+----------------------------------------------------------
+
+30/37 Testing: network.events
+30/37 Test: network.events
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_network_events"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.events" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS network.events (57 checks)
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"network.events" end time: Oct 30 18:34 CST
+"network.events" time elapsed: 00:00:00
+----------------------------------------------------------
+
+31/37 Testing: network.core_auth
+31/37 Test: network.core_auth
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_network_core_auth"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.core_auth" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS network.core_auth (32 checks)
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"network.core_auth" end time: Oct 30 18:34 CST
+"network.core_auth" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/37 Testing: network.auth_repository
+32/37 Test: network.auth_repository
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_auth_repository"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.auth_repository" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+PASS network.auth_repository (26 checks)
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"network.auth_repository" end time: Oct 30 18:34 CST
+"network.auth_repository" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/37 Testing: network.https_sessions
+33/37 Test: network.https_sessions
+Command: "/usr/bin/python3" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/contract/network/test_https.py" "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_auth_repository" "/home/%USER%/locker-workspace/build/S2-07-debug/network-dependencies/bin/openssl"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.https_sessions" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+HTTPS trust, authentication, revocation, body and route boundaries passed
+<end of output>
+Test time =   7.31 sec
+----------------------------------------------------------
+Test Passed.
+"network.https_sessions" end time: Oct 30 18:34 CST
+"network.https_sessions" time elapsed: 00:00:07
+----------------------------------------------------------
+
+34/37 Testing: network.https_flow
+34/37 Test: network.https_flow
+Command: "/usr/bin/python3" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/contract/network/test_https_flow.py" "/home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network/test_https_flow_fixture" "/home/%USER%/locker-workspace/build/S2-07-debug/network-dependencies/bin/openssl"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/contract/network
+"network.https_flow" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+TLS operation/idempotency/owner matrix, IPC presence, single simulated pulses and history pagination passed
+<end of output>
+Test time =   6.92 sec
+----------------------------------------------------------
+Test Passed.
+"network.https_flow" end time: Oct 30 18:34 CST
+"network.https_flow" time elapsed: 00:00:06
+----------------------------------------------------------
+
+35/37 Testing: runtime.health
+35/37 Test: runtime.health
+Command: "/home/%USER%/locker-workspace/build/S2-07-debug/tests/integration/runtime/test_runtime_health"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/integration/runtime
+"runtime.health" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+runtime health: unknown UI, source counter freshness, identity, saturation passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"runtime.health" end time: Oct 30 18:34 CST
+"runtime.health" time elapsed: 00:00:00
+----------------------------------------------------------
+
+36/37 Testing: runtime.lifecycle
+36/37 Test: runtime.lifecycle
+Command: "/usr/bin/python3" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/integration/runtime/test_lifecycle.py" "/home/%USER%/locker-workspace/build/S2-07-debug/host/runtime/locker-service" "/home/%USER%/locker-workspace/build/S2-07-debug/host/cli/locker-admin" "/home/%USER%/locker-workspace/build/S2-07-debug/host/simulator/locker-device-sim" "/home/%USER%/locker-workspace/build/S2-07-debug/network-dependencies/bin/openssl"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/integration/runtime
+"runtime.lifecycle" start time: Oct 30 18:34 CST
+Output:
+----------------------------------------------------------
+terminal input: hidden echo, success restoration and prompt SIGINT restoration passed
+wire stalled Core evidence: [{"elapsed_ms": 956, "progress": 151, "age_ms": 968}, {"elapsed_ms": 1961, "progress": 151, "age_ms": 1973}, {"elapsed_ms": 2967, "progress": 151, "age_ms": 2979}, {"elapsed_ms": 3978, "progress": 151, "age_ms": 3989}]
+wire health: HELLO identity, unknown UI, single sender cadence, real Core stall/recovery passed
+runtime lifecycle: initialization, trusted HTTPS, restart, exclusion, failures, privacy and cleanup passed
+<end of output>
+Test time =  13.23 sec
+----------------------------------------------------------
+Test Passed.
+"runtime.lifecycle" end time: Oct 30 18:35 CST
+"runtime.lifecycle" time elapsed: 00:00:13
+----------------------------------------------------------
+
+37/37 Testing: integration.stage_gate_process
+37/37 Test: integration.stage_gate_process
+Command: "/usr/bin/python3" "/home/%USER%/locker-workspace/S2-07/batches/20261030-01/src/tests/integration/runtime/test_stage_gate.py" "/home/%USER%/locker-workspace/build/S2-07-debug/host/runtime/locker-service" "/home/%USER%/locker-workspace/build/S2-07-debug/host/cli/locker-admin" "/home/%USER%/locker-workspace/build/S2-07-debug/host/simulator/locker-device-sim" "/home/%USER%/locker-workspace/build/S2-07-debug/network-dependencies/bin/openssl"
+Directory: /home/%USER%/locker-workspace/build/S2-07-debug/tests/integration/runtime
+"integration.stage_gate_process" start time: Oct 30 18:35 CST
+Output:
+----------------------------------------------------------
+stage gate real-process borrow/return/restart/reconnect: TLS, auth, IPC, UART, reconciliation, idempotency, SQLite passed
+<end of output>
+Test time =  14.84 sec
+----------------------------------------------------------
+Test Passed.
+"integration.stage_gate_process" end time: Oct 30 18:35 CST
+"integration.stage_gate_process" time elapsed: 00:00:14
+----------------------------------------------------------
+
+End testing: Oct 30 18:35 CST

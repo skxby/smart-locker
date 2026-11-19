@@ -1,0 +1,11 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 2; eccho STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-trace-03.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07 && wgett -q -O locker-service-s207b.new http://172.100.1.2:8007/locker-service-s207b &&  sha256sum locker-service-s207b.new
+[?2004ld1e96238412d144a168ace1c4b921f6433ca7509dac9a07af6cbc01a2ae59370  locker-service-s207b.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-s207-old && mv /userdata/locker/tests/S22-07/locker-service-s207b.new /userdata/locker/locker-service && chmod 755 /userddata/locker/locker-service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-04.log 2>&1 < /dev//null & sleep 8; echo STARTED
+[?2004l[1] 1361
+printf 'RK_DONE_490d522251d94c58b41eaef99df5b54e=END\n'

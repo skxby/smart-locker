@@ -1,0 +1,6 @@
+wget -q -O s207k.new http://172.100.1.22:8007/locker-service-s207k && sha256sum s207k.new
+[?2004l8604d645ee2c44540b470e5cb984981843a9ae66b3c82f120a96777d3ec8d78d  s207k.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# python3 lt.py
+[?2004lpython3: can't open file 'lt.py': [Errno 2] No such file or directory
+[?2004hroot@RK356X:/data/locker# grep -E "admit|login gate" /userdata/locker/tests/S2-077/service-epoch10-01.log | tail -6
+[?2004l[?2004hroot@RK356X:/data/locker# 

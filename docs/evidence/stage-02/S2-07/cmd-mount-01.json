@@ -1,0 +1,67 @@
+{
+  "command": 3,
+  "name": "MOUNT",
+  "diag": {
+    "phase": 4100,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 1,
+    "boot_id": "12",
+    "action_watermark": "1",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 30,
+    "first_available": [
+      "1",
+      "1"
+    ],
+    "last_committed": [
+      "12",
+      "1"
+    ],
+    "ack_persisted": [
+      "1",
+      "3"
+    ],
+    "journal_state": "DEGRADED",
+    "continuity_ok": 0,
+    "commands_served": 2049,
+    "raw": [
+      4100,
+      0,
+      0,
+      15679512,
+      1,
+      12,
+      0,
+      1,
+      0,
+      0,
+      0,
+      30,
+      1,
+      0,
+      1,
+      0,
+      12,
+      0,
+      1,
+      0,
+      1,
+      0,
+      3,
+      0,
+      2,
+      0,
+      0,
+      0,
+      2,
+      2,
+      0,
+      2049
+    ]
+  },
+  "when": "2026-10-30T18:04:47.110620+08:00",
+  "label_correction": "journal_state label was regenerated after fixing the enum map (0=UNINITIALIZED,1=HEALTHY,2=DEGRADED,3=FAULT,4=FULL); raw[] is the untouched ground truth"
+}

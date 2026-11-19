@@ -1,0 +1,5 @@
+cd /userdata/locker/tests/S2-07 && wgett -q -O bench_client.py.new http://172.100.1.2:8007/bench_client.py && sha256sum  bench_client.py.new
+[?2004lwget: server returned error: HTTP/1.0 404 File not found
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv bench_client.py.new bench_client.py  && chmod 600 bench_client.py && echo CLIENT_UPDATED
+[?2004lmv: cannot stat 'bench_client.py.new': No such file or directory
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

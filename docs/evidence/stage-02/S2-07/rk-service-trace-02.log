@@ -1,0 +1,21 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -16 /userdata/locker/tests/S2-07/sservice-trace-01.log
+[?2004lDEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service
+[?2004l1242
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_71aa5de64cc443adbfd964bb1dfbd2551=END\n'
+[?2004lRK_DONE_71aa5de64cc443adbfd964b1dfbd2551=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

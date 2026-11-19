@@ -1,0 +1,5 @@
+cd /userdata/locker/tests/S2-07 && wgett -q -O bench_client.py.new http://172.100.1.2:8007/bench_client.py && sha256sum  bench_client.py.new
+[?2004la99c45eb7af1c90a61f4f7393ffb42e264f0119b6980745fa76226c0b597b34e  bench_client.py.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv bench_client.py.new bench_client.py  && chmod 600 bench_client.py && echo CLIENT_UPDATED
+[?2004lCLIENT_UPDATED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

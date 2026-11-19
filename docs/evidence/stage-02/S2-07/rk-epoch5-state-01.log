@@ -1,0 +1,12 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service
+[?2004l1751
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -3 /userdata/locker/tests/S2-07/seervice-epoch5-02.log
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,520) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d","boot_id":"4","physical_revision":"1","door":"OPEN","item":"ABSENT","supply_mv":null,"observed_age_ms":121,"time_quality":"HOST_SYNCED","continuity_ok":false,"dropped_events":"18446744073709551615","durable_cursor":{"device
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_91e056ba6c8c4b59ae7fc5881409cb8ed=END\n'
+[?2004lRK_DONE_91e056ba6c8c4b59ae7fc581409cb8ed=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,11 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "fetch|sink" /userdata/locker/ttests/S2-07/service-epoch5-03.log | head -6
+[?2004lfetch refused=6
+fetch refused=6
+fetch refused=6
+fetch refused=6
+fetch refused=6
+fetch refused=6
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_4d8c0068be784b518842b2eeb6a4f0138=END\n'
+[?2004lRK_DONE_4d8c0068be784b518842b2eb6a4f0138=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

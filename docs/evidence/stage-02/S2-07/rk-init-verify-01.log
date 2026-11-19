@@ -1,0 +1,16 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# ls -la /userdata/locker/state-s207
+[?2004ltotal 24
+drwx------ 2 root root  4096 Oct 30 09:09 .
+drwxr-xr-x 6 root root  4096 Oct 30 09:03 ..
+-rw------- 1 root root 16384 Oct 30 09:09 business.db
+-rw------- 1 root root     0 Oct 30 09:08 instance.lock
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state-s207/business.db?mode==ro" "select collection,count(*) from documents group by collection"
+[?2004ltools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/gec_yay# command -v setsid
+[?2004l/usr/bin/setsid
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_de00ffa5bac24fa9b2821463f6d6cb61=END\n'
+[?2004lRK_DONE_de00ffa5bac24fa9b2821463f6d6cb61=END
+[?2004hroot@RK356X:/gec_yay# 

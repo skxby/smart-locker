@@ -1,0 +1,10 @@
+cd /userdata/locker/tests/S2-07
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 2
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O s207g.new http://172.100.1.22:8007/locker-service-s207g && sha256sum s207g.new
+[?2004lef71a39b203c08093ad9b41e2a4c9a475c49b7b59e977720b7d01865510909e0  s207g.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev5
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv s207g.new /userdata/locker/locker-seervice && chmod 755 /userdata/locker/locker-service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s10.sh
+[?2004l2253
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

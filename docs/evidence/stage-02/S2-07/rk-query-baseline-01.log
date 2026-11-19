@@ -1,0 +1,16 @@
+snapshot
+{"status": 200, "body": {"data": {"device": {"device_id": "000000000000000000000000", "cabinet_name": "??????????????????-RK3568", "contract_version": "0.2.1", "simulated": false, "mode": "RECONCILING", "health_reasons": [], "ui_restart_count": null, "physical": {"device_id": "000000000000000000000000", "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f", "boot_id": "11", "physical_revision": "1", "door": "OPEN", "item": "ABSENT", "supply_mv": null, "observed_age_ms": 195, "time_quality": "HOST_SYNCED", "continuity_ok": false, "dropped_events": "18446744073709551615", "durable_cursor": {"device_id": "000000000000000000000000", "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f", "boot_id": "0", "event_seq": "0"}}}, "tools": [{"id": "86f53966-a094-4c93-b363-6ef679748a49", "name": "A1", "slot_id": 1, "availability": "UNAVAILABLE", "tool_revision": "1"}], "active_operations": [], "loans": []}, "snapshot_revision": "3", "request_id": "49834a3e-0e5b-441e-a6b9-65ac9c1125f2"}}
+bench> 
+===CMD_END:snapshot===
+device
+{"status": 200, "body": {"data": {"device_id": "000000000000000000000000", "cabinet_name": "??????????????????-RK3568", "contract_version": "0.2.1", "simulated": false, "mode": "RECONCILING", "health_reasons": [], "ui_restart_count": null, "physical": {"device_id": "000000000000000000000000", "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f", "boot_id": "11", "physical_revision": "1", "door": "OPEN", "item": "ABSENT", "supply_mv": null, "observed_age_ms": 404, "time_quality": "HOST_SYNCED", "continuity_ok": false, "dropped_events": "18446744073709551615", "durable_cursor": {"device_id": "000000000000000000000000", "journal_epoch": "9628099c-8c85-4af6-973a-2c4b8322461f", "boot_id": "0", "event_seq": "0"}}}, "snapshot_revision": "3", "request_id": "c40500e4-a7bb-462f-9675-3d04ed5eb2b8"}}
+bench> 
+===CMD_END:device===
+tools
+{"status": 200, "body": {"data": {"items": [{"id": "86f53966-a094-4c93-b363-6ef679748a49", "name": "A1", "slot_id": 1, "availability": "UNAVAILABLE", "tool_revision": "1"}]}, "snapshot_revision": "3", "request_id": "8f5e3069-fe17-4d2f-b6fd-9f84dbc56485"}}
+bench> 
+===CMD_END:tools===
+users
+{"status": 200, "body": {"data": {"items": [{"id": "18df8f12-62c8-4a5b-8ef1-ecfcf4148fef", "username": "admin", "display_name": "admin", "role": "ADMIN", "enabled": true, "user_revision": "1"}]}, "snapshot_revision": "3", "request_id": "553bde80-8d32-434e-b9ab-025e038740e3"}}
+bench> 
+===CMD_END:users===

@@ -1,0 +1,28 @@
+{
+  "when": "2026-10-30T15:36:22.478740+08:00",
+  "status": "PASS",
+  "operation": "read-only post-interruption bench check; no trigger",
+  "sector0_sha256": "a39ec7dc5287c25161ebdb20d0cad5c3cbf9d1fb54225f7b962805426f1b8e06",
+  "first": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 100074,
+    "count": 0,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  },
+  "second": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 100105,
+    "count": 0,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x1280",
+    "gpio_b_odr": "0x0"
+  }
+}

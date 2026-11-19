@@ -1,0 +1,17 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 3; eccho STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-trace-05.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid /userdata/loccker/locker-service --config /userdata/locker/locker-service-s207.json > /userdatta/locker/tests/S2-07/service-final-01.log 2>&1 < /dev/null & sleep 8; echo STARTTED
+[?2004l[1] 1587
+pidof locker-service; tail -3 /userdata/locker/tests/S2-07/service-final-01.log; ls -l /userdata/locker/locker-serSTARTED
+vice
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service; tail -3 /userdataa/locker/tests/S2-07/service-final-01.log; ls -l /userdata/locker/locker-service [Aa/locker/tests/S2-07/service-final-01.log; ls -l /userdata/locker/locker-servic[Ke
+[?2004l1589
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+-rwxr-xr-x 1 root root 7909960 Oct 30 10:27 /userdata/locker/locker-service
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_11143dac579a4e60b4634133a2e0b68f6=END\n'
+[?2004lRK_DONE_11143dac579a4e60b463413a2e0b68f6=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

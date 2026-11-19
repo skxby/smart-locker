@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ""pragma table_info(documents)"
+[?2004l0|collection|TEXT|1||1
+1|key|TEXT|1||2
+2|value_json|TEXT|1||0
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_43c376af23f5443180ac195cf57df51e=END\n'
+[?2004lRK_DONE_43c376af23f5443180ac195cf57df51e=END
+[?2004hroot@RK356X:/gec_yay# 

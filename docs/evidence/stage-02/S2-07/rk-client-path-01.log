@@ -1,0 +1,17 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# command -v wget curl
+[?2004l/usr/bin/wget
+[?2004hroot@RK356X:/gec_yay# ls -la /userdata/locker/tests/S2-07/
+[?2004ltotal 28
+drwx------ 2 root root  4096 Oct 30 09:14 .
+drwxr-xr-x 3 root root  4096 Oct 30 08:32 ..
+-rw------- 1 root root 11635 Oct 30 08:33 bench_client.py
+-rw-r--r-- 1 root root   140 Oct 30 08:32 service-01.log
+-rw-r--r-- 1 root root   140 Oct 30 09:14 service-s207-01.log
+-rw------- 1 root root     0 Oct 30 08:33 session-admin-01.jsonl
+srw------- 1 root root     0 Oct 30 06:14 stale-service-01.sock
+[?2004hroot@RK356X:/gec_yay# sha256sum /userdata/locker/tests/S2-07/bench_client.py 2>&11
+[?2004l5da3be6a47fbbb97e762ab4ef50f564d25f2bbed83323539c963b22af4737aa8  /userdata/locker/tests/S2-07/bench_client.py
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_95a311f1bc114cae98197ff271f35f22=END\n'
+[?2004lRK_DONE_95a311f1bc114cae98197ff271f35f22=END
+[?2004hroot@RK356X:/gec_yay# 

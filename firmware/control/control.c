@@ -4,6 +4,9 @@
 #include <string.h>
 
 #define PENDING_COUNT 16u
+/* Diagnostics readable over SWD: (kind<<16)|status of the last journal result that
+ * did not complete cleanly. Non-static so the linker map exposes it. */
+volatile uint32_t s205_control_last_result;
 enum { EVENT=1, RECOVER, SNAPSHOT, INTENT, FINALIZE, RELEASE, RESUME };
 typedef struct {
     uint32_t token;
@@ -58,9 +61,20 @@ static bool fresh(const mcu_control_t *c)
 { return c->health_known && c->progress!=0 && c->now>=c->progress_time &&
     c->now-c->progress_time<LOCKER_HOST_TIMEOUT_MS &&
     c->health_age<LOCKER_HOST_TIMEOUT_MS-(c->now-c->progress_time); }
+/* Bench-only escape hatch for the supply monitor. PC0 wiring and the ADC
+   voltage/reference calibration are deferred (user decision 2026-10-29), but
+   physical() requires supply_valid, so RESUME can never pass and the device
+   stays in RECONCILING forever. This flag is OFF by default and is only set by
+   the bench build: with it the device trusts door/item plus sample freshness and
+   does NOT know whether the rail is live. Product images must never define it,
+   and every supply-loss / power-fault case stays NOT_RUN until PC0 is calibrated. */
+#ifndef LOCKER_BENCH_SUPPLY_UNMONITORED
+#define LOCKER_BENCH_SUPPLY_UNMONITORED 0
+#endif
 static bool physical(const mcu_control_t *c)
 { return c->inputs.door==LOCKER_DOOR_STATE_CLOSED && c->inputs.item!=LOCKER_ITEM_STATE_UNKNOWN &&
-    c->inputs.supply_valid && c->now>=c->last_sample && c->now-c->last_sample<=100u; }
+    (LOCKER_BENCH_SUPPLY_UNMONITORED || c->inputs.supply_valid) &&
+    c->now>=c->last_sample && c->now-c->last_sample<=100u; }
 static pending_t *allocate(mcu_control_t *c, uint8_t kind, const mcu_request_context_t *r)
 {
     unsigned i;
@@ -152,8 +166,25 @@ locker_status_t mcu_control_bind_sink(mcu_control_t *c,const mcu_control_sink_t 
 locker_status_t mcu_control_recover(mcu_control_t *c)
 {
     pending_t *p;
-    if(!c->bound || c->recovered) return LOCKER_STATUS_NOT_READY;
+    if(c!=&singleton || !c->bound || c->recovered) return LOCKER_STATUS_NOT_READY;
     p=allocate(c,RECOVER,NULL); return p?management(c,p,MCU_JOURNAL_RECOVER,0):LOCKER_STATUS_NO_SPACE;
+}
+bool mcu_control_recovered(const mcu_control_t *c)
+{ return c==&singleton && c->recovered; }
+void mcu_control_diag(volatile uint32_t out[8])
+{
+    const mcu_control_t *c=&singleton;
+    if(!out) return;
+    out[0]=((uint32_t)c->mode&0xffu)|((uint32_t)c->recovered<<8)|((uint32_t)c->bound<<9)|
+           ((uint32_t)c->failed<<10)|((uint32_t)c->barrier_valid<<11)|((uint32_t)c->session_valid<<12)|
+           ((uint32_t)c->command_pending<<13);
+    out[1]=(uint32_t)c->state.journal_state|((uint32_t)c->state.has_active<<8)|((uint32_t)c->state.continuity_ok<<9);
+    out[2]=(uint32_t)c->state.ack_persisted.boot_id;
+    out[3]=(uint32_t)c->state.ack_persisted.event_seq;
+    out[4]=(uint32_t)c->barrier_cursor.boot_id;
+    out[5]=(uint32_t)c->barrier_cursor.event_seq;
+    out[6]=(uint32_t)(c->barrier_revision&0xffffffffu);
+    out[7]=(uint32_t)c->revision;
 }
 locker_status_t mcu_control_observe_inputs(mcu_control_t *c,const locker_board_inputs_t *in)
 {
@@ -283,11 +314,26 @@ locker_status_t mcu_control_on_journal_result(mcu_control_t *c,uint32_t token,lo
     pending_t *p=NULL; unsigned n; uint8_t kind; locker_device_reply_t reply;
     c->now=mcu_board_monotonic_ms();
     for(n=0;n<PENDING_COUNT;n++) if(c->pending[n].token==token && token) { p=&c->pending[n]; break; }
-    if(!p) { mcu_control_fault(c); return LOCKER_STATUS_CONFLICT; }
+    if(!p) {
+        /* Late or duplicate result whose slot was already reclaimed: a race, not a
+           device fault. Latching `failed` here (the old behaviour) turned one lost
+           race into a cabinet that stays DEGRADED until it is reset. */
+        s205_control_last_result=(uint32_t)LOCKER_STATUS_CONFLICT;
+        return LOCKER_STATUS_CONFLICT;
+    }
     kind=p->kind;
     if(result!=LOCKER_STATUS_OK || (kind!=EVENT && kind!=INTENT && !state)) {
+        /* Real faults (IO/space) still latch; "the journal refused this one request"
+           does not. journal_state already carries genuine media faults, so a
+           recoverable refusal must be allowed to heal on the next RECOVER instead of
+           forcing a maintenance visit (S2-07: a BARRIER conflict after reconcile
+           bricked the mode). */
+        bool recoverable = result==LOCKER_STATUS_CONFLICT || result==LOCKER_STATUS_NOT_READY ||
+                           result==LOCKER_STATUS_BUSY || result==LOCKER_STATUS_INVALID ||
+                           result==LOCKER_STATUS_REPLAY_BLOCKED;
+        s205_control_last_result=((uint32_t)kind<<16)|((uint32_t)result&0xffffu);
         if(state) c->state=*state;
-        mcu_control_fault(c);
+        if(!recoverable) mcu_control_fault(c);
         if(p->request.request_no) (void)error(c,&p->request,LOCKER_WIRE_RESULT_LOG_UNAVAILABLE);
         if(kind==INTENT || kind==FINALIZE || kind==RELEASE) c->command_pending=false;
         p->token=0; return result==LOCKER_STATUS_OK?LOCKER_STATUS_INVALID:result;

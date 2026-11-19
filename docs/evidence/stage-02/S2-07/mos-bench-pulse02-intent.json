@@ -1,0 +1,18 @@
+{
+  "when": "2026-10-30T15:47:12.610957+08:00",
+  "operation": "one 1000ms pulse with live non-halting reads",
+  "before": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 165117,
+    "count": 1,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x2280",
+    "gpio_b_odr": "0x0"
+  },
+  "operator_confirmed": "12V now on; coil disconnected; 10k dummy load; PC0 disconnected; PWM connected; meter directly PB6 to MCU GND",
+  "correction": "previous observation had 12V off; MOS conduction conclusion invalid",
+  "automatic_retry": false
+}

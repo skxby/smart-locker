@@ -1,0 +1,9 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "fetch page|fetch import" /userrdata/locker/tests/S2-07/service-trace-04.log | head -4
+[?2004lfetch import_status=3
+fetch page invalid: n=4 has_more=0 gap=0 fa=1/1 lc=2/3 na=2/3 ev0=1/1 evN=2/3
+fetch import_status=3
+fetch page invalid: n=4 has_more=0 gap=0 fa=1/1 lc=2/3 na=2/3 ev0=1/1 evN=2/3
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_c6f895ce28dc4aae945b1444c857548a4=END\n'
+[?2004lRK_DONE_c6f895ce28dc4aae945b144c857548a4=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

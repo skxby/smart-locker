@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,700) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"a054d7fd-8190-40d1-b497-4d7e869ce0cd","boot_id":"2","physical_revision":"1","door":"CLOSED","item":"ABSENT","supply_mv":null,"observed_age_ms":120,"time_quality":"HOST_SYNCED","continuity_ok":false,"dropped_events":"0","durable_cursor":{"device_id":"000000000000000000000000","journal_epoch":"a054d7fd-8190-40d1-b497-4d7e869ce0cd","boot_id":"0","event_seq":"0"}}},"last_snapshot_revision":"5","active_command_id":null}
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_e3241e44899245e7a905cdbb05ddc9ff2=END\n'
+[?2004lRK_DONE_e3241e44899245e7a905cdb05ddc9ff2=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

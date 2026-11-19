@@ -1,0 +1,9 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 4; piidof locker-service; echo STOPPED
+[?2004lcd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-epoch5-03.log 2>&1 < /dev/null & sleep 12; echo STARTED
+[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-epoch5-02.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-epoch5-03.log 2>&1 < /devv/null & sleep 12; echo STARTED
+[?2004l[1] 1822
+sqlite3 "file:/userdata/locker/state-s207/business.db?mode=ro" "select substr(value_json,1,470) from documents where collection='device_state'"
+printf 'RK_DONE_3b530519444a4e09bf0a9e3ee8c64f49=END\n'

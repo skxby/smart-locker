@@ -1,0 +1,6 @@
+pidof locker-service
+[?2004l2513
+[?2004hroot@RK356X:/gec_yay# ps -o pid,etime,cmd -p $(pidof locker-service) | tail -2
+[?2004l  PID     ELAPSED CMD
+ 2513       01:58 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json
+[?2004hroot@RK356X:/gec_yay# 

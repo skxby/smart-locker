@@ -1,0 +1,7 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls /proc/1751/task | wc -l
+[?2004l12
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# for t in /proc/1751/task/*; do awk "{prrint FILENAME, \$2, \$3}" \$t/stat 2>/dev/null; done | head -20
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_a265c49e7ab542d19c32ba335b6b3cf54=END\n'
+[?2004lRK_DONE_a265c49e7ab542d19c32ba35b6b3cf54=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

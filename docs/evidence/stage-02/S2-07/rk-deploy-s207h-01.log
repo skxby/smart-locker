@@ -1,0 +1,12 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 2
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O s207h.new http://172.100.1.22:8007/locker-service-s207h && sha256sum s207h.new
+[?2004l7c92ca019544193adaa647bcb7f41afe7b2929f05fbe49dbc1e265984c614375  s207h.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev6
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv s207h.new /userdata/locker/locker-seervice && chmod 755 /userdata/locker/locker-service
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r13.sh http://172.100.1.2:80007/r13.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s10.sh
+[?2004l2301
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh r13.sh
+[?2004lPassword: 

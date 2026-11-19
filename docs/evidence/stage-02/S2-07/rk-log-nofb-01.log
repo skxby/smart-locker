@@ -1,0 +1,7 @@
+grep -v "dev open" /userdata/locker/tessts/S2-07/service-epoch10-01.log | tail -n 25
+[?2004lDEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+fetch epoch_changed=2
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wc -l /userdata/locker/tests/S2-07/servvice-epoch10-01.log
+[?2004l198 /userdata/locker/tests/S2-07/service-epoch10-01.log
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

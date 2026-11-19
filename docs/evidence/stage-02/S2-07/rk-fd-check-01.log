@@ -1,0 +1,8 @@
+ls -l /proc/$(pidof locker-service)/fd//1 /proc/$(pidof locker-service)/fd/2
+[?2004ll-wx------ 1 root root 64 Oct 30 13:10 /proc/2393/fd/1 -> /userdata/locker/tests/S2-07/service-epoch10-01.log
+l-wx------ 1 root root 64 Oct 30 13:10 /proc/2393/fd/2 -> /userdata/locker/tests/S2-07/service-epoch10-01.log
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# readlink /proc/$(pidof locker-service)//exe
+[?2004l/userdata/locker/locker-service
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service
+[?2004l2393
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

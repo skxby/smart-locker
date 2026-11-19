@@ -299,6 +299,15 @@ static void apply_execute_or_query(locker_device_t *device, uint64_t action_no,
 static void apply_resume(locker_device_t *device,
                          const locker_wire_resume_ready_response_t *body)
 {
+    /* The device answers RESUME with a wire result code. Dropping it made a
+       refused resume look identical to an accepted one: mode stayed 0 and the
+       only visible symptom was "still RECONCILING" (S2-07 bench). */
+    if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        fprintf(stderr, "resume reply result=%u mode=%u revision=%llu\n",
+                (unsigned)body->result, (unsigned)body->device_mode,
+                (unsigned long long)body->physical_revision);
+        fflush(stderr);
+    }
     if (body->physical_revision != 0u) {
         device->physical_revision = body->physical_revision;
     }
@@ -458,6 +467,14 @@ static locker_status_t device_on_frame(void *user, const locker_wire_frame_t *fr
     }
     if (matched && response.hello.result == 0u) {
         apply_response(device, request_type, &response);
+    } else if (matched && getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        /* A refused reply used to vanish here: the slot was taken (streak stayed
+           0) but apply_response was skipped, so a device-side check failure was
+           indistinguishable from silence (S2-07 bench, mode stuck at 0). */
+        fprintf(stderr, "reply refused type=%u result=%u request_no=%u\n",
+                (unsigned)request_type, (unsigned)response.hello.result,
+                (unsigned)frame->request_no);
+        fflush(stderr);
     }
     pthread_mutex_unlock(&device->lock);
     if (!matched) {
@@ -475,7 +492,22 @@ static locker_status_t device_on_frame(void *user, const locker_wire_frame_t *fr
      * the decoded response is copied member-wise by size (never a struct on wire). */
     memcpy(&reply.body, &response, sizeof(reply.body));
     if (device->sink_bound && device->sink.reply != NULL) {
-        return device_sink_result(device, device->sink.reply(device->sink.user, &reply));
+        locker_status_t sink_status = device->sink.reply(device->sink.user, &reply);
+        if (sink_status != LOCKER_STATUS_OK) {
+            /* Any non-OK sink result latches reconcile_required and tears the
+             * session down, which the supervisor then reports as
+             * "session not established; reopening". Without this line the whole
+             * flap looks like a link problem; with it the offending reply type
+             * and status are visible. */
+            static int budget = 16;
+            if (budget > 0 && getenv("LOCKER_DEVICE_TRACE") != NULL) {
+                --budget;
+                fprintf(stderr, "sink rejected type=%u status=%d request_no=%u\n",
+                        (unsigned)request_type, (int)sink_status, (unsigned)frame->request_no);
+                fflush(stderr);
+            }
+        }
+        return device_sink_result(device, sink_status);
     }
     return LOCKER_STATUS_OK;
 }

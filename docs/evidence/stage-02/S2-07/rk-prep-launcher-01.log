@@ -1,0 +1,7 @@
+cd /userdata/locker/tests/S2-07
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# rm -f session-admin-05.jsonl
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r.sh http://172.100.1.2:80077/r.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# head -2 r.sh
+[?2004lcd /userdata/locker/tests/S2-07 || exit 1
+exec python3 -B bench_client.py --host 192.0.2.20 --ca /data/locker/tls/server.crt --device-id 000000000000000000000000 --user admin --socket /userdata/locker/state-s207/service.sock --evidence /userdata/locker/tests/S2-07/session-admin-06.jsonl
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

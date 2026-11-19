@@ -1,0 +1,8 @@
+
+bench> tail -25 /userdata/locker/tests/S2-07/service-s207-01.log
+Request failed or outcome unknown; no retry. Inspect evidence and query current state.
+bench> ls -l /dev/ttyS4; pidof locker-service
+Request failed or outcome unknown; no retry. Inspect evidence and query current state.
+bench> printf 'RK_DONE_7980b7ebb5f64786a0919f98cedda4e4=END\n'
+Request failed or outcome unknown; no retry. Inspect evidence and query current state.
+bench> 

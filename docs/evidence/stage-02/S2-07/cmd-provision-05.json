@@ -1,0 +1,66 @@
+{
+  "command": 2,
+  "name": "PROVISION",
+  "diag": {
+    "phase": 10,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 0,
+    "boot_id": "5",
+    "action_watermark": "0",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 0,
+    "first_available": [
+      "1",
+      "1"
+    ],
+    "last_committed": [
+      "5",
+      "1"
+    ],
+    "ack_persisted": [
+      "4",
+      "3"
+    ],
+    "journal_state": "DEGRADED",
+    "continuity_ok": 0,
+    "commands_served": 4,
+    "raw": [
+      10,
+      0,
+      0,
+      15679512,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      5,
+      0,
+      1,
+      0,
+      4,
+      0,
+      3,
+      0,
+      4,
+      0,
+      0,
+      0,
+      4,
+      2,
+      0,
+      4
+    ]
+  },
+  "when": "2026-10-30T18:56:28.300726+08:00"
+}

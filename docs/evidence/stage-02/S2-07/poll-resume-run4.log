@@ -1,0 +1,6 @@
+[31mNo connected debug probe matches unique ID '000000000000000000000000'[0m
+Traceback (most recent call last):
+  File "%REPO%\docs\evidence\stage-02\S2-07\poll-resume.py", line 31, in <module>
+    with s:
+         ^
+TypeError: 'NoneType' object does not support the context manager protocol

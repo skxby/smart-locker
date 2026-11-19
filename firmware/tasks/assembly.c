@@ -14,14 +14,21 @@
 #include "task.h"
 #include <string.h>
 
+/* Default off: an image must opt in explicitly to claim the board is verified. */
+#ifndef BOARD_VERIFIED
+#define BOARD_VERIFIED 0
+#endif
+
 typedef struct { mcu_request_context_t context; locker_wire_request_union_t body; uint32_t generation; } request_t;
 typedef struct {
     uint8_t kind; uint32_t token; locker_status_t status;
     union { request_t request; mcu_journal_state_t state; rc522_uid_t card; } value;
 } control_message_t;
 typedef struct { bool event; union { locker_device_reply_t reply; locker_device_event_t fact; } body; } outgoing_t;
-static control_message_t inbox[16]; static unsigned ih,ic;
-static request_t storage_inbox[4]; static unsigned sh,sc;
+#define CONTROL_INBOX 24u
+static control_message_t inbox[CONTROL_INBOX]; static unsigned ih,ic;
+#define STORAGE_INBOX 8u
+static request_t storage_inbox[STORAGE_INBOX]; static unsigned sh,sc;
 static outgoing_t outgoing[8]; static unsigned oh,oc;
 static bool started,ready_flag,failed;
 static uint32_t session_generation;
@@ -34,6 +41,10 @@ static mcu_health_t *health;
 static w25q128_t flash;
 static const mcu_journal_config_t geometry={true,0xef4018u,16777216u,4096u,256u,0u};
 volatile uint32_t s205_diag[16];
+/* Ready-gate snapshot: mode/recovered/bound/failed/barrier + journal cursors.
+   Written by Control each loop so a stuck RECONCILING can be read over SWD
+   instead of re-flashed with print statements. */
+volatile uint32_t s205_control_diag[8];
 
 static void lock(void *u) { (void)u; taskENTER_CRITICAL(); }
 static void unlock(void *u) { (void)u; taskEXIT_CRITICAL(); }
@@ -55,8 +66,12 @@ static locker_status_t post(const control_message_t *m)
 {
     locker_status_t status=LOCKER_STATUS_QUEUED;
     taskENTER_CRITICAL();
-    if(ic==16u) { failed=true; status=LOCKER_STATUS_BUSY; }
-    else { inbox[(ih+ic)%16u]=*m; ++ic; }
+    /* A full mailbox is backpressure, not evidence of damage. Latching `failed`
+       here bricked the device: one burst of FETCH/ACK frames filled all slots,
+       every later loop re-applied the fault, and the unit sat in DEGRADED until
+       a reflash. The sender now gets BUSY and can retry. */
+    if(ic==CONTROL_INBOX) status=LOCKER_STATUS_BUSY;
+    else { inbox[(ih+ic)%CONTROL_INBOX]=*m; ++ic; }
     taskEXIT_CRITICAL();
     if(status==LOCKER_STATUS_BUSY) mcu_board_force_off();
     return status;
@@ -100,8 +115,10 @@ locker_status_t assembly_dispatch(void *u,const mcu_request_context_t *r,const l
     }
     if(r->message_type==3 || r->message_type==4) {
         taskENTER_CRITICAL();
-        if(sc==4u) { failed=true; result=LOCKER_STATUS_BUSY; }
-        else { storage_inbox[(sh+sc)%4u].context=*r; storage_inbox[(sh+sc)%4u].body=*q; ++sc; }
+        /* Same rule as post(): depth is backpressure. FETCH/ACK arrive in bursts
+           and four slots filled easily, which used to latch a permanent fault. */
+        if(sc==STORAGE_INBOX) { result=LOCKER_STATUS_BUSY; }
+        else { storage_inbox[(sh+sc)%STORAGE_INBOX].context=*r; storage_inbox[(sh+sc)%STORAGE_INBOX].body=*q; ++sc; }
         taskEXIT_CRITICAL(); if(result==LOCKER_STATUS_BUSY) mcu_board_force_off(); return result;
     }
     m.value.request.context=*r; m.value.request.body=*q;
@@ -135,8 +152,8 @@ void assembly_transmit(mcu_transport_t *t)
 }
 static void control_task(void *u)
 {
-    uint32_t generation=0; bool did_recover=false; (void)u;
-    uint64_t progress=0;
+    uint32_t generation=0; (void)u;
+    uint64_t progress=0, recover_try_ms=0;
     for(;;) {
         if(assembly_ready()) {
             control_message_t m; bool available,broken; uint32_t current;
@@ -144,20 +161,27 @@ static void control_task(void *u)
             board_inputs_sample();
             (void)mcu_board_read_inputs(&in); (void)mcu_control_observe_inputs(control,&in);
             taskENTER_CRITICAL(); broken=failed; current=session_generation;
-            available=ic!=0u; if(available) { m=inbox[ih]; ih=(ih+1u)%16u; --ic; }
+            available=ic!=0u; if(available) { m=inbox[ih]; ih=(ih+1u)%CONTROL_INBOX; --ic; }
             /* Keep the final session/fault check and nonblocking HAL start
                atomic relative to Communication revocation. Nested mailbox/
                Journal inbox critical sections contain no Flash IO or waits. */
             if(current!=generation) { mcu_control_session_lost(control); generation=current; }
             if(broken) mcu_control_fault(control);
-            if(!did_recover) { (void)mcu_control_recover(control); did_recover=true; }
+            /* Retry until the journal actually reports the epoch recovered. A
+               single attempt that only "succeeded" in returning NOT_READY used
+               to latch recovered=false forever, which kept healthy() false and
+               pinned the device in RECONCILING (S2-07). */
+            if(!mcu_control_recovered(control)) {
+                uint64_t attempt=mcu_board_monotonic_ms();
+                if(attempt-recover_try_ms>=100u) { recover_try_ms=attempt; (void)mcu_control_recover(control); }
+            }
             if(available) {
                 if(m.kind==3) (void)mcu_control_observe_card(control,m.value.card.bytes,m.value.card.length);
                 else if(m.kind) (void)mcu_control_on_journal_result(control,m.token,m.status,m.kind==2?&m.value.state:NULL);
                 else if(m.value.request.generation==current)
                     (void)mcu_control_dispatch(control,&m.value.request.context,&m.value.request.body);
             }
-            mcu_control_tick(control); ++s205_diag[0];
+            mcu_control_tick(control); mcu_control_diag(s205_control_diag); ++s205_diag[0];
             taskEXIT_CRITICAL();
             assembly_progress(LOCKER_MCU_TASK_ID_CONTROL,++progress);
         }
@@ -208,7 +232,13 @@ static void storage_request(const request_t *r)
 static void storage_task(void *u)
 {
     mcu_journal_port_t port={0}; mcu_journal_sink_t sink={NULL,committed,event,control_result};
-    mcu_control_sink_t cs={NULL,reply}; mcu_control_config_t config={false,1000u,2000u};
+    mcu_control_sink_t cs={NULL,reply};
+    /* board_verified is a build-time claim about the hardware this image is
+       allowed to drive; it is not a runtime self-certificate. Only the product
+       target sets BOARD_VERIFIED, so the acceptance/validation images keep the
+       lock inert. Runtime safety still gates every pulse on mode==RUNNING,
+       fresh physical evidence, journal health and the door/item preconditions. */
+    mcu_control_config_t config={BOARD_VERIFIED!=0,1000u,2000u};
     locker_status_t s; (void)u;
     uint64_t progress=0;
     rc522_t reader={0}; rc522_uid_t previous={0}; uint64_t next_card=0; unsigned absent=0;
@@ -233,7 +263,7 @@ static void storage_task(void *u)
     for(;;) {
         request_t r; bool available;
         taskENTER_CRITICAL(); available=sc!=0u;
-        if(available) { r=storage_inbox[sh]; sh=(sh+1u)%4u; --sc; }
+        if(available) { r=storage_inbox[sh]; sh=(sh+1u)%STORAGE_INBOX; --sc; }
         taskEXIT_CRITICAL();
         if(available) storage_request(&r);
         (void)mcu_journal_process_one(journal); ++s205_diag[2];
@@ -272,8 +302,11 @@ void assembly_start(void)
     if(started) return;
     started=true;
     if(mcu_health_init(&config,&health)!=LOCKER_STATUS_OK) env_assert_failed();
+    /* Storage parses each 4-event page into locker_event_batch_t plus a reply
+     * union before it touches littlefs; 4 KB overflowed once FETCH actually ran
+     * (pxStack 0x20002308, saved SP 0x200022ec). Keep the headroom. */
     if(xTaskCreate(control_task,"Control",1024u,NULL,2u,NULL)!=pdPASS ||
        xTaskCreate(communication_task,"Communication",1024u,NULL,2u,NULL)!=pdPASS ||
-       xTaskCreate(storage_task,"Storage",1024u,NULL,1u,NULL)!=pdPASS ||
+       xTaskCreate(storage_task,"Storage",1536u,NULL,1u,NULL)!=pdPASS ||
        xTaskCreate(health_task,"Health",256u,NULL,1u,NULL)!=pdPASS) env_assert_failed();
 }

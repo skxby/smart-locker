@@ -1,0 +1,5 @@
+device
+{"status": 200, "body": {"data": {"device_id": "000000000000000000000000", "cabinet_name": "??????????????????-RK3568", "contract_version": "0.2.1", "simulated": false, "mode": "RECONCILING", "health_reasons": [], "ui_restart_count": null, "physical": {"device_id": "000000000000000000000000", "journal_epoch": "2e4761af-1ba2-48df-86a3-f5cfbc0fb89f", "boot_id": "2", "physical_revision": "1", "door": "CLOSED", "item": "PRESENT", "supply_mv": null, "observed_age_ms": 432, "time_quality": "HOST_SYNCED", "continuity_ok": true, "dropped_events": "0", "durable_cursor": {"device_id": "000000000000000000000000", "journal_epoch": "2e4761af-1ba2-48df-86a3-f5cfbc0fb89f", "boot_id": "0", "event_seq": "0"}}}, "snapshot_revision": "78", "request_id": "40728cc7-97b3-460d-b53a-e066425b63d2"}}
+bench> reconcile 2e4761af-1ba2-48df-86a3-f5cfbc0fb89f 2 1 78 f7a12c1d-c76d-4894-9df9-824e3b6b06a3 "bench reconcile diag h"
+{"status": 409, "body": {"error": {"code": "REVISION_CONFLICT", "message": "Request rejected", "retryable": false, "operation_id": null}, "request_id": "07da5517-13f2-4a46-a1e8-e77f4e065223"}}
+bench> 

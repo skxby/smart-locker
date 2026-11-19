@@ -1,0 +1,9 @@
+wget -q -O s207n.new http://172.100.1.22:8007/locker-service-s207n && mv /userdata/locker/locker-service /userdata/lockeer/tests/S2-07/locker-service-prev12 && mv s207n.new /userdata/locker/locker-servvice && chmod 755 /userdata/locker/locker-service && echo OK1
+[?2004lOK1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r23.sh http://172.100.1.2:80007/r23.sh && echo OK2
+[?2004lOK2
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# RESOLVE: {"status": 409, "body": {"error": {"code": "REVISION_CONFLICT", "message": "Request rejected", "retryable": false, "operation_id": null}, "request_id": "fbe72c1e-d042-40ed-bf39-15f09d920d75"}}
+grep -E "resolve|conflict reply" /userdata/locker/tests/S2--07/service-epoch10-01.log | tail -5
+[?2004lresolve conflict: baseline=2 has_baseline=1 current_item=1
+conflict reply slot=1
+[?2004hroot@RK356X:/gec_yay# 

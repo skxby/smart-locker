@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "image": "build\\firmware-s205-gnu\\hse8_168\\locker_s205.hex",
+  "hex_sha256": "9b6032832c92636118d0836c4b2cb49539e1911b040919e8b9f0d83f6f22dbac",
+  "payload_bytes": 56012,
+  "sectors_erased": [
+    "0x8000000",
+    "0x8004000",
+    "0x8008000",
+    "0x800c000"
+  ],
+  "pc_after_reset": "0x8000188",
+  "replaced_head_sha256": "7e17750a5661fbd0ebee1339e7434311bdfeb0fbe6b4ed56cb40a8cc08c60736",
+  "first": {
+    "xtick": 593,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "second": {
+    "xtick": 994,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "when": "2026-10-30T18:07:03.218245+08:00"
+}

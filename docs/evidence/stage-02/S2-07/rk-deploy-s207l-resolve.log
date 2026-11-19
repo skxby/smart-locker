@@ -1,0 +1,3 @@
+wget -q -O s207l.new http://172.100.1.2:8007/locker-service-s207l && sha256sum s207l.new
+Request failed or outcome unknown; no retry. ValueError: unknown command/arguments; enter help
+bench> 

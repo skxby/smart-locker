@@ -1,0 +1,6 @@
+presence status=200
+T+0s door=CLOSED item=PRESENT
+T+2s door=OPEN item=PRESENT
+T+6s door=OPEN item=ABSENT
+T+9s door=CLOSED item=ABSENT
+T+9s SEQUENCE_COMPLETE

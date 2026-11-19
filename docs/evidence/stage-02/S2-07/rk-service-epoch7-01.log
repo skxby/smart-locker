@@ -1,0 +1,6 @@
+wget -q -O s7.sh http://172.100.1.2:80007/s7.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s7.sh
+[?2004l2035
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,300) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"0abf6bbe-75ed-46e7-94db-186173335e91","bo
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

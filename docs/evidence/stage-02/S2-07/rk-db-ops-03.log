@@ -1,0 +1,7 @@
+wget -q -O q.py http://172.100.1.2:80077/query_ops.py && python3 q.py 2>&1 | head -45
+[?2004lCOLS: ['collection', 'key', 'value_json']
+Traceback (most recent call last):
+  File "q.py", line 6, in <module>
+    rows = c.execute('SELECT * FROM documents ORDER BY rowid DESC LIMIT 40').fetchall()
+sqlite3.OperationalError: no such column: rowid
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

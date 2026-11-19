@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# echo aW1wb3J0IHNxbGl0ZTMKYz1zcWxpdGUzLmNvbm5lY3QoImZpbGU6L33VzZXJkYXRhL2xvY2tlci9zdGF0ZS9idXNpbmVzcy5kYj9tb2RlPXJvIix1cmk9VHJ1ZSkKdD1bclswXSSBmb3IgciBpbiBjLmV4ZWN1dGUoInNlbGVjdCBuYW1lIGZyb20gc3FpbHRlX21hc3RlciB3aGVyZSB0eXXBlPSd0YWJsZSciKV0KcHJpbnQoIlRBQkxFUyIsIHQpCmZvciBuIGluIHQ6CiAgICB0cnk6CiAgICAgICCAgcHJpbnQobiwgYy5leGVjdXRlKCJzZWxlY3QgY291bnQoKikgZnJvbSAiK24pLmZldGNob25lKClbMFF0pCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgcHJpbnQobiwgIkVSUiIsIGUpCg== || base64 -d | python3 -; rk_rc=$?; printf '\nRK_DONE_2b7084a11aed475b9f8d4ea854833ae8f=%s\n' "$rk_rc"
+[?2004lTraceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+sqlite3.OperationalError: no such table: sqilte_master
+
+RK_DONE_2b7084a11aed475b9f8d4ea85483ae8f=1
+[?2004hroot@RK356X:/gec_yay# 

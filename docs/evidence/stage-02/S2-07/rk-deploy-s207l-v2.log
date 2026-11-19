@@ -1,0 +1,5 @@
+wget -q -O s207l.new http://172.100.1.22:8007/locker-service-s207l && sha256sum s207l.new
+[?2004l169e5898d1be80f2fd6842e81831f9bc132350996a3a8ec16f7a0ac640bb88c3  s207l.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev10 && mv s207l.new /userdata/locker//locker-service && chmod 755 /userdata/locker/locker-service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

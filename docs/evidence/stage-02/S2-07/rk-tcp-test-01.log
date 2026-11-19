@@ -1,0 +1,6 @@
+ip -4 addr show | grep inet
+[?2004l    inet 127.0.0.1/8 scope host lo
+    inet 192.0.2.20/23 brd 172.100.1.255 scope global eth0
+[?2004hroot@RK356X:/gec_yay# python3 -c "import socket; s=socket.create_connection((chr((49)+chr(55)+chr(50)+chr(46)+chr(49)+chr(48)+chr(48)+chr(46)+chr(49)+chr(46)+chr((49)+chr(56)+chr(52),8443),3); print(chr(84)+chr(67)+chr(80)+chr(32)+chr(79)+chr((75)); s.close()"
+[?2004lTCP OK
+[?2004hroot@RK356X:/gec_yay# 

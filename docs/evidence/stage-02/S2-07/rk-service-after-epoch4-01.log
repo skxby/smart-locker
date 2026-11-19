@@ -1,0 +1,21 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 3; eccho STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-trace-04.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-05.log 2>&1 < /dev//null & sleep 10; echo STARTED
+[?2004l[1] 1406
+sqlite3 "file:/userdata/locker/state-s207/business.db?mode=ro" "select collection,count(*) from documents group by collection"
+grep -E "fetch" /userdata/locker/tests/S2-07/service-trace-05.log | head -3
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_events|4
+device_state|1
+import_cursors|1
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "fetch" /userdata/locker/tests//S2-07/service-trace-05.log | head -3
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_f5c852e2c7e7474d8ebda03332f62a51e=END\n'
+[?2004lRK_DONE_f5c852e2c7e7474d8ebda0332f62a51e=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

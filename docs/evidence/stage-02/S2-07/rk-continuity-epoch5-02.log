@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,380,200) from documents where  collection='device_state'"
+[?2004l":null,"observed_age_ms":121,"time_quality":"HOST_SYNCED","continuity_ok":true,"dropped_events":"0","durable_cursor":{"device_id":"000000000000000000000000","journal_epoch":"6fad5fcd-7242-4c6b-8a9f-45
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_8cc6cef07db54d6a87975a669f30f61d9=END\n'
+[?2004lRK_DONE_8cc6cef07db54d6a87975a69f30f61d9=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -18,9 +18,28 @@
 
 #include "domain_internal.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "locker/common/log.h"
+
+/* S2-07: the fetch/import path used to fail completely silently - a refused
+ * request, a device error result and an import that returned NOT_READY all
+ * looked like "connected but nothing happens", and the cabinet sat in
+ * RECONCILING with an empty ledger. These lines are off unless
+ * LOCKER_DEVICE_TRACE is set, and the budget stops a 5 Hz retry from flooding
+ * the console: the first failures are what identify the cause. */
+static void fetch_trace(const char *what, long value)
+{
+    static int budget = 24;
+    if (budget <= 0 || getenv("LOCKER_DEVICE_TRACE") == NULL) {
+        return;
+    }
+    --budget;
+    fprintf(stderr, "fetch %s=%ld%s\n", what, value, budget == 0 ? " (further lines suppressed)" : "");
+    fflush(stderr);
+}
 
 #define DOMAIN_POLL_INTERVAL_MS 100u
 #define DOMAIN_HEALTH_INTERVAL_MS 1000u
@@ -210,6 +229,7 @@ static void request_fetch(locker_core_t *core)
     }
     locker_status_t status = locker_device_fetch_events(core->device, &after, 4u);
     if (status != LOCKER_STATUS_OK) {
+        fetch_trace("refused", (long)status);
         return;
     }
     core->fetch_in_flight = true;
@@ -595,6 +615,27 @@ static void apply_snapshot(locker_core_t *core, const locker_wire_get_snapshot_r
     core->session.action_watermark = snapshot->action_watermark;
     core->action_watermark = snapshot->action_watermark;
 
+    /* 设备换了 journal epoch，说明它的日志被重新 provision 过：库里保存的
+       导入/ACK 游标属于一条已经不存在的日志。端口按 epoch 校验游标身份
+       （port.c:device_cursor_matches），旧 epoch 的游标会让 FETCH 永远
+       CONFLICT——现场表现是「连着、但一条事件都不导入、也永远对不了账」
+       （S2-07 实测 fetch refused=6）。这里把游标归零，让 FETCH 从新日志
+       开头重新接入；已导入的旧 epoch 事件仍留在仓储里。连续性不在这里放宽，
+       仍由首个导入页重新推导，对账资格照旧由 reconcile 把关。 */
+    if (core->cursor.valid &&
+        !locker_uuid_equal(&core->cursor.journal_epoch, &snapshot->journal_epoch)) {
+        core->cursor.valid = false;
+        memset(&core->cursor.through, 0, sizeof(core->cursor.through));
+        core->cursor.continuity_ok = false;
+        core->import_cursor_valid = false;
+        memset(&core->import_cursor, 0, sizeof(core->import_cursor));
+        core->import_continuity = false;
+        core->ack_cursor_valid = false;
+        memset(&core->ack_cursor, 0, sizeof(core->ack_cursor));
+        core->fetch_gap = false;
+        fetch_trace("epoch_changed", (long)snapshot->boot_id);
+    }
+
     if (!core->cursor.valid) {
         core->cursor.valid = true;
         core->cursor.journal_epoch = snapshot->journal_epoch;
@@ -730,14 +771,41 @@ static void apply_fetch(locker_core_t *core, const locker_wire_fetch_events_resp
 {
     core->fetch_in_flight = false;
     if (page->result != 0u) {
+        /* A device-side refusal used to vanish here: no gap flag, no retry
+         * backoff change, no log - the ledger simply stayed empty. */
+        fetch_trace("reply_result", (long)page->result);
         return;
     }
     /* 先落库再 ACK（卡 :117「设备重连屏障：先补取落库再 ACK」）。导入失败不能
        把内存水位推过去：那会让 ACK 提前、重启后事件永久丢失。 */
     locker_status_t imported = domain_import_page(core, page);
     if (imported != LOCKER_STATUS_OK && imported != LOCKER_STATUS_NOT_READY) {
+        fetch_trace("import_status", (long)imported);
         core->fetch_gap = true;
         core->cursor.continuity_ok = false;
+    } else if (imported == LOCKER_STATUS_NOT_READY) {
+        fetch_trace("import_not_ready", (long)page->event_count);
+    }
+    if (imported == LOCKER_STATUS_INVALID) {
+        /* One line with the page boundaries: the storage import rejects a page
+         * whose first_available/next_after/last_committed disagree with its
+         * events, and without these numbers the rejection is untraceable. */
+        fprintf(stderr,
+                "fetch page invalid: n=%u has_more=%u gap=%u "
+                "fa=%llu/%llu lc=%llu/%llu na=%llu/%llu ev0=%llu/%llu evN=%llu/%llu\n",
+                (unsigned)page->event_count, (unsigned)page->has_more,
+                (unsigned)page->gap_before_page,
+                (unsigned long long)page->first_available.boot_id,
+                (unsigned long long)page->first_available.event_seq,
+                (unsigned long long)page->last_committed.boot_id,
+                (unsigned long long)page->last_committed.event_seq,
+                (unsigned long long)page->next_after.boot_id,
+                (unsigned long long)page->next_after.event_seq,
+                page->event_count ? (unsigned long long)page->events[0].boot_id : 0ull,
+                page->event_count ? (unsigned long long)page->events[0].event_seq : 0ull,
+                page->event_count ? (unsigned long long)page->events[page->event_count - 1u].boot_id : 0ull,
+                page->event_count ? (unsigned long long)page->events[page->event_count - 1u].event_seq : 0ull);
+        fflush(stderr);
     }
     if (page->gap_before_page != 0u) {
         core->cursor.continuity_ok = false;

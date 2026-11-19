@@ -19,6 +19,12 @@ def main():
                         help='Installed GNU Arm toolchain directory containing bin/')
     parser.add_argument('--target', choices=['s204', 's205', 's205-cutoff'], default='s204')
     parser.add_argument('--clock', choices=['hsi16', 'hse8_168'], default='hsi16')
+    parser.add_argument('--bench-unmonitored-supply', action='store_true',
+                        help='Bench only: let physical() pass without supply_valid (PC0 not wired). '
+                             'Never use for a product image; supply-fault cases stay NOT_RUN.')
+    parser.add_argument('--bench-real-lock', action='store_true',
+                        help='Bench only: define BOARD_LOCK_QUALIFIED so PB6/TIM4 may drive a real '
+                             'solenoid. Without it board_lock_apply() fails closed and no pulse happens.')
     args = parser.parse_args()
     toolroot = Path(args.toolchain_root).resolve()
     tools = {name: toolroot / 'bin' / ('arm-none-eabi-' + name + '.exe')
@@ -58,7 +64,11 @@ def main():
     if args.clock == 'hse8_168':
         defines.append('ENV_HSE8_168')
     if args.target == 's205':
-        defines += ['LOCKER_S203', 'LOCKER_S205', 'BOARD_UART_QUALIFIED=1']
+        defines += ['LOCKER_S203', 'LOCKER_S205', 'BOARD_UART_QUALIFIED=1', 'BOARD_VERIFIED=1']
+        if args.bench_unmonitored_supply:
+            defines += ['LOCKER_BENCH_SUPPLY_UNMONITORED=1']
+        if args.bench_real_lock:
+            defines += ['BOARD_LOCK_QUALIFIED=1']
     if args.target == 's205-cutoff':
         defines += ['BOARD_LOCK_QUALIFIED=1']
     includes = [p for p in INCLUDES if 'portable/RVDS/' not in p]
@@ -118,6 +128,8 @@ def main():
               'image_sha256': hashlib.sha256(image.read_bytes()).hexdigest(),
               'compile_link_only': True, 'hardware_tested': False,
               'uart_enabled': args.target == 's205', 'lock_qualified': False,
+              'supply_monitor_bypassed': bool(args.bench_unmonitored_supply and args.target == 's205'),
+              'real_lock_drive': bool(args.bench_real_lock and args.target == 's205'),
               'isolated_pulse_bench': args.target == 's205-cutoff',
               'cabinet_business_implemented': False}
     (output / 'summary.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

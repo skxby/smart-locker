@@ -1,0 +1,9 @@
+^C[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -c "session not established" /userrdata/locker/tests/S2-07/service-epoch9-01.log
+[?2004l16
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -5 /userdata/locker/tests/S2-07/seervice-epoch9-01.log
+[?2004ldevice reopen ok
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+device session not established; reopening
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

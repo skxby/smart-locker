@@ -1,0 +1,15 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 2; piidof locker-service; echo STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-trace-01.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid /userdata/loccker/locker-service --config /userdata/locker/locker-service-s207.json > /userdatta/locker/tests/S2-07/service-s207-02.log 2>&1 < /dev/null & sleep 4; echo STARTEED
+[?2004l[1] 1268
+pidof locker-service; tail -4 /userdata/locker/tests/S2-07/service-s207-02.log
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service; tail -4 /userdataa/locker/tests/S2-07/service-s207-02.log
+[?2004l1270
+DEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_1192530e69be42999680c8aa85c50e85b=END\n'
+[?2004lRK_DONE_1192530e69be42999680c8a85c50e85b=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

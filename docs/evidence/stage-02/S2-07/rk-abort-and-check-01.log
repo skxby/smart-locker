@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "bench_client.py", line 269, in <module>
+    main()
+  File "bench_client.py", line 233, in main
+    password = getpass.getpass("Password: ")
+  File "/usr/lib/python3.8/getpass.py", line 77, in unix_getpass
+  File "/usr/lib/python3.8/getpass.py", line 146, in _raw_input
+KeyboardInterrupt
+
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# session-admin-05.jsonl

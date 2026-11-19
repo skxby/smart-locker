@@ -1,0 +1,9 @@
+{
+  "when": "2026-10-30T15:39:34.633642+08:00",
+  "operation": "operator-ready one-shot MOS dummy-load pulse",
+  "mode": 1,
+  "pulse_ms": 1000,
+  "expected_before_count": 0,
+  "operator_confirmed": "coil disconnected; 10k across OUT; PC0 disconnected; PWM connected; supplies on; multimeter ready",
+  "retry_policy": "never automatically repeat if execution outcome is unknown"
+}

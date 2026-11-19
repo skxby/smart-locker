@@ -1,0 +1,5 @@
+BEFORE b=2 p=4 s=89
+RESOLVE: {"status": 409, "body": {"error": {"code": "REVISION_CONFLICT", "message": "Request rejected", "retryable": false, "operation_id": null}, "request_id": "50628538-a406-4785-90d3-91f4de86d7bf"}}
+AFTER_RESOLVE mode=RECONCILING b=2 p=4 s=89
+RECONCILE: {"status": 409, "body": {"error": {"code": "REVISION_CONFLICT", "message": "Request rejected", "retryable": false, "operation_id": null}, "request_id": "32cc7bb6-badc-4b09-8bff-93cda889a26e"}}
+FINAL mode=RECONCILING

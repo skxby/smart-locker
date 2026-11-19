@@ -1,0 +1,7 @@
+{
+  "source": "operator multimeter and LED observation",
+  "date": "2026-10-30",
+  "pulse_evidence": "mos-bench-pulse04-samples.json",
+  "reported_result": "operator confirms OUT+ to OUT- rises close to 12V and returns close to 0V as expected; no exact numeric peak supplied",
+  "conclusion": "10k dummy-load output conduction/off preliminary observation meets expectation; real-lock current, precise pulse width and transients remain unverified"
+}

@@ -1,0 +1,12 @@
+^C[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O svc http://172.100.1.2:8007//locker-service-s207e
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-epoch5-04.log 2>&1 < /dev/null
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sha256sum svc
+[?2004l63c3cda66b02397f1a8000c7150dbd982bdec728c6d5d9e325f1f1c1d434dad2  svc
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv svc /userdata/locker/locker-service [Aroot@RK356X:/userdata/locker/tests/S2-07# mv svc /userdata/locker/locker-servic[Ke
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# chmod 755 /userdata/locker/locker-serviice
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O s.sh http://172.100.1.2:80077/s.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r2.sh http://172.100.1.2:80007/r2.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s.sh
+[?2004l1948
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

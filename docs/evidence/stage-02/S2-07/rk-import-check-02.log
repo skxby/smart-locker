@@ -1,0 +1,13 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_state|1
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -3 /userdata/locker/tests/S2-07/seervice-s207-02.log
+[?2004lDEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_7a8265c24d554e928cdfb222d42d44f38=END\n'
+[?2004lRK_DONE_7a8265c24d554e928cdfb22d42d44f38=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

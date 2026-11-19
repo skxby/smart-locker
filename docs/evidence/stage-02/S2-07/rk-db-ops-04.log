@@ -1,0 +1,41 @@
+wget -q -O q.py http://172.100.1.2:80077/query_ops.py && python3 q.py 2>&1 | head -45
+[?2004ldevice_state | 000000000000000000000000 | {"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_c
+import_cursors | 000000000000000000000000/bff0955c-f66b-40c2-81bc-c | {"device_id":"000000000000000000000000","journal_epoch":"bff0955c-f66b-40c2-81bc-c50ee9e645ac","through":{"device_id":"000000000000000000000000","journal_epoch":"bff0955c-f66b-40c2
+import_cursors | 000000000000000000000000/a75ce458-18bc-4351-a0b0-6 | {"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351-a0b0-66ae44dfa27d","through":{"device_id":"000000000000000000000000","journal_epoch":"a75ce458-18bc-4351
+import_cursors | 000000000000000000000000/6fad5fcd-7242-4c6b-8a9f-4 | {"device_id":"000000000000000000000000","journal_epoch":"6fad5fcd-7242-4c6b-8a9f-4540d4cfd976","through":{"device_id":"000000000000000000000000","journal_epoch":"6fad5fcd-7242-4c6b
+import_cursors | 000000000000000000000000/5e47a599-0be9-447d-a6bd-e | {"device_id":"000000000000000000000000","journal_epoch":"5e47a599-0be9-447d-a6bd-ecff8e7211d9","through":{"device_id":"000000000000000000000000","journal_epoch":"5e47a599-0be9-447d
+import_cursors | 000000000000000000000000/3e4d707f-f498-49c1-bc1b-4 | {"device_id":"000000000000000000000000","journal_epoch":"3e4d707f-f498-49c1-bc1b-4fe791cfb7c7","through":{"device_id":"000000000000000000000000","journal_epoch":"3e4d707f-f498-49c1
+import_cursors | 000000000000000000000000/2e4761af-1ba2-48df-86a3-f | {"device_id":"000000000000000000000000","journal_epoch":"2e4761af-1ba2-48df-86a3-f5cfbc0fb89f","through":{"device_id":"000000000000000000000000","journal_epoch":"2e4761af-1ba2-48df
+import_cursors | 000000000000000000000000/0abf6bbe-75ed-46e7-94db-1 | {"device_id":"000000000000000000000000","journal_epoch":"0abf6bbe-75ed-46e7-94db-186173335e91","through":{"device_id":"000000000000000000000000","journal_epoch":"0abf6bbe-75ed-46e7
+operations | acb70db1-22f5-4950-8faa-c3ce56b1bbe3 | {"operation":{"id":"acb70db1-22f5-4950-8faa-c3ce56b1bbe3","tool_id":"86f53966-a094-4c93-b363-6ef679748a49","kind":"BORROW","actor_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","state"
+sessions | f9486b29-e368-4e49-8b02-e1e055ea40c3 | {"id":"f9486b29-e368-4e49-8b02-e1e055ea40c3","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"cd8dae327516548532a2a03da42e29453cf699a1a136eb18b1ddefb419fcbbe5","expir
+sessions | f4f8bc35-a3ee-4327-80bb-528ff3e54f18 | {"id":"f4f8bc35-a3ee-4327-80bb-528ff3e54f18","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"a43543a7596a9bd4e331a9ddb1a382c29ed3bc0c15ef72e9f4aa71a1a45e5a46","expir
+sessions | e29985c6-53d2-4831-a981-8627f632adbd | {"id":"e29985c6-53d2-4831-a981-8627f632adbd","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"fcee04a678a09bb1b5f9ae7f4f096e1570e58647110949fdd68d010bc05036bd","expir
+sessions | dee74c54-6330-4454-84ac-0b4ebc805112 | {"id":"dee74c54-6330-4454-84ac-0b4ebc805112","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"b3dd0d27ad8ecb753d0eb858dbb05c89ee3ba1f9ef7eb825245f6cbcd0157672","expir
+sessions | b95068ee-fa44-430d-96fe-5105aec93277 | {"id":"b95068ee-fa44-430d-96fe-5105aec93277","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"c83d3046a6e6bfcf73af880bff6e2dbd491e3b2dee460dd5861f5ab52b6142e9","expir
+sessions | a0c99e17-5abd-4067-ba89-a761d30d1fe8 | {"id":"a0c99e17-5abd-4067-ba89-a761d30d1fe8","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"7f3ec6af057a9b19d3886b9536ddde761af02630e30b62b73217e2cddf45dde4","expir
+sessions | 9fab09c0-325d-49ff-8ede-0ab973557e24 | {"id":"9fab09c0-325d-49ff-8ede-0ab973557e24","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"8131eb3ed2932f16b3e257e68dcb7eb5dcc1f24cd51a4e51c0df67f6e66dc1db","expir
+sessions | 822247a8-2843-4c1a-8afd-8080919a20be | {"id":"822247a8-2843-4c1a-8afd-8080919a20be","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"867d3cae624a7cfb1fc0f99748090357787ca39e3f9b1e85483976c3edfcc0bc","expir
+sessions | 7aae0437-0683-47af-967e-57337997c530 | {"id":"7aae0437-0683-47af-967e-57337997c530","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"2494f9b24dd04abef9aa0693080a3be758bca36884f12944d602a5285f743ad4","expir
+sessions | 5f564652-54e2-48bc-93d2-496f97665988 | {"id":"5f564652-54e2-48bc-93d2-496f97665988","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"926d9802563b87e1774e0f8d5561be61221e1c3f1c2170f14f3c5550b728e5b3","expir
+sessions | 37ec2bf2-5ceb-480b-82cb-eec78554c2da | {"id":"37ec2bf2-5ceb-480b-82cb-eec78554c2da","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"ea8e6f647362ac20f1848956e1058ccbd750db72a6b40679b09398af19e95f70","expir
+sessions | 2e68a16c-49cf-444d-9e09-bf398684fd9e | {"id":"2e68a16c-49cf-444d-9e09-bf398684fd9e","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"bf083eacc749ff5fba738a1e93759c3f2a91bff3bc3e604c5821ac806dec643d","expir
+sessions | 29d827a0-609f-4076-b488-8fa6887efa19 | {"id":"29d827a0-609f-4076-b488-8fa6887efa19","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"cad145256c912ecea8d06e8946485e72bbb97036bc3bbc17895f4c7856c22c8f","expir
+sessions | 270b4cdd-64fc-4f7f-bb89-0fc8b397cefa | {"id":"270b4cdd-64fc-4f7f-bb89-0fc8b397cefa","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"fcaea104b0aa02e816bc881255be87044396f3869ce22d269debef978dcc5349","expir
+sessions | 20254545-7314-4637-8f7b-ae37d7ab63f2 | {"id":"20254545-7314-4637-8f7b-ae37d7ab63f2","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"03ecdda23f25972b7aab5e3101325fa6504a85bbd4b72c43ce77a15c88792114","expir
+sessions | 139c8d4e-1e4e-4bae-b1a6-34b01bbfc081 | {"id":"139c8d4e-1e4e-4bae-b1a6-34b01bbfc081","user_id":"18df8f12-62c8-4a5b-8ef1-ecfcf4148fef","token_hash":"b49261bbec485c693b7078dea682d9c04419f873ef1982f850d2413e2b641f0c","expir
+tools | 86f53966-a094-4c93-b363-6ef679748a49 | {"id":"86f53966-a094-4c93-b363-6ef679748a49","name":"A1","slot_id":1,"tool_revision":"1","enabled":true}
+=== collections ===
+('audits', 5)
+('device_events', 103)
+('device_state', 1)
+('idempotency', 7)
+('import_cursors', 7)
+('operations', 1)
+('outbox', 1)
+('sessions', 16)
+('slot_guards', 1)
+('tools', 1)
+('username_index', 1)
+('users', 1)
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

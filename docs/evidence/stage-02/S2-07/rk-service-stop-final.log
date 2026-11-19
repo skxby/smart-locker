@@ -1,0 +1,11 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 3; piidof locker-service; echo STOPPED; ls -l /userdata/locker/tests/S2-07/locker-servvice-*
+[?2004lprintf 'RK_DONE_ab7f837e0bd747d683aa6d27786ac900=END\n'
+[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-trace-06.log 2>&1 < /dev/null
+STOPPED
+-rwxr-xr-x 1 root root 9639232 Oct 30 06:13 /userdata/locker/tests/S2-07/locker-service-prev
+-rwxr-xr-x 1 root root 7909960 Oct 30 10:27 /userdata/locker/tests/S2-07/locker-service-prev2
+-rwxr-xr-x 1 root root 7975496 Oct 30 10:19 /userdata/locker/tests/S2-07/locker-service-s207-old
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_ab7f837e0bd747d683aa6d227786ac900=END\n'
+[?2004lRK_DONE_ab7f837e0bd747d683aa6d27786ac900=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,560,240) from documents where  collection='device_state'"
+[?2004lcd-7242-4c6b-8a9f-4540d4cfd976","boot_id":"2","event_seq":"3"}}},"last_snapshot_revision":"13","active_command_id":null}
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -c "session not established" /userrdata/locker/tests/S2-07/service-epoch5-04.log
+[?2004l0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_5ba20a66d07e474da1a65c884536347d0=END\n'
+[?2004lRK_DONE_5ba20a66d07e474da1a65c84536347d0=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

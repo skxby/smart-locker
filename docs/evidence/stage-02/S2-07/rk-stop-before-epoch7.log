@@ -1,0 +1,4 @@
+pkill -TERM locker-service
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service; echo STOPPED
+[?2004lSTOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,6 @@
+^C[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O bench_client.py http://172.1100.1.2:8007/bench_client.py
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r.sh http://172.100.1.2:80077/r.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sha256sum bench_client.py
+[?2004l6d8828209bf9d032f0907c2fb63d4a81b8996d9f805d51ce9909dd93ac71b274  bench_client.py
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

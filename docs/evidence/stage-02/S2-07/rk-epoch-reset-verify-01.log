@@ -1,0 +1,16 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "fetch|epoch_changed" /userdataa/locker/tests/S2-07/service-epoch5-04.log | head -4
+[?2004lfetch epoch_changed=2
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_events|29
+device_state|1
+import_cursors|2
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,430) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"6fad5fcd-7242-4c6b-8a9f-4540d4cfd976","boot_id":"2","physical_revision":"15","door":"CLOSED","item":"PRESENT","supply_mv":null,"observed_age_ms":121,"time_quality":"HOST_S
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_756c59dcc1154e209d484a994b0affc93=END\n'
+[?2004lRK_DONE_756c59dcc1154e209d484a94b0affc93=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

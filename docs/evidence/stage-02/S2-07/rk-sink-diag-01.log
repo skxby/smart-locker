@@ -1,0 +1,17 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 3; eccho STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-final-01.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07 && wgett -q -O s207c.new http://172.100.1.2:8007/locker-service-s207c && sha256sum s207cc.new
+[?2004l6cc6de46be56b975c6eccdfb7c0c08d648ba01218e015660c2a310c8a0fd894c  s207c.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev2 && mv /userdata/locker/tests/S2-077/s207c.new /userdata/locker/locker-service && chmod 755 /userdata/locker/locker--service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-06.log 2>&1 < /dev//null & sleep 10; echo STARTED
+[?2004l[1] 1641
+grep -E "sink rejected" /userdata/locker/tests/S2-07/service-trace-06.log | head -3
+printf 'RK_DONE_a36a8893d0fe4675aca7e65fa2112692=END\n'
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "sink rejected" /userdata/lockeer/tests/S2-07/service-trace-06.log | head -3
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_a36a8893d0fe4675aca7e655fa2112692=END\n'
+[?2004lRK_DONE_a36a8893d0fe4675aca7e65fa2112692=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

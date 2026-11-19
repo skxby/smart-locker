@@ -24,7 +24,7 @@ chmod 700 "$work/simulator" "$work/tls"
 
 从 `deployment/host/simulator.example.json` 复制配置到工作区 runtime 中；
 替换 USER、全部绝对路径、`ui_uid` 和 `admin_uid`（用 `id -u` 取得运行用户 UID）。
-配置必须包含样例中全部11个字段，不接受重复键、未知字段、相对路径或硬件模式。
+配置必须包含样例中全部11个字段，不接受重复键、未知字段或相对路径；DEVICE_SERIAL要求/dev/下的真实设备路径。
 `state_dir` 少于80字节，须为无符号链接/无 `..`/无末尾斜杠的规范绝对路径；
 init 可创建最后一层目录，父目录须已存在。现有状态目录须由当前UID所有且权限0700。
 HTTP固定4工作线程、Core队列64、WS提示环16，配置不提供放大这些上限的选项。
@@ -80,7 +80,7 @@ IPC和当前会话执行维护核对。未知旧动作不自动重发。
 相同计数的再次读取不改变原采样时刻。Core阻塞时年龄持续增长；UI实例零UUID、
 UI年龄UINT32_MAX、监督UNKNOWN。未装配Runtime的旧库级测试仍可使用Core内置健康发送；
 正式服务关闭该发送路径，避免两个发送者的计数竞争。
-`device_simulated=true` 同时用于公开投影与持久化设备状态，不再把模拟来源写为false。
+`device_simulated`按运行配置传给Core和公开投影：SIMULATOR_ONLY为true，DEVICE_SERIAL为false。
 
 ## 网络和失败边界
 
@@ -92,7 +92,7 @@ IPC还要求允许的peer UID与当前用户会话；0700状态目录/0600 socke
 
 参数/配置错误退出2，运行/初始化失败退出1，正常退出0；错误输出不回显配置正文或口令。
 端口占用、证书错误、模拟器不可连接、业务库错误或socket路径占用均失败退出。
-连接运行中断后保持不可新操作，不做自动重启；后续现场重连/部署能力按对应卡验收。
+串口请求连续超时或IO线程退出时关闭设备并退避重开；重开后须在3秒内完成会话建链，否则继续关闭重试。重连核对期间不允许新动作，不重放旧动作，也不重启整个服务；实测证据见docs/evidence/stage-02/recovery-preflight/summary.md。
 Linux x86_64证据不能证明RK ABI、真实锁硬截止、掉电安全或整柜可用。
 
 ## 复用依据

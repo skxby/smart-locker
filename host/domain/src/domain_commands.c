@@ -18,6 +18,7 @@
 #include "domain_internal.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #ifdef LOCKER_NETWORK_AUTH
 #include <sodium.h>
@@ -198,6 +199,13 @@ static void response_finish(locker_core_t *core, uint32_t slot, locker_status_t 
 {
     if (slot == UINT32_MAX) {
         return;
+    }
+    if (status == LOCKER_STATUS_CONFLICT && getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        /* Every 409 funnelled through here carried no context; the bench burned
+           hours guessing which gate refused (S2-07). Slot+status pair with the
+           "cmd kind=..." line printed by domain_handle_command on entry. */
+        fprintf(stderr, "conflict reply slot=%u\n", slot);
+        fflush(stderr);
     }
     /* 槽必须仍属于本次作业：等待方超时后按令牌释放、槽被下一个请求复用时，
        这次写回属于上一个请求。令牌核对在 accept/finish 的锁内完成，
@@ -1095,14 +1103,27 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
     domain_operation_t operation;
     locker_status_t status = domain_operation_load(core, &command->resource_id, 0, &operation);
     if (status != LOCKER_STATUS_OK) {
+        if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resolve fail: load status=%d\n", (int)status);
+            fflush(stderr);
+        }
         response_finish(core, slot, status, false, NULL);
         return status;
     }
     if (operation.state != LOCKER_OPERATION_STATE_REVIEW_REQUIRED) {
+        if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resolve conflict: state=%d (want REVIEW_REQUIRED=4)\n", (int)operation.state);
+            fflush(stderr);
+        }
         response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
         return LOCKER_STATUS_CONFLICT;
     }
     if (operation.revision != revision) {
+        if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resolve conflict: op_rev=%llu req=%llu\n",
+                    (unsigned long long)operation.revision, (unsigned long long)revision);
+            fflush(stderr);
+        }
         response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
         return LOCKER_STATUS_CONFLICT;
     }
@@ -1116,6 +1137,14 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
     if (!core->device_snapshot_valid || core->physical.door != LOCKER_DOOR_STATE_CLOSED ||
         core->physical.item == LOCKER_ITEM_STATE_UNKNOWN ||
         core->physical.physical_revision != physical_revision) {
+        if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resolve conflict: snapshot_valid=%d door=%d item=%d phys=%llu req=%llu\n",
+                    core->device_snapshot_valid ? 1 : 0, (int)core->physical.door,
+                    (int)core->physical.item,
+                    (unsigned long long)core->physical.physical_revision,
+                    (unsigned long long)physical_revision);
+            fflush(stderr);
+        }
         response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
         return LOCKER_STATUS_CONFLICT;
     }
@@ -1125,6 +1154,10 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
        改成「已借出」——而这恰恰是最需要证据的时刻（审计 R1-B-12）。
        SNAPSHOT_MAX_AGE_MS 之外、或会话已断，都视为不可核验。 */
     if (!physical_evidence_fresh(core, domain_now(core))) {
+        if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resolve conflict: physical evidence not fresh\n");
+            fflush(stderr);
+        }
         response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
         return LOCKER_STATUS_CONFLICT;
     }
@@ -1155,6 +1188,11 @@ static locker_status_t command_operation_resolve(locker_core_t *core, const lock
     if (resolution == LOCKER_RESOLUTION_NO_CHANGE) {
         const uint8_t baseline_item = operation.has_baseline ? operation.baseline.item : LOCKER_ITEM_STATE_UNKNOWN;
         if (baseline_item == LOCKER_ITEM_STATE_UNKNOWN || core->physical.item != baseline_item) {
+            if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+                fprintf(stderr, "resolve conflict: baseline=%d has_baseline=%d current_item=%d\n",
+                        (int)baseline_item, operation.has_baseline ? 1 : 0, (int)core->physical.item);
+                fflush(stderr);
+            }
             response_finish(core, slot, LOCKER_STATUS_CONFLICT, false, NULL);
             return LOCKER_STATUS_CONFLICT;
         }
@@ -2009,6 +2047,11 @@ void domain_handle_command(locker_core_t *core, const domain_job_t *job)
     if (domain_handle_session_command(core, job)) return;
     const locker_command_t *command = &job->body.command;
     uint32_t slot = job->completion;
+    if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        fprintf(stderr, "cmd kind=%s slot=%u role=%d\n", command->kind, slot,
+                (int)command->principal.role);
+        fflush(stderr);
+    }
     locker_status_t status = domain_principal_check(core, &command->principal);
     if (status != LOCKER_STATUS_OK) {
         response_finish(core, slot, status, false, NULL);
@@ -2093,12 +2136,52 @@ static void local_request(locker_core_t *core, const domain_job_t *job, bool mai
         if (c.principal.role!=LOCKER_ROLE_ADMIN || !job->body.maintenance.peer.verified_admin_peer ||
             reason_length==sizeof(request->reason) || audit_char_count(request->reason,reason_length)<5 ||
             audit_char_count(request->reason,reason_length)>256) status=LOCKER_STATUS_INVALID;
-        else if (core->active.used && !domain_terminal_state(core->active.state)) status=LOCKER_STATUS_CONFLICT;
+        else if (core->active.used && !domain_terminal_state(core->active.state)) {
+            if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+                fprintf(stderr, "reconcile conflict: active op used=1 state=%d\n", (int)core->active.state);
+                fflush(stderr);
+            }
+            status=LOCKER_STATUS_CONFLICT;
+        }
         else if (!physical_evidence_fresh(core,domain_now(core)) || core->physical.door!=LOCKER_DOOR_STATE_CLOSED ||
             core->physical.item!=(core->loan_open ? LOCKER_ITEM_STATE_ABSENT : LOCKER_ITEM_STATE_PRESENT) ||
-            core->session.journal_state!=LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY || !core->cursor.continuity_ok) status=LOCKER_STATUS_NOT_READY;
+            core->session.journal_state!=LOCKER_WIRE_WIRE_JOURNAL_STATE_HEALTHY || !core->cursor.continuity_ok) {
+            /* Every one of these collapses into NOT_READY, which the IPC layer then
+             * reports as a bare 503 DEVICE_UNAVAILABLE. Name the failing term so the
+             * operator knows whether to close the door, seat the tool or look at the
+             * journal, instead of guessing (S2-07 bench). */
+            if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+                fprintf(stderr, "reconcile blocked: fresh=%d door=%d item=%d want_item=%d journal=%u continuity=%d loan_open=%d\n",
+                        physical_evidence_fresh(core,domain_now(core)) ? 1 : 0,
+                        (int)core->physical.door,
+                        (int)core->physical.item,
+                        (int)(core->loan_open ? LOCKER_ITEM_STATE_ABSENT : LOCKER_ITEM_STATE_PRESENT),
+                        (unsigned)core->session.journal_state,
+                        core->cursor.continuity_ok ? 1 : 0,
+                        core->loan_open ? 1 : 0);
+                fflush(stderr);
+            }
+            status=LOCKER_STATUS_NOT_READY;
+        }
         else if (!locker_uuid_equal(&request->journal_epoch,&core->session.journal_epoch) || request->expected_boot_id!=core->session.boot_id ||
-            request->physical_revision!=core->physical.physical_revision || request->snapshot_revision!=core->revision) status=LOCKER_STATUS_CONFLICT;
+            request->physical_revision!=core->physical.physical_revision || request->snapshot_revision!=core->revision) {
+            /* The 409 never said WHICH term mismatched; five bench probes burned on
+               this blind spot (S2-07). Dump request vs core for all four terms. */
+            if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+                char req_epoch[37], core_epoch[37];
+                domain_uuid_to_text(&request->journal_epoch, req_epoch, sizeof(req_epoch));
+                domain_uuid_to_text(&core->session.journal_epoch, core_epoch, sizeof(core_epoch));
+                fprintf(stderr, "reconcile conflict: req(epoch=%s boot=%llu phys=%llu srev=%llu) core(epoch=%s boot=%llu phys=%llu rev=%llu)\n",
+                        req_epoch, (unsigned long long)request->expected_boot_id,
+                        (unsigned long long)request->physical_revision,
+                        (unsigned long long)request->snapshot_revision,
+                        core_epoch, (unsigned long long)core->session.boot_id,
+                        (unsigned long long)core->physical.physical_revision,
+                        (unsigned long long)core->revision);
+                fflush(stderr);
+            }
+            status=LOCKER_STATUS_CONFLICT;
+        }
     } else {
         if (!job->body.presence.peer.verified_ui_peer && !job->body.presence.peer.verified_admin_peer) status=LOCKER_STATUS_INVALID;
         else status=presence_apply(core,presence,2u);
@@ -2130,7 +2213,16 @@ static void local_request(locker_core_t *core, const domain_job_t *job, bool mai
     if (maintenance) {
         locker_ready_guard_t guard={0}; guard.session_id=core->session.session_id; guard.journal_epoch=core->session.journal_epoch;
         guard.expected_boot_id=core->session.boot_id; guard.expected_physical_revision=core->physical.physical_revision; guard.persisted_through=core->import_cursor;
-        (void)locker_device_resume_ready(core->device,&guard);
+        /* RESUME decides whether the device ever leaves RECONCILING. Swallowing its
+           status made a locally-refused request look identical to an accepted one. */
+        locker_status_t resumed=locker_device_resume_ready(core->device,&guard);
+        if (resumed!=LOCKER_STATUS_OK && getenv("LOCKER_DEVICE_TRACE") != NULL) {
+            fprintf(stderr, "resume refused status=%d cursor=%llu/%llu epoch=%02x%02x\n",
+                    (int)resumed,(unsigned long long)guard.persisted_through.boot_id,
+                    (unsigned long long)guard.persisted_through.event_seq,
+                    (unsigned)guard.journal_epoch.bytes[0],(unsigned)guard.journal_epoch.bytes[1]);
+            fflush(stderr);
+        }
     } else if (operation_arm(core)==LOCKER_STATUS_OK) domain_outbox_pump(core);
 }
 
@@ -2183,7 +2275,16 @@ void domain_handle_maintenance(locker_core_t *core, const domain_job_t *job)
     guard.expected_boot_id = core->session.boot_id;
     guard.expected_physical_revision = core->physical.physical_revision;
     guard.persisted_through = core->import_cursor;
-    (void)locker_device_resume_ready(core->device, &guard);
+    /* This is the path the bench actually uses: reconcile arrives as
+       DOMAIN_JOB_MAINTENANCE. Its RESUME status was dropped here, so a refused
+       resume was indistinguishable from an accepted one. */
+    locker_status_t resumed = locker_device_resume_ready(core->device, &guard);
+    if (resumed != LOCKER_STATUS_OK && getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        fprintf(stderr, "resume refused(maintenance) status=%d cursor=%llu/%llu\n",
+                (int)resumed, (unsigned long long)guard.persisted_through.boot_id,
+                (unsigned long long)guard.persisted_through.event_seq);
+        fflush(stderr);
+    }
 }
 
 void domain_handle_tick(locker_core_t *core, uint64_t tick_ms)

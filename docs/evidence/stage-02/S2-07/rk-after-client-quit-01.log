@@ -1,0 +1,36 @@
+quit
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -30 /userdata/locker/tests/S2-07/sservice-s207-01.log
+[?2004ldevice session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls -l /dev/ttyS4; pidof locker-service [Aroot@RK356X:/userdata/locker/tests/S2-07# ls -l /dev/ttyS4; pidof locker-servic[Ke
+[?2004lcrw-rw---- 1 root dialout 4, 68 Oct 30 10:07 /dev/ttyS4
+960
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

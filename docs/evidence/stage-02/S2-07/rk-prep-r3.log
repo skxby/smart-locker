@@ -1,0 +1,3 @@
+wget -q -O r3.sh http://172.100.1.2:80007/r3.sh
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh r3.sh
+[?2004lPassword: 

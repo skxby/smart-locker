@@ -1,0 +1,10 @@
+grep -E "^dev |expired|timeout" /userdaata/locker/tests/S2-07/service-epoch10-01.log | tail -6
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -c "resume" /userdata/locker/testss/S2-07/service-epoch10-01.log
+[?2004l0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

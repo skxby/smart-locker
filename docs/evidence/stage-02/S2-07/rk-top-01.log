@@ -1,0 +1,7 @@
+top -b -n 1 -p $(pidof locker-service)  | tail -3
+[?2004l
+  PID USER      PR  NI    VIRT    RES  %CPU  %MEM     TIME+ S COMMAND
+ 2513 root      20   0  484.0m   8.9m   0.0   0.4   0:08.54 S /userdata/locker+
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls /proc/$(pidof locker-service)/task || wc -l
+[?2004l12
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

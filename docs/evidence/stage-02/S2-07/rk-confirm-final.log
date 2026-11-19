@@ -1,0 +1,2 @@
+before-confirm state=REVIEW_REQUIRED rev=6
+NOT_WAIT_CONFIRM

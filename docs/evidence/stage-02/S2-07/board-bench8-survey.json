@@ -1,0 +1,8 @@
+{
+  "state": "RUNNING",
+  "dbgmcu_idcode": "0x101f6413",
+  "flash_kb": 1024,
+  "head_0x10000_sha256": "7cec176a361aee438f7f13a6c26d9b6036d04a49d812c3cb6d50fb0ed98692f0",
+  "whole_internal_sha256": "c842094e3b8ff298f6dbe37e745853f496a5a9eac99a913671e5532c64bc11ec",
+  "when": "2026-10-30T19:56:46.914550+08:00"
+}

@@ -1,0 +1,22 @@
+{
+  "when": "2026-10-30T15:19:05.969744+08:00",
+  "operation": "first flash init failed before erase",
+  "registers": {
+    "pc": "0x8000200",
+    "sp": "0x2001ffe0",
+    "msp": "0x2001ffe0",
+    "psp": "0x2001f648",
+    "control": "0x0",
+    "primask": "0x1",
+    "basepri": "0x0",
+    "faultmask": "0x0",
+    "xpsr": "0x41000003"
+  },
+  "system": {
+    "0xe000ed28": "0x400",
+    "0xe000ed2c": "0x40000000",
+    "0xe000ed34": "0xe000edf8",
+    "0xe000ed38": "0xe000edf8"
+  },
+  "sector0_sha256": "c1453808c87d3aac6d7f11075eb77da536931eb1df9e89537df75b7def18ff8e"
+}

@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "image": "build\\firmware-s205-gnu\\hse8_168\\locker_s205.hex",
+  "hex_sha256": "9b6032832c92636118d0836c4b2cb49539e1911b040919e8b9f0d83f6f22dbac",
+  "payload_bytes": 56012,
+  "sectors_erased": [
+    "0x8000000",
+    "0x8004000",
+    "0x8008000",
+    "0x800c000"
+  ],
+  "pc_after_reset": "0x8000188",
+  "first": {
+    "xtick": 593,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "second": {
+    "xtick": 995,
+    "tasks": 5,
+    "gpio_b_moder": "0xa9001280",
+    "gpio_b_odr": "0x1000"
+  },
+  "when": "2026-10-30T15:58:00.992372+08:00",
+  "operator_confirmed": "12V off; PWM disconnected; real coil disconnected; PC0 disconnected",
+  "flash_prepare": "reset_and_halt; MSP/control context; HSI"
+}

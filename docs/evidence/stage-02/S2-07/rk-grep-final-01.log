@@ -1,0 +1,4 @@
+grep -n "resume" /userdata/locker/testss/S2-07/service-epoch10-01.log | tail -8
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -c "dev open" /userdata/locker/tessts/S2-07/service-epoch10-01.log
+[?2004l1543
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

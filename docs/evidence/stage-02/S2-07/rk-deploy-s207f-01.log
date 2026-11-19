@@ -1,0 +1,7 @@
+cd /userdata/locker/tests/S2-07
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O s207f.new http://172.100.1.22:8007/locker-service-s207f && sha256sum s207f.new
+[?2004le641c1bf9c701a80890b7cde32dd44be219c25fd0cb7e47ed8274c3aae5bd78e  s207f.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev4
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv s207f.new /userdata/locker/locker-seervice && chmod 755 /userdata/locker/locker-service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

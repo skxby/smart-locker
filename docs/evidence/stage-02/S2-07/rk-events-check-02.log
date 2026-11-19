@@ -1,0 +1,10 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select count(*) from documents where collection='devicee_events'"
+[?2004l11
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls -l --time-style=+%H:%M:%S /userdata//locker/state-s207/business.db; date +%H:%M:%S
+[?2004l-rw------- 1 root root 24576 10:58:33 /userdata/locker/state-s207/business.db
+11:07:59
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,substr(key,1,60) from documents wheree instr(value_json,'6fad5fcd')>0 limit 5"
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_aee0297caad54c0296cc10ee234f22fb5=END\n'
+[?2004lRK_DONE_aee0297caad54c0296cc10e234f22fb5=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,15 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# mkdir -p /userdata/locker/tests/S2-07 && chmod 700 /userdatta/locker/tests/S2-07 && echo DIR_OK
+[?2004lDIR_OK
+[?2004hroot@RK356X:/gec_yay# cd /data/locker && setsid /userdata/locker/locker-service ---config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-077/service-s207-01.log 2>&1 < /dev/null & sleep 4; echo STARTED
+[?2004l[1] 958
+pidof locker-service; echo ---LOG---; tail -8 /userdata/locker/tests/S2-07/service-s207-01.log
+STARTED
+[?2004hroot@RK356X:/gec_yay# pidof locker-service; echo ---LOG---; tail -8 /userdata/loccker/tests/S2-07/service-s207-01.log
+[?2004l960
+---LOG---
+DEVICE_SERIAL startup RECONCILING; queue=64 http_workers=4 ws_buffer=16
+DEVICE_SERIAL listening; business readiness requires reconciliation
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_36ebb71948ff4b938dddf602275550b7=END\n'
+[?2004lRK_DONE_36ebb71948ff4b938dddf602275550b7=END
+[?2004hroot@RK356X:/gec_yay# 

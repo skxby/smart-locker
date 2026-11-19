@@ -343,8 +343,8 @@
         "tests/hardware/"
       ],
       "scope_detail": "Exact path qualifiers and tests/documentation permissions are in the task specification.",
-      "status": "NOT_STARTED",
-      "report": null
+      "status": "BLOCKED",
+      "report": "docs/evidence/stage-02/S2-07/summary.md"
     },
     {
       "id": "S2-08",

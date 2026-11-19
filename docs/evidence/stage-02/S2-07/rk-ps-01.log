@@ -1,0 +1,2 @@
+ps w | grep -v grep | grep -E "python|bbench|curl|locker" | head -12
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

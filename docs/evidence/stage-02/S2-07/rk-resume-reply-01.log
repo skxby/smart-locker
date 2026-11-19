@@ -1,0 +1,2 @@
+^C[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "resume reply|resume refused" //userdata/locker/tests/S2-07/service-epoch10-01.log | tail -4
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

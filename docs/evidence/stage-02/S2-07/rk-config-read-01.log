@@ -1,0 +1,23 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# cat /userdata/locker/locker-service.json
+[?2004l{
+  "mode": "DEVICE_SERIAL",
+  "state_dir": "/userdata/locker/state",
+  "device_path": "/dev/ttyS4",
+  "device_id": "000000000000000000000000",
+  "certificate": "/data/locker/tls/server.crt",
+  "private_key": "/data/locker/tls/server.key",
+  "bind_address": "192.0.2.20",
+  "port": 8443,
+  "ui_uid": 0,
+  "admin_uid": 0,
+  "cabinet_name": "??????????????????-RK3568"
+}
+[?2004hroot@RK356X:/gec_yay# ls -ld /userdata/locker /userdata/locker/state
+[?2004ldrwxr-xr-x 5 root root 4096 Oct 30 08:32 /userdata/locker
+drwx------ 2 root root 4096 Oct 30 08:32 /userdata/locker/state
+[?2004hroot@RK356X:/gec_yay# mount | grep -w /userdata
+[?2004l/dev/mmcblk0p9 on /userdata type ext2 (rw,relatime)
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_c99ace85ba55406980c33961813dd741=END\n'
+[?2004lRK_DONE_c99ace85ba55406980c33961813dd741=END
+[?2004hroot@RK356X:/gec_yay# 

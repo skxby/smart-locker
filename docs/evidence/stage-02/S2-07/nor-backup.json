@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "file": "build\\hardware-S2-07\\journal\\nor-before-epoch2.bin",
+  "bytes": 16777216,
+  "sha256": "8e6f74208db338d002f14a7362781d5edf04961571934ea958301cd840876b54",
+  "diag": {
+    "phase": 4098,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 0,
+    "boot_id": "0",
+    "action_watermark": "0",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 0,
+    "first_available": [
+      "0",
+      "0"
+    ],
+    "last_committed": [
+      "0",
+      "0"
+    ],
+    "ack_persisted": [
+      "0",
+      "0"
+    ],
+    "journal_state": "HEALTHY",
+    "continuity_ok": 0,
+    "commands_served": 2048,
+    "raw": [
+      4098,
+      0,
+      0,
+      15679512,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2048
+    ]
+  },
+  "when": "2026-10-30T18:04:33.949355+08:00"
+}

@@ -1,0 +1,13 @@
+rm -f /userdata/llocker/tests/S2-07/session-admin-05.jsonl
+[?2004lsh: session-admin-05.jsonlrm: command not found
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls /userdata/locker/tests/S2-07/
+[?2004lbench_client.py		 service-epoch5-04.log	  service-trace-05.log
+locker-service-prev	 service-final-01.log	  service-trace-06.log
+locker-service-prev2	 service-s207-01.log	  session-admin-02.jsonl
+locker-service-prev3	 service-s207-02.log	  session-admin-03.jsonl
+locker-service-s207-old  service-stackfix-01.log  session-admin-04.jsonl
+service-01.log		 service-trace-01.log	  session-admin-05.jsonl
+service-epoch5-01.log	 service-trace-02.log	  stale-service-01.sock
+service-epoch5-02.log	 service-trace-03.log
+service-epoch5-03.log	 service-trace-04.log
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

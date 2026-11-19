@@ -1,0 +1,6 @@
+wget -q -O s207i.new http://172.100.1.22:8007/locker-service-s207i && sha256sum s207i.new
+[?2004l2e0a905a67864fe325dd064578b02649906d2483edf30254cbab8c62e0662158  s207i.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh /userdata/locker/tests/S2-07/s10.sh [Aroot@RK356X:/userdata/locker/tests/S2-07# sh /userdata/locker/tests/S2-07/s10.s[Kh
+[?2004l2393
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07 && . .//r15.sh
+[?2004lPassword: 

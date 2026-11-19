@@ -1,0 +1,9 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07 && wgett -q -O locker-service-s207.new http://172.100.1.2:8007/locker-service-s207 && eccho WGET_OK
+[?2004lWGET_OK
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sha256sum /userdata/locker/tests/S2-07//locker-service-s207.new; ls -l /userdata/locker/tests/S2-07/locker-service-s207..new
+[?2004lb376194d1d75213cfb432759c69e76414260c72e4fb565596e9e453bbf20cf10  /userdata/locker/tests/S2-07/locker-service-s207.new
+-rw-r--r-- 1 root root 7975496 Oct 30 10:19 /userdata/locker/tests/S2-07/locker-service-s207.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_cfcf031f098749d59c17b0ccabe9e6350=END\n'
+[?2004lRK_DONE_cfcf031f098749d59c17b0cabe9e6350=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

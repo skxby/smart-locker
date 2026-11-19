@@ -1,0 +1,9 @@
+{
+  "when": "2026-10-30T16:35:41.276939+08:00",
+  "host": "192.0.2.20",
+  "trusted_tls_unauthenticated_device_status": 401,
+  "untrusted_certificate_rejected": true,
+  "login_attempts": 0,
+  "business_mutations": 0,
+  "client_sha256": "5da3be6a47fbbb97e762ab4ef50f564d25f2bbed83323539c963b22af4737aa8"
+}

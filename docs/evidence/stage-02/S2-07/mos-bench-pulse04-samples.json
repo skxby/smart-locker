@@ -1,0 +1,213 @@
+{
+  "when": "2026-10-30T15:54:00.885906+08:00",
+  "operation": "one pulse with live non-halting reads",
+  "before": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 205790,
+    "count": 3,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x2280",
+    "gpio_b_odr": "0x0"
+  },
+  "after": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 205945,
+    "count": 4,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x2280",
+    "gpio_b_odr": "0x0"
+  },
+  "samples": [
+    {
+      "elapsed_ms": 1.96,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 69.94,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 578
+    },
+    {
+      "elapsed_ms": 119.4,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 1067
+    },
+    {
+      "elapsed_ms": 167.81,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 1560
+    },
+    {
+      "elapsed_ms": 233.04,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 2210
+    },
+    {
+      "elapsed_ms": 287.73,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 2753
+    },
+    {
+      "elapsed_ms": 336.24,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 3245
+    },
+    {
+      "elapsed_ms": 383.85,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 3724
+    },
+    {
+      "elapsed_ms": 431.49,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 4201
+    },
+    {
+      "elapsed_ms": 484.17,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 4724
+    },
+    {
+      "elapsed_ms": 532.06,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 5206
+    },
+    {
+      "elapsed_ms": 591.15,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 5686
+    },
+    {
+      "elapsed_ms": 639.31,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 6278
+    },
+    {
+      "elapsed_ms": 687.6,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 6761
+    },
+    {
+      "elapsed_ms": 735.7,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 7242
+    },
+    {
+      "elapsed_ms": 784.68,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 7730
+    },
+    {
+      "elapsed_ms": 834.24,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 8224
+    },
+    {
+      "elapsed_ms": 881.85,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 8704
+    },
+    {
+      "elapsed_ms": 932.52,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 9188
+    },
+    {
+      "elapsed_ms": 982.08,
+      "pb6_idr": 1,
+      "tim4_cr1": "0x9",
+      "tim4_cnt": 9695
+    },
+    {
+      "elapsed_ms": 1029.63,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1076.47,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1134.36,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1192.76,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1240.46,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1288.25,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1335.41,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1384.48,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1433.28,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    },
+    {
+      "elapsed_ms": 1493.76,
+      "pb6_idr": 0,
+      "tim4_cr1": "0x8",
+      "tim4_cnt": 0
+    }
+  ],
+  "count_increased_once": true,
+  "high_samples": 19,
+  "last_pb6_low": true,
+  "last_timer_stopped": true,
+  "output_voltage_or_precise_width_proven": false
+}

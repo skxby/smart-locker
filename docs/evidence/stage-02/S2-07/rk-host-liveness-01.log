@@ -1,0 +1,14 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls -l --time-style=+%H:%M:%S /userdata//locker/state-s207/business.db; date +%H:%M:%S
+[?2004l-rw------- 1 root root 24576 10:58:33 /userdata/locker/state-s207/business.db
+11:06:14
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -6 /userdata/locker/tests/S2-07/seervice-epoch5-02.log
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_bb7d36967bca422e8a3c951130e5027c9=END\n'
+[?2004lRK_DONE_bb7d36967bca422e8a3c95130e5027c9=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

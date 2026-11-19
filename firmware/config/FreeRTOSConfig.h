@@ -9,7 +9,10 @@ void env_assert_failed(void);
 #define configTICK_RATE_HZ 1000U
 #define configMAX_PRIORITIES 5
 #define configMINIMAL_STACK_SIZE 128U
-#define configTOTAL_HEAP_SIZE (16U * 1024U)
+/* Four tasks: Control/Communication 4 KB each, Storage 6 KB, Health 1 KB, plus
+ * TCBs and the idle task. 16 KB left Storage overflowing; 24 KB keeps the same
+ * allocations with room to grow and still fits the 128 KB part. */
+#define configTOTAL_HEAP_SIZE (24U * 1024U)
 #define configMAX_TASK_NAME_LEN 16
 #define configUSE_16_BIT_TICKS 0
 #define configIDLE_SHOULD_YIELD 1

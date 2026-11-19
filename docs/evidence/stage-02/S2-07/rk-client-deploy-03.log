@@ -1,0 +1,15 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# cd /userdata/locker/tests/S2-07 && mv bench_client.py.new bbench_client.py && chmod 600 bench_client.py && echo MOVED
+[?2004lMOVED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# python3 -B /userdata/locker/tests/S2-077/bench_client.py --help | head -5
+[?2004lusage: bench_client.py [-h] --host HOST [--port PORT] --ca CA --device-id
+                       DEVICE_ID --user USER [--socket SOCKET] --evidence
+                       EVIDENCE
+
+S2-07 operator client. Existing HTTPS API plus two local-only IPC methods. No
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls -l /userdata/locker/state-s207/serviice.sock; pidof locker-service
+[?2004lsrw------- 1 root root 0 Oct 30 09:14 /userdata/locker/state-s207/service.sock
+960
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_aea0205888c44c75ade9dfaabd5ff3901=END\n'
+[?2004lRK_DONE_aea0205888c44c75ade9dfabd5ff3901=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

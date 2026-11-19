@@ -1,0 +1,4 @@
+wget -q -O lt.py http://172.100.1.2:80007/login_test.py && python3 lt.py
+[?2004lSTATUS 404
+{"error":{"code":"NOT_FOUND","message":"Request rejected","retryable":false,"operation_id":null},"request_id":"b1f7f17a-1a2e-4200-be64-82aead160235"}
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,8 @@
+-- locker host build: contract 0.2.1
+{"status": "PASS", "network_source_files": 3811, "downloaded_at_configure": false}
+-- Network dependencies: linux-x86_64 (native)
+-- storage tests: contract-drift gate enabled (/usr/bin/python3)
+-- device contract tests: daemon smoke enabled (/usr/bin/python3)
+-- Configuring done (1.8s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/%USER%/locker-workspace/build/S2-07/20261030-01

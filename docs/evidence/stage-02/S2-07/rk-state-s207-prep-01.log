@@ -1,0 +1,13 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# mkdir -p /userdata/locker/state-s207 && chmod 700 /userdataa/locker/state-s207 && echo MKDIR_OK
+[?2004lMKDIR_OK
+[?2004hroot@RK356X:/gec_yay# sed 's|/userdata/locker/state"|/userdata/locker/state-s207""|' /userdata/locker/locker-service.json > /userdata/locker/locker-service-s207.jjson && echo SED_OK
+[?2004lSED_OK
+[?2004hroot@RK356X:/gec_yay# grep -n state_dir /userdata/locker/locker-service-s207.jsonn
+[?2004l3:  "state_dir": "/userdata/locker/state-s207",
+[?2004hroot@RK356X:/gec_yay# ls -ld /userdata/locker/state-s207 /userdata/locker/state
+[?2004ldrwx------ 2 root root 4096 Oct 30 08:32 /userdata/locker/state
+drwx------ 2 root root 4096 Oct 30 09:03 /userdata/locker/state-s207
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_d8bbbb38b365473fa175ed054b47cb6c=END\n'
+[?2004lRK_DONE_d8bbbb38b365473fa175ed054b47cb6c=END
+[?2004hroot@RK356X:/gec_yay# 

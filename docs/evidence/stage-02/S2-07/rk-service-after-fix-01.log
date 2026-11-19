@@ -1,0 +1,14 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-03.log 2>&1 < /dev//null & sleep 8; echo STARTED
+[?2004l[1] 1335
+sqlite3 "file:/userdata/locker/state-s207/business.db?mode=ro" "select collection,count(*) from documents group by collection"
+STARTED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_state|1
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_650c9fe1720d4780871e73115df2f111b=END\n'
+[?2004lRK_DONE_650c9fe1720d4780871e7315df2f111b=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

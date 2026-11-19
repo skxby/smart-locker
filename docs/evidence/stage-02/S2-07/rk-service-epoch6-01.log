@@ -1,0 +1,6 @@
+pkill -TERM locker-service
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sh s.sh
+[?2004l2005
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select substr(value_json,1,400) from documents where coollection='device_state'"
+[?2004l{"device":{"device_id":"000000000000000000000000","cabinet_name":"??????????????????-RK3568","contract_version":"0.2.1","simulated":false,"mode":"RECONCILING","health_reasons":[],"ui_restart_count":null,"physical":{"device_id":"000000000000000000000000","journal_epoch":"3e4d707f-f498-49c1-bc1b-4fe791cfb7c7","boot_id":"2","physical_revision":"1","door":"CLOSED","item":"PRESENT","supply_mv":null,"observed_age_m
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

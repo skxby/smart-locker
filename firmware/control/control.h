@@ -6,6 +6,11 @@
 locker_status_t mcu_control_dispatch(mcu_control_t *, const mcu_request_context_t *,
                                     const locker_wire_request_union_t *);
 locker_status_t mcu_control_recover(mcu_control_t *);
+/* Recovery is queued once the object is bound; the caller must be able to tell
+ * "already recovered" from "not ready yet" so it can retry without duplicating. */
+bool mcu_control_recovered(const mcu_control_t *);
+/* Read-only snapshot of the ready gates, for board diagnosis over SWD. */
+void mcu_control_diag(volatile uint32_t out[8]);
 void mcu_control_tick(mcu_control_t *);
 void mcu_control_fault(mcu_control_t *);
 void mcu_control_session_lost(mcu_control_t *);

@@ -1,0 +1,12 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ''.tables'
+[?2004ldocuments   meta        migrations
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ''select username,role,enabled from users'
+[?2004lError: no such table: users
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ''select count(*) from operations'
+[?2004lError: no such table: operations
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ''select count(*) from loans'
+[?2004lError: no such table: loans
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_a787583c41a746408bcc9bc7934329d2=END\n'
+[?2004lRK_DONE_a787583c41a746408bcc9bc7934329d2=END
+[?2004hroot@RK356X:/gec_yay# 

@@ -33,6 +33,8 @@ IMAGE = ROOT / 'build/firmware-s205-cutoff-gnu/hse8_168/locker_s205-cutoff.hex'
 PACK = Path('E:/keil5/ARM/PACK/Keil/STM32F4xx_DFP/2.13.0')
 PROBE = '000000000000000000000000'
 SECTOR0 = 0x08000000
+SUFFIX = ''            # set from --suffix; keeps re-runs from reusing evidence names
+FORCE = False          # set from --force; closed-card evidence stays immutable by default
 
 # Free-standing diagnostic symbols of control/cutoff_validation.c.
 SYM = {'pulse_ms': 0x20000000, 'fault': 0x20000018, 'phase': 0x2000001C,
@@ -82,9 +84,14 @@ def snapshot(target):
             'gpio_b_moder': hex(target.read32(0x40020400)), 'gpio_b_odr': hex(target.read32(0x40020414))}
 
 
-def write_json(name, data):
+def write_json(name, data, force=False):
     data = dict(data, when=datetime.now().astimezone().isoformat())
-    path = ROOT / 'docs/evidence/stage-02/S2-05' / name
+    stem, _, ext = name.partition('.')
+    path = ROOT / 'docs/evidence/stage-02/S2-05' / ((stem + SUFFIX + '.' + ext) if SUFFIX else name)
+    # S2-05 is a closed card: never let a later survey silently rewrite its record.
+    if path.exists() and not (force or FORCE):
+        raise SystemExit('%s exists; new evidence needs a new name (--out/--suffix) '
+                         'or an explicit --force' % path)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(data, ensure_ascii=False), flush=True)
     return path
@@ -115,11 +122,18 @@ def main():
                         help='1 plain, 2 IRQs masked, 3 scheduler suspended, 4 software off, 5 system reset')
     parser.add_argument('--pulse-ms', type=int, default=1000, help='Requested pulse width, 1..1000')
     parser.add_argument('--settle', type=float, default=0.0, help='Delay before the board is read back')
+    parser.add_argument('--suffix', default='',
+                        help='Append to every evidence file name, e.g. --suffix=-rerun01')
+    parser.add_argument('--force', action='store_true',
+                        help='Overwrite an existing S2-05 evidence file (never for a closed card)')
     args = parser.parse_args()
     if args.program and not args.expected_current_sha256:
         parser.error('--program requires --expected-current-sha256 from a prior --identify')
     if not (args.identify or args.program or args.verify_only or args.status or args.trigger):
         parser.error('nothing to do')
+    global SUFFIX, FORCE
+    SUFFIX = args.suffix
+    FORCE = args.force
 
     s = session()
     with s:

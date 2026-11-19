@@ -1,0 +1,66 @@
+{
+  "command": 11,
+  "name": "RECOVER",
+  "diag": {
+    "phase": 6,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 1,
+    "boot_id": "3",
+    "action_watermark": "0",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 5,
+    "first_available": [
+      "1",
+      "1"
+    ],
+    "last_committed": [
+      "3",
+      "1"
+    ],
+    "ack_persisted": [
+      "0",
+      "0"
+    ],
+    "journal_state": "DEGRADED",
+    "continuity_ok": 0,
+    "commands_served": 2,
+    "raw": [
+      6,
+      0,
+      0,
+      15679512,
+      1,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      1,
+      0,
+      1,
+      0,
+      3,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      4,
+      2,
+      0,
+      2
+    ]
+  },
+  "when": "2026-10-30T18:22:50.119011+08:00"
+}

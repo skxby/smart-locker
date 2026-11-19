@@ -1,0 +1,19 @@
+quit
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -14 /userdata/locker/tests/S2-07/sservice-epoch5-04.log
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=2 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=2 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# ls -l /userdata/locker/state-s207/serviice.sock
+[?2004lsrw------- 1 root root 0 Oct 30 11:09 /userdata/locker/state-s207/service.sock
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

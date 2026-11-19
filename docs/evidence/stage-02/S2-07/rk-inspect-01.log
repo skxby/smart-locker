@@ -1,0 +1,26 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# ls -la /userdata/locker/state; echo ---SVC---; pgrep -a loccker-service; echo ---DATA---; ls -la /data/locker; rk_rc=$?; printf '\nRK_DONE_aaa9d88aa073d44cf924516ac4f2d3f3f=%s\n' "$rk_rc"
+[?2004ltotal 76
+drwx------ 2 root root  4096 Oct 30 08:32 .
+drwxr-xr-x 5 root root  4096 Oct 30 08:32 ..
+-rw------- 1 root root 16384 Oct 30 06:13 business.db
+-rw------- 1 root root 32768 Oct 30 08:32 business.db-shm
+-rw------- 1 root root 16512 Oct 30 08:32 business.db-wal
+-rw------- 1 root root     0 Oct 30 05:07 instance.lock
+srw------- 1 root root     0 Oct 30 08:32 service.sock
+---SVC---
+849 /userdata/locker/locker-service --config /userdata/locker/locker-service.json
+---DATA---
+total 12300
+drwxr-xr-x 5 root root    4096 Oct 30 08:32 .
+drwxr-xr-x 7 root root    4096 Jan  1  1970 ..
+-rwxr-xr-x 1 root root 2696528 Oct 30 06:13 locker-admin
+-rwxr-xr-x 1 root root 9639232 Oct 30 06:13 locker-service
+-rw-r--r-- 1 root root     372 Oct 30 06:13 locker-service.json
+-rw-r--r-- 1 root root  203659 Oct 30 07:18 service.log
+drwx------ 2 root root    4096 Oct 30 08:32 state
+drwxr-xr-x 3 root root    4096 Oct 30 08:32 tests
+drwxr-xr-x 2 root root    4096 Oct 30 05:01 tls
+
+RK_DONE_aa9d88aa073d44cf924516ac4f2d3f3f=0
+[?2004hroot@RK356X:/gec_yay# 

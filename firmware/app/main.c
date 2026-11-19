@@ -30,9 +30,18 @@ void env_assert_failed(void)
 }
 
 void vApplicationMallocFailedHook(void) { env_assert_failed(); }
+/* Keep the offender readable over SWD: the fail-stop loop alone cannot say which
+ * task ran out of stack, and the name argument is otherwise discarded. */
+volatile uint32_t s201_stack_overflow_task;
 void vApplicationStackOverflowHook(TaskHandle_t task, char *name)
 {
-    (void)task; (void)name;
+    (void)task;
+    if (name != NULL) {
+        s201_stack_overflow_task = (uint32_t)(uint8_t)name[0] |
+                                   ((uint32_t)(uint8_t)name[1] << 8) |
+                                   ((uint32_t)(uint8_t)name[2] << 16) |
+                                   ((uint32_t)(uint8_t)name[3] << 24);
+    }
     env_assert_failed();
 }
 void HardFault_Handler(void) { env_assert_failed(); }
@@ -100,6 +109,26 @@ int main(void)
 #endif
 #ifdef LOCKER_S205
     (void)names; (void)i;
+    {
+        /* The non-product path applied a board profile below; the product path
+           skipped it entirely, so board_lock_apply() never ran and `ready`
+           stayed false. Every unlock then ended as UNKNOWN_RESULT with the
+           solenoid never energised (S2-07 bench: command_state=5, lock silent).
+           BOARD_LOCK_QUALIFIED remains the single switch: with it at its default
+           0 the apply still fails closed and the lock stays inert. */
+        mcu_board_profile_t candidate = {0};
+        candidate.verified = true;
+        candidate.lock_output.configured = true;
+        candidate.lock_output.port_index = 1u;
+        candidate.lock_output.pin_mask = GPIO_PIN_6;
+        candidate.lock_output.alternate_function = GPIO_AF2_TIM4;
+        candidate.lock_active_level = 1u;
+        candidate.lock_timer_instance = 4u;
+        candidate.lock_timer_channel = 1u;
+        candidate.hal_tick_timer_instance = 6u;
+        candidate.pulse_ms = 1000u;
+        (void)mcu_board_apply_profile(&candidate);
+    }
     assembly_start();
 #else
     for (i = 0U; i < 4U; ++i) {

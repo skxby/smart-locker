@@ -18,9 +18,9 @@ STM32开发环境入口：[firmware/README.md](firmware/README.md)和[Keil工程
 
 STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile的完整实测记录尚未入库。
 
-当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE、主机模拟门禁PASS。S2-01安全BSP和低电流默认关闭验收完成；S2-02输入/SPI完成，门磁/微动内部上拉及低有效映射、RC522两张4字节UID、Flash JEDEC读出和互斥测试通过。PC0接线/ADC实物标定按用户授权后移，当前供电无效；7/10字节UID仅协议回归通过，实物待补。硬件profile仍UNVERIFIED、阶段2门禁NOT_RUN。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实黄金帧、跨圈和背压验证通过；见[本卡报告](docs/evidence/stage-02/S2-03/summary.md)。S2-04真实littlefs/Journal已DONE，提交后真实断电恢复、持久ACK/水位及故障锁存验收通过；见[本卡报告](docs/evidence/stage-02/S2-04/summary.md)。诊断epoch保持DEGRADED，未ACK记录保留；S2-05未开始。
+当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE、主机模拟门禁PASS。S2-01安全BSP和低电流默认关闭验收完成；S2-02输入/SPI完成，门磁/微动内部上拉及低有效映射、RC522两张4字节UID、Flash JEDEC读出和互斥测试通过。PC0接线/ADC实物标定按用户授权后移，当前供电无效；7/10字节UID仅协议回归通过，实物待补。硬件profile仍UNVERIFIED、阶段2门禁NOT_RUN。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实黄金帧、跨圈和背压验证通过；见[本卡报告](docs/evidence/stage-02/S2-03/summary.md)。S2-04真实littlefs/Journal已DONE，提交后真实断电恢复、持久ACK/水位及故障锁存验收通过；见[本卡报告](docs/evidence/stage-02/S2-04/summary.md)。诊断epoch保持DEGRADED，未ACK记录保留；S2-05 Control与硬截止空载验收DONE；S2-06 RK真实串口/ABI/TLS/配对DONE，物理断线恢复已补证。S2-07采用真实硬件台架测试，无需正式柜体；台架客户端及主机验证通过，完整实物闭环因供电/profile等前置待补而BLOCKED，见[前置记录](docs/evidence/stage-02/S2-07/summary.md)。
 
-**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-05，阶段1 gate PASS。S2-03已通过本卡软件与真实UART验收，详见[本卡报告](docs/evidence/stage-02/S2-03/summary.md)；当前授权包含S2-04，止于S2-05开发之前。
+**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-07，阶段1 gate PASS、阶段2 gate NOT_RUN。S2-01至S2-06已DONE；S2-07为BLOCKED，完整实物闭环待验，授权范围止于S2-08开发之前。
 
 开发、集成与验证由当前会话统一负责，具体流程见[执行规则](docs/development/execution-policy.md)。
 
@@ -41,7 +41,7 @@ STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；�
 - [模块与 AI 所有权](docs/architecture/module-ownership.md)：后续 AI 的目录与修改边界。
 - [阶段 1 任务卡](docs/stages/stage-01-task-cards.md)：主机骨架、仓储、模拟器与验证；S1-01至S1-07已DONE，阶段一主机模拟门禁PASS。
 - [材料与HAL影响](docs/hardware/材料变更影响与HAL边界.md)、[本地HAL核对](docs/hardware/本地HAL库核对.md)：材料替换不翻转业务状态，HAL适配不改公开协议。
-- [阶段 2 HAL任务卡](docs/stages/stage-02-hal-hardware-task-cards.md)：S2-01至S2-04已DONE，S2-05至S2-08尚未执行。
+- [阶段 2 HAL任务卡](docs/stages/stage-02-hal-hardware-task-cards.md)：S2-01至S2-06已DONE，S2-07台架客户端已验证、完整实物闭环BLOCKED，S2-08未执行。
 - [阶段2B视觉八卡](docs/stages/stage-02b-vision-task-cards.md)：S2-09—16接模型/相机/worker/融合；S2-08只过基础子门禁，S2-16为阶段2完整门禁。
 - [阶段 3 客户端任务卡](docs/stages/stage-03-clients-task-cards.md)：Android/LVGL的7张卡及配对/幂等/异步IPC。
 - [阶段 4 监护任务卡](docs/stages/stage-04-monitoring-task-cards.md)：容量、供电、真实进度、IWDG与固定UI恢复的8张卡。

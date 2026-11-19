@@ -1,0 +1,20 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sleep 5; tail -6 /userdata/locker/testss/S2-07/service-final-01.log
+[?2004lsqlite3 "file:/userdata/locker/state-s207/businedevice session not established; reopening
+ss.db?mode=ro" "device reopen ok
+select collectiodevice session not established; reopening
+n,count(*) from device reopen ok
+documents group device session not established; reopening
+by collection"
+device reopen ok
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select collection,count(*) from documents group by colllection"
+[?2004ldevice_events|8
+device_state|1
+import_cursors|1
+sessions|1
+tools|1
+username_index|1
+users|1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_cd6a6acb838745a194511844cec4b313b=END\n'
+[?2004lRK_DONE_cd6a6acb838745a19451184cec4b313b=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

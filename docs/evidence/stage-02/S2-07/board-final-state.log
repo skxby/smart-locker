@@ -1,0 +1,9 @@
+pidof locker-service; sha256sum /userdaata/locker/locker-service
+[?2004l7fbf00933ed8b1e5d7afb28e516012f6febed1803a1ff04f2aeef70d50581aef  /userdata/locker/locker-service
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "version|epoch" /userdata/lockeer/tests/S2-07/board-final-note.txt 2>/dev/null; echo ---; ls locker-service-prevv* 2>/dev/null | head -3; echo ---
+[?2004l---
+locker-service-prev
+locker-service-prev10
+locker-service-prev11
+---
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

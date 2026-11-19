@@ -169,6 +169,13 @@ locker_status_t mcu_journal_provision(const mcu_journal_config_t *config,const l
 }
 static locker_status_t add_event(mcu_journal_t *j, const locker_device_event_t *event) {
     checkpoint_t *c=&j->next; locker_device_event_t e=*event; uint64_t seq=1;
+    /* uart-v1.md:42: an event whose supply reading is not valid must carry the
+       0xffffffff sentinel, never 0. The host rejects the whole page otherwise
+       (host/storage/src/repository.c:879), which leaves the ledger empty and the
+       cabinet latched in RECONCILING. Internal facts (BOOT, COMMAND_ACCEPTED,
+       CONTEXT_RELEASED, PULSE_*) are zero-initialised, so normalise them here at
+       the single append point instead of at every construction site. */
+    if((e.flags&0x0001u)==0u) e.supply_mv=UINT32_MAX;
     if(c->count==MCU_JOURNAL_MAX_EVENTS) return LOCKER_STATUS_NO_SPACE;
     if(c->count && c->events[c->count-1].key.boot_id==c->state.boot_id) {
         seq=c->events[c->count-1].key.event_seq; if(seq==UINT64_MAX) return LOCKER_STATUS_NO_SPACE; ++seq;

@@ -1,0 +1,18 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -4 /userdata/locker/tests/S2-07/seervice-final-01.log
+[?2004ldevice session not established; reopening
+device reopen ok
+device session not established; reopening
+device reopen ok
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sleep 6; echo ---AFTER6s---; tail -4 /uuserdata/locker/tests/S2-07/service-final-01.log
+[?2004lsqlite3 "file:/userdata/locker/state-s207/business.db?mode=ro" "select count(*) from documents where collection='device_events'"
+---AFTER6s---
+device reopen ok
+device session not established; reopening
+device reopen ok
+device session not established; reopening
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# sqlite3 "file:/userdata/locker/state-s2207/business.db?mode=ro" "select count(*) from documents where collection='devicee_events'"
+[?2004l8
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_82238d85ad344c9eaa3e01117a234af18=END\n'
+[?2004lRK_DONE_82238d85ad344c9eaa3e0117a234af18=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

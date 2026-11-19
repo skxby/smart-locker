@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "%REPO%\docs\evidence\stage-02\S2-07\poll-resume.py", line 39, in <module>
+    buf = t.read_block_memory(PEND, 16 * 8)
+          ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Stm32f407vgtx' object has no attribute 'read_block_memory'

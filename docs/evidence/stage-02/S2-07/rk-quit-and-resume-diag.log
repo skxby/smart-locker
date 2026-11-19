@@ -1,0 +1,10 @@
+quit
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "resume refused|reconcile blockked" /userdata/locker/tests/S2-07/service-epoch7-01.log | tail -5
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -6 /userdata/locker/tests/S2-07/seervice-epoch7-01.log
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

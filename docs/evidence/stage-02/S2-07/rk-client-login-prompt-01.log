@@ -1,0 +1,2 @@
+python3 -B /userdata/locker/tests/S2-07/bench_client.py --hhost 192.0.2.20 --ca /data/locker/tls/server.crt --device-id 4f004e000e513533336363231 --user admin --socket /userdata/locker/state/service.sock --evidence /usserdata/locker/tests/S2-07/session-admin-01.jsonl
+[?2004lPassword: 

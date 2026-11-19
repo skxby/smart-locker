@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ""select json_extract(value_json,'$.user.username'), json_extract(value_json,'$.usser.role'), json_extract(value_json,'$.user.enabled') from documents where collecction='users'"
+[?2004lError: no such function: json_extract
+[?2004hroot@RK356X:/gec_yay# sqlite3 "file:/userdata/locker/state/business.db?mode=ro" ""select key from documents where collection='tools'"
+[?2004l73229457-51e3-478f-b24e-525511abbb34
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_c3026a1d1ddd477aacab7ba687e83b90=END\n'
+[?2004lRK_DONE_c3026a1d1ddd477aacab7ba687e83b90=END
+[?2004hroot@RK356X:/gec_yay# 

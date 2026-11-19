@@ -1,0 +1,66 @@
+{
+  "command": 9,
+  "name": "SHUTDOWN",
+  "diag": {
+    "phase": 12,
+    "last_result": 0,
+    "flash_init": 0,
+    "jedec_id": "0xef4018",
+    "has_journal": 0,
+    "boot_id": "1",
+    "action_watermark": "0",
+    "has_active": 0,
+    "command_state": 0,
+    "event_count": 0,
+    "first_available": [
+      "1",
+      "1"
+    ],
+    "last_committed": [
+      "1",
+      "1"
+    ],
+    "ack_persisted": [
+      "0",
+      "0"
+    ],
+    "journal_state": "HEALTHY",
+    "continuity_ok": 1,
+    "commands_served": 5,
+    "raw": [
+      12,
+      0,
+      0,
+      15679512,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      4,
+      1,
+      1,
+      5
+    ]
+  },
+  "when": "2026-10-30T20:07:26.239804+08:00"
+}

@@ -1,0 +1,3 @@
+wget -q -O s207j.new http://172.100.1.22:8007/locker-service-s207j && sha256sum s207j.new
+[?2004l0cee007fecb97980a0486ffdf9e6c7f1b13da8f25af70b72e82602afd636890c  s207j.new
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

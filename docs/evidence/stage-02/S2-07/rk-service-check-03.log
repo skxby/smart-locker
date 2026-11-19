@@ -1,0 +1,6 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pidof locker-service
+[?2004l2301
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /userdata/locker/tests/S2-07 && . .//r13.sh
+[?2004lConnection/login failed; no request retry. Check identity, TLS, permissions and evidence.
+[?2004hroot@RK356X:/gec_yay# 

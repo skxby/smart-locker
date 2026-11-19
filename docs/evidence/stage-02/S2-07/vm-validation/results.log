@@ -1,0 +1,6 @@
+debug-configure exit=0
+debug-build exit=0
+debug-ctest exit=0
+asan-configure exit=0
+asan-build exit=0
+asan-ctest exit=0

@@ -2116,9 +2116,83 @@ static void test_card_binding(void)
     dt_fixture_free(&fixture);
 }
 
+/* ---------- S2-07：会话满时登录驱逐 expires 最早的活跃会话，不再 BUSY ---------- */
+
+/* 只声明本用例用到的 libsodium 面：domain 库已链接 sodium，符号可达。
+   参数取 INTERACTIVE 档（ops=2, mem=64MiB），str_verify 按存储串自适应。 */
+#define DT_PWHASH_STRBYTES 128u
+extern int crypto_pwhash_str(char out[DT_PWHASH_STRBYTES], const char *const passwd,
+                             unsigned long long passwdlen, unsigned long long opslimit,
+                             size_t memlimit);
+
+static void test_session_lru_eviction(void)
+{
+    dt_fixture_t fixture;
+    locker_query_result_t result;
+    locker_uuid_t seed_uuid;
+    char args[192], value[1024], expires[64], key_text[40];
+    char pwhash[DT_PWHASH_STRBYTES];
+    const char *password = "bench-password-123456";
+    int printed;
+
+    TEST_CHECK(dt_fixture_init(&fixture, true));
+
+    /* 用户 lruuser：argon2id 现场生成 hash，domain_login 用 str_verify 比对。 */
+    TEST_CHECK(crypto_pwhash_str(pwhash, password, strlen(password), 2ull, (size_t)67108864) == 0);
+    dt_uuid_fill(&seed_uuid, 0x91u);
+    {
+        char user_id[40];
+        dt_uuid_text(&seed_uuid, user_id, sizeof(user_id));
+        printed = snprintf(value, sizeof(value),
+                           "{\"user\":{\"id\":\"%s\",\"username\":\"lruuser\",\"display_name\":\"LRU\","
+                           "\"role\":\"ADMIN\",\"enabled\":true,\"user_revision\":\"1\"},"
+                           "\"password_hash\":\"%s\"}", user_id, pwhash);
+        TEST_CHECK(printed > 0 && (size_t)printed < sizeof(value));
+        TEST_CHECK(dt_repo_put(fixture.repo, "users", user_id, value));
+    }
+
+    /* 预置 16 条 current 会话（user_id 同上）：第 0 条 expires 最早，是驱逐目标。 */
+    for (unsigned i = 0u; i < 16u; ++i) {
+        char user_id[40];
+        dt_uuid_fill(&seed_uuid, 0x91u);
+        dt_uuid_text(&seed_uuid, user_id, sizeof(user_id));
+        dt_uuid_fill(&seed_uuid, (uint8_t)(0xA0u + i));
+        dt_uuid_text(&seed_uuid, key_text, sizeof(key_text));
+        TEST_CHECK(locker_domain_time_format_utc(fixture.clock.wall_ms + (i == 0u ? 3600000ull : 7200000ull),
+                                                expires, sizeof(expires)));
+        printed = snprintf(value, sizeof(value),
+                           "{\"id\":\"%s\",\"user_id\":\"%s\",\"token_hash\":\"ab%02u\","
+                           "\"expires_at\":\"%s\",\"revoked\":false}",
+                           key_text, user_id, i, expires);
+        TEST_CHECK(printed > 0 && (size_t)printed < sizeof(value));
+        TEST_CHECK(dt_repo_put(fixture.repo, "sessions", key_text, value));
+    }
+
+    /* 登录：修复前 16 条全 active 时这里 BUSY/429；现在驱逐最老后成功。 */
+    {
+        locker_principal_t anon;
+        memset(&anon, 0, sizeof(anon));
+        printed = snprintf(args, sizeof(args), "{\"username\":\"lruuser\",\"password\":\"%s\"}", password);
+        TEST_CHECK(printed > 0 && (size_t)printed < sizeof(args));
+        locker_command_t command = dc_command(&anon, LOCKER_CORE_SESSION_CREATE, args, 0xB0u, 0xB1u);
+        TEST_CHECK_STATUS(LOCKER_STATUS_OK, dc_run_command(&fixture, &command, &result));
+    }
+
+    /* 最老（0xA0）被驱逐，次老（0xA1）保留，新会话已入库。 */
+    dt_uuid_fill(&seed_uuid, 0xA0u);
+    dt_uuid_text(&seed_uuid, key_text, sizeof(key_text));
+    TEST_CHECK(dt_repo_find(fixture.repo, "sessions", key_text) == NULL);
+    dt_uuid_fill(&seed_uuid, 0xA1u);
+    dt_uuid_text(&seed_uuid, key_text, sizeof(key_text));
+    TEST_CHECK(dt_repo_find(fixture.repo, "sessions", key_text) != NULL);
+
+    dt_fixture_free(&fixture);
+}
+
 int main(void)
 {
     test_card_binding();
+    test_session_lru_eviction();
     test_create_guards();
     test_create_success();
     test_create_idempotency();

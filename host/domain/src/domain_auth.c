@@ -141,7 +141,30 @@ static locker_status_t domain_login(locker_core_t *core, const locker_command_t 
     char obsolete[LOCKER_DOMAIN_MAX_USER_SESSIONS][37]; size_t obsolete_count=0,active_count=0;
     status=domain_user_sessions(core,user_id,true,obsolete,&obsolete_count,&active_count);
     if (status!=LOCKER_STATUS_OK) return status;
-    if (active_count>=LOCKER_DOMAIN_MAX_USER_SESSIONS) return LOCKER_STATUS_BUSY;
+    if (active_count>=LOCKER_DOMAIN_MAX_USER_SESSIONS) {
+        /* 会话满时驱逐 expires_at 最早的活跃会话（LRU），而不是拒绝登录。
+           台架反复登录把 16 条全部占满后，每一次登录都 BUSY/429，且在最早
+           一条 8 小时过期前无法自愈（S2-07：登录连环 429，重启服务也无效，
+           因为会话在库里持久存在）。被驱逐的会话走统一的 obsolete 删除，
+           与过期会话同一事务。 */
+        char all_keys[LOCKER_DOMAIN_MAX_USER_SESSIONS][37];
+        size_t all_count=0,unused_active=0;
+        if (domain_user_sessions(core,user_id,false,all_keys,&all_count,&unused_active)!=LOCKER_STATUS_OK)
+            return LOCKER_STATUS_BUSY;
+        char oldest[37]="",oldest_exp[32]="";
+        for (size_t i=0;i<all_count;++i) {
+            domain_doc_t sdoc;
+            if (domain_repo_doc(core,0,"sessions",all_keys[i],&sdoc)!=LOCKER_STATUS_OK || !sdoc.found) continue;
+            char exp[32]; bool revoked=true;
+            if (!domain_json_read_text(&sdoc.doc,domain_json_member(&sdoc.doc,sdoc.value,"expires_at"),exp,sizeof(exp))) continue;
+            (void)domain_json_read_bool(&sdoc.doc,domain_json_member(&sdoc.doc,sdoc.value,"revoked"),&revoked);
+            if (revoked) continue;
+            if (!oldest[0] || strcmp(exp,oldest_exp)<0) { memcpy(oldest,all_keys[i],36); oldest[36]=0; memcpy(oldest_exp,exp,sizeof(oldest_exp)); }
+        }
+        if (!oldest[0] || obsolete_count>=LOCKER_DOMAIN_MAX_USER_SESSIONS) return LOCKER_STATUS_BUSY;
+        memcpy(obsolete[obsolete_count],oldest,36); obsolete[obsolete_count][36]=0; ++obsolete_count;
+        --active_count;
+    }
     randombytes_buf(entropy, sizeof(entropy));
     sodium_bin2hex(token, sizeof(token), entropy, sizeof(entropy));
     sodium_memzero(entropy, sizeof(entropy));
@@ -272,6 +295,12 @@ bool domain_handle_session_command(locker_core_t *core, const domain_job_t *job)
 #ifdef LOCKER_NETWORK_AUTH
     uint64_t now = 0;
     (void)locker_clock_port_monotonic_ms(&core->clock, &now);
+    if (getenv("LOCKER_DEVICE_TRACE") != NULL) {
+        fprintf(stderr, "login gate now=%llu not_before=%llu -> %s\n",
+                (unsigned long long)now, (unsigned long long)core->login_not_before_ms,
+                now < core->login_not_before_ms ? "BUSY" : "pass");
+        fflush(stderr);
+    }
     if (now < core->login_not_before_ms) status = LOCKER_STATUS_BUSY;
     else {
         core->login_not_before_ms = now > UINT64_MAX - 1000 ? UINT64_MAX : now + 1000;

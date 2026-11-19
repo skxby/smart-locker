@@ -1,0 +1,14 @@
+
+[?2004l[?2004hroot@RK356X:/gec_yay# pgrep -a locker-service
+[?2004l849 /userdata/locker/locker-service --config /userdata/locker/locker-service.json
+[?2004hroot@RK356X:/gec_yay# kill -TERM 849; echo TERM_SENT
+[?2004lTERM_SENT
+[?2004hroot@RK356X:/gec_yay# sleep 3; pgrep -a locker-service; echo ---; ls -l /userdataa/locker/state/service.sock 2>&1; echo ---; netstat -lnt 2>/dev/null | grep 8443;; echo DONE_CHECK
+[?2004lprintf 'RK_DONE_8d619d6491044cebaf37fc8f1a24d7ac=END\n'
+---
+ls: cannot access '/userdata/locker/state/service.sock': No such file or directory
+---
+DONE_CHECK
+[?2004hroot@RK356X:/gec_yay# printf 'RK_DONE_8d619d6491044cebaf37fc8f1a24d7ac=END\n'
+[?2004lRK_DONE_8d619d6491044cebaf37fc8f1a24d7ac=END
+[?2004hroot@RK356X:/gec_yay# 

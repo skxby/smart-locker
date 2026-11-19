@@ -1,0 +1,8 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 4; piidof locker-service; echo STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid env LOCKER_DEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-stackfix-01.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-epoch5-02.log 2>&1 < /devv/null & sleep 15; echo STARTED
+[?2004l[1] 1749
+pidof locker-service; grep -c "session not established" /userata/locker/tests/S2-07/service-epoch5-02.log; grep -E "fetch" /userdata/locker/tests/S2-07/service-epoch5-02.log | head -2
+printf 'RK_DONE_2352a82513b34754a2ddc948a84e4c9c=END\n'

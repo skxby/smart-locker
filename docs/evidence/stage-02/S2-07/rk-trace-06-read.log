@@ -1,0 +1,17 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# grep -E "^dev " /userdata/locker/tests//S2-07/service-trace-06.log | head -6
+[?2004ldev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# tail -5 /userdata/locker/tests/S2-07/seervice-trace-06.log
+[?2004ldevice reopen ok
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+dev open=1 hello=0 lost=0 rd=1 wr=1 streak=0 pend=1 tx=0
+device session not established; reopening
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_79cfcca391904a6c8089b2337c7de45d8=END\n'
+[?2004lRK_DONE_79cfcca391904a6c8089b237c7de45d8=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

@@ -1,0 +1,19 @@
+
+snapshot | device | tools | users | operation OPERATION_UUID
+user USERNAME USER|ADMIN IDEMPOTENCY_UUID "Display Name"  (admin; password prompted, hidden)
+borrow TOOL_UUID TOOL_REV IDEMPOTENCY_UUID submit
+return TOOL_UUID TOOL_REV IDEMPOTENCY_UUID submit
+presence OPERATION_UUID OP_REV IDEMPOTENCY_UUID  (local IPC; may cause a pulse)
+confirm OPERATION_UUID OP_REV IDEMPOTENCY_UUID
+cancel OPERATION_UUID OP_REV IDEMPOTENCY_UUID "reason"
+reconcile EPOCH BOOT PHYSICAL_REV SNAPSHOT_REV IDEMPOTENCY_UUID "reason" (local admin)
+resolve OPERATION_UUID OP_REV PHYSICAL_REV COMPLETE_BORROW|COMPLETE_RETURN|NO_CHANGE IDEMPOTENCY_UUID "reason"
+key  (generate an idempotency UUID; retain it for the same intent)
+help | quit
+Read current revisions first. No automatic retries, sensor simulation or fault clearing.
+
+bench> VALUES b=2 p=4 s=88
+RECONCILE: {"status": 409, "body": {"error": {"code": "REVISION_CONFLICT", "message": "Request rejected", "retryable": false, "operation_id": null}, "request_id": "1075d025-394b-4807-9fa6-150da7d0627e"}}
+grep -E "reconcile conflict|reconcile blocked|resume" /userrdata/locker/tests/S2-07/service-epoch10-01.log | tail -4
+[?2004lreconcile conflict: active op used=1 state=4
+[?2004hroot@RK356X:/gec_yay# 

@@ -1,0 +1,7 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pgrep -af bench_client; echo ---; pgrepp -a locker-service; echo ---; stty -a | head -1
+[?2004l---
+1856 /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json
+---
+speed 115200 baud; rows 0; columns 0; line = 0;
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

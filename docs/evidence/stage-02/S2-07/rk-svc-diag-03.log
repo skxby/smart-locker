@@ -1,0 +1,10 @@
+pidof locker-service
+[?2004l2472
+[?2004hroot@RK356X:/gec_yay# ls -la /userdata/locker/state-s207/service.sock 2>&1
+[?2004lsrw------- 1 root root 0 Oct 30 13:21 /userdata/locker/state-s207/service.sock
+[?2004hroot@RK356X:/gec_yay# tail -n 4 /userdata/locker/tests/S2-07/service-epoch10-01.llog
+[?2004ldev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+dev open=1 hello=1 lost=0 rd=1 wr=1 streak=0 pend=0 tx=0
+[?2004hroot@RK356X:/gec_yay# 

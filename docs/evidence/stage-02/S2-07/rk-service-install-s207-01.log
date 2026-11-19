@@ -1,0 +1,24 @@
+
+[?2004l[?2004hroot@RK356X:/userdata/locker/tests/S2-07# pkill -TERM locker-service; sleep 2; piidof locker-service; echo STOPPED
+[?2004l[1]+  Done                    cd /data/locker && setsid /userdata/locker/locker-service --config /userdata/locker/locker-service-s207.json > /userdata/locker/tests/S2-07/service-s207-02.log 2>&1 < /dev/null
+STOPPED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# mv /userdata/locker/locker-service /useerdata/locker/tests/S2-07/locker-service-prev && mv /userdata/locker/tests/S2-07//locker-service-s207.new /userdata/locker/locker-service && chmod 755 /userdata/llocker/locker-service && echo INSTALLED
+[?2004lINSTALLED
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# cd /data/locker && setsid env LOCKER_DEEVICE_TRACE=1 /userdata/locker/locker-service --config /userdata/locker/locker-seervice-s207.json > /userdata/locker/tests/S2-07/service-trace-02.log 2>&1 < /dev//null & sleep 8; echo STARTED
+[?2004l[1] 1312
+sleep 4; grep -c . /userdata/locker/tests/S2-07/service-trace-02.log; grep fetchSTARTED
+ /userdata/locke[?2004hr/tests/S2-07/seroot@RK356X:/userdata/locker/tests/S2-07# rvice-trace-02.lsleep 4; grep -c . /userdata/locker/tessts/S2-07/service-trace-02.log; grep fetch /userdata/locker/tests/S2-07/service-ttrace-02.log | head -8og | head -8
+pr
+intf 'RK_DONE_c5[?2004l0aa033c43e4b3d8037
+5ddded20b697a6=Efetch import_status=3
+ND\n'
+fetch import_status=3
+fetch import_status=3
+fetch import_status=3
+fetch import_status=3
+fetch import_status=3
+fetch import_status=3
+fetch import_status=3
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# printf 'RK_DONE_c50aa033c43e4b3d805dddeed20b697a6=END\n'
+[?2004lRK_DONE_c50aa033c43e4b3d805ddded20b697a6=END
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

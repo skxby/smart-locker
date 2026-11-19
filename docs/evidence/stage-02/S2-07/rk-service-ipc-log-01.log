@@ -1,0 +1,5 @@
+tail -12 /userdata/locker/tests/S2-07/service-epoch5-04.log
+Request failed or outcome unknown; no retry. Inspect evidence and query current state.
+bench> ls -l /userdata/locker/state-s207/service.sock
+Request failed or outcome unknown; no retry. Inspect evidence and query current state.
+bench> 

@@ -1,0 +1,3 @@
+. ./r13.sh
+[?2004lConnection/login failed; no request retry. Check identity, TLS, permissions and evidence.
+[?2004hroot@RK356X:/gec_yay# 

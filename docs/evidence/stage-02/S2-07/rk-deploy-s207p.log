@@ -1,0 +1,5 @@
+wget -q -O s207p.new http://172.100.1.22:8007/locker-service-s207p && mv /userdata/locker/locker-service /userdata/lockeer/tests/S2-07/locker-service-prev13 && mv s207p.new /userdata/locker/locker-servvice && chmod 755 /userdata/locker/locker-service && echo OK1
+[?2004lOK1
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# wget -q -O r26.sh http://172.100.1.2:80007/r26.sh && echo OK2
+[?2004lOK2
+[?2004hroot@RK356X:/userdata/locker/tests/S2-07# 

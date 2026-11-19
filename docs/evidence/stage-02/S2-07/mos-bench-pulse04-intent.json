@@ -1,0 +1,17 @@
+{
+  "when": "2026-10-30T15:53:59.336838+08:00",
+  "operation": "fourth individually authorized 1000ms dummy-load pulse",
+  "before": {
+    "command": 0,
+    "pulse_ms": 1000,
+    "progress": 205790,
+    "count": 3,
+    "result": "OK",
+    "phase": 0,
+    "fault": 0,
+    "gpio_b_moder": "0x2280",
+    "gpio_b_odr": "0x0"
+  },
+  "operator_confirmed": "output measurement ready; meter red OUT+, black OUT-; coil disconnected; 10k dummy load unchanged; PC0 disconnected; both supplies on",
+  "automatic_retry": false
+}
