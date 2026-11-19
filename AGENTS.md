@@ -6,7 +6,7 @@
 
 ## 阅读顺序与真源
 
-1. `README.md`：当前阶段和交付入口。
+1. `docs/开发入口.md`：当前阶段和交付入口（根 `README.md` 是面向 GitHub 访客的介绍页，不含验收结论）。
 2. `docs/stages/README.md`、`config/development/stage-plan.json`：单卡规约、阶段依赖、真实实施状态；再读`docs/stages/stage-00-architecture.md`的架构/状态机。
 3. `contracts/contract-source.json` 和 `contracts/uart-layouts.json`：枚举/API/端口与串口字段的机器真源。
    `contracts/internal-data-source.json`固定内部仓储与IPC字段；生成器维护C原生DTO映射。硬件profile使用独立schema，不从公开API写入。

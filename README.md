@@ -1,56 +1,105 @@
-# 实验室工具借还柜
+# 智能工具借还柜
 
-当前由本会话完成开发、验证、整改和交接，取消开发AI/独立审计AI分工；按[执行规则](docs/development/execution-policy.md)执行。旧提示词中的独立审计及并发操作段仅作历史参考，功能依赖与实物验收继续有效。
+> **把「谁借了什么、柜门到底开没开、东西真被取走了吗」做成一条有物理证据、断电不丢、结果未知就不敢自动重放的借还链。**
 
-VM入口已建立：[VM检查与两个工作区](docs/development/vm-inspection-and-code-layout.md)。使用ssh locker-vm；桌面及文件侧栏有借还柜、当前源码和内核驱动入口。两批共800个HOME直属条目已集中归档并核验，根下不再散落脚本/日志/安装包，10个root目录也已完成迁移；[目录用途](docs/development/vm-home-layout.md)说明各类资料的位置。NAT互联网与自编译内核告警仍有待修项。
+[![MCU](https://img.shields.io/badge/STM32F407-HAL_1.8.5-03234B?logo=stmicroelectronics&logoColor=white)](#)
+[![RTOS](https://img.shields.io/badge/FreeRTOS-littlefs-2C8EBB)](#)
+[![SoC](https://img.shields.io/badge/RK3568-Linux-C51A4A)](#)
+[![Vision](https://img.shields.io/badge/MobileNetV3--Large-7_class-EE4C2C)](#)
+[![Contract](https://img.shields.io/badge/contract-0.2.1-blue)](#)
+[![Tests](https://img.shields.io/badge/CTest-29_suites-brightgreen)](#)
+[![Cards](https://img.shields.io/badge/cards-13%2F45_DONE-orange)](#)
 
-S1-01至S1-07已完成，阶段一主机模拟门禁PASS；场景和VM实跑结果见[阶段一证据](docs/evidence/stage-01/S1-07/summary.md)。
+## 项目简介
 
-主机端开发环境：[用户已有VMware Ubuntu工作流](docs/development/vm-ubuntu-workflow.md)；S1-01原成果保留，后续按[VM最终复验指令](docs/stages/S1-01-vm-final-review.md)验证整改版。Windows继续用于源文件/Keil，不要求WSL。
+实验室工具借还场景的三端系统。三块算力各管一件事，谁也不越权：
 
-AI开发入口：[完整执行手册](docs/AI开发执行手册.md)与[45卡指令索引](docs/ai-prompts/README.md)。全部45卡均有开发、审计、整改、交接四份已填指令，共180份；按当前卡复制，无需自己替换卡号。执行说明不自动启动额外产品卡。
+| 角色 | 职责 | 不做什么 |
+|---|---|---|
+| **STM32F407** | 锁驱动、门磁/微动、RC522 刷卡、独立 Journal | 不记业务账本、不做身份判断 |
+| **RK3568** | 借还账本（唯一写者）、局域网 HTTPS、LVGL 触摸界面 | 不直接写 GPIO、不替 MCU 判物理状态 |
+| **Android** | 远程查询、申请、本人确认 | 不直连设备、不参与开锁授权 |
 
-STM32开发环境入口：[firmware/README.md](firmware/README.md)和[Keil工程](firmware/keil/locker_environment.uvprojx)。HAL/FreeRTOS/littlefs已落盘并通过本机环境目标编译链接；[验证记录](docs/evidence/environment-2026-10-22/summary.md)区分环境测试与尚未实施的借还柜功能。
+**设计立场** —— 物理真相归 MCU，账本归 RK，决定权归人。系统里任何一处「不确定」，都必须停在原地等人，而不是靠重试去猜。
 
-当前整体可实施性结论见[整体验证](docs/architecture/feasibility-validation.md)与[本轮审计/检查记录](docs/evidence/feasibility-2026-10-22/summary.md)。0.2.1补齐MCU异步回传/Journal管理及视觉健康时效；设计可实施不等于硬件齐备或整机已验证。
+## 亮点速览
 
-项目定位：STM32F407负责柜锁、物理状态和独立记录；RK3568负责业务、LVGL、局域网服务及独立v11视觉进程；Android负责查询、申请、确认和管理。Core综合物理事实、视觉证据及本人确认作决定。
+- **锁脉冲的硬截止不靠软件** —— 定时器单脉冲直接驱动 MOS 关断，不依赖 Linux、Flash 完成或 RTOS 任务及时调度。空载 PB6 实测五组波形通过：正常、关中断、挂起调度器、软件提前关断、强制复位；脉冲结束 0.9s 后读回 phase 仍为 2/3，证明软件全程无法运行时脉冲照样按时结束
+- **ACK 不是开门，意图不是执行** —— 持久化一条开锁意图，不等于锁已经动过；`ACK` 只表示收到。历史补传不会产生开锁，结果未知时**禁止自动重放动作**，只能进人工复核
+- **唯一写者约束** —— RK 是借还账本唯一写者，MCU 控制任务是锁驱动唯一入口；HTTP 工作线程、客户端和 UI 都不直接写账本或 GPIO
+- **断电后能说清发生了什么** —— littlefs Journal 提交后真实断电重启，恢复通过；诊断 epoch 保留 `DEGRADED` 与未 ACK 记录，不靠「看起来正常」掩盖丢帧
+- **契约先于代码** —— 0.2.1 契约是机器真源：24 个公开入口、82 个内部 C 端口、11 类 UART 请求由生成器产出 C 头文件与 OpenAPI，**禁止手改生成物**，三端不允许各挑一种解释
+- **每张卡都要留证据** —— `docs/evidence/` 按卡归档真实 VM 日志、示波器波形、抓包与断电记录；没有证据的卡不能标 DONE
 
-STM32使用用户提供的 **HAL V1.8.5**，路径为 `STM32F4xx_HAL_Code/`；原库保持不变。当前候选板为天空星STM32F407VGT6高配版，BSP/profile的完整实测记录尚未入库。
+## 架构
 
-当前状态：契约0.2.1，45张产品任务卡；阶段一7卡DONE、主机模拟门禁PASS。S2-01安全BSP和低电流默认关闭验收完成；S2-02输入/SPI完成，门磁/微动内部上拉及低有效映射、RC522两张4字节UID、Flash JEDEC读出和互斥测试通过。PC0接线/ADC实物标定按用户授权后移，当前供电无效；7/10字节UID仅协议回归通过，实物待补。硬件profile仍UNVERIFIED、阶段2门禁NOT_RUN。S2-03 UART DMA/通信任务DONE，RK UART4经ADuM真实黄金帧、跨圈和背压验证通过；见[本卡报告](docs/evidence/stage-02/S2-03/summary.md)。S2-04真实littlefs/Journal已DONE，提交后真实断电恢复、持久ACK/水位及故障锁存验收通过；见[本卡报告](docs/evidence/stage-02/S2-04/summary.md)。诊断epoch保持DEGRADED，未ACK记录保留；S2-05 Control与硬截止空载验收DONE；S2-06 RK真实串口/ABI/TLS/配对DONE，物理断线恢复已补证。S2-07采用真实硬件台架测试，无需正式柜体；台架客户端及主机验证通过，完整实物闭环因供电/profile等前置待补而BLOCKED，见[前置记录](docs/evidence/stage-02/S2-07/summary.md)。
+```
+        Android 客户端              LVGL 触摸屏
+              └──────────┬──────────────┘
+                   HTTPS（局域网 · 证书固定）
+              ┌──────────▼───────────┐
+              │      RK3568 业务核    │  借还账本唯一写者
+              │  HTTP · 账本 · UI 泵  │
+              └───┬──────────────┬───┘
+        UART4     │              │  vision.sock
+      （ADuM 隔离）│              │
+        ┌─────────▼──────┐  ┌────▼─────────────┐
+        │   STM32F407    │  │  v11 视觉进程     │
+        │ 锁 · 传感 · 刷卡 │  │ MobileNetV3-Large │
+        │ 独立 Journal    │  │ 七分类 · 不接 UART │
+        └────────────────┘  └───────────────────┘
+```
 
-**后续AI先读[分阶段开发入口](docs/stages/README.md)，一次只执行一张卡。** [机器状态索引](config/development/stage-plan.json)记录实际active_task；当前active_task=null、recommended_next=S2-07，阶段1 gate PASS、阶段2 gate NOT_RUN。S2-01至S2-06已DONE；S2-07为BLOCKED，完整实物闭环待验，授权范围止于S2-08开发之前。
+**关键语义**（都在契约里，不靠口头约定）：
 
-开发、集成与验证由当前会话统一负责，具体流程见[执行规则](docs/development/execution-policy.md)。
+1. `ACK` 表示帧已收到，不表示动作已执行
+2. 持久化的意图不等于已执行的动作
+3. 历史补传不产生开锁
+4. 结果未知 → 进 `REVIEW_REQUIRED`，不自动重放
+5. 锁脉冲硬截止由硬件保证，软件崩溃不影响关断
 
-- [项目执行计划](docs/stages/README.md)：当前阶段、45张卡、依赖门禁和单卡交接。docs/项目计划.md作为产品讨论背景保留，其旧开发顺序不作为执行依据。
-- [到货检测与确认](docs/hardware/到货检测与确认.md)：2026-10-27用户报告器件到齐，逐件型号/数量/电压/功能待验；[本批记录](docs/evidence/hardware-receipt-2026-10-27/summary.md)用于填写真实测量结果。
-- [完整材料与搜索比价](docs/材料清单与搜索比价-2026-10-20.md)：所有器件、辅料、复用项、工具、报价来源与成本分支；视觉采集件在独立小节。
-- [14页逐引脚接线图册](docs/hardware/接线图册/接线图册.html)：80孔索引、47条连接、安装位置、工具与逐点验证；[系统总览](docs/hardware/系统接线图.svg)是安装示意，图册由 `scripts/build_wiring_guide.py` 生成，需Pillow。
-- [引脚确定与接线表](docs/hardware/引脚确定与接线表.md)：候选GPIO/连接器针号、官方来源、实物核对边界。
-- [保护板接线与布局](docs/hardware/保护板接线与布局.md)：保留原尺寸试摆、器件分区、网络与焊接要求；[验证操作与记录](docs/hardware/接线验证操作与记录.md)给出表笔测点和预期值。
-- [手机选购清单](docs/hardware/手机选购清单.html)：手机可直接点的卡片式清单（`python -B scripts/build_shopping_list.py` 生成）。
-- [淘宝核对关键词](docs/hardware/淘宝核对关键词.md)：按 BOM 编号的手动搜索词、判定要点与参考价，用于回填清单。
-- [相机选型与成本](docs/hardware/相机选型与成本.md)：为什么选USB UVC定焦模组、硬性规格、机位补光、已选定HBVCAM-F2170HD具体SKU、SKU取舍、到货验证与50.56元增量预算。
-- [阶段 0 设计](docs/stages/stage-00-architecture.md)：本轮重点评审入口，定义状态机、进程/任务、职责和故障规则。
-- [API链接与调用链](docs/architecture/api-links.md)：手机/终端地址、公开入口到内部函数及MCU消息的对应。
-- [各阶段调用链](docs/architecture/stage-call-chains.md)与[接口追踪表](docs/architecture/traceability.md)：24个公开入口、82个内部C端口、11类UART请求和28个业务/监督RPC的实施/验收归属。
-- [接口契约](contracts/README.md)：24 个公开入口、内部 C 端口、11 类串口请求、样例与检查方式。
-- [v11视觉架构](docs/architecture/vision-architecture.md)、[接口/地址](docs/architecture/vision-interfaces.md)、[AI接线说明](docs/architecture/vision-ai-handoff.md)：MobileNetV3-Large七分类，独立vision.sock，不改MCU UART。
-- [模块与 AI 所有权](docs/architecture/module-ownership.md)：后续 AI 的目录与修改边界。
-- [阶段 1 任务卡](docs/stages/stage-01-task-cards.md)：主机骨架、仓储、模拟器与验证；S1-01至S1-07已DONE，阶段一主机模拟门禁PASS。
-- [材料与HAL影响](docs/hardware/材料变更影响与HAL边界.md)、[本地HAL核对](docs/hardware/本地HAL库核对.md)：材料替换不翻转业务状态，HAL适配不改公开协议。
-- [阶段 2 HAL任务卡](docs/stages/stage-02-hal-hardware-task-cards.md)：S2-01至S2-06已DONE，S2-07台架客户端已验证、完整实物闭环BLOCKED，S2-08未执行。
-- [阶段2B视觉八卡](docs/stages/stage-02b-vision-task-cards.md)：S2-09—16接模型/相机/worker/融合；S2-08只过基础子门禁，S2-16为阶段2完整门禁。
-- [阶段 3 客户端任务卡](docs/stages/stage-03-clients-task-cards.md)：Android/LVGL的7张卡及配对/幂等/异步IPC。
-- [阶段 4 监护任务卡](docs/stages/stage-04-monitoring-task-cards.md)：容量、供电、真实进度、IWDG与固定UI恢复的8张卡。
-- [阶段 5 交付任务卡](docs/stages/stage-05-delivery-task-cards.md)：部署、离线备份、兼容更新和现场验收的7张卡。
-- [单卡交接模板](docs/stages/task-handoff-template.md)：交给其他AI的提示词、证据和变更请求格式。
-- [当前视觉设计验证](docs/evidence/vision-design-2026-10-22/summary.md)：0.2.1核对、静态检查和未验证项；早期0.1.2记录保留为历史证据。
+## 当前进度
 
-按用户更新清单，新增配件和运费上限为 **200元，待购F407板单独预算**。候选金额与补件预留不是成交价，最终核算见材料清单；不能删保护件或漏运费凑数。
+45 张产品任务卡，按依赖序推进，一次只做一张。
 
-相机接口已定为USB UVC免驱定焦模组（候选CAM-UVC-01）。用户已报告器件全部到货，相机实际型号/SKU与候选匹配、结算金额和RK采集仍待核对；判据与到货验证见[相机选型与成本](docs/hardware/相机选型与成本.md)。视觉增量为独立预算（已选定HBVCAM-F2170HD 75°手动调焦33.76元+补光灯9.80元+运费7元=50.56元，单独上限55元；补光走用户已有充电头），不占用也不从200元扣减。已有PT/ONNX不代表RKNN/柜内识别通过，模型源目录保持不变。
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| 1 · 主机模拟闭环 | 7 卡：骨架 / SQLite 仓储 / 协议与模拟器 / Journal / 鉴权 / 业务 / 验收 | **DONE · 门禁 PASS** |
+| 2 · HAL 实物闭环 | 8 卡 + 视觉 8 卡（S2-09..16） | **进行中** · S2-01..06 DONE，S2-07 BLOCKED |
+| 3 · Android 与触摸端 | 7 卡 | 未开始 |
+| 4 · 独立记录与监护 | 8 卡 | 未开始 |
+| 5 · 部署与现场交付 | 7 卡 | 未开始 |
 
-设计检查：`python -B scripts/check_contracts.py`、`python -B scripts/check_stage_plan.py`、`python -B scripts/check_vision_contracts.py`。它们不代表业务构建、推理或真机通过。
+已完成部分：主机 Debug / ASan+UBSan / TSan 三套各 13/13；MCU 侧 UART DMA、真实 littlefs 断电恢复、Control 硬截止、RK 串口/ABI/TLS/配对均已在实物上验证。
+
+**如实说明**：硬件 profile 仍为 `UNVERIFIED`，阶段二门禁 `NOT_RUN`；PC0 供电 ADC 标定按授权后移，`supply_valid` 保持 `false`；真锁线圈、MOS、12V 回路与断电瞬态尚未验收。真机证据只来自 VMware Ubuntu 与实板，不用 mock 替代实物门禁。
+
+## 文档地图
+
+| 想了解 | 读这里 |
+|---|---|
+| **开发入口与真实状态**（后续 AI 从这里开始） | [`docs/开发入口.md`](docs/开发入口.md) |
+| 阶段划分、单卡规约、依赖门禁 | [`docs/stages/README.md`](docs/stages/README.md) |
+| 机器可读状态（active_task / 门禁结果） | [`config/development/stage-plan.json`](config/development/stage-plan.json) |
+| 接口契约真源 | [`contracts/contract-source.json`](contracts/contract-source.json) · [`contracts/README.md`](contracts/README.md) |
+| 架构与状态机 | [`docs/stages/stage-00-architecture.md`](docs/stages/stage-00-architecture.md) |
+| 内部接口与线程模型 | [`docs/architecture/internal-interfaces.md`](docs/architecture/internal-interfaces.md) |
+| UART 线协议 | [`docs/architecture/uart-v1.md`](docs/architecture/uart-v1.md) |
+| 接线图册（14 页逐引脚） | [`docs/hardware/接线图册/接线图册.html`](docs/hardware/接线图册/接线图册.html) |
+| 视觉链路（v11 七分类） | [`docs/architecture/vision-architecture.md`](docs/architecture/vision-architecture.md) |
+| 各卡验收证据 | [`docs/evidence/`](docs/evidence/) |
+| 提交改动前的硬约束 | [`AGENTS.md`](AGENTS.md) |
+
+## 设计检查
+
+```bash
+python -B scripts/check_contracts.py        # 契约与生成物一致
+python -B scripts/check_stage_plan.py       # 阶段索引与卡状态一致
+python -B scripts/check_vision_contracts.py # 视觉契约与帧样例
+```
+
+三条命令只验证**设计产物一致性**，不证明业务实现或真机可用 —— 真机结论只认 `docs/evidence/` 里的原始记录。
+
+## 说明
+
+个人工程实践项目，尚未声明开源许可证。仓库内的第三方组件（STM32 HAL、FreeRTOS、littlefs、civetweb、SQLite、OpenSSL、duktape 等）各自遵循其原始许可，详见 `deployment/*/licenses/`。
